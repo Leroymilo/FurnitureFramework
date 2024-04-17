@@ -12,6 +12,14 @@ namespace FurnitureFramework
     internal sealed class ModEntry : Mod
     {
 		static IMonitor? monitor;
+		public static IModHelper helper {
+			get {
+				if (helper == null)
+					throw new NullReferenceException("Helper was not set");
+				return helper;
+			}
+			private set {helper = value;}
+		}
 
 		static public void log(string message, LogLevel log_level = LogLevel.Debug)
 		{
@@ -26,6 +34,7 @@ namespace FurnitureFramework
         public override void Entry(IModHelper helper)
         {
 			monitor = Monitor;
+			ModEntry.helper = Helper;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			
