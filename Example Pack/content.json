@@ -1,0 +1,62 @@
+{
+	"Format": 1,
+
+	"Furniture": {
+		"Test": {
+			"Display Name": "test furniture",
+			"Description": "A Furniture made for testing purposes",
+
+			"Rotations": 1,
+			"Bounding Box": {"Width": 3, "Height": 3},	// in tiles
+			"Collisions": [
+				"XXX",
+				"XXX",
+				"XXX"
+			],
+
+			"Indoors": true,
+			"Outdoors": true,
+
+			"Table Slots": [
+				{"X": 8, "Y": 8}	// in pixels
+			],
+			"Seats": [
+				{
+					"Position": {"X": 8, "Y": 8},	// in pixels
+					"Direction": "UP"
+				}
+			],
+			"LightSources": [
+				{
+					"Position": {"X": 8, "Y": 8},	// in pixels
+					"Texture": null,
+					"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+					"Color": null,
+					"Is Window": false
+				}
+			],
+
+			"Texture": "furniture.png",
+			"Front Texture": null,
+			"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+
+			"Animation Frames": null,
+			"Animation Length": null,
+			"Animation Offset": {"X": 0, "Y": 0},	// in pixels
+
+			"Show in Catalogue": false,
+			"Shop": null,
+
+			"Is TV": false,
+			"TV Tiles": [],
+
+			"Is Fireplace": false,
+			"Is Dresser": false,
+			"Is Rug": false,
+			"Is Mural": false,
+			"Is Bed": false,
+
+			"Context Tags": []
+		}
+	}
+}

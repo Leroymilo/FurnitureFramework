@@ -1,0 +1,5 @@
+.vscode
+test.sh
+*.zip
+FurnitureFramework/bin/
+FurnitureFramework/obj/
