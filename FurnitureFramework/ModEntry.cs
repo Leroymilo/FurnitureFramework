@@ -11,14 +11,13 @@ namespace FurnitureFramework
     /// <summary>The mod entry point.</summary>
     internal sealed class ModEntry : Mod
     {
-		static IMonitor? monitor;
-		public static IModHelper helper {
-			get {
-				if (helper == null)
-					throw new NullReferenceException("Helper was not set");
-				return helper;
-			}
-			private set {helper = value;}
+		public static IMonitor? monitor {get; private set;}
+		private static IModHelper? helper;
+
+		static public IModHelper get_helper()
+		{
+			if (helper == null) throw new NullReferenceException("Helper was not set.");
+			return helper;
 		}
 
 		static public void log(string message, LogLevel log_level = LogLevel.Debug)
@@ -91,10 +90,18 @@ namespace FurnitureFramework
 				{
 					if (f_data == null)
 					{
-						log($"No data for furniture {key}, skipping entry.", LogLevel.Warn);
+						log($"No data for Furniture {key}, skipping entry.", LogLevel.Warn);
 						continue;
 					}
-					furnitures.Add(new CustomFurniture(pack, key, (JObject)f_data));
+					try
+					{
+						furnitures.Add(new CustomFurniture(pack, key, (JObject)f_data));
+					}
+					catch (Exception ex)
+					{
+						log(ex.ToString(), LogLevel.Trace);
+						log($"Failed to load data for Furniture {key}, skipping entry.", LogLevel.Warn);
+					}
 				}
 			}
 		}

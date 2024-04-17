@@ -14,7 +14,7 @@ namespace FurnitureFramework
 			string true_path;
 			if (path.StartsWith("FF."))
 			{
-				content_helper = ModEntry.helper.ModContent;
+				content_helper = ModEntry.get_helper().ModContent;
 				true_path = path[3..];
 			}
 			else
