@@ -11,7 +11,6 @@ namespace FurnitureFramework
 
 		public static Texture2D load(IModContentHelper content_helper, string path)
 		{
-			ModEntry.log($"loading texture at path {path}");
 
 			string true_path;
 			if (path.StartsWith("FF."))
@@ -27,6 +26,7 @@ namespace FurnitureFramework
 			if (!textures.ContainsKey(path))
 			{
 				textures[path] = content_helper.Load<Texture2D>(true_path);
+				ModEntry.log($"loading texture at {true_path}");
 			}
 			return textures[path];
 		}

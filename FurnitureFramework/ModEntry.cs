@@ -55,7 +55,7 @@ namespace FurnitureFramework
 			Furniture test = new();
 			// Object test;
 			// GameLocation location = new();
-			// Farmer farmer = new();
+			Farmer farmer = new();
 			return;
         }
 
