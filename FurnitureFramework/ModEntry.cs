@@ -1,8 +1,14 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using System.ComponentModel;
+using System.Net;
+using System.Runtime.Serialization;
+using HarmonyLib;
+using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData;
+using StardewValley.GameData.Locations;
 using StardewValley.Objects;
 
 
@@ -11,8 +17,14 @@ namespace FurnitureFramework
     /// <summary>The mod entry point.</summary>
     internal sealed class ModEntry : Mod
     {
-		public static IMonitor? monitor {get; private set;}
+		private static IMonitor? monitor;
 		private static IModHelper? helper;
+
+
+		public static bool print_debug = false;
+
+
+		public static readonly Dictionary<string, CustomFurniture> furniture = new();
 
 		static public IModHelper get_helper()
 		{
@@ -26,20 +38,23 @@ namespace FurnitureFramework
 			monitor.Log(message, log_level);
 		}
 
-		static readonly List<CustomFurniture> furnitures = new();
-
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
 			monitor = Monitor;
 			ModEntry.helper = Helper;
+			HarmonyPatcher.harmony = new(ModManifest.UniqueID);
             helper.Events.Input.ButtonPressed += OnButtonPressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
+			helper.Events.Content.AssetRequested += on_asset_requested;
 			
+			HarmonyPatcher.patch();
+
 			// for quick access to decompiled code
 			Furniture test = new();
-			GameLocation location = new();
+			// Object test;
+			// GameLocation location = new();
 			// Farmer farmer = new();
 			return;
         }
@@ -90,20 +105,24 @@ namespace FurnitureFramework
 				{
 					if (f_data == null)
 					{
-						log($"No data for Furniture {key}, skipping entry.", LogLevel.Warn);
+						log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
 						continue;
 					}
 					try
 					{
-						furnitures.Add(new CustomFurniture(pack, key, (JObject)f_data));
+						CustomFurniture new_furniture = new(pack, key, (JObject)f_data);
+						furniture[new_furniture.id] = new_furniture;
 					}
 					catch (Exception ex)
 					{
-						log(ex.ToString(), LogLevel.Trace);
-						log($"Failed to load data for Furniture {key}, skipping entry.", LogLevel.Warn);
+						log(ex.ToString(), LogLevel.Error);
+						log($"Failed to load data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
 					}
 				}
 			}
+
+			log("Finished loading Custom Furniture.");
+			Helper.GameContent.InvalidateCache("Data/Furniture");
 		}
 
 
@@ -115,9 +134,32 @@ namespace FurnitureFramework
             // ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady)
                 return;
-
-            // print button presses to the console window
-            this.Monitor.Log($"{Game1.player.Name} pressed {e.Button}.", LogLevel.Debug);
+			
+			if (e.Button == SButton.K)
+				print_debug = true;
         }
+
+        /// <inheritdoc cref="IContentEvents.AssetRequested"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_asset_requested(object? sender, AssetRequestedEventArgs e)
+		{
+			if (e.NameWithoutLocale.StartsWith("Data/Furniture"))
+			{
+				e.Edit(asset => {
+					var editor = asset.AsDictionary<string, string>().Data;
+					foreach ((string id, CustomFurniture f) in furniture)
+					{
+						editor[id] = f.get_string_data();
+					}
+				});
+			}
+
+			if (furniture.ContainsKey(e.Name.Name))
+			{
+				e.LoadFrom(furniture[e.Name.Name].get_icon_texture, AssetLoadPriority.Medium);
+			}
+		}
+
     }
 }

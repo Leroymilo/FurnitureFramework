@@ -2,6 +2,7 @@
 	"Format": 1,
 
 	"Furniture": {
+		// your mod's id will automatically be added to the furniture id
 		"Test": {
 			"Display Name": "test furniture",
 			"Price": 0,
@@ -18,15 +19,28 @@
 			"Texture": "furniture.png",
 			"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
 			"Front Texture": null,
-			"Front SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+			"Front SourceRect": null,//{"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+
+			"Exclude from Random Sales": true,
+			"Attached Shop": null,	// to make a catalogue-like furniture
+
+			"Context Tags": [],
+
+			// "Is TV": false,
+			// "TV Tiles": [],
+
 
 			"Table Slots": [
-				{"X": 8, "Y": 8}	// in pixels
+				{
+					"Position": {"X": 8, "Y": 8},	// in pixels
+					"For Rotations": 0
+				}
 			],
 			"Seats": [
 				{
 					"Position": {"X": 8, "Y": 8},	// in pixels
-					"Direction": "UP"
+					"Direction": 0,
+					"For Rotations": 0
 				}
 			],
 			"LightSources": [
@@ -35,7 +49,8 @@
 					"Texture": null,
 					"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
 					"Color": null,
-					"Is Window": false
+					"Is Window": false,
+					"For Rotations": 0
 				}
 			],
 
@@ -43,19 +58,18 @@
 			"Animation Length": null,
 			"Animation Offset": {"X": 0, "Y": 0},	// in pixels
 
-			"Show in Catalogue": false,
-			"Attached Shop": null,
-
-			"Is TV": false,
-			"TV Tiles": [],
-
+			"Is Lamp": false,
 			"Is Fireplace": false,
+			"Torch Fire": [
+				{
+					"Position": {"X": 8, "Y": 8},	// in pixels
+					"For Rotations": 0
+				}
+			],
 			"Is Dresser": false,
 			"Is Rug": false,
 			"Is Mural": false,
-			"Is Bed": false,
-
-			"Context Tags": []
+			"Is Bed": false
 		}
 	}
 }
