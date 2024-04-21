@@ -1,9 +1,8 @@
-using System.Runtime.CompilerServices;
+
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
@@ -12,7 +11,7 @@ using StardewValley.Objects;
 namespace FurnitureFramework
 {
 
-	class CustomFurniture
+	class FurnitureType
 	{
 		string mod_id;
 
@@ -20,39 +19,42 @@ namespace FurnitureFramework
 		string display_name;
 		string type;
 
+		int rotations;
+		List<string> rot_names = new();
+
 		List<Point> bb_sizes = new();
 
-		int rotations;
 		int price;
 		int placement_rules;
 		
 		Texture2D texture;
 		List<Rectangle> source_rects = new();
 		
-		Texture2D? front_texture;
+		Texture2D? front_texture = null;
 		List<Rectangle> front_source_rects = new();
 
 		bool exclude_from_random_sales;
 		List<string> context_tags = new();
 
-		List<LightSource> light_sources = new();
+		// List<LightSource> light_sources = new();
 
 		// TO ADD : torch fire positions, seats, placement spots
 
 		bool is_rug = false;
 		bool has_front = false;
-		bool can_be_toggled = false;
-		bool can_be_placed_on = false;
+		// bool can_be_toggled = false;
+		// bool can_be_placed_on = false;
 		bool is_mural = false;
 
 
-		public CustomFurniture(IContentPack pack, string id, JObject data)
+		public FurnitureType(IContentPack pack, string id, JObject data)
 		{
+			#region base attributes
+
 			mod_id = pack.Manifest.UniqueID;
 			this.id = $"{mod_id}.{id}";
 			display_name = JC.extract(data, "Display Name", "No Name");
 			type = JC.extract(data, "Force Type", "other");
-			rotations = JC.extract(data, "Rotations", 1);
 			price = JC.extract(data, "Price", 0);
 			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", false);
 
@@ -61,16 +63,23 @@ namespace FurnitureFramework
 				+ 2 * JC.extract(data, "Outdoors", 1)
 				- 1;
 
+			parse_rotations(data);
+
+			#endregion
+
+			#region textures & source rects
+
 			string text_path = data.Value<string>("Texture")
 				?? throw new InvalidDataException($"Missing Texture for Furniture {id}");
 			texture = TextureManager.load(pack.ModContent, text_path);
-			
 
 			JToken? rect_token = data.GetValue("SourceRect");
 			if (rect_token != null && rect_token.Type != JTokenType.Null)
-				JC.get_list_of_rect(rect_token, source_rects);
-			else
+				JC.get_directional_rectangles(rect_token, source_rects, rot_names);
+			else if (rotations == 1)
 				source_rects.Add(texture.Bounds);
+			else
+				throw new InvalidDataException($"Missing SourceRects for Furniture {id}.");
 
 			string? front_text_path = data.Value<string?>("Front Texture");
 			if (front_text_path != null)
@@ -78,7 +87,7 @@ namespace FurnitureFramework
 
 			JToken? front_rect_token = data.GetValue("Front SourceRect");
 			if (front_rect_token != null && front_rect_token.Type != JTokenType.Null)
-				JC.get_list_of_rect(front_rect_token, front_source_rects);
+				JC.get_directional_rectangles(front_rect_token, front_source_rects, rot_names);
 
 			if (front_texture != null || front_source_rects.Count > 0)
 			{
@@ -87,14 +96,68 @@ namespace FurnitureFramework
 				if (front_source_rects.Count == 0) front_source_rects = source_rects;
 			}
 
+			#endregion
+
 			JToken size_token = data.GetValue("Bounding Box Size")
 				?? throw new InvalidDataException($"Missing Bounding Box Size for Furniture {id}.");
-			JC.get_list_of_size(size_token, bb_sizes);
-			if (bb_sizes.Count < 1)
-				throw new InvalidDataException($"At least one Bounding Box Size required for Furniture {id}");
-
+			JC.get_directional_sizes(size_token, bb_sizes, rot_names);
+			
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
+		}
+
+		public void parse_rotations(JObject data)
+		{
+			JToken? rot_token = data.GetValue("Rotations");
+			if (rot_token == null || rot_token.Type == JTokenType.Null)
+				throw new InvalidDataException($"Missing Rotations for Furniture {id}.");
+			
+			if (rot_token is JValue rot_value)
+			{
+				try
+				{
+					rotations = (int)rot_value;
+				}
+				catch
+				{
+					throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
+				}
+
+				switch (rotations)
+				{
+					case 1:
+						return;
+					case 2:
+						rot_names.AddRange(new string[2]{"Horizontal", "Vertical"});
+						return;
+					case 4:
+						rot_names.AddRange(new string[4]{"Down", "Right", "Up", "Left"});
+						return;
+				}
+
+				throw new InvalidDataException($"Invalid Rotations for Furniture {id}, number can be 1, 2 or 4.");
+			}
+
+			if (rot_token is JArray rot_keys)
+			{
+				bool has_null_keys = false;
+				foreach (string? key in rot_keys.Values<string>())
+				{
+					if (key == null) 
+					{
+						has_null_keys = true;
+						continue;
+					}
+					rot_names.Add(key);
+				}
+				if (has_null_keys)
+					ModEntry.log($"Invalid rotation(s) skipped in Furniture {id}.", LogLevel.Warn);
+				
+				rotations = rot_names.Count;
+				return;
+			}
+
+			throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
 		}
 
 		public string get_string_data()
@@ -102,7 +165,7 @@ namespace FurnitureFramework
 			string result = display_name;
 			result += $"/{type}";
 			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
-			result += $"/{bb_sizes[0].X} {bb_sizes[0].X}";	// to ignore with prefix for custom collisions
+			result += $"/{bb_sizes[0].X} {bb_sizes[0].X}";
 			result += $"/{rotations}";
 			result += $"/{price}";
 			result += $"/{placement_rules}";
@@ -110,7 +173,8 @@ namespace FurnitureFramework
 			result += $"/0";
 			result += $"/{id}";
 			result += $"/{exclude_from_random_sales}";
-			result += $"/" + context_tags.Join(delimiter: " ");
+			if (context_tags.Count > 0)
+				result += $"/" + context_tags.Join(delimiter: " ");
 
 			ModEntry.log(result);
 
@@ -122,13 +186,21 @@ namespace FurnitureFramework
 			return texture;
 		}
 
+		private Point get_bb_size(int rot)
+		{
+			if (bb_sizes.Count == 1)
+				return bb_sizes[0];
+			
+			return get_bb_size(rot);
+		}
+
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
 			int rot = furniture.currentRotation.Value;
 
 			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
 
-			SpriteEffects effects = furniture.Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+			SpriteEffects effects = SpriteEffects.None;
 			Color color = Color.White * alpha;
 			float depth;
 			Vector2 position;
@@ -148,7 +220,7 @@ namespace FurnitureFramework
 			{
 				position = new(
 					furniture.boundingBox.X,
-					furniture.boundingBox.Y - (source_rects[rot].Height * 4 - bb_sizes[rot].Y * 64)
+					furniture.boundingBox.Y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
 				);
 				if (furniture.shakeTimer > 0) {
 					position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
@@ -181,7 +253,7 @@ namespace FurnitureFramework
 			{
 				position = new(
 					64*x,
-					64*y - (source_rects[rot].Height * 4 - bb_sizes[rot].Y * 64)
+					64*y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
 				);
 				if (furniture.shakeTimer > 0) {
 					position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
@@ -238,7 +310,7 @@ namespace FurnitureFramework
 
 			if (Game1.debugMode)
 			{
-				Vector2 draw_pos = new(furniture.boundingBox.X, furniture.boundingBox.Y - (source_rects[rot].Height * 4 - bb_sizes[rot].Y * 64));
+				Vector2 draw_pos = new(furniture.boundingBox.X, furniture.boundingBox.Y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
 

@@ -13,63 +13,63 @@
 
 			"Force Type": null,
 
-			"Indoors": true,
+			"Indoors": false,
 			"Outdoors": true,
 
 			"Texture": "assets/simple.png",
 			"SourceRect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
-			"Front Texture": null,
-			"Front SourceRect": null,//{"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+			// "Front Texture": null,
+			// "Front SourceRect": null,//{"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
 
 			"Exclude from Random Sales": true,
-			"Attached Shop": null,	// to make a catalogue-like furniture
+			// "Attached Shop": null,	// to make a catalogue-like furniture
 
-			"Context Tags": [],
+			"Context Tags": []
 
 			// "Is TV": false,
 			// "TV Tiles": [],
 
 
-			"Table Slots": [
-				{
-					"Position": {"X": 8, "Y": 8},	// in pixels
-					"For Rotations": 0
-				}
-			],
-			"Seats": [
-				{
-					"Position": {"X": 8, "Y": 8},	// in pixels
-					"Direction": 0,
-					"For Rotations": 0
-				}
-			],
-			"LightSources": [
-				{
-					"Position": {"X": 8, "Y": 8},	// in pixels
-					"Texture": null,
-					"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
-					"Color": null,
-					"Is Window": false,
-					"For Rotations": 0
-				}
-			],
+			// "Table Slots": [
+			// 	{
+			// 		"Position": {"X": 8, "Y": 8},	// in pixels
+			// 		"For Rotations": 0
+			// 	}
+			// ],
+			// "Seats": [
+			// 	{
+			// 		"Position": {"X": 8, "Y": 8},	// in pixels
+			// 		"Direction": 0,
+			// 		"For Rotations": 0
+			// 	}
+			// ],
+			// "LightSources": [
+			// 	{
+			// 		"Position": {"X": 8, "Y": 8},	// in pixels
+			// 		"Texture": null,
+			// 		"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
+			// 		"Color": null,
+			// 		"Is Window": false,
+			// 		"For Rotations": 0
+			// 	}
+			// ],
 
-			"Animation Frames": null,
-			"Animation Length": null,
-			"Animation Offset": {"X": 0, "Y": 0},	// in pixels
+			// "Animation Frames": null,
+			// "Animation Length": null,
+			// "Animation Offset": {"X": 0, "Y": 0},	// in pixels
 
-			"Is Lamp": false,
-			"Is Fireplace": false,
-			"Torch Fire": [
-				{
-					"Position": {"X": 8, "Y": 8},	// in pixels
-					"For Rotations": 0
-				}
-			],
-			"Is Dresser": false,
-			"Is Rug": false,
-			"Is Mural": false,
-			"Is Bed": false
+			// "Is Lamp": false,
+			// "Is Fireplace": false,
+			// "Torch Fire": [
+			// 	{
+			// 		"Position": {"X": 8, "Y": 8},	// in pixels
+			// 		"For Rotations": 0
+			// 	}
+			// ],
+			// "Is Dresser": false,
+			// "Is Rug": false,
+			// "Is Mural": false,
+			// "Is Bed": false
 		},
 
 		"chair_test": {
@@ -78,23 +78,29 @@
 			"Price": 0,
 
 			"Rotations": 4,
+			// "Rotations": ["Down", "Right", "Up", "Left"],
+			// keys used in all other directional values
 			"Bounding Box Size": {"Width": 1, "Height": 1},	// in tiles
 
 			"Indoors": true,
 			"Outdoors": true,
 
 			"Texture": "assets/chair.png",
-			"SourceRect": [
-				{"X": 0,  "Y": 0, "Width": 16, "Height": 32},
-				{"X": 16, "Y": 0, "Width": 16, "Height": 32},
-				{"X": 32, "Y": 0, "Width": 16, "Height": 32}
-			],	// in pixels
+			"SourceRect": {
+				"Down":		{"X": 0,  "Y": 0, "Width": 16, "Height": 32},
+				"Right":	{"X": 16, "Y": 0, "Width": 16, "Height": 32},
+				"Up":		{"X": 32, "Y": 0, "Width": 16, "Height": 32},
+				"Left":		{"X": 48, "Y": 0, "Width": 16, "Height": 32}
+				// must have all directions
+			},	// in pixels
 			"Front Texture": "assets/chair.png",
-			"Front SourceRect": [
-				{"X": 0,  "Y": 32, "Width": 16, "Height": 32},
-				{"X": 16, "Y": 32, "Width": 16, "Height": 32},
-				{"X": 32, "Y": 32, "Width": 16, "Height": 32}
-			],	// in pixels
+			"Front SourceRect": {
+				"Down":		{"X": 0,  "Y": 32, "Width": 16, "Height": 32},
+				"Right":	{"X": 16, "Y": 32, "Width": 16, "Height": 32},
+				"Up":		{"X": 32, "Y": 32, "Width": 16, "Height": 32},
+				"Left":		{"X": 48, "Y": 32, "Width": 16, "Height": 32}
+				// must have all directions
+			},	// in pixels
 
 			"Exclude from Random Sales": true,
 
@@ -104,8 +110,14 @@
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
 					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": [2, 1, 0, 3]	// 0: up, 1: right, 2: down, 3: left, null: cannot seat
-					// requires a value for each rotation.
+					"Player Direction": {
+						"Up": 0,
+						"Right": 1,
+						"Down": 2,
+						"Left": 3
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+					// omitting a furniture direction will remove this seat when the furniture is in this direction
 				}
 			]
 		}

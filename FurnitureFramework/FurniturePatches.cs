@@ -20,12 +20,12 @@ namespace FurnitureFramework
 			{
 				ModEntry.furniture.TryGetValue(
 					__instance.ItemId,
-					out CustomFurniture? custom_furniture
+					out FurnitureType? furniture_type
 				);
 
-				if (custom_furniture == null) return true; // run original logic
+				if (furniture_type == null) return true; // run original logic
 
-				custom_furniture.draw(__instance, spriteBatch, x, y, alpha);
+				furniture_type.draw(__instance, spriteBatch, x, y, alpha);
 				return false; // don't run original logic
 			}
 			catch (Exception ex)

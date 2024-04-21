@@ -1,14 +1,8 @@
-﻿using System.ComponentModel;
-using System.Net;
-using System.Runtime.Serialization;
-using HarmonyLib;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.GameData;
-using StardewValley.GameData.Locations;
 using StardewValley.Objects;
 
 
@@ -24,7 +18,7 @@ namespace FurnitureFramework
 		public static bool print_debug = false;
 
 
-		public static readonly Dictionary<string, CustomFurniture> furniture = new();
+		public static readonly Dictionary<string, FurnitureType> furniture = new();
 
 		static public IModHelper get_helper()
 		{
@@ -55,7 +49,7 @@ namespace FurnitureFramework
 			Furniture test = new();
 			// Object test;
 			// GameLocation location = new();
-			Farmer farmer = new();
+			// Farmer farmer = new();
 			return;
         }
 
@@ -68,7 +62,7 @@ namespace FurnitureFramework
 			{
 				string UID = pack.Manifest.UniqueID;
 
-				log($"Reading Custom Furniture of {UID}...");
+				log($"Reading Furniture Types of {UID}...");
 				JObject data;
 				try
 				{
@@ -110,7 +104,7 @@ namespace FurnitureFramework
 					}
 					try
 					{
-						CustomFurniture new_furniture = new(pack, key, (JObject)f_data);
+						FurnitureType new_furniture = new(pack, key, (JObject)f_data);
 						furniture[new_furniture.id] = new_furniture;
 					}
 					catch (Exception ex)
@@ -121,7 +115,7 @@ namespace FurnitureFramework
 				}
 			}
 
-			log("Finished loading Custom Furniture.");
+			log("Finished loading Furniture Types.");
 			Helper.GameContent.InvalidateCache("Data/Furniture");
 		}
 
@@ -148,7 +142,7 @@ namespace FurnitureFramework
 			{
 				e.Edit(asset => {
 					var editor = asset.AsDictionary<string, string>().Data;
-					foreach ((string id, CustomFurniture f) in furniture)
+					foreach ((string id, FurnitureType f) in furniture)
 					{
 						editor[id] = f.get_string_data();
 					}

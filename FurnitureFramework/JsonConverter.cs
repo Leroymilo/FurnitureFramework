@@ -17,7 +17,6 @@ namespace FurnitureFramework
 			return value;
 		}
 
-
 		public static Point extract_size(JToken token)
 		{
 			Point result = Point.Zero;
@@ -37,9 +36,9 @@ namespace FurnitureFramework
 			}
 			throw new InvalidDataException(inv_rect_msg);
 		}
-		public static Point extract_position(JToken token)
+		public static Vector2 extract_position(JToken token)
 		{
-			Point result = Point.Zero;
+			Vector2 result = Vector2.Zero;
 			
 			string inv_rect_msg = $"Invalid Position definition at {token.Path}.";
 			if (token is JObject rect_data)
@@ -56,13 +55,12 @@ namespace FurnitureFramework
 			}
 			throw new InvalidDataException(inv_rect_msg);
 		}
-
 		public static Rectangle extract_rect(JToken token)
 		{
 			try
 			{
 				return new Rectangle(
-					extract_position(token),
+					extract_position(token).ToPoint(),
 					extract_size(token)
 				);
 			}
@@ -72,34 +70,60 @@ namespace FurnitureFramework
 			}
 		}
 
-		public static void get_list_of_rect(JToken token, List<Rectangle> list)
+		public static void get_directional_rectangles(
+			JToken token, List<Rectangle> rectangles, List<string> rotations
+		)
 		{
-			if (token is JArray array)
+			rectangles.Clear();
+			if (rotations.Count == 0)
 			{
-				foreach (JToken sub_token in array.Children())
+				rectangles.Add(extract_rect(token));
+			}
+			else if (token is JObject rect_dict)
+			{
+				foreach (string key in rotations)
 				{
-					get_list_of_rect(sub_token, list);
+					JToken? rect_token = rect_dict.GetValue(key);
+					if (rect_token == null || rect_token.Type == JTokenType.Null)
+					{
+						throw new InvalidDataException($"Missing Rectangle at {token.Path} for direction {key}.");
+					}
+					rectangles.Add(extract_rect(rect_token));
 				}
 			}
-			else
-			{
-				list.Add(extract_rect(token));
-			}
+			else throw new InvalidDataException($"Directional Rectangles at {token.Path} should be a dictionary.");
 		}
 
-		public static void get_list_of_size(JToken token, List<Point> list)
+		public static void get_directional_sizes(
+			JToken token, List<Point> sizes, List<string> rotations
+		)
 		{
-			if (token is JArray array)
+			sizes.Clear();
+			// trying to extract a single size from the token
+			try
 			{
-				foreach (JToken sub_token in array.Children())
+				sizes.Add(extract_size(token));
+				return;
+			}
+			catch (InvalidDataException)
+			{
+				if (rotations.Count == 0) throw;
+				// if no rot_names, then only a single size is accepted
+			}
+			
+			if (token is JObject size_dict)
+			{
+				foreach (string key in rotations)
 				{
-					get_list_of_size(sub_token, list);
+					JToken? size_token = size_dict.GetValue(key);
+					if (size_token == null || size_token.Type == JTokenType.Null)
+					{
+						throw new InvalidDataException($"Missing Size at {token.Path} for direction {key}.");
+					}
+					sizes.Add(extract_size(size_token));
 				}
 			}
-			else
-			{
-				list.Add(extract_size(token));
-			}
+			else throw new InvalidDataException($"Directional Sizes at {token.Path} should be a dictionary.");
 		}
 
 		public static void get_list_of_string(JToken token, List<string> list)
