@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Minigames;
 using StardewValley.Objects;
 
 
@@ -19,12 +20,12 @@ namespace FurnitureFramework
 		string display_name;
 		string type;
 
-		int rotations;
+		uint rotations;
 		List<string> rot_names = new();
 
 		List<Point> bb_sizes = new();
 
-		int price;
+		uint price;
 		int placement_rules;
 		
 		Texture2D texture;
@@ -36,7 +37,7 @@ namespace FurnitureFramework
 		bool exclude_from_random_sales;
 		List<string> context_tags = new();
 
-		// List<LightSource> light_sources = new();
+		List<SeatData> seats = new();
 
 		// TO ADD : torch fire positions, seats, placement spots
 
@@ -55,7 +56,7 @@ namespace FurnitureFramework
 			this.id = $"{mod_id}.{id}";
 			display_name = JC.extract(data, "Display Name", "No Name");
 			type = JC.extract(data, "Force Type", "other");
-			price = JC.extract(data, "Price", 0);
+			price = JC.extract(data, "Price", 0U);
 			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", false);
 
 			placement_rules =
@@ -104,6 +105,8 @@ namespace FurnitureFramework
 			
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
+
+			parse_seats(data);
 		}
 
 		public void parse_rotations(JObject data)
@@ -116,7 +119,7 @@ namespace FurnitureFramework
 			{
 				try
 				{
-					rotations = (int)rot_value;
+					rotations = (uint)rot_value;
 				}
 				catch
 				{
@@ -153,11 +156,49 @@ namespace FurnitureFramework
 				if (has_null_keys)
 					ModEntry.log($"Invalid rotation(s) skipped in Furniture {id}.", LogLevel.Warn);
 				
-				rotations = rot_names.Count;
+				rotations = (uint)rot_names.Count;
 				return;
 			}
 
 			throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
+		}
+
+		public void parse_seats(JObject data)
+		{
+			JToken? seats_token = data.GetValue("Seats");
+			if (seats_token == null || seats_token.Type == JTokenType.Null) return;
+
+			if (seats_token is JArray seat_array)
+			{
+				bool has_invalid_seats = false;
+				foreach (JToken seat_token in seat_array.Children())
+				{
+					if (seat_token.Type == JTokenType.Comment) continue;
+
+					if (seat_token is JObject seat_obj)
+					{
+						try
+						{
+							seats.Add(new(seat_obj, rot_names));
+						}
+						catch (InvalidDataException ex)
+						{
+							ModEntry.log($"{ex}", LogLevel.Error);
+							has_invalid_seats = true;
+						}
+					}
+					else
+					{
+						ModEntry.log($"Seat at {seat_token.Path} should be a model.", LogLevel.Error);
+						has_invalid_seats = true;
+					}
+				}
+				if (has_invalid_seats)
+				{
+					ModEntry.log($"Invalid seat(s) skipped in Furniture {id}, See log for info.", LogLevel.Warn);
+				}
+			}
+			else throw new InvalidDataException($"Invalid Seats for Furniture {id}, should be a list of seats.");
 		}
 
 		public string get_string_data()
@@ -315,6 +356,65 @@ namespace FurnitureFramework
 			}
 
 			ModEntry.print_debug = false;
+		}
+
+		public List<Vector2> get_seat_positions(Furniture furniture)
+		{
+			List<Vector2> list = new List<Vector2>();
+
+			int cur_rot = furniture.currentRotation.Value;
+			
+			foreach (SeatData seat in seats)
+			{
+				if (seat.can_sit(cur_rot))
+				{
+					list.Add(furniture.TileLocation + seat.position);
+				}
+			}
+
+			return list;
+		}
+
+		public int get_sitting_direction(Furniture furniture, Farmer who)
+		{
+			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
+
+			int rot = furniture.currentRotation.Value;
+			foreach (SeatData seat in seats)
+			{
+				int? seat_dir = seat.get_dir(rot);
+				if (seat_dir != null)
+				{
+					if (seat_index == 0)
+						return (int)seat_dir;
+					seat_index--;
+				}
+			}
+
+			return who.FacingDirection;
+		}
+		
+		public bool check_for_action(Furniture furniture, Farmer who, bool justCheckingForActivity)
+		{
+			// Shop
+
+			// Play Sound
+
+			// Toggle
+
+			// Seat
+
+			if (seats.Count > 0)
+			{
+				who.BeginSitting(furniture);
+				return true;
+			}
+
+			// Take held object
+
+
+
+			return false;
 		}
 	}
 

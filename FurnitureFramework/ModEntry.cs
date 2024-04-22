@@ -39,18 +39,18 @@ namespace FurnitureFramework
 			monitor = Monitor;
 			ModEntry.helper = Helper;
 			HarmonyPatcher.harmony = new(ModManifest.UniqueID);
-            helper.Events.Input.ButtonPressed += OnButtonPressed;
+            helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
 			
 			HarmonyPatcher.patch();
 
+			return;
 			// for quick access to decompiled code
 			Furniture test = new();
 			// Object test;
 			// GameLocation location = new();
-			// Farmer farmer = new();
-			return;
+			Farmer farmer = new();
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
@@ -120,10 +120,10 @@ namespace FurnitureFramework
 		}
 
 
-        /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
+        /// <inheritdoc cref="IInputEvents.ButtonPressed"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
+        private void on_button_pressed(object? sender, ButtonPressedEventArgs e)
         {
             // ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady)
@@ -132,6 +132,7 @@ namespace FurnitureFramework
 			if (e.Button == SButton.K)
 				print_debug = true;
         }
+
 
         /// <inheritdoc cref="IContentEvents.AssetRequested"/>
         /// <param name="sender">The event sender.</param>

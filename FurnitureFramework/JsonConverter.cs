@@ -132,6 +132,7 @@ namespace FurnitureFramework
 			{
 				foreach (JToken sub_token in array.Children())
 				{
+					if (sub_token.Type == JTokenType.Comment) continue;
 					get_list_of_string(sub_token, list);
 				}
 			}
