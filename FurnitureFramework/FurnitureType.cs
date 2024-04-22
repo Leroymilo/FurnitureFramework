@@ -263,34 +263,12 @@ namespace FurnitureFramework
 					furniture.boundingBox.X,
 					furniture.boundingBox.Y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
 				);
-				if (furniture.shakeTimer > 0) {
-					position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
-				}
-				position = Game1.GlobalToLocal(Game1.viewport, position);
 
-				// drawing a part of the furniture in front of the player
 				if (furniture.HasSittingFarmers())
 				{
 					depth = (furniture.boundingBox.Value.Top + 16) / 10000f;
-					float front_depth = (furniture.boundingBox.Value.Bottom - 8) / 10000f;
-
-					if (
-						has_front && front_texture != null &&
-						front_source_rects[rot].Right <= front_texture.Width &&
-						front_source_rects[rot].Bottom <= front_texture.Height
-					)
-					{
-						sprite_batch.Draw(
-							front_texture, position, front_source_rects[rot],
-							color, 0f, Vector2.Zero, 4f, effects, front_depth
-						);
-					}
+					// pushing the sprite deeper to make sure the player is drawn on top
 				}
-
-				sprite_batch.Draw(
-					texture, position, source_rects[rot],
-					color, 0f, Vector2.Zero, 4f, effects, depth
-				);
 			}
 
 			// when the furniture follows the cursor
@@ -300,16 +278,33 @@ namespace FurnitureFramework
 					64*x,
 					64*y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
 				);
-				if (furniture.shakeTimer > 0) {
-					position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
-				}
-				position = Game1.GlobalToLocal(Game1.viewport, position);
+			}
 
+			if (furniture.shakeTimer > 0) {
+				position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
+			}
+			position = Game1.GlobalToLocal(Game1.viewport, position);
+
+			sprite_batch.Draw(
+				texture, position, source_rects[rot],
+				color, 0f, Vector2.Zero, 4f, effects, depth
+			);
+
+			if (
+				furniture.HasSittingFarmers() &&
+				has_front && front_texture != null &&
+				front_source_rects[rot].Right <= front_texture.Width &&
+				front_source_rects[rot].Bottom <= front_texture.Height
+			)
+			{
+				// Drawing on top of farmer when sitting on furniture
 				sprite_batch.Draw(
-					texture, position, source_rects[rot],
-					color, 0f, Vector2.Zero, 4f, effects, depth
+					front_texture, position, front_source_rects[rot],
+					color, 0f, Vector2.Zero, 4f, effects, 
+					(furniture.boundingBox.Value.Bottom - 8) / 10000f
 				);
 			}
+
 
 			// vanilla method
 
