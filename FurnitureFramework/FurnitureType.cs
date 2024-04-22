@@ -268,20 +268,24 @@ namespace FurnitureFramework
 				}
 				position = Game1.GlobalToLocal(Game1.viewport, position);
 
-				// // drawing a part of the furniture in front of the player
-				// if (furniture.HasSittingFarmers())	// TODO : replace for custom seats support
-				// {
-				// 	depth = furniture.boundingBox.Value.Top + 16 / 10000f;
-				// 	float front_depth = (furniture.boundingBox.Value.Bottom - 8) / 10000f;
+				// drawing a part of the furniture in front of the player
+				if (furniture.HasSittingFarmers())
+				{
+					depth = (furniture.boundingBox.Value.Top + 16) / 10000f;
+					float front_depth = (furniture.boundingBox.Value.Bottom - 8) / 10000f;
 
-				// 	if (has_front && front_texture != null && front_source_rects[rot].Right <= front_texture.Width && front_source_rects[rot].Bottom <= front_texture.Height)
-				// 	{
-				// 		sprite_batch.Draw(
-				// 			front_texture, position, front_source_rects[rot],
-				// 			color, 0f, Vector2.Zero, 4f, effects, front_depth
-				// 		);
-				// 	}
-				// }
+					if (
+						has_front && front_texture != null &&
+						front_source_rects[rot].Right <= front_texture.Width &&
+						front_source_rects[rot].Bottom <= front_texture.Height
+					)
+					{
+						sprite_batch.Draw(
+							front_texture, position, front_source_rects[rot],
+							color, 0f, Vector2.Zero, 4f, effects, front_depth
+						);
+					}
+				}
 
 				sprite_batch.Draw(
 					texture, position, source_rects[rot],

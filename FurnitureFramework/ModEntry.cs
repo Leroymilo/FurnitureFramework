@@ -47,10 +47,10 @@ namespace FurnitureFramework
 
 			return;
 			// for quick access to decompiled code
-			Furniture test = new();
+			// Furniture test = new();
 			// Object test;
 			// GameLocation location = new();
-			Farmer farmer = new();
+			// Farmer farmer = new();
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
