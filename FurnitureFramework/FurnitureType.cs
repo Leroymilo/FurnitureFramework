@@ -206,7 +206,7 @@ namespace FurnitureFramework
 			string result = display_name;
 			result += $"/{type}";
 			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
-			result += $"/{bb_sizes[0].X} {bb_sizes[0].X}";
+			result += $"/{bb_sizes[0].X} {bb_sizes[0].Y}";
 			result += $"/{rotations}";
 			result += $"/{price}";
 			result += $"/{placement_rules}";
