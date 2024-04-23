@@ -45,10 +45,10 @@ namespace FurnitureFramework
 			
 			HarmonyPatcher.patch();
 
-			return;
 			// for quick access to decompiled code
-			// Furniture test = new();
+			Furniture test = new();
 			// Object test;
+			return;
 			// GameLocation location = new();
 			// Farmer farmer = new();
         }

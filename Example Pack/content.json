@@ -165,10 +165,10 @@
 					"Player Direction": 1
 				}
 			]
-		},
+		}//,
 
-		"armchair_test": {
+		// "armchair_test": {
 			
-		}
+		// }
 	}
 }

@@ -357,9 +357,9 @@ namespace FurnitureFramework
 			ModEntry.print_debug = false;
 		}
 
-		public List<Vector2> get_seat_positions(Furniture furniture)
+		public void GetSeatPositions(Furniture furniture, ref List<Vector2> list)
 		{
-			List<Vector2> list = new List<Vector2>();
+			// This is a postfix, it keeps the original seat positions.
 
 			int cur_rot = furniture.currentRotation.Value;
 			
@@ -370,31 +370,37 @@ namespace FurnitureFramework
 					list.Add(furniture.TileLocation + seat.position);
 				}
 			}
-
-			return list;
 		}
 
-		public int get_sitting_direction(Furniture furniture, Farmer who)
+		public void GetSittingDirection(Furniture furniture, Farmer who, ref int sit_dir)
 		{
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
 
 			int rot = furniture.currentRotation.Value;
+			bool found_seat = false;
 			foreach (SeatData seat in seats)
 			{
 				int? seat_dir = seat.get_dir(rot);
 				if (seat_dir != null)
 				{
 					if (seat_index == 0)
-						return (int)seat_dir;
+					{
+						sit_dir = (int)seat_dir;
+						found_seat = true;
+						break;
+					}
 					seat_index--;
 				}
 			}
 
-			return who.FacingDirection;
+			if (!found_seat) sit_dir = who.FacingDirection;
 		}
 		
-		public bool check_for_action(Furniture furniture, Farmer who, bool justCheckingForActivity)
+		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
 		{
+			if (justCheckingForActivity) return;
+			// had_action is already true from original method
+
 			// Shop
 
 			// Play Sound
@@ -406,14 +412,11 @@ namespace FurnitureFramework
 			if (seats.Count > 0)
 			{
 				who.BeginSitting(furniture);
-				return true;
+				had_action = true;
 			}
 
 			// Take held object
 
-
-
-			return false;
 		}
 	}
 

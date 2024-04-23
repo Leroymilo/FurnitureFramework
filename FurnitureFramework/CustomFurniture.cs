@@ -1,0 +1,11 @@
+
+
+namespace FurnitureFramework
+{
+
+	class CustomFurniture
+	{
+		
+	}
+
+}
