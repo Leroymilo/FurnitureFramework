@@ -1,11 +1,9 @@
-
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Minigames;
 using StardewValley.Objects;
 
 
@@ -20,7 +18,7 @@ namespace FurnitureFramework
 		string display_name;
 		string type;
 
-		uint rotations;
+		int rotations;
 		List<string> rot_names = new();
 
 		List<Point> bb_sizes = new();
@@ -119,7 +117,7 @@ namespace FurnitureFramework
 			{
 				try
 				{
-					rotations = (uint)rot_value;
+					rotations = (int)rot_value;
 				}
 				catch
 				{
@@ -156,7 +154,7 @@ namespace FurnitureFramework
 				if (has_null_keys)
 					ModEntry.log($"Invalid rotation(s) skipped in Furniture {id}.", LogLevel.Warn);
 				
-				rotations = (uint)rot_names.Count;
+				rotations = rot_names.Count;
 				return;
 			}
 
@@ -217,7 +215,7 @@ namespace FurnitureFramework
 			if (context_tags.Count > 0)
 				result += $"/" + context_tags.Join(delimiter: " ");
 
-			ModEntry.log(result);
+			// ModEntry.log(result);
 
 			return result;
 		}
@@ -232,7 +230,15 @@ namespace FurnitureFramework
 			if (bb_sizes.Count == 1)
 				return bb_sizes[0];
 			
-			return get_bb_size(rot);
+			return bb_sizes[rot];
+		}
+
+		private Rectangle get_bb(int rot, Vector2 pos)
+		{
+			return new(
+				pos.ToPoint() * new Point(64),
+				get_bb_size(rot) * new Point(64)
+			);
 		}
 
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
@@ -245,12 +251,13 @@ namespace FurnitureFramework
 			Color color = Color.White * alpha;
 			float depth;
 			Vector2 position;
+			Rectangle bounding_box = get_bb(rot, furniture.TileLocation);
 
 			// computing common depth :
 			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
 			{
-				depth = furniture.boundingBox.Value.Bottom;
+				depth = bounding_box.Bottom;
 				if (is_mural) depth -= 48;
 				else depth -= 8;
 			}
@@ -260,13 +267,13 @@ namespace FurnitureFramework
 			if (Furniture.isDrawingLocationFurniture)
 			{
 				position = new(
-					furniture.boundingBox.X,
-					furniture.boundingBox.Y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
+					bounding_box.X,
+					bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height)
 				);
 
 				if (furniture.HasSittingFarmers())
 				{
-					depth = (furniture.boundingBox.Value.Top + 16) / 10000f;
+					depth = (bounding_box.Top + 16) / 10000f;
 					// pushing the sprite deeper to make sure the player is drawn on top
 				}
 			}
@@ -276,7 +283,7 @@ namespace FurnitureFramework
 			{
 				position = new(
 					64*x,
-					64*y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64)
+					64*y - (source_rects[rot].Height * 4 - bounding_box.Height)
 				);
 			}
 
@@ -301,12 +308,11 @@ namespace FurnitureFramework
 				sprite_batch.Draw(
 					front_texture, position, front_source_rects[rot],
 					color, 0f, Vector2.Zero, 4f, effects, 
-					(furniture.boundingBox.Value.Bottom - 8) / 10000f
+					(bounding_box.Bottom - 8) / 10000f
 				);
 			}
 
-
-			// vanilla method
+			#region vanilla method
 
 			// // CODE FOR ITEM ON TABLE
 			// if (heldObject.Value != null)
@@ -350,9 +356,11 @@ namespace FurnitureFramework
 
 			if (Game1.debugMode)
 			{
-				Vector2 draw_pos = new(furniture.boundingBox.X, furniture.boundingBox.Y - (source_rects[rot].Height * 4 - get_bb_size(rot).Y * 64));
+				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
+
+			#endregion
 
 			ModEntry.print_debug = false;
 		}
@@ -418,6 +426,29 @@ namespace FurnitureFramework
 			// Take held object
 
 		}
-	}
 
+		public void rotate(Furniture furniture)
+		{
+			furniture.currentRotation.Value =
+				(furniture.currentRotation.Value + 1) % rotations;
+			furniture.updateRotation();
+		}
+
+		public void updateRotation(Furniture furniture)
+		{
+			furniture.boundingBox.Value = get_bb(furniture.currentRotation.Value, furniture.TileLocation);
+		}
+
+		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
+		{
+			if (!get_bb(furniture.currentRotation.Value, furniture.TileLocation).Intersects(rect))
+			{
+				collides = false;
+				return;
+			}
+
+			// collision map check TODO
+			collides = true;
+		}
+	}
 }

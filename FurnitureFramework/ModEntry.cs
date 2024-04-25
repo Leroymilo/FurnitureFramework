@@ -46,8 +46,8 @@ namespace FurnitureFramework
 			HarmonyPatcher.patch();
 
 			// for quick access to decompiled code
-			Furniture test = new();
-			// Object test;
+			// Furniture Ftest = new();
+			// StardewValley.Object Otest = new();
 			return;
 			// GameLocation location = new();
 			// Farmer farmer = new();

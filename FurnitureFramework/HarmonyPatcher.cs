@@ -6,13 +6,16 @@ using System.Reflection;
 namespace FurnitureFramework
 {
 
+	// TO PATCH :
+	// Object.drawPlacementBounds to draw only squares with collision.
+
 	class HarmonyPatcher
 	{
 		public static Harmony harmony;
 
 		public static void patch()
 		{
-			foreach (MethodInfo method in typeof(Prefixes).GetMethods(
+			foreach (MethodInfo method in typeof(FurniturePrefixes).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 			))
 			{
@@ -29,7 +32,7 @@ namespace FurnitureFramework
 				);
 			}
 
-			foreach (MethodInfo method in typeof(Postfixes).GetMethods(
+			foreach (MethodInfo method in typeof(FurniturePostfixes).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 			))
 			{

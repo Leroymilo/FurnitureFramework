@@ -43,11 +43,11 @@ namespace FurnitureFramework
 			string inv_rect_msg = $"Invalid Position definition at {token.Path}.";
 			if (token is JObject rect_data)
 			{
-				int value = rect_data.Value<int?>("X")
+				float value = rect_data.Value<float?>("X")
 					?? throw new InvalidDataException(inv_rect_msg);
 				result.X = value;
 
-				value = rect_data.Value<int?>("Y")
+				value = rect_data.Value<float?>("Y")
 					?? throw new InvalidDataException(inv_rect_msg);
 				result.Y = value;
 

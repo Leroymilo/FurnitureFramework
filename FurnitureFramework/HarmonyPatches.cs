@@ -7,7 +7,7 @@ using StardewValley.Objects;
 namespace FurnitureFramework
 {
 
-	internal class Prefixes
+	internal class FurniturePrefixes
 	{
 		#region draw
 
@@ -37,10 +37,57 @@ namespace FurnitureFramework
 
 		#endregion
 
+		#region rotate
+
+		internal static bool rotate(
+			Furniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				if (furniture_type == null) return true; // run original logic
+
+				furniture_type.rotate(__instance);
+				return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(rotate)}:\n{ex}", LogLevel.Error);
+				return true; // run original logic
+			}
+		}
+
+		#endregion
 	}
 
-	internal class Postfixes
+	internal class FurniturePostfixes
 	{
+		#region updateRotation
+
+		internal static void updateRotation(Furniture __instance)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.updateRotation(__instance
+				);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(updateRotation)}:\n{ex}", LogLevel.Error);
+			}
+		}
+
+		#endregion
 
 		#region GetSeatPositions
 
@@ -116,6 +163,29 @@ namespace FurnitureFramework
 
 		#endregion
 
-	}
+		#region IntersectsForCollision
 
+		internal static bool IntersectsForCollision(
+			bool __result, Furniture __instance,
+			Rectangle rect
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.IntersectsForCollision(__instance, rect, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+	}
 }
