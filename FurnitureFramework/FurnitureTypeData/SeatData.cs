@@ -6,6 +6,20 @@ using Newtonsoft.Json.Linq;
 namespace FurnitureFramework
 {
 
+	class Seats
+	{
+		#region SeatData
+
+		private class SeatData
+		{
+
+		}
+
+		#endregion
+
+		
+	}
+
 	struct SeatData
 	{
 		public Vector2 position {get; private set;}

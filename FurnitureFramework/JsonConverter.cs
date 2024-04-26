@@ -21,20 +21,20 @@ namespace FurnitureFramework
 		{
 			Point result = Point.Zero;
 			
-			string inv_rect_msg = $"Invalid Size definition at {token.Path}.";
+			string inv_size_msg = $"Invalid Size definition at {token.Path}.";
 			if (token is JObject rect_data)
 			{
 				int value = rect_data.Value<int?>("Width")
-					?? throw new InvalidDataException(inv_rect_msg);
+					?? throw new InvalidDataException(inv_size_msg);
 				result.X = value;
 
 				value = rect_data.Value<int?>("Height")
-					?? throw new InvalidDataException(inv_rect_msg);
+					?? throw new InvalidDataException(inv_size_msg);
 				result.Y = value;
 
 				return result;
 			}
-			throw new InvalidDataException(inv_rect_msg);
+			throw new InvalidDataException(inv_size_msg);
 		}
 		public static Vector2 extract_position(JToken token)
 		{

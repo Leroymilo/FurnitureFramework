@@ -8,8 +8,10 @@
 			"Price": 0,
 
 			"Rotations": 1,
-			"Bounding Box Size": {"Width": 1, "Height": 1},	// in tiles
-			"Collisions": null,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
 
 			"Force Type": null,
 
@@ -18,28 +20,15 @@
 
 			"Texture": "assets/simple.png",
 			"SourceRect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
-			// "Front Texture": null,
-			// "Front SourceRect": null,//{"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
 
 			"Exclude from Random Sales": true,
 			// "Attached Shop": null,	// to make a catalogue-like furniture
 
 			"Context Tags": []
 
-			// "Is TV": false,
-			// "TV Tiles": [],
-
-
 			// "Table Slots": [
 			// 	{
 			// 		"Position": {"X": 8, "Y": 8},	// in pixels
-			// 		"For Rotations": 0
-			// 	}
-			// ],
-			// "Seats": [
-			// 	{
-			// 		"Position": {"X": 8, "Y": 8},	// in pixels
-			// 		"Direction": 0,
 			// 		"For Rotations": 0
 			// 	}
 			// ],
@@ -69,7 +58,8 @@
 			// "Is Dresser": false,
 			// "Is Rug": false,
 			// "Is Mural": false,
-			// "Is Bed": false
+			// "Is Bed": false,
+			// "Is TV": false
 		},
 
 		"chair_test": {
@@ -80,7 +70,10 @@
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
 			// keys used in all other directional values
-			"Bounding Box Size": {"Width": 1, "Height": 1},	// in tiles
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
 
 			"Indoors": true,
 			"Outdoors": true,
@@ -93,14 +86,18 @@
 				"Left":		{"X": 48, "Y": 0, "Width": 16, "Height": 32}
 				// must have all directions
 			},	// in pixels
-			"Front Texture": "assets/chair.png",
-			"Front SourceRect": {
-				"Down":		{"X": 0,  "Y": 32, "Width": 16, "Height": 32},
-				"Right":	{"X": 16, "Y": 32, "Width": 16, "Height": 32},
-				"Up":		{"X": 32, "Y": 32, "Width": 16, "Height": 32},
-				"Left":		{"X": 48, "Y": 32, "Width": 16, "Height": 32}
-				// must have all directions
-			},	// in pixels
+			"Layers": [
+				{
+					"Texture": "assets/chair.png",
+					"SourceRect": {
+						"Up": {"X": 32, "Y": 32, "Width": 16, "Height": 32}
+					},	// in pixels
+					"Draw Pos": {"X": 0, "Y": 0},	// Where to draw the layer, in pixels, relative to the back texture
+					// Defaults to {"X": 0, "Y": 0}
+					"Layer Tile": 0	// Couting from the bottom of the bounding box
+					// Defaults to 0
+				}
+			],
 
 			"Exclude from Random Sales": true,
 
@@ -122,99 +119,269 @@
 			]
 		},
 
-		"armchair_test": {
+		// "armchair_test": {
 
-			"Display Name": "Armchair Test",
+		// 	"Display Name": "Armchair Test",
+		// 	"Price": 0,
+
+		// 	"Rotations": 4,
+		// 	// "Rotations": ["Down", "Right", "Up", "Left"],
+		// 	// keys used in all other directional values
+		// 	"Bounding Box Size": {"Width": 2, "Height": 1},
+
+		// 	"Indoors": true,
+		// 	"Outdoors": true,
+
+		// 	"Texture": "assets/armchair.png",
+		// 	"SourceRect": {
+		// 		"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
+		// 		"Right":	{"X": 32, "Y": 0, "Width": 32, "Height": 32},
+		// 		"Up":		{"X": 64, "Y": 0, "Width": 32, "Height": 32},
+		// 		"Left":		{"X": 96, "Y": 0, "Width": 32, "Height": 32}
+		// 		// must have all directions
+		// 	},	// in pixels
+		// 	"Front Texture": "assets/armchair.png",
+		// 	"Front SourceRect": {
+		// 		"Down":		{"X": 0,  "Y": 32, "Width": 32, "Height": 32},
+		// 		"Right":	{"X": 32, "Y": 32, "Width": 32, "Height": 32},
+		// 		"Up":		{"X": 64, "Y": 32, "Width": 32, "Height": 32},
+		// 		"Left":		{"X": 96, "Y": 32, "Width": 32, "Height": 32}
+		// 		// must have all directions
+		// 	},	// in pixels
+
+		// 	"Exclude from Random Sales": true,
+
+		// 	"Context Tags": [],
+
+		// 	"Seats": [
+		// 		// positions are from the top left of the Bounding Box (not the texture!)
+		// 		{
+		// 			"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Up": 0,
+		// 				"Down": 2
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Right": 1
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Left": 3
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		}
+		// 	]
+		// },
+
+		// "bench_test": {
+
+		// 	"Display Name": "Bench Test",
+		// 	"Price": 0,
+
+		// 	"Rotations": 4,
+		// 	// "Rotations": ["Down", "Right", "Up", "Left"],
+		// 	// keys used in all other directional values
+		// 	"Bounding Box Size": {
+		// 		"Down": 	{"Width": 2, "Height": 1},
+		// 		"Right": 	{"Width": 1, "Height": 2},
+		// 		"Up": 		{"Width": 2, "Height": 1},
+		// 		"Left": 	{"Width": 1, "Height": 2}
+		// 	},
+
+		// 	"Indoors": true,
+		// 	"Outdoors": true,
+
+		// 	"Texture": "assets/bench.png",
+		// 	"SourceRect": {
+		// 		"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
+		// 		"Right":	{"X": 32, "Y": 0, "Width": 16, "Height": 48},
+		// 		"Up":		{"X": 48, "Y": 0, "Width": 32, "Height": 32},
+		// 		"Left":		{"X": 80, "Y": 0, "Width": 16, "Height": 48}
+		// 		// must have all directions
+		// 	},	// in pixels
+		// 	"Front Texture": "assets/bench.png",
+		// 	"Front SourceRect": {
+		// 		"Down":		{"X": 0,  "Y": 48, "Width": 32, "Height": 32},
+		// 		"Right":	{"X": 32, "Y": 48, "Width": 16, "Height": 48},
+		// 		"Up":		{"X": 48, "Y": 48, "Width": 32, "Height": 32},
+		// 		"Left":		{"X": 80, "Y": 48, "Width": 16, "Height": 48}
+		// 		// must have all directions
+		// 	},	// in pixels
+
+		// 	"Exclude from Random Sales": true,
+
+		// 	"Context Tags": [],
+
+		// 	"Seats": [
+		// 		// positions are from the top left of the Bounding Box (not the texture!)
+		// 		{
+		// 			"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Up": 0,
+		// 				"Right": 1,
+		// 				"Down": 2,
+		// 				"Left": 3
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Up": 0,
+		// 				"Down": 2
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Right": 1,
+		// 				"Left": 3
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		}
+		// 	]
+		// },
+
+		// "couch_test": {
+
+		// 	"Display Name": "Couch Test",
+		// 	"Price": 0,
+
+		// 	"Rotations": 4,
+		// 	// "Rotations": ["Down", "Right", "Up", "Left"],
+		// 	// keys used in all other directional values
+		// 	"Bounding Box Size": {
+		// 		"Down": 	{"Width": 3, "Height": 1},
+		// 		"Right": 	{"Width": 2, "Height": 2},
+		// 		"Up": 		{"Width": 3, "Height": 1},
+		// 		"Left": 	{"Width": 2, "Height": 2}
+		// 	},
+
+		// 	"Indoors": true,
+		// 	"Outdoors": true,
+
+		// 	"Texture": "assets/couch.png",
+		// 	"SourceRect": {
+		// 		"Down":		{"X": 0,	"Y": 0, "Width": 48, "Height": 32},
+		// 		"Right":	{"X": 48,	"Y": 0, "Width": 32, "Height": 48},
+		// 		"Up":		{"X": 80,	"Y": 0, "Width": 48, "Height": 32},
+		// 		"Left":		{"X": 128,	"Y": 0, "Width": 32, "Height": 48}
+		// 		// must have all directions
+		// 	},	// in pixels
+		// 	"Front Texture": "assets/couch.png",
+		// 	"Front SourceRect": {
+		// 		"Down":		{"X": 0,	"Y": 48, "Width": 48, "Height": 32},
+		// 		"Right":	{"X": 48,	"Y": 48, "Width": 32, "Height": 48},
+		// 		"Up":		{"X": 80,	"Y": 48, "Width": 48, "Height": 32},
+		// 		"Left":		{"X": 128,	"Y": 48, "Width": 32, "Height": 48}
+		// 		// must have all directions
+		// 	},	// in pixels
+
+		// 	"Exclude from Random Sales": true,
+
+		// 	"Context Tags": [],
+
+		// 	"Seats": [
+		// 		// positions are from the top left of the Bounding Box (not the texture!)
+		// 		{
+		// 			"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Up": 0,
+		// 				"Down": 2
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 1.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Up": 0,
+		// 				"Down": 2
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Right": 1
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Right": 1
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Left": 3
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		},
+		// 		{
+		// 			"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+		// 			"Player Direction": {
+		// 				"Left": 3
+		// 			}	// structure is : {<furniture direction> : <player direction>}
+		// 			// player direction : Up->0, Right->1, Down->2, Left->3
+		// 		}
+		// 	]
+		// },
+
+		"living room": {
+
+			"Display Name": "Living Room",
 			"Price": 0,
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
 			// keys used in all other directional values
-			"Bounding Box Size": {"Width": 2, "Height": 1},
-
-			"Indoors": true,
-			"Outdoors": true,
-
-			"Texture": "assets/armchair.png",
-			"SourceRect": {
-				"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
-				"Right":	{"X": 32, "Y": 0, "Width": 32, "Height": 32},
-				"Up":		{"X": 64, "Y": 0, "Width": 32, "Height": 32},
-				"Left":		{"X": 96, "Y": 0, "Width": 32, "Height": 32}
-				// must have all directions
-			},	// in pixels
-			"Front Texture": "assets/armchair.png",
-			"Front SourceRect": {
-				"Down":		{"X": 0,  "Y": 32, "Width": 32, "Height": 32},
-				"Right":	{"X": 32, "Y": 32, "Width": 32, "Height": 32},
-				"Up":		{"X": 64, "Y": 32, "Width": 32, "Height": 32},
-				"Left":		{"X": 96, "Y": 32, "Width": 32, "Height": 32}
-				// must have all directions
-			},	// in pixels
-
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
+			"Collisions": {
+				"Down": 	{
+					"Width": 8, "Height": 3,
+					"Map": "..XXXX../XX....XX/......XX"
 				},
-				{
-					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
+				"Right": 	{
+					"Width": 5, "Height": 5,
+					"Map": "..XXX/XX.../XX.../XX.../..XX."
 				},
-				{
-					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
+				"Up": 		{
+					"Width": 8, "Height": 3,
+					"Map": "XX....../XX....XX/..XXXX.."
+				},
+				"Left": 	{
+					"Width": 5, "Height": 5,
+					"Map": ".XX../...XX/...XX/...XX/XXX.."
 				}
-			]
-		},
-
-		"bench_test": {
-
-			"Display Name": "Bench Test",
-			"Price": 0,
-
-			"Rotations": 4,
-			// "Rotations": ["Down", "Right", "Up", "Left"],
-			// keys used in all other directional values
-			"Bounding Box Size": {
-				"Down": 	{"Width": 2, "Height": 1},
-				"Right": 	{"Width": 1, "Height": 2},
-				"Up": 		{"Width": 2, "Height": 1},
-				"Left": 	{"Width": 1, "Height": 2}
 			},
 
 			"Indoors": true,
 			"Outdoors": true,
 
-			"Texture": "assets/bench.png",
+			"Texture": "assets/living_room.png",
 			"SourceRect": {
-				"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
-				"Right":	{"X": 32, "Y": 0, "Width": 16, "Height": 48},
-				"Up":		{"X": 48, "Y": 0, "Width": 32, "Height": 32},
-				"Left":		{"X": 80, "Y": 0, "Width": 16, "Height": 48}
+				"Down":		{"X": 0, "Y": 0, "Width": 128, "Height": 64},
+				"Right":	{"X": 0, "Y": 128, "Width": 80, "Height": 96},
+				"Up":		{"X": 0, "Y": 64, "Width": 128, "Height": 64},
+				"Left":		{"X": 80, "Y": 128, "Width": 80, "Height": 96}
 				// must have all directions
 			},	// in pixels
-			"Front Texture": "assets/bench.png",
+			"Front Texture": "assets/living_room.png",
 			"Front SourceRect": {
-				"Down":		{"X": 0,  "Y": 48, "Width": 32, "Height": 32},
-				"Right":	{"X": 32, "Y": 48, "Width": 16, "Height": 48},
-				"Up":		{"X": 48, "Y": 48, "Width": 32, "Height": 32},
-				"Left":		{"X": 80, "Y": 48, "Width": 16, "Height": 48}
+				"Down":		{"X": 160, "Y": 96, "Width": 128, "Height": 64},
+				"Right":	{"X": 128, "Y": 0, "Width": 80, "Height": 96},
+				"Up":		{"X": 160, "Y": 160, "Width": 128, "Height": 64},
+				"Left":		{"X": 208, "Y": 0, "Width": 80, "Height": 96}
 				// must have all directions
 			},	// in pixels
 
@@ -224,96 +391,40 @@
 
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Right": 1,
-						"Down": 2,
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
 				{
 					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1,
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				}
-			]
-		},
-
-		"couch_test": {
-
-			"Display Name": "Couch Test",
-			"Price": 0,
-
-			"Rotations": 4,
-			// "Rotations": ["Down", "Right", "Up", "Left"],
-			// keys used in all other directional values
-			"Bounding Box Size": {
-				"Down": 	{"Width": 3, "Height": 1},
-				"Right": 	{"Width": 2, "Height": 2},
-				"Up": 		{"Width": 3, "Height": 1},
-				"Left": 	{"Width": 2, "Height": 2}
-			},
-
-			"Indoors": true,
-			"Outdoors": true,
-
-			"Texture": "assets/couch.png",
-			"SourceRect": {
-				"Down":		{"X": 0,	"Y": 0, "Width": 48, "Height": 32},
-				"Right":	{"X": 48,	"Y": 0, "Width": 32, "Height": 48},
-				"Up":		{"X": 80,	"Y": 0, "Width": 48, "Height": 32},
-				"Left":		{"X": 128,	"Y": 0, "Width": 32, "Height": 48}
-				// must have all directions
-			},	// in pixels
-			"Front Texture": "assets/couch.png",
-			"Front SourceRect": {
-				"Down":		{"X": 0,	"Y": 48, "Width": 48, "Height": 32},
-				"Right":	{"X": 48,	"Y": 48, "Width": 32, "Height": 48},
-				"Up":		{"X": 80,	"Y": 48, "Width": 48, "Height": 32},
-				"Left":		{"X": 128,	"Y": 48, "Width": 32, "Height": 48}
-				// must have all directions
-			},	// in pixels
-
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
+						"Up": 1
 					}	// structure is : {<furniture direction> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
 					"Position": {"X": 1.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Up": 0,
-						"Down": 2
+						"Left": 2
 					}	// structure is : {<furniture direction> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 2.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Right": 1
+						"Down": 2,
+						"Right": 2
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 3.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Down": 2,
+						"Right": 2
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 4.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Down": 2
 					}	// structure is : {<furniture direction> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
@@ -325,16 +436,103 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Up": 1,
+						"Right": 1,
+						"Down": 1
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 3, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Left": 3
 					}	// structure is : {<furniture direction> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 6, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Up": 3,
+						"Down": 3
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 1, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Right": 1
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 2.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Up": 0
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 3, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Left": 3
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 3.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Up": 0
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 4.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Up": 0
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 6, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Down": 3
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 1, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Right": 1
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 3, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Left": 3
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 0.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Left": 0
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 1.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Left": 0
+					}	// structure is : {<furniture direction> : <player direction>}
+					// player direction : Up->0, Right->1, Down->2, Left->3
+				},
+				{
+					"Position": {"X": 2.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+					"Player Direction": {
+						"Right": 0
 					}	// structure is : {<furniture direction> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				}

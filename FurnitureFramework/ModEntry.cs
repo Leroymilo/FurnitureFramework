@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using System.Reflection.Metadata.Ecma335;
+using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -130,7 +131,10 @@ namespace FurnitureFramework
                 return;
 			
 			if (e.Button == SButton.K)
+			{
 				print_debug = true;
+				log("=== Debug Print for a frame ===", LogLevel.Info);
+			}
         }
 
 

@@ -21,7 +21,7 @@ namespace FurnitureFramework
 		int rotations;
 		List<string> rot_names = new();
 
-		List<Point> bb_sizes = new();
+		Collisions collisions;
 
 		uint price;
 		int placement_rules;
@@ -97,10 +97,8 @@ namespace FurnitureFramework
 
 			#endregion
 
-			JToken size_token = data.GetValue("Bounding Box Size")
-				?? throw new InvalidDataException($"Missing Bounding Box Size for Furniture {id}.");
-			JC.get_directional_sizes(size_token, bb_sizes, rot_names);
-			
+			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
+
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
 
@@ -204,13 +202,13 @@ namespace FurnitureFramework
 			string result = display_name;
 			result += $"/{type}";
 			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
-			result += $"/{bb_sizes[0].X} {bb_sizes[0].Y}";
+			result += $"/1 1";	// overwritten by updateRotation
 			result += $"/{rotations}";
 			result += $"/{price}";
 			result += $"/{placement_rules}";
 			result += $"/{display_name}";
 			result += $"/0";
-			result += $"/{id}";
+			result += $"/{id}";	// texture path
 			result += $"/{exclude_from_random_sales}";
 			if (context_tags.Count > 0)
 				result += $"/" + context_tags.Join(delimiter: " ");
@@ -225,25 +223,10 @@ namespace FurnitureFramework
 			return texture;
 		}
 
-		private Point get_bb_size(int rot)
-		{
-			if (bb_sizes.Count == 1)
-				return bb_sizes[0];
-			
-			return bb_sizes[rot];
-		}
-
-		private Rectangle get_bb(int rot, Vector2 pos)
-		{
-			return new(
-				pos.ToPoint() * new Point(64),
-				get_bb_size(rot) * new Point(64)
-			);
-		}
-
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
 			int rot = furniture.currentRotation.Value;
+			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
 			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
 
@@ -251,7 +234,7 @@ namespace FurnitureFramework
 			Color color = Color.White * alpha;
 			float depth;
 			Vector2 position;
-			Rectangle bounding_box = get_bb(rot, furniture.TileLocation);
+			Rectangle bounding_box = collisions.get_bounding_box(pos, rot);
 
 			// computing common depth :
 			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
@@ -362,7 +345,7 @@ namespace FurnitureFramework
 
 			#endregion
 
-			ModEntry.print_debug = false;
+			// ModEntry.print_debug = false;
 		}
 
 		public void GetSeatPositions(Furniture furniture, ref List<Vector2> list)
@@ -436,19 +419,16 @@ namespace FurnitureFramework
 
 		public void updateRotation(Furniture furniture)
 		{
-			furniture.boundingBox.Value = get_bb(furniture.currentRotation.Value, furniture.TileLocation);
+			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+			furniture.boundingBox.Value = collisions.get_bounding_box(pos);
 		}
 
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
 		{
-			if (!get_bb(furniture.currentRotation.Value, furniture.TileLocation).Intersects(rect))
-			{
-				collides = false;
-				return;
-			}
-
-			// collision map check TODO
-			collides = true;
+			int rot = furniture.currentRotation.Value;
+			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+			collides = collisions.is_colliding(rect, pos, rot);
+			return;
 		}
 	}
 }
