@@ -12,6 +12,8 @@ namespace FurnitureFramework
 
 	class FurnitureType
 	{
+		private static string[] forbidden_rotation_names = {"Width", "Height"};
+
 		string mod_id;
 
 		public readonly string id;
@@ -35,7 +37,7 @@ namespace FurnitureFramework
 		bool exclude_from_random_sales;
 		List<string> context_tags = new();
 
-		List<SeatData> seats = new();
+		Seats seats;
 
 		// TO ADD : torch fire positions, seats, placement spots
 
@@ -99,10 +101,10 @@ namespace FurnitureFramework
 
 			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
 
+			seats = new(data.GetValue("Seats"), rot_names);
+
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
-
-			parse_seats(data);
 		}
 
 		public void parse_rotations(JObject data)
@@ -157,44 +159,6 @@ namespace FurnitureFramework
 			}
 
 			throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
-		}
-
-		public void parse_seats(JObject data)
-		{
-			JToken? seats_token = data.GetValue("Seats");
-			if (seats_token == null || seats_token.Type == JTokenType.Null) return;
-
-			if (seats_token is JArray seat_array)
-			{
-				bool has_invalid_seats = false;
-				foreach (JToken seat_token in seat_array.Children())
-				{
-					if (seat_token.Type == JTokenType.Comment) continue;
-
-					if (seat_token is JObject seat_obj)
-					{
-						try
-						{
-							seats.Add(new(seat_obj, rot_names));
-						}
-						catch (InvalidDataException ex)
-						{
-							ModEntry.log($"{ex}", LogLevel.Error);
-							has_invalid_seats = true;
-						}
-					}
-					else
-					{
-						ModEntry.log($"Seat at {seat_token.Path} should be a model.", LogLevel.Error);
-						has_invalid_seats = true;
-					}
-				}
-				if (has_invalid_seats)
-				{
-					ModEntry.log($"Invalid seat(s) skipped in Furniture {id}, See log for info.", LogLevel.Warn);
-				}
-			}
-			else throw new InvalidDataException($"Invalid Seats for Furniture {id}, should be a list of seats.");
 		}
 
 		public string get_string_data()
@@ -353,38 +317,18 @@ namespace FurnitureFramework
 			// This is a postfix, it keeps the original seat positions.
 
 			int cur_rot = furniture.currentRotation.Value;
+			Vector2 tile_pos = furniture.TileLocation;
 			
-			foreach (SeatData seat in seats)
-			{
-				if (seat.can_sit(cur_rot))
-				{
-					list.Add(furniture.TileLocation + seat.position);
-				}
-			}
+			seats.get_seat_positions(cur_rot, tile_pos, list);
 		}
 
 		public void GetSittingDirection(Furniture furniture, Farmer who, ref int sit_dir)
 		{
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
-
 			int rot = furniture.currentRotation.Value;
-			bool found_seat = false;
-			foreach (SeatData seat in seats)
-			{
-				int? seat_dir = seat.get_dir(rot);
-				if (seat_dir != null)
-				{
-					if (seat_index == 0)
-					{
-						sit_dir = (int)seat_dir;
-						found_seat = true;
-						break;
-					}
-					seat_index--;
-				}
-			}
 
-			if (!found_seat) sit_dir = who.FacingDirection;
+			int? new_sit_dir = seats.get_sitting_direction(rot, seat_index);
+			if (new_sit_dir != null) sit_dir = (int)new_sit_dir;
 		}
 		
 		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
@@ -400,7 +344,7 @@ namespace FurnitureFramework
 
 			// Seat
 
-			if (seats.Count > 0)
+			if (seats.has_seats)
 			{
 				who.BeginSitting(furniture);
 				had_action = true;
@@ -419,8 +363,9 @@ namespace FurnitureFramework
 
 		public void updateRotation(Furniture furniture)
 		{
+			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
-			furniture.boundingBox.Value = collisions.get_bounding_box(pos);
+			furniture.boundingBox.Value = collisions.get_bounding_box(pos, rot);
 		}
 
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)

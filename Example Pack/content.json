@@ -106,7 +106,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Right": 1,
@@ -117,6 +117,33 @@
 					// omitting a furniture direction will remove this seat when the furniture is in this direction
 				}
 			]
+			// alternate :
+			// "Seats": {
+			// 	"Up": [
+			// 		{
+			// 			"X": 0, "Y": 0,
+			// 			"Player Direction": 0
+			// 		}
+			// 	],
+			// 	"Right": [
+			// 		{
+			// 			"X": 0, "Y": 0,
+			// 			"Player Direction": 1
+			// 		}
+			// 	],
+			// 	"Down": [
+			// 		{
+			// 			"X": 0, "Y": 0,
+			// 			"Player Direction": 2
+			// 		}
+			// 	],
+			// 	"Left": [
+			// 		{
+			// 			"X": 0, "Y": 0,
+			// 			"Player Direction": 3
+			// 		}
+			// 	]
+			// }
 		},
 
 		// "armchair_test": {
@@ -338,7 +365,7 @@
 		// 	]
 		// },
 
-		"living room": {
+		"living_room": {
 
 			"Display Name": "Living Room",
 			"Price": 0,
@@ -389,154 +416,261 @@
 
 			"Context Tags": [],
 
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 2.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Down": 2,
-						"Right": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 3.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Down": 2,
-						"Right": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 4.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Down": 2
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 1,
-						"Right": 1,
-						"Down": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 3, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 6, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 3,
-						"Down": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 2.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 3, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 3.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 4.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 6, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Down": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 3, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 0.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 2.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 0
-					}	// structure is : {<furniture direction> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				}
-			]
+			"Seats": {
+				"Down": [
+					{
+						"X": 2.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 3.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 4.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 1, "Y": 1,
+						"Player Direction": 1
+					},
+					{
+						"X": 6, "Y": 1,
+						"Player Direction": 3
+					},
+					{
+						"X": 6, "Y": 2,
+						"Player Direction": 3
+					}
+				],
+				"Right": [
+					{
+						"X": 2.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 3.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 1, "Y": 1,
+						"Player Direction": 1
+					},
+					{
+						"X": 1, "Y": 2,
+						"Player Direction": 1
+					},
+					{
+						"X": 1, "Y": 3,
+						"Player Direction": 1
+					},
+					{
+						"X": 2.5, "Y": 4,
+						"Player Direction": 0
+					}
+				],
+				"Up": [
+					{
+						"X": 1, "Y": 0,
+						"Player Direction": 1
+					},
+					{
+						"X": 1, "Y": 1,
+						"Player Direction": 1
+					},
+					{
+						"X": 6, "Y": 1,
+						"Player Direction": 3
+					},
+					{
+						"X": 2.5, "Y": 2,
+						"Player Direction": 0
+					},
+					{
+						"X": 3.5, "Y": 2,
+						"Player Direction": 0
+					},
+					{
+						"X": 4.5, "Y": 2,
+						"Player Direction": 0
+					}
+				],
+				"Left": [
+					{
+						"X": 1.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 3, "Y": 1,
+						"Player Direction": 3
+					},
+					{
+						"X": 3, "Y": 2,
+						"Player Direction": 3
+					},
+					{
+						"X": 3, "Y": 3,
+						"Player Direction": 3
+					},
+					{
+						"X": 0.5, "Y": 4,
+						"Player Direction": 0
+					},
+					{
+						"X": 1.5, "Y": 4,
+						"Player Direction": 0
+					}
+				]
+			}
+
+			// "Seats": [
+			// 	// positions are from the top left of the Bounding Box (not the texture!)
+			// 	{
+			// 		"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 1
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 2
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 2.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Down": 2,
+			// 			"Right": 2
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 3.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Down": 2,
+			// 			"Right": 2
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 4.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Down": 2
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Right": 1
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 1,
+			// 			"Right": 1,
+			// 			"Down": 1
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 3, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 3
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 6, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 3,
+			// 			"Down": 3
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Right": 1
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 2.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 3, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 3
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 3.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 4.5, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Up": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 6, "Y": 2},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Down": 3
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Right": 1
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 3, "Y": 3},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 3
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 0.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 1.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Left": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	},
+			// 	{
+			// 		"Position": {"X": 2.5, "Y": 4},		// in tiles, can be decimal to sit between 2 tiles
+			// 		"Player Direction": {
+			// 			"Right": 0
+			// 		}	// structure is : {<furniture direction> : <player direction>}
+			// 		// player direction : Up->0, Right->1, Down->2, Left->3
+			// 	}
+			// ]
 		}
 	}
 }

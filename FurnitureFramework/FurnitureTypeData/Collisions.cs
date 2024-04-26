@@ -3,6 +3,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using StardewModdingAPI;
 
 namespace FurnitureFramework
 {
@@ -16,6 +17,7 @@ namespace FurnitureFramework
 		{
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
+
 			Point size = new();
 			Point game_size;
 
@@ -40,9 +42,6 @@ namespace FurnitureFramework
 				size.Y = (int)h_token;
 
 				is_valid = true;
-
-				// Pre-computing stuff
-
 				game_size = size * tile_game_size;
 
 				// Parsing optional custom collision map
@@ -153,7 +152,13 @@ namespace FurnitureFramework
 
 			// Case 2 : directional collisions
 			if (rotations == null)
-				throw new InvalidDataException($"Missing expected non-directional Collisions for non-directional Furniture {id}");
+			{
+				ModEntry.log(
+					$"Invalid non-directional Collisions for non-directional Furniture {id}",
+					LogLevel.Error
+				);
+				throw new InvalidDataException(single_collision.error_msg);
+			}
 			
 			foreach (string rot_name in rotations)
 			{
@@ -161,7 +166,8 @@ namespace FurnitureFramework
 				if (col_token == null || col_token is not JObject col_obj)
 				{
 					string msg = $"Collisions for {id} are invalid: ";
-					msg += "cannot parse as Single Collision nor Directional Collisions.";
+					msg += "cannot parse as Single Collision nor as Directional Collisions";
+					msg += $" (No Collision Data for rotation {rot_name}).";
 					throw new InvalidDataException(msg);
 				}
 				else
@@ -173,9 +179,11 @@ namespace FurnitureFramework
 					}
 					else
 					{
-						throw new InvalidDataException(
-							$"Invalid Directional Collision for {id} -> {rot_name}."
+						ModEntry.log(
+							$"Invalid Directional Collision for {id} -> {rot_name}.",
+							LogLevel.Error
 						);
+						throw new InvalidDataException(collision.error_msg);
 					}
 				}
 			}
