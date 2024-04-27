@@ -31,8 +31,7 @@ namespace FurnitureFramework
 		Texture2D texture;
 		List<Rectangle> source_rects = new();
 		
-		Texture2D? front_texture = null;
-		List<Rectangle> front_source_rects = new();
+		Layers layers;
 
 		bool exclude_from_random_sales;
 		List<string> context_tags = new();
@@ -42,7 +41,6 @@ namespace FurnitureFramework
 		// TO ADD : torch fire positions, seats, placement spots
 
 		bool is_rug = false;
-		bool has_front = false;
 		// bool can_be_toggled = false;
 		// bool can_be_placed_on = false;
 		bool is_mural = false;
@@ -70,32 +68,19 @@ namespace FurnitureFramework
 
 			#region textures & source rects
 
-			string text_path = data.Value<string>("Texture")
+			string text_path = data.Value<string>("Source Image")
 				?? throw new InvalidDataException($"Missing Texture for Furniture {id}");
 			texture = TextureManager.load(pack.ModContent, text_path);
 
-			JToken? rect_token = data.GetValue("SourceRect");
+			JToken? rect_token = data.GetValue("Source Rect");
 			if (rect_token != null && rect_token.Type != JTokenType.Null)
 				JC.get_directional_rectangles(rect_token, source_rects, rot_names);
 			else if (rotations == 1)
 				source_rects.Add(texture.Bounds);
 			else
-				throw new InvalidDataException($"Missing SourceRects for Furniture {id}.");
+				throw new InvalidDataException($"Missing Source Rectangles for Furniture {id}.");
 
-			string? front_text_path = data.Value<string?>("Front Texture");
-			if (front_text_path != null)
-				front_texture = TextureManager.load(pack.ModContent, front_text_path);
-
-			JToken? front_rect_token = data.GetValue("Front SourceRect");
-			if (front_rect_token != null && front_rect_token.Type != JTokenType.Null)
-				JC.get_directional_rectangles(front_rect_token, front_source_rects, rot_names);
-
-			if (front_texture != null || front_source_rects.Count > 0)
-			{
-				has_front = true;
-				front_texture ??= texture;
-				if (front_source_rects.Count == 0) front_source_rects = source_rects;
-			}
+			layers = new(data.GetValue("Layers"), rot_names, texture);
 
 			#endregion
 
@@ -204,7 +189,7 @@ namespace FurnitureFramework
 			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
 			{
-				depth = bounding_box.Bottom;
+				depth = bounding_box.Top + 16;
 				if (is_mural) depth -= 48;
 				else depth -= 8;
 			}
@@ -217,12 +202,6 @@ namespace FurnitureFramework
 					bounding_box.X,
 					bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height)
 				);
-
-				if (furniture.HasSittingFarmers())
-				{
-					depth = (bounding_box.Top + 16) / 10000f;
-					// pushing the sprite deeper to make sure the player is drawn on top
-				}
 			}
 
 			// when the furniture follows the cursor
@@ -244,18 +223,14 @@ namespace FurnitureFramework
 				color, 0f, Vector2.Zero, 4f, effects, depth
 			);
 
-			if (
-				furniture.HasSittingFarmers() &&
-				has_front && front_texture != null &&
-				front_source_rects[rot].Right <= front_texture.Width &&
-				front_source_rects[rot].Bottom <= front_texture.Height
-			)
+			if (Furniture.isDrawingLocationFurniture)
 			{
-				// Drawing on top of farmer when sitting on furniture
-				sprite_batch.Draw(
-					front_texture, position, front_source_rects[rot],
-					color, 0f, Vector2.Zero, 4f, effects, 
-					(bounding_box.Bottom - 8) / 10000f
+				if (ModEntry.print_debug) ModEntry.log("Drawing layers");
+
+				layers.draw(
+					sprite_batch, color,
+					position, bounding_box.Bottom,
+					rot
 				);
 			}
 
@@ -309,7 +284,7 @@ namespace FurnitureFramework
 
 			#endregion
 
-			// ModEntry.print_debug = false;
+			ModEntry.print_debug = false;
 		}
 
 		public void GetSeatPositions(Furniture furniture, ref List<Vector2> list)
