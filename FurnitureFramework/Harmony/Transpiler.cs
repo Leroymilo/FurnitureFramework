@@ -152,10 +152,6 @@ callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(v
 
 			
 			List<int> start_indices = find_start_indices(instructions, to_replace);
-			foreach (int index in start_indices)
-			{
-				ModEntry.log($"start index : {index}", LogLevel.Warn);
-			}
 
 			int k = 0;
 
@@ -177,13 +173,6 @@ callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(v
 				{
 					new_inst.Add(instructions.ElementAt(i));
 				}
-			}
-
-			int ii = 0;
-			foreach (CodeInstruction inst in new_inst)
-			{
-				ModEntry.log($"{ii}:  \t{inst.opcode} {inst.operand}");
-				ii++;
 			}
 
 			return new_inst;

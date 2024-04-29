@@ -67,7 +67,7 @@ namespace FurnitureFramework
 				);
 			}
 
-			ModEntry.log("Patching transpiler", LogLevel.Warn);
+			// ModEntry.log("Patching transpiler", LogLevel.Warn);
 
 			harmony.Patch(
 				original: AccessTools.DeclaredMethod(

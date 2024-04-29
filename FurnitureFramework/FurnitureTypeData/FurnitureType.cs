@@ -26,7 +26,7 @@ namespace FurnitureFramework
 
 		Collisions collisions;
 
-		uint price;
+		public readonly int price;
 		int placement_rules;
 		
 		Texture2D texture;
@@ -46,6 +46,8 @@ namespace FurnitureFramework
 		// bool can_be_placed_on = false;
 		bool is_mural = false;
 
+		public readonly string? shop_id = null;
+		public readonly HashSet<string> shops = new();
 
 		public FurnitureType(IContentPack pack, string id, JObject data)
 		{
@@ -55,7 +57,7 @@ namespace FurnitureFramework
 			this.id = $"{mod_id}.{id}";
 			display_name = JC.extract(data, "Display Name", "No Name");
 			type = JC.extract(data, "Force Type", "other");
-			price = JC.extract(data, "Price", 0U);
+			price = JC.extract(data, "Price", 0);
 			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", false);
 
 			placement_rules =
@@ -91,6 +93,24 @@ namespace FurnitureFramework
 
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
+
+			JToken? shop_id_token = data.GetValue("Shop Id");
+			if (shop_id_token != null && shop_id_token.Type == JTokenType.String)
+			{
+				shop_id = (string?)shop_id_token;
+			}
+
+			JToken? shops_token = data.GetValue("Shows in Shops");
+			if (shops_token is JArray shops_array)
+			{
+				foreach (JToken shop_token in shops_array.Children())
+				{
+					if (shop_token.Type != JTokenType.String) continue;
+					string? shop_str = (string?)shop_token;
+					if (shop_str == null) continue;
+					shops.Add(shop_str);
+				}
+			}
 		}
 
 		public void parse_rotations(JObject data)
@@ -311,6 +331,11 @@ namespace FurnitureFramework
 			// had_action is already true from original method
 
 			// Shop
+			if (shop_id != null)
+			{
+				if (Utility.TryOpenShopMenu(shop_id, Game1.currentLocation))
+					had_action = true;
+			}
 
 			// Play Sound
 

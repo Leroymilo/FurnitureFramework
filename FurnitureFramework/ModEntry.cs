@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
 
@@ -21,6 +22,7 @@ namespace FurnitureFramework
 
 
 		public static readonly Dictionary<string, FurnitureType> furniture = new();
+		public static readonly Dictionary<string, List<string>> shops = new();
 
 		static public IModHelper get_helper()
 		{
@@ -38,7 +40,7 @@ namespace FurnitureFramework
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
-			Harmony.DEBUG = true;
+			// Harmony.DEBUG = true;
 
 			monitor = Monitor;
 			ModEntry.helper = Helper;
@@ -48,14 +50,6 @@ namespace FurnitureFramework
 			helper.Events.Content.AssetRequested += on_asset_requested;
 			
 			HarmonyPatcher.patch();
-
-			// for quick access to decompiled code
-			Furniture Ftest = new();
-			StardewValley.Object Otest = new();
-			return;
-			GameLocation location;
-			Farmer farmer;
-			Utility test;
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
@@ -102,6 +96,7 @@ namespace FurnitureFramework
 				}
 				foreach((string key, JToken? f_data) in (JObject)furniture_token)
 				{
+					FurnitureType new_furniture;
 					if (f_data == null)
 					{
 						log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
@@ -109,13 +104,32 @@ namespace FurnitureFramework
 					}
 					try
 					{
-						FurnitureType new_furniture = new(pack, key, (JObject)f_data);
+						new_furniture = new(pack, key, (JObject)f_data);
 						furniture[new_furniture.id] = new_furniture;
 					}
 					catch (Exception ex)
 					{
 						log(ex.ToString(), LogLevel.Error);
 						log($"Failed to load data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
+						continue;
+					}
+
+					if (new_furniture.shop_id != null)
+					{
+						if (!shops.ContainsKey(new_furniture.shop_id))
+						{
+							shops[new_furniture.shop_id] = new();
+						}
+					}
+
+					foreach (string shop_id in new_furniture.shops)
+					{
+						if (!shops.ContainsKey(shop_id))
+						{
+							shops[shop_id] = new();
+						}
+
+						shops[shop_id].Add(new_furniture.id);
 					}
 				}
 			}
@@ -158,10 +172,61 @@ namespace FurnitureFramework
 				});
 			}
 
+			if (e.NameWithoutLocale.StartsWith("Data/Shops"))
+			{
+				e.Edit(asset => {
+					var editor = asset.AsDictionary<string, ShopData>().Data;
+					foreach ((string shop_id, List<string> f_ids) in shops)
+					{
+						log($"Adding shop: {shop_id}.");
+						if (!editor.ContainsKey(shop_id))
+						{
+							ShopData catalogue_shop_data = new()
+							{
+								CustomFields = new Dictionary<string, string>() {
+									{"HappyHomeDesigner/Catalogue", "true"}
+								},
+								Owners = new List<ShopOwnerData>() { 
+									new() { Name = "AnyOrNone" }
+								}
+							};
+							editor[shop_id] = catalogue_shop_data;
+						}
+
+						log($"Has {f_ids.Count} items.");
+						foreach (string f_id in f_ids)
+						{
+							if (!has_shop_item(editor[shop_id], f_id))
+							{
+								log($"Adding shop item: {f_id}");
+								ShopItemData shop_item_data = new()
+								{
+									Id = f_id,
+									ItemId = $"(F){f_id}",
+									Price = furniture[f_id].price
+								};
+
+								editor[shop_id].Items.Add(shop_item_data);
+							}
+						}
+					}
+				});
+			}
+
 			if (furniture.ContainsKey(e.Name.Name))
 			{
 				e.LoadFrom(furniture[e.Name.Name].get_icon_texture, AssetLoadPriority.Medium);
 			}
+		}
+
+		private bool has_shop_item(ShopData shop_data, string f_id)
+		{
+			foreach (ShopItemData shop_item_data in shop_data.Items)
+			{
+				if (shop_item_data.ItemId == $"(F){f_id}")
+					return true;
+			}
+			return false;
 		}
 
     }
