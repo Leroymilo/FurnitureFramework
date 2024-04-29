@@ -1,5 +1,6 @@
 using HarmonyLib;
 using StardewModdingAPI;
+using StardewValley;
 using StardewValley.Objects;
 using System.Reflection;
 
@@ -48,6 +49,35 @@ namespace FurnitureFramework
 					postfix: new(method)
 				);
 			}
+
+			foreach (MethodInfo method in typeof(LocationPostfixes).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
+			))
+			{
+				ModEntry.log($"Patching postfix : {method.Name}", LogLevel.Trace);
+
+				MethodInfo original = AccessTools.DeclaredMethod(
+					typeof(GameLocation),
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					postfix: new(method)
+				);
+			}
+
+			ModEntry.log("Patching transpiler", LogLevel.Warn);
+
+			harmony.Patch(
+				original: AccessTools.DeclaredMethod(
+					typeof(GameLocation),
+					"LowPriorityLeftClick"
+				),
+				transpiler: new HarmonyMethod(
+					AccessTools.Method(typeof(Transpiler), "transpiler")
+				)
+			);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using HarmonyLib;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -37,6 +38,8 @@ namespace FurnitureFramework
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
+			Harmony.DEBUG = true;
+
 			monitor = Monitor;
 			ModEntry.helper = Helper;
 			HarmonyPatcher.harmony = new(ModManifest.UniqueID);
@@ -47,11 +50,12 @@ namespace FurnitureFramework
 			HarmonyPatcher.patch();
 
 			// for quick access to decompiled code
-			// Furniture Ftest = new();
-			// StardewValley.Object Otest = new();
+			Furniture Ftest = new();
+			StardewValley.Object Otest = new();
 			return;
-			// GameLocation location = new();
-			// Farmer farmer = new();
+			GameLocation location;
+			Farmer farmer;
+			Utility test;
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
@@ -132,8 +136,8 @@ namespace FurnitureFramework
 			
 			if (e.Button == SButton.K)
 			{
-				print_debug = true;
-				log("=== Debug Print for a frame ===", LogLevel.Info);
+				print_debug = !print_debug;
+				log($"=== Debug Print {(print_debug ? "On": "Off")} ===", LogLevel.Info);
 			}
         }
 

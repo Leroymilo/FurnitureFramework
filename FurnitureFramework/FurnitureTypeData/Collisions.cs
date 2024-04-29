@@ -1,9 +1,11 @@
 
 
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewValley;
+using StardewValley.Objects;
+using StardewValley.TerrainFeatures;
 
 namespace FurnitureFramework
 {
@@ -23,7 +25,10 @@ namespace FurnitureFramework
 
 			bool has_tiles = false;
 			HashSet<Point> tiles = new();
+			HashSet<Point> game_tiles = new();
 			// in game coordinates (tile coordinates * 64)
+
+			public readonly bool is_passable = false;
 
 			#region CollisionData Parsing
 
@@ -54,9 +59,9 @@ namespace FurnitureFramework
 					{
 						ModEntry.log(
 							$"Map at {map_token.Path} must be a string.",
-							StardewModdingAPI.LogLevel.Warn
+							LogLevel.Warn
 						);
-						ModEntry.log($"Ignoring Map.", StardewModdingAPI.LogLevel.Warn);
+						ModEntry.log($"Ignoring Map.", LogLevel.Warn);
 						return;
 					}
 					
@@ -65,9 +70,9 @@ namespace FurnitureFramework
 					{
 						ModEntry.log(
 							$"Map at {map_token.Path} must have as many rows as Height : {size.Y}.",
-							StardewModdingAPI.LogLevel.Warn
+							LogLevel.Warn
 						);
-						ModEntry.log($"Ignoring Map.", StardewModdingAPI.LogLevel.Warn);
+						ModEntry.log($"Ignoring Map.", LogLevel.Warn);
 						return;
 					}
 
@@ -78,9 +83,9 @@ namespace FurnitureFramework
 						{
 							ModEntry.log(
 								$"All lines of Map at {map_token.Path} must be as long as Height : {size.X}.",
-								StardewModdingAPI.LogLevel.Warn
+								LogLevel.Warn
 							);
-							ModEntry.log($"Ignoring Map.", StardewModdingAPI.LogLevel.Warn);
+							ModEntry.log($"Ignoring Map.", LogLevel.Warn);
 							return;
 						}
 
@@ -88,12 +93,17 @@ namespace FurnitureFramework
 						{
 							if (map[y][x] == 'X')
 							{
-								tiles.Add(new Point(x, y) * tile_game_size);
+								Point tile = new(x, y);
+								tiles.Add(tile);
+								game_tiles.Add(tile * tile_game_size);
 							}
 						}
 					}
 
 					has_tiles = true;
+					if (tiles.Count < size.X * size.Y)
+						is_passable = true;
+					// to allow the player to un-sit properly
 				}
 			}
 
@@ -116,18 +126,115 @@ namespace FurnitureFramework
 				if (!bounding_box.Intersects(rect))
 					return false; // bounding box does not intersect
 
-				if (!has_tiles) return true;	// no custom collision map
+				if (!has_tiles) return true;	// no custom collision map				
 				
-				foreach (Point tile_game_pos in tiles)
+				foreach (Point tile_game_pos in game_tiles)
 				{
 					Rectangle tile_rect = new(
 						this_game_pos + tile_game_pos,
 						tile_game_size
 					);
 					if (tile_rect.Intersects(rect))
+					{
 						return true;	// collision map tile intersects
+					}
 				}
 				return false;	// no collision map tile intersects
+			}
+
+			public bool can_be_placed_here(
+				GameLocation loc, Point tile_pos,
+				CollisionMask collisionMask, CollisionMask passable_ignored)
+			{
+				if (has_tiles)
+				{
+					foreach (Point tile in tiles)
+					{
+						if (!is_tile_free(
+							tile + tile_pos, loc,
+							collisionMask, passable_ignored
+						))
+						{
+							return false;
+						}
+					}
+					return true;
+				}
+
+				else
+				{
+					for (int y = 0; y < size.Y; y++)
+					{
+						for (int x = 0; x < size.X; x++)
+						{
+							if (!is_tile_free(
+								new Point(x, y) + tile_pos, loc,
+								collisionMask, passable_ignored
+							))
+							{
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+			}
+
+			private bool is_tile_free(
+				Point tile, GameLocation loc,
+				CollisionMask collisionMask, CollisionMask passable_ignored
+			)
+			{
+				Vector2 v_tile = tile.ToVector2();
+				Vector2 center = (v_tile + new Vector2(0.5f)) * 64;
+
+				// checking for general map placeability
+				if (!loc.isTilePlaceable(v_tile, false))
+				{
+					return false;
+				}
+
+				foreach (Furniture item in loc.furniture)
+				{
+					// obstructed by non-rug furniture
+					if (
+						(item.furniture_type.Value != 12 /*|| furniture.furniture_type.Value == 12*/) &&
+						item.GetBoundingBox().Contains(center) &&
+						!item.AllowPlacementOnThisTile(tile.X, tile.Y)
+					)
+					{
+						return false;
+					}
+				}
+
+				if (loc.objects.TryGetValue(v_tile, out var value) /*&& (!value.isPassable() || !furniture.isPassable())*/)
+				{
+					return false;
+				}
+
+				/*if (!furniture.isGroundFurniture())
+				{*/
+					if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
+					{
+						return false;
+					}
+				//}
+
+				if (loc.IsTileBlockedBy(v_tile, collisionMask, passable_ignored))
+				{
+					return false;
+				}
+
+				if (
+					loc.terrainFeatures.ContainsKey(v_tile) &&
+					loc.terrainFeatures[v_tile] is HoeDirt hoeDirt &&
+					hoeDirt.crop != null
+				)
+				{
+					return false;
+				}
+
+				return true;
 			}
 
 			#endregion
@@ -212,6 +319,19 @@ namespace FurnitureFramework
 
 			// Case 2 : directional collisions
 			return directional_collisions[this_rot].is_colliding(rect, this_game_pos);
+		}
+
+		public bool can_be_placed_here(
+			int rot, GameLocation loc, Point tile_pos,
+			CollisionMask collisionMask, CollisionMask passable_ignored
+		)
+		{
+			// Case 1 : non-directional collisions
+			if (!is_directional)
+			return single_collision.can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
+
+			// Case 2 : directional collisions
+			return directional_collisions[rot].can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
 		}
 
 		#endregion

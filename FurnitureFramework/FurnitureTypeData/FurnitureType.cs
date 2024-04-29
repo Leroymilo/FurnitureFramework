@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
+using StardewValley.TerrainFeatures;
 
 
 namespace FurnitureFramework
@@ -225,8 +226,6 @@ namespace FurnitureFramework
 
 			if (Furniture.isDrawingLocationFurniture)
 			{
-				if (ModEntry.print_debug) ModEntry.log("Drawing layers");
-
 				layers.draw(
 					sprite_batch, color,
 					position, bounding_box.Bottom,
@@ -284,7 +283,7 @@ namespace FurnitureFramework
 
 			#endregion
 
-			ModEntry.print_debug = false;
+			// ModEntry.print_debug = false;
 		}
 
 		public void GetSeatPositions(Furniture furniture, ref List<Vector2> list)
@@ -321,8 +320,10 @@ namespace FurnitureFramework
 
 			if (seats.has_seats)
 			{
+				int sit_count = furniture.GetSittingFarmerCount();
 				who.BeginSitting(furniture);
-				had_action = true;
+				if (furniture.GetSittingFarmerCount() > sit_count)
+					had_action = true;
 			}
 
 			// Take held object
@@ -349,6 +350,64 @@ namespace FurnitureFramework
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 			collides = collisions.is_colliding(rect, pos, rot);
 			return;
+		}
+
+		public void canBePlacedHere(
+			Furniture furniture, GameLocation loc, Vector2 tile,
+			CollisionMask collisionMask, ref bool result
+		)
+		{
+			if (result) return;	// no need to check, it already checked the bounding box.
+
+			// don't change this part
+
+			if (!loc.CanPlaceThisFurnitureHere(furniture))
+			{
+				// false
+				return;
+			}
+
+			if (!furniture.isGroundFurniture())
+			{
+				tile.Y = furniture.GetModifiedWallTilePosition(loc, (int)tile.X, (int)tile.Y);
+			}
+
+			CollisionMask passable_ignored = CollisionMask.Buildings | CollisionMask.Flooring | CollisionMask.TerrainFeatures;
+			bool is_passable = furniture.isPassable();
+			if (is_passable)
+			{
+				passable_ignored |= CollisionMask.Characters | CollisionMask.Farmers;
+			}
+
+			collisionMask &= ~(CollisionMask.Furniture | CollisionMask.Objects);
+
+			int rot = furniture.currentRotation.Value;
+			if (!collisions.can_be_placed_here(rot, loc, tile.ToPoint(), collisionMask, passable_ignored))
+			{
+				result = false;
+				return;
+			}
+
+			if (furniture.GetAdditionalFurniturePlacementStatus(loc, (int)tile.X * 64, (int)tile.Y * 64) != 0)
+			{
+				result = false;
+				return;
+			}
+
+			result = true;
+			return;
+		}
+
+		public void AllowPlacementOnThisTile(Furniture furniture, int x, int y, ref bool allow)
+		{
+			Rectangle tile_rect = new(
+				new Point(x, y) * Collisions.tile_game_size,
+				Collisions.tile_game_size
+			);
+
+			bool collides = true;
+			IntersectsForCollision(furniture, tile_rect, ref collides);
+			allow = !collides;
 		}
 	}
 }

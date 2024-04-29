@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -182,6 +183,57 @@ namespace FurnitureFramework
 			catch (Exception ex)
 			{
 				ModEntry.log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+
+		#region canBePlacedHere
+
+		internal static bool canBePlacedHere(
+			bool __result, Furniture __instance,
+			GameLocation l, Vector2 tile,
+			CollisionMask collisionMask = CollisionMask.All, bool showError = false
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.canBePlacedHere(__instance, l, tile, collisionMask, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(canBePlacedHere)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+
+		#region AllowPlacementOnThisTile
+
+		internal static bool AllowPlacementOnThisTile(
+			bool __result, Furniture __instance,
+			int tile_x, int tile_y
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.AllowPlacementOnThisTile(__instance, tile_x, tile_y, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(canBePlacedHere)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
