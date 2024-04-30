@@ -1,6 +1,6 @@
 # User Tutorial
 
-If you want to use a mod (Furniture Pack) that was made for this Framework, you just need to install the latest version of the mod on [Nexus](https://www.nexusmods.com/stardewvalley/mods/23458?tab=files).
+If you want to use a mod (Furniture Pack) that was made for this Framework, you just need to install the latest version of the mod available on [Nexus](https://www.nexusmods.com/stardewvalley/mods/23458?tab=files).
 
 # Author Tutorial
 
@@ -8,7 +8,7 @@ Here is [the documentation](https://github.com/Leroymilo/FurnitureFramework/blob
 
 # Features
 
-What parts of Furniture are customizable with this Framework :
+What parts of Furniture are customizable with this Framework:
 - Display Name (translation not supported yet)
 - Default Price
 - Custom Rotations
@@ -26,7 +26,7 @@ What parts of Furniture are customizable with this Framework :
 
 # TODO
 
-What parts of Furniture I plan to add customization to in this Framework :
+What parts of Furniture I plan to add customization to in this Framework:
 - Custom table item placement location
 - Custom light sources
 - Animated textures
@@ -36,4 +36,4 @@ What parts of Furniture I plan to add customization to in this Framework :
 
 # Known Issues
 
-- The action might not work when Furniture are overlapping (can't open catalogue if on the bounding box of another custom furniture).
+- A Furniture action might not work when Furniture are overlapping (can't open catalogue if on the bounding box of another custom furniture).

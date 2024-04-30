@@ -6,6 +6,13 @@ If you don't know how to format a json data file, please read a tutorial about i
 
 This tutorial and documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/Example%20Pack) as an example, sometimes without a link.
 
+## Contents
+
+* [Manifest](#manifest)
+* [Content](#content)
+	* [Format](#format)
+	* [Furniture](#furniture)
+
 ## Manifest
 
 Like any other content pack, you will need a `manifest.json` file to make your Furniture Pack mod work with SMAPI. Here's the one provided in the Example Pack:
@@ -37,7 +44,7 @@ This is the file where you define all your custom Fruniture. Please keep in mind
 
 :warning: <span style="color:red">**WARNING**</span>: Unlike a CP Content Pack, names in this field are <span style="color:red">**CASE SENSITIVE**</span>, make sure you don't forget capital letters when writting field names or ids.
 
-The `content.json` file is a model with only 2 fields :
+The `content.json` file is a model with only 2 fields:
 
 ### Format
 

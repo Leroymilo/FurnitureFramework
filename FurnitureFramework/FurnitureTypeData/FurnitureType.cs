@@ -145,22 +145,31 @@ namespace FurnitureFramework
 				throw new InvalidDataException($"Invalid Rotations for Furniture {id}, number can be 1, 2 or 4.");
 			}
 
-			if (rot_token is JArray rot_keys)
+			if (rot_token is JArray rot_arr)
 			{
-				bool has_null_keys = false;
-				foreach (string? key in rot_keys.Values<string>())
+				foreach (JToken key_token in rot_arr.Children())
 				{
-					if (key == null) 
+					if (key_token.Type != JTokenType.String) continue;
+					string? key = (string?)key_token;
+					if (key == null) continue;
+
+					if (rot_names.Contains(key))
 					{
-						has_null_keys = true;
+						ModEntry.log($"Furniture {id} has duplicate rotation key {key}", LogLevel.Warn);
 						continue;
 					}
+
 					rot_names.Add(key);
 				}
-				if (has_null_keys)
-					ModEntry.log($"Invalid rotation(s) skipped in Furniture {id}.", LogLevel.Warn);
-				
+
 				rotations = rot_names.Count;
+
+				if (rotations == 0)
+				{
+					rotations = 1;
+					ModEntry.log($"Furniture {id} has no valid rotation key, fallback to \"Rotations\": 1", LogLevel.Warn);
+				}
+
 				return;
 			}
 

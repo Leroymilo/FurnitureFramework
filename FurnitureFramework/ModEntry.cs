@@ -178,7 +178,6 @@ namespace FurnitureFramework
 					var editor = asset.AsDictionary<string, ShopData>().Data;
 					foreach ((string shop_id, List<string> f_ids) in shops)
 					{
-						log($"Adding shop: {shop_id}.");
 						if (!editor.ContainsKey(shop_id))
 						{
 							ShopData catalogue_shop_data = new()
@@ -193,12 +192,10 @@ namespace FurnitureFramework
 							editor[shop_id] = catalogue_shop_data;
 						}
 
-						log($"Has {f_ids.Count} items.");
 						foreach (string f_id in f_ids)
 						{
 							if (!has_shop_item(editor[shop_id], f_id))
 							{
-								log($"Adding shop item: {f_id}");
 								ShopItemData shop_item_data = new()
 								{
 									Id = f_id,
