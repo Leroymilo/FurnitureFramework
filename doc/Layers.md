@@ -28,4 +28,4 @@ It can be a float (decimal value), but it's recommended to keep it an integer if
 Defaults to `0`
 
 
-This doc will be 
+This doc will probably be reworked later.
