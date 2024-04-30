@@ -115,6 +115,10 @@ Note 2: if your Furniture uses a custom collision Map, there's a good chance tha
 
 ## Optional Fields
 
+### Force Type
+
+In this field, you can force the [type of the Furniture](https://stardewvalleywiki.com/Modding:Items#Furniture) (as a string). If you don't know how it works, don't set it, no type other than "other" has truly been tested. You might need it if you want to make a table to place other objects on, but it was not tested. Please report it if you find Furniture types that completely break the mod so that I can list them here.
+
 ### Price
 
 This is the default price of the Furniture, it will be used if it is added to a shop's item list without specifying a price.
