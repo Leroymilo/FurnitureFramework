@@ -111,7 +111,7 @@ To properly put the collision Map in the Collisions model, the newlines have to 
 
 Note: if the topmost row or the rightmost column of your Map is fill with `.`, you can remove it and reduce the bounding box size accordingly.
 
-Note 2: if your Furniture uses a custom collision Map, there's a good chance that you'll have to define [Layers](#) to avoid layering issues.
+Note 2: if your Furniture uses a custom collision Map, there's a good chance that you'll have to define [Layers](#layers) to avoid layering issues.
 
 ## Optional Fields
 
