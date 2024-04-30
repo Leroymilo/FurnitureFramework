@@ -125,15 +125,37 @@ These fields define if the Furniture can be placed respectively indoor and outdo
 
 ### Exclude from Random Sales
 
+This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
 
 ### Context Tags
 
+This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).
 
 ### Shows in Shops
 
+This is an array (a list) of string Shop IDs where you want your Furniture to show-up, it defaults to an empty list. For example, having:
+```json
+"Shows in Shops": ["Carpenter"]
+```
+will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki.
+
+When used in combination to the "Shop Id" field, you can create a custom Catalogue for your custom Furniture.
 
 ### Shop Id
 
+The Shop ID of the Shop the game should open when right-clicking on the Furniture, it's a string that defaults to `null` (no Shop attached).  
+You can attach one of the [vanilla Shops](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs), or your own Shop.  
+By default, if the Shop ID given doesn't match any existing shop, a default shop based on the vanilla Furniture Catalogue (no owner) will be created.  
+You can then use the same Shop ID in the "Shows in Shops" field of other Furniture you created to add them to this new Catalogue. If you want to add more rules to your custom Catalogue (multipliers, owners, ...), you'll need to define it in another Content Pack using Content Patcher.
+
+An example of this is in the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/Example%20Pack/content.json).
+
+Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it for example).
+
 ### Layers
 
+Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Layers.md).
+
 ### Seats
+
+Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Seats.md).
