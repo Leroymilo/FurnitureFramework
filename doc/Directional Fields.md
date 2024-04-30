@@ -4,7 +4,7 @@ Directional Fields is a type of field that *can* depend on the rotation of the F
 
 When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#rotations).
 
-Let's take the Furniture's [Source Rect field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source_rect) as an example. If you choose to have the same Source Rectangle for every rotation, the field will look like this:
+Let's take the Furniture's [Source Rect field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source-rect) as an example. If you choose to have the same Source Rectangle for every rotation, the field will look like this:
 ```json
 "Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32}
 ```
