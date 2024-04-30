@@ -13,8 +13,6 @@
 				"Height": 1
 			},
 
-			"Force Type": null,
-
 			"Indoors": false,
 			"Outdoors": true,
 
@@ -22,7 +20,6 @@
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
 
 			"Exclude from Random Sales": true,
-			// "Attached Shop": null,	// to make a catalogue-like furniture
 
 			"Context Tags": [],
 
@@ -39,21 +36,18 @@
 				"Height": 1
 			},
 
-			"Force Type": null,
-
-			"Indoors": false,
+			"Indoors": true,
 			"Outdoors": true,
 
 			"Source Image": "assets/catalogue.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
 
 			"Exclude from Random Sales": true,
-			// "Attached Shop": null,	// to make a catalogue-like furniture
 
 			"Context Tags": [],
 
 			"Shop Id": "leroymilo.FurnitureFramework_custom_catalogue",
-
+			// To make a catalogue-like Furniture
 			"Shows in Shops": ["Carpenter"]
 			// Adding the Custom Catalogue to Robin's Shop
 		},
