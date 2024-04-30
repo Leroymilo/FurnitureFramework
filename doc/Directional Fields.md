@@ -2,9 +2,9 @@
 
 Directional Fields is a type of field that *can* depend on the rotation of the Furniture.
 
-When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Rotations).
+When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#rotations).
 
-Let's take the Furniture's [Source Rect field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Source%20Rect) as an example. If you choose to have the same Source Rectangle for every rotation, the field will look like this:
+Let's take the Furniture's [Source Rect field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source_rect) as an example. If you choose to have the same Source Rectangle for every rotation, the field will look like this:
 ```json
 "Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32}
 ```
@@ -21,7 +21,7 @@ For this example, we'll take the "Chair Test" Furniture of the Example Pack, it 
 
 For the Source Rect field, a value for all possible rotations are required, because the Furniture Framework need to know how to display the Furniture at all possible rotations. This is not true for other Directional Fields, most of them don't need to have values for all rotations.
 
-A directional field can also be an array instead of an object. This works the same way, let's take a Furniture's [Layers field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Layers) as an example. Here what it looks like when it is non-directional:
+A directional field can also be an array instead of an object. This works the same way, let's take a Furniture's [Layers field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers) as an example. Here what it looks like when it is non-directional:
 ```json
 "Layers": [
 	// My layers applied to all directions
