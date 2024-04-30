@@ -90,7 +90,7 @@ It's 2 main properties give the size ***in game tiles*** of the bounding box:
 They are required to properly define a the collisions of a Furniture, they must be integers.
 
 The other propery of the Collisions field is its "Map", with it, you to decide for each tile of the bounding box if it is traversable or not. For example, this is the perfect tool if you want to make an arch that you can walk under.  
-To define a custom collision Map, you first have to write it as a square of characters of the size of the bounding box. Let's take the "Living Room" Furniture from the Example Pack, it's made of Furniture from the game to give a proper reference. Here's its main sprite:
+To define a custom collision Map, you first have to write it as a square of characters of the size of the bounding box. Let's take the "Living Room" Furniture from the Example Pack, it's made of Furniture from the game to give a proper reference. Here's its main sprite:  
 ![The main sprite for the Living Room Furniture](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/images/collision_map_example.gif)  
 This gif shows that its bounding box is 8x3, and its collision Map is represented by:
 ```
