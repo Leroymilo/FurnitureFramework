@@ -43,7 +43,11 @@ Any other number will result in an error because rotation keys are essential to 
 
 Note: the order of the rotation names will only define in which order they cycle when using right-click when placing a Furniture in game.
 
-Note 2: you can set as many rotations as you want! Just make sure that they have distinct names.
+Note 2: you can set as many rotations as you want! Just make sure that they have distinct names. Here's an example with 6 rotations: 
+```json
+"Rotations": ["r1", "r2", "r3", "r4", "r5", "r6"]
+```
+You'll just have to remember to use these names as keys when defining directional fields.
 
 ### Source Image
 

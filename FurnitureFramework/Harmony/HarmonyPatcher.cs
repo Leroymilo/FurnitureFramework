@@ -12,10 +12,13 @@ namespace FurnitureFramework
 
 	class HarmonyPatcher
 	{
-		public static Harmony harmony;
+		public static Harmony? harmony;
 
 		public static void patch()
 		{
+			if (harmony == null)
+				throw new NullReferenceException("Harmony was not set");
+
 			foreach (MethodInfo method in typeof(FurniturePrefixes).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 			))
@@ -69,15 +72,20 @@ namespace FurnitureFramework
 
 			// ModEntry.log("Patching transpiler", LogLevel.Warn);
 
-			harmony.Patch(
-				original: AccessTools.DeclaredMethod(
+			foreach (MethodInfo method in typeof(Transpiler).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public
+			))
+			{
+				MethodInfo original = AccessTools.DeclaredMethod(
 					typeof(GameLocation),
-					"LowPriorityLeftClick"
-				),
-				transpiler: new HarmonyMethod(
-					AccessTools.Method(typeof(Transpiler), "transpiler")
-				)
-			);
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					transpiler: new(method)
+				);
+			}
 		}
 	}
 }
