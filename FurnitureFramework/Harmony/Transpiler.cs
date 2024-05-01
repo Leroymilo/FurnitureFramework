@@ -294,7 +294,7 @@ call Transpiler.check_collisions
 			};
 
 			ModEntry.log($"Transpiling GameLocation.checkAction");
-			return replace_instructions(instructions, to_replace, to_write, debug: true);
+			return replace_instructions(instructions, to_replace, to_write);
 		}
 
 		#endregion
