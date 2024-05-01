@@ -36,4 +36,4 @@ What parts of Furniture I plan to add customization to in this Framework:
 
 # Known Issues
 
-- A Furniture action might not work when Furniture are overlapping (can't open catalogue if on the bounding box of another custom furniture).
+- Nothing for now!
