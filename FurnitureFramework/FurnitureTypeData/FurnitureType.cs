@@ -1,3 +1,4 @@
+using System.Data;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -267,8 +268,6 @@ namespace FurnitureFramework
 				// draw depending on heldObject own stored bounding box
 			}
 
-			#region vanilla method
-
 			// // CODE FOR ITEM ON TABLE
 			// if (heldObject.Value != null)
 			// {
@@ -314,8 +313,6 @@ namespace FurnitureFramework
 				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
-
-			#endregion
 
 			// ModEntry.print_debug = false;
 		}
@@ -386,8 +383,12 @@ namespace FurnitureFramework
 
 		public void rotate(Furniture furniture)
 		{
-			furniture.currentRotation.Value =
-				(furniture.currentRotation.Value + 1) % rotations;
+			int rot = furniture.currentRotation.Value;
+			if (rot < 0) rot = 0;
+
+			rot = (rot + 1) % rotations;
+			furniture.currentRotation.Value = rot;
+
 			furniture.updateRotation();
 		}
 
@@ -395,6 +396,7 @@ namespace FurnitureFramework
 		{
 			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+
 			furniture.boundingBox.Value = collisions.get_bounding_box(pos, rot);
 		}
 

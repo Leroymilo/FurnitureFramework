@@ -207,7 +207,7 @@ callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(v
 				)
 			};
 
-			ModEntry.log($"Transpiling GameLocation.LowPriorityLeftClick");
+			// ModEntry.log($"Transpiling GameLocation.LowPriorityLeftClick");
 			return replace_instructions(instructions, to_replace, to_write);
 		}
 
@@ -293,7 +293,7 @@ call Transpiler.check_collisions
 				)
 			};
 
-			ModEntry.log($"Transpiling GameLocation.checkAction");
+			// ModEntry.log($"Transpiling GameLocation.checkAction");
 			return replace_instructions(instructions, to_replace, to_write);
 		}
 
