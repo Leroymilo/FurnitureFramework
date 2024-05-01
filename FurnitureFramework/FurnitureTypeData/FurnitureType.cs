@@ -366,8 +366,12 @@ namespace FurnitureFramework
 
 		public void rotate(Furniture furniture)
 		{
-			furniture.currentRotation.Value =
-				(furniture.currentRotation.Value + 1) % rotations;
+			int rot = furniture.currentRotation.Value;
+			if (rot < 0) rot = 0;
+
+			rot = (rot + 1) % rotations;
+			furniture.currentRotation.Value = rot;
+
 			furniture.updateRotation();
 		}
 
