@@ -167,6 +167,11 @@ namespace FurnitureFramework
 					{
 						for (int x = 0; x < size.X; x++)
 						{
+							if (can_place_on_table(new Point(x, y) + tile_pos, loc))
+							{
+								return true;
+							}
+
 							if (!is_tile_free(
 								new Point(x, y) + tile_pos, loc,
 								collisionMask, passable_ignored
@@ -235,6 +240,41 @@ namespace FurnitureFramework
 				}
 
 				return true;
+			}
+
+			private bool can_place_on_table(Point tile, GameLocation loc)
+			{
+				if (size.X > 1 || size.Y > 1)
+					return false;
+
+				Rectangle tile_rect = new Rectangle(
+					tile * tile_game_size,
+					tile_game_size
+				);
+
+				foreach (Furniture item in loc.furniture)
+				{
+					ModEntry.furniture.TryGetValue(item.ItemId, out FurnitureType? f_type);
+					if (f_type == null)
+					{
+						// vanilla furniture
+						if (
+							item.furniture_type.Value == 11 &&
+							item.IntersectsForCollision(tile_rect) &&
+							item.heldObject.Value == null
+						)
+							return true;
+							
+					}
+					else
+					{
+						// custom furniture
+						if (f_type.can_hold(tile))
+							return true;
+					}
+				}
+
+				return false;
 			}
 
 			#endregion

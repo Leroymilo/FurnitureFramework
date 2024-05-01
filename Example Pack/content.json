@@ -393,6 +393,46 @@
 			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
 		},
 
+		"table_test": {
+			"Display Name": "Table Test",
+			"Price": 0,
+
+			"Rotations": 2,
+			// "Rotations": ["Horizontal", "Vertical"],
+			// keys used in all other directional values
+			"Collisions": {
+				"Horizontal": 	{
+					"Width": 2, "Height": 1
+				},
+				"Vertical": 	{
+					"Width": 1, "Height": 2
+				}
+			},
+
+			"Indoors": true,
+			"Outdoors": true,
+
+			"Source Image": "assets/table.png",
+			"Source Rect": {
+				"Horizontal":	{"X": 0,	"Y": 0, "Width": 32, "Height": 32},
+				"Vertical":		{"X": 32,	"Y": 0, "Width": 16, "Height": 48}
+				// must have all directions
+			},	// in pixels
+
+			"Exclude from Random Sales": true,
+
+			"Slots": {
+				"Horizontal": [
+					
+				],
+				"Vertical": [
+
+				]
+			},
+
+			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+		},
+
 		"living_room": {
 
 			"Display Name": "Living Room",
@@ -558,8 +598,6 @@
 
 			"Exclude from Random Sales": true,
 
-			"Context Tags": [],
-
 			"Seats": {
 				"Down": [
 					{
@@ -674,12 +712,6 @@
 
 // FUTURE FIELDS :
 
-// "Table Slots": [
-// 	{
-// 		"Position": {"X": 8, "Y": 8},	// in pixels
-// 		"For Rotations": 0
-// 	}
-// ],
 // "LightSources": [
 // 	{
 // 		"Position": {"X": 8, "Y": 8},	// in pixels

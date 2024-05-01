@@ -350,9 +350,9 @@ namespace FurnitureFramework
 
 			// Toggle
 
-			// Seat
+			// Seats
 
-			if (seats.has_seats)
+			if (seats.has_seats && !had_action)
 			{
 				int sit_count = furniture.GetSittingFarmerCount();
 				who.BeginSitting(furniture);
@@ -362,6 +362,21 @@ namespace FurnitureFramework
 
 			// Take held object
 
+			if (furniture.heldObject.Value != null)
+			{
+				StardewValley.Object value = furniture.heldObject.Value;
+				furniture.heldObject.Value = null;
+				if (who.addItemToInventoryBool(value))
+				{
+					value.performRemoveAction();
+					Game1.playSound("coin");
+					had_action =  true;
+				}
+				else
+				{
+					furniture.heldObject.Value = value;
+				}
+			}
 		}
 
 		public void rotate(Furniture furniture)
@@ -384,6 +399,12 @@ namespace FurnitureFramework
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 			collides = collisions.is_colliding(rect, pos, rot);
 			return;
+		}
+
+		public bool can_hold(Point tile)
+		{
+			// returns true if it has a table slot extending on tile at "tile"
+			return false;
 		}
 
 		public void canBePlacedHere(
