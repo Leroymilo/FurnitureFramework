@@ -38,6 +38,7 @@ When using a number of rotations instead of a list of names, the resulting "rota
 - `"Rotations": 1` -> no need for rotations keys
 - `"Rotations": 2` -> `"Rotations": ["Horizontal", "Vertical"]`
 - `"Rotations": 4` -> `"Rotations": ["Down", "Right", "Up", "Left"]`
+
 Any other number will result in an error because rotation keys are essential to parse Directional Fields. If you don't need to use Directional Fields, then the Rotations should be set to 1 (the Furniture cannot be rotated).
 
 Note: the order of the rotation names will only define in which order they cycle when using right-click when placing a Furniture in game.
