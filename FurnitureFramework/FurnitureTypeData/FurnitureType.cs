@@ -262,6 +262,11 @@ namespace FurnitureFramework
 				);
 			}
 
+			if (furniture.heldObject.Value != null)
+			{
+				// draw depending on heldObject own stored bounding box
+			}
+
 			#region vanilla method
 
 			// // CODE FOR ITEM ON TABLE
@@ -463,6 +468,14 @@ namespace FurnitureFramework
 			bool collides = true;
 			IntersectsForCollision(furniture, tile_rect, ref collides);
 			allow = !collides;
+		}
+
+		public void performObjectDropInAction(
+			Furniture furniture, ref bool result, Item dropInItem,
+			bool probe, Farmer who, bool returnFalseIfItemConsumed = false
+		)
+		{
+
 		}
 	}
 }
