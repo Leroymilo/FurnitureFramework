@@ -394,19 +394,19 @@
 			"Collisions": {
 				"Down": 	{
 					"Width": 8, "Height": 3,
-					"Map": "..XXXX../XX....XX/......XX"
+					"Map": "..XXXX../XX....XX/...XX.XX"
 				},
 				"Right": 	{
 					"Width": 5, "Height": 5,
-					"Map": "..XXX/XX.../XX.../XX.../..XX."
+					"Map": "..XXX/XX.../XX..X/XX..X/..XX."
 				},
 				"Up": 		{
 					"Width": 8, "Height": 3,
-					"Map": "XX....../XX....XX/..XXXX.."
+					"Map": "XX.XX.../XX....XX/..XXXX.."
 				},
 				"Left": 	{
 					"Width": 5, "Height": 5,
-					"Map": ".XX../...XX/...XX/...XX/XXX.."
+					"Map": ".XX../X..XX/X..XX/...XX/XXX.."
 				}
 			},
 
@@ -476,6 +476,14 @@
 						// Defaults to 0
 					},
 					{
+						"Source Rect": {"X": 64, "Y": 160, "Width": 16, "Height": 48},
+						// in pixels
+						"Draw Pos": {"X": 64, "Y": 32},	// Where to draw the layer, in pixels, relative to the back texture
+						// Defaults to {"X": 0, "Y": 0}
+						"Depth": 3	// Counting from the bottom of the bounding box
+						// Defaults to 0
+					},
+					{
 						"Source Rect": {"X": 128, "Y": 64, "Width": 32, "Height": 64},
 						// in pixels
 						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
@@ -485,6 +493,14 @@
 					}
 				],
 				"Down": [
+					{
+						"Source Rect": {"X": 48, "Y": 32, "Width": 32, "Height": 32},
+						// in pixels
+						"Draw Pos": {"X": 48, "Y": 32},	// Where to draw the layer, in pixels, relative to the back texture
+						// Defaults to {"X": 0, "Y": 0}
+						"Depth": 0	// Counting from the bottom of the bounding box
+						// Defaults to 0
+					},
 					{
 						"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
 						// in pixels
@@ -533,6 +549,14 @@
 						"Draw Pos": {"X": 48, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
 						// Defaults to {"X": 0, "Y": 0}
 						"Depth": 1	// Counting from the bottom of the bounding box
+						// Defaults to 0
+					},
+					{
+						"Source Rect": {"X": 80, "Y": 144, "Width": 16, "Height": 48},
+						// in pixels
+						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
+						// Defaults to {"X": 0, "Y": 0}
+						"Depth": 4	// Counting from the bottom of the bounding box
 						// Defaults to 0
 					},
 					{
@@ -653,6 +677,33 @@
 						"Player Direction": 0
 					}
 				]
+			},
+
+			"Slots": {
+				"Down": [
+					{
+						"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13}
+					}
+				],
+				"Right": [
+					{
+						"Area": {"X": 64, "Y": 41, "Width": 16, "Height": 31},
+						"Depth": 1
+					}
+				],
+				"Up": [
+					{
+						"Area": {"X": 48, "Y": 11, "Width": 32, "Height": 13},
+						"Depth": 2
+					}
+				],
+				"Left": [
+					{
+						"Area": {"X": 0, "Y": 25, "Width": 16, "Height": 31},
+						"Depth": 2
+					}
+				]
+				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
 			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]

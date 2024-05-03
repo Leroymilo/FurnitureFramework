@@ -278,14 +278,16 @@ namespace FurnitureFramework
 
 				Vector2 draw_pos = bb.Center.ToVector2() - new Vector2(32);
 
+				depth = bounding_box.Bottom - slots.get_depth(rot) * 64 + 1;
+
 				if (furniture.heldObject.Value is Furniture item)
 				{
-					draw_pos.Y = bb.Y + bb.Height - item.sourceRect.Height * 4;
+					draw_pos.Y += 64 - item.sourceRect.Height * 4;
 					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
 
 					item.drawAtNonTileSpot(
 						sprite_batch, draw_pos,
-						(furniture.boundingBox.Bottom - 7) / 10000f,
+						depth / 10000f,
 						alpha
 					);
 				}
@@ -301,7 +303,7 @@ namespace FurnitureFramework
 						Color.White * alpha, 0f,
 						Game1.shadowTexture.Bounds.Center.ToVector2(),
 						4f, SpriteEffects.None,
-						bb.Bottom / 10000f
+						depth / 10000f
 					);
 
 					if (furniture.heldObject.Value is ColoredObject)
@@ -309,7 +311,7 @@ namespace FurnitureFramework
 						furniture.heldObject.Value.drawInMenu(
 							sprite_batch,
 							draw_pos, 1f, 1f,
-							(bb.Bottom + 1) / 10000f,
+							(depth + 1) / 10000f,
 							StackDrawType.Hide, Color.White, drawShadow: false
 						);
 					}
@@ -324,34 +326,12 @@ namespace FurnitureFramework
 							Color.White * alpha,
 							0f, Vector2.Zero, 4f,
 							SpriteEffects.None,
-							(bb.Bottom + 1) / 10000f
+							(depth + 1) / 10000f
 						);
 					}
 				}
 				// draw depending on heldObject own stored bounding box
 			}
-
-			// // CODE FOR ITEM ON TABLE
-			// if (heldObject.Value != null)
-			// {
-			// 	if (heldObject.Value is Furniture furniture)
-			// 	{
-			// 		furniture.drawAtNonTileSpot(spriteBatch, Game1.GlobalToLocal(Game1.viewport, new Vector2(boundingBox.Center.X - 32, boundingBox.Center.Y - furniture.sourceRect.Height * 4 - (drawHeldObjectLow ? (-16) : 16))), (float)(boundingBox.Bottom - 7) / 10000f, alpha);
-			// 	}
-			// 	else
-			// 	{
-			// 		ParsedItemData dataOrErrorItem2 = ItemRegistry.GetDataOrErrorItem(heldObject.Value.QualifiedItemId);
-			// 		spriteBatch.Draw(Game1.shadowTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(boundingBox.Center.X - 32, boundingBox.Center.Y - (drawHeldObjectLow ? 32 : 85))) + new Vector2(32f, 53f), Game1.shadowTexture.Bounds, Color.White * alpha, 0f, new Vector2(Game1.shadowTexture.Bounds.Center.X, Game1.shadowTexture.Bounds.Center.Y), 4f, SpriteEffects.None, (float)boundingBox.Bottom / 10000f);
-			// 		if (heldObject.Value is ColoredObject)
-			// 		{
-			// 			heldObject.Value.drawInMenu(spriteBatch, Game1.GlobalToLocal(Game1.viewport, new Vector2(boundingBox.Center.X - 32, boundingBox.Center.Y - (drawHeldObjectLow ? 32 : 85))), 1f, 1f, (float)(boundingBox.Bottom + 1) / 10000f, StackDrawType.Hide, Color.White, drawShadow: false);
-			// 		}
-			// 		else
-			// 		{
-			// 			spriteBatch.Draw(dataOrErrorItem2.GetTexture(), Game1.GlobalToLocal(Game1.viewport, new Vector2(boundingBox.Center.X - 32, boundingBox.Center.Y - (drawHeldObjectLow ? 32 : 85))), dataOrErrorItem2.GetSourceRect(), Color.White * alpha, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(boundingBox.Bottom + 1) / 10000f);
-			// 		}
-			// 	}
-			// }
 
 			// if ((bool)isOn && (int)furniture_type == 14)
 			// {

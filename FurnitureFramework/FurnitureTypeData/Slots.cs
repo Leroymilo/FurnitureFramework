@@ -1,5 +1,6 @@
 
 
+using System.Dynamic;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 
@@ -19,6 +20,8 @@ namespace FurnitureFramework
 			List<Rectangle?> directional_areas = new();
 			Rectangle single_area;
 			bool is_directional = false;
+
+			public readonly float depth = 0;
 
 			#region SlotData Parsing
 
@@ -74,6 +77,17 @@ namespace FurnitureFramework
 					is_directional = true;
 					is_valid = true;
 					return;	// no draw pos or depth if source rect is directional
+				}
+
+				// Parsing optional layer depth
+
+				JToken? depth_token = slot_obj.GetValue("Depth");
+				if (depth_token != null &&
+					(depth_token.Type == JTokenType.Float ||
+					depth_token.Type == JTokenType.Integer)
+				)
+				{
+					depth = (float)depth_token;
 				}
 
 				is_valid = true;
@@ -187,6 +201,18 @@ namespace FurnitureFramework
 			}
 
 			return null;
+		}
+
+		public float get_depth(int rot, int slot_id = 0)
+		{
+			if (is_directional)
+			{
+				return directional_slots[rot][slot_id].depth;
+			}
+			else
+			{
+				return singular_slots[slot_id].depth;
+			}
 		}
 
 		#endregion

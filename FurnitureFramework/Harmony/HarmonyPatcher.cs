@@ -69,9 +69,7 @@ namespace FurnitureFramework
 					postfix: new(method)
 				);
 			}
-
-			// ModEntry.log("Patching transpiler", LogLevel.Warn);
-
+			
 			foreach (MethodInfo method in typeof(Transpiler).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public
 			))
