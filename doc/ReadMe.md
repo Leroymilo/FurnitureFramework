@@ -23,11 +23,11 @@ What parts of Furniture are customizable with this Framework:
 - Shop it appears in
 - Exclude from random sales
 - Context Tags
+- Custom table item placement location (only one slot per Furniture)
 
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Custom table item placement location
 - Multiple Textures to batch create Furniture with the same properties
 - Seasonal Textures
 - Custom light sources
