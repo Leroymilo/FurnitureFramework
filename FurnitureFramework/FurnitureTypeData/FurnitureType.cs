@@ -1,14 +1,11 @@
-using System.Data;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Extensions;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
-using StardewValley.TerrainFeatures;
 
 
 namespace FurnitureFramework

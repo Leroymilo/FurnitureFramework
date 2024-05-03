@@ -3,7 +3,6 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using System.Data;
 
 namespace FurnitureFramework
 {
