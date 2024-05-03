@@ -64,6 +64,34 @@ namespace FurnitureFramework
 		}
 
 		#endregion
+
+		#region checkForAction
+
+		internal static bool checkForAction(
+			bool __result, Furniture __instance,
+			Farmer who, bool justCheckingForActivity = false
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				if (furniture_type == null) return true; // run original logic
+
+				furniture_type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
+				return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
+				return true; // run original logic
+			}
+		}
+
+		#endregion
 	}
 
 	internal class FurniturePostfixes
@@ -134,31 +162,6 @@ namespace FurnitureFramework
 				ModEntry.log($"Failed in {nameof(GetSittingDirection)}:\n{ex}", LogLevel.Error);
 			}
 
-			return __result;
-		}
-
-		#endregion
-
-		#region checkForAction
-
-		internal static bool checkForAction(
-			bool __result, Furniture __instance,
-			Farmer who, bool justCheckingForActivity = false
-		)
-		{
-			try
-			{
-				ModEntry.furniture.TryGetValue(
-					__instance.ItemId,
-					out FurnitureType? furniture_type
-				);
-
-				furniture_type?.checkForAction(__instance, who, justCheckingForActivity, ref __result);
-			}
-			catch (Exception ex)
-			{
-				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
-			}
 			return __result;
 		}
 

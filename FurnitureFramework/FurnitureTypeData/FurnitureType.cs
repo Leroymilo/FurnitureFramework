@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Extensions;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
@@ -40,12 +42,15 @@ namespace FurnitureFramework
 
 		Seats seats;
 
+		Slots slots;
+
 		// TO ADD : torch fire positions, seats, placement spots
 
 		bool is_rug = false;
 		// bool can_be_toggled = false;
 		// bool can_be_placed_on = false;
 		bool is_mural = false;
+		public readonly bool is_table = false;
 
 		public readonly string? shop_id = null;
 		public readonly HashSet<string> shops = new();
@@ -91,6 +96,9 @@ namespace FurnitureFramework
 			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
 
 			seats = new(data.GetValue("Seats"), rot_names);
+
+			slots = new(data.GetValue("Slots"), rot_names);
+			is_table = slots.has_slots;
 
 			JToken? tag_token = data.GetValue("Context Tags");
 			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
@@ -263,8 +271,63 @@ namespace FurnitureFramework
 				);
 			}
 
-			if (furniture.heldObject.Value != null)
+			// draw held object
+			if (furniture.heldObject.Value is StardewValley.Object obj)
 			{
+				Rectangle bb = obj.boundingBox.Value;
+
+				Vector2 draw_pos = bb.Center.ToVector2() - new Vector2(32);
+
+				if (furniture.heldObject.Value is Furniture item)
+				{
+					draw_pos.Y = bb.Y + bb.Height - item.sourceRect.Height * 4;
+					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
+
+					item.drawAtNonTileSpot(
+						sprite_batch, draw_pos,
+						(furniture.boundingBox.Bottom - 7) / 10000f,
+						alpha
+					);
+				}
+				else
+				{
+					draw_pos.Y -= 16;
+					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
+					
+					sprite_batch.Draw(
+						Game1.shadowTexture,
+						draw_pos + new Vector2(32f, 53f),
+						Game1.shadowTexture.Bounds,
+						Color.White * alpha, 0f,
+						Game1.shadowTexture.Bounds.Center.ToVector2(),
+						4f, SpriteEffects.None,
+						bb.Bottom / 10000f
+					);
+
+					if (furniture.heldObject.Value is ColoredObject)
+					{
+						furniture.heldObject.Value.drawInMenu(
+							sprite_batch,
+							draw_pos, 1f, 1f,
+							(bb.Bottom + 1) / 10000f,
+							StackDrawType.Hide, Color.White, drawShadow: false
+						);
+					}
+					else
+					{
+						ParsedItemData dataOrErrorItem2 = ItemRegistry.GetDataOrErrorItem(furniture.heldObject.Value.QualifiedItemId);
+					
+						sprite_batch.Draw(
+							dataOrErrorItem2.GetTexture(),
+							draw_pos,
+							dataOrErrorItem2.GetSourceRect(),
+							Color.White * alpha,
+							0f, Vector2.Zero, 4f,
+							SpriteEffects.None,
+							(bb.Bottom + 1) / 10000f
+						);
+					}
+				}
 				// draw depending on heldObject own stored bounding box
 			}
 
@@ -353,7 +416,6 @@ namespace FurnitureFramework
 			// Toggle
 
 			// Seats
-
 			if (seats.has_seats && !had_action)
 			{
 				int sit_count = furniture.GetSittingFarmerCount();
@@ -362,33 +424,33 @@ namespace FurnitureFramework
 					had_action = true;
 			}
 
-			// Take held object
-
-			if (furniture.heldObject.Value != null)
-			{
-				StardewValley.Object value = furniture.heldObject.Value;
-				furniture.heldObject.Value = null;
-				if (who.addItemToInventoryBool(value))
-				{
-					value.performRemoveAction();
-					Game1.playSound("coin");
-					had_action =  true;
-				}
-				else
-				{
-					furniture.heldObject.Value = value;
-				}
-			}
+			// // Take held object (commented to avoid place-pick in same click)
+			// if (furniture.heldObject.Value != null)
+			// {
+			// 	ModEntry.log("Taking held object through checkForAction");
+			// 	StardewValley.Object value = furniture.heldObject.Value;
+			// 	furniture.heldObject.Value = null;
+			// 	if (who.addItemToInventoryBool(value))
+			// 	{
+			// 		value.performRemoveAction();
+			// 		Game1.playSound("coin");
+			// 		had_action =  true;
+			// 	}
+			// 	else
+			// 	{
+			// 		furniture.heldObject.Value = value;
+			// 	}
+			// }
 		}
 
 		public void rotate(Furniture furniture)
 		{
 			int rot = furniture.currentRotation.Value;
+			rot = (rot + 1) % rotations;
+
 			if (rot < 0) rot = 0;
 
-			rot = (rot + 1) % rotations;
 			furniture.currentRotation.Value = rot;
-
 			furniture.updateRotation();
 		}
 
@@ -443,6 +505,8 @@ namespace FurnitureFramework
 
 			collisionMask &= ~(CollisionMask.Furniture | CollisionMask.Objects);
 
+			// Actual collision detection made by collisions
+
 			int rot = furniture.currentRotation.Value;
 			if (!collisions.can_be_placed_here(rot, loc, tile.ToPoint(), collisionMask, passable_ignored))
 			{
@@ -472,12 +536,122 @@ namespace FurnitureFramework
 			allow = !collides;
 		}
 
-		public void performObjectDropInAction(
-			Furniture furniture, ref bool result, Item dropInItem,
-			bool probe, Farmer who, bool returnFalseIfItemConsumed = false
-		)
+		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
 		{
+			if (who.ActiveItem is not StardewValley.Object)
+				return false;
+			
+			if (furniture.heldObject.Value != null) return false;
 
+			int rot = furniture.currentRotation.Value;
+			
+			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
+			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
+			this_pos.Y -= source_rects[rot].Height * 4;
+			Point rel_pos = (pos - this_pos) / new Point(4);
+
+			Rectangle? slot_area = slots.get_slot(rel_pos, rot);
+			if (slot_area == null) return false;
+
+			Point item_pos = slot_area.Value.Location * new Point(4) + this_pos;
+			Rectangle bounding_box = new(
+				item_pos,
+				slot_area.Value.Size * new Point(4)
+			);
+
+			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
+
+			obj_inst.Location = furniture.Location;
+			obj_inst.TileLocation = item_pos.ToVector2() / 64f;
+			obj_inst.boundingBox.Value = bounding_box;
+
+			furniture.heldObject.Value = obj_inst;
+
+			who.reduceActiveItemByOne();
+			Game1.currentLocation.playSound("woodyStep");
+
+			return true;
 		}
+
+		public Item? remove_from_slot(Furniture furniture, Point pos, Farmer who)
+		{
+			if (furniture.heldObject.Value == null) return null;
+
+			int rot = furniture.currentRotation.Value;
+
+			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
+			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
+			this_pos.Y -= source_rects[rot].Height * 4;
+			Point rel_pos = (pos - this_pos) / new Point(4);
+
+			Rectangle? slot_area = slots.get_slot(rel_pos, rot);
+			if (slot_area == null) return null;
+
+			StardewValley.Object value = furniture.heldObject.Value;
+			furniture.heldObject.Value = null;
+			if (who.addItemToInventoryBool(value))
+			{
+				value.performRemoveAction();
+				Game1.playSound("coin");
+				return value;
+			}
+			else
+			{
+				furniture.heldObject.Value = value;
+			}
+
+			return null;
+		}
+
+		// public void performObjectDropInAction(
+		// 	Furniture furniture, ref bool result, Item dropInItem,
+		// 	bool probe, Farmer who, bool returnFalseIfItemConsumed = false
+		// )
+		// {
+		// 	GameLocation location = furniture.Location;
+		// 	if (location == null)
+		// 	{
+		// 		result = false;
+		// 		return;
+		// 	}
+
+		// 	if (dropInItem is not StardewValley.Object @object)
+		// 	{
+		// 		result = false;
+		// 		return;
+		// 	}
+
+		// 	if (
+		// 		is_table &&
+		// 		furniture.heldObject.Value == null &&
+		// 		!@object.bigCraftable.Value && !(@object is Wallpaper) &&
+		// 		(@object is not Furniture item || (item.getTilesWide() == 1 && item.getTilesHigh() == 1)))
+		// 	{
+		// 		result = true;
+
+		// 		if (probe) return;
+
+		// 		furniture.heldObject.Value = (StardewValley.Object)@object.getOne();
+		// 		furniture.heldObject.Value.Location = furniture.Location;
+		// 		furniture.heldObject.Value.TileLocation = furniture.TileLocation;
+		// 		furniture.heldObject.Value.boundingBox.X = furniture.boundingBox.X;
+		// 		furniture.heldObject.Value.boundingBox.Y = furniture.boundingBox.Y;
+		// 		furniture.heldObject.Value.performDropDownAction(who);
+		// 		location.playSound("woodyStep");
+		// 		if (who != null)
+		// 		{
+		// 			who.reduceActiveItemByOne();
+		// 			if (returnFalseIfItemConsumed)
+		// 			{
+		// 				result = false;
+		// 				return;
+		// 			}
+		// 		}
+
+		// 		return;
+		// 	}
+
+		// 	result = false;
+		// }
 	}
 }

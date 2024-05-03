@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using HarmonyLib;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -153,6 +152,35 @@ namespace FurnitureFramework
 				print_debug = !print_debug;
 				log($"=== Debug Print {(print_debug ? "On": "Off")} ===", LogLevel.Info);
 			}
+
+			if (e.Button == SButton.MouseRight)
+			{
+				Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
+
+				foreach (Furniture item in Game1.currentLocation.furniture)
+				{
+					furniture.TryGetValue(item.ItemId, out FurnitureType? type);
+					if (type == null) continue;
+					if (!type.is_table) continue;
+
+					if (
+						Game1.player.ActiveObject is not null &&
+						!Game1.player.ActiveObject.bigCraftable.Value
+					)
+					{
+						if (type.place_in_slot(item, pos, Game1.player))
+						{
+							break;
+						}
+					}
+
+					Item? picked_item = type.remove_from_slot(item, pos, Game1.player);
+					if (picked_item is not null)
+					{
+						break;
+					}
+				}
+			}
         }
 
 
@@ -225,6 +253,5 @@ namespace FurnitureFramework
 			}
 			return false;
 		}
-
     }
 }

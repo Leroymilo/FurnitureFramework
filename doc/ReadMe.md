@@ -28,6 +28,8 @@ What parts of Furniture are customizable with this Framework:
 
 What parts of Furniture I plan to add customization to in this Framework:
 - Custom table item placement location
+- Multiple Textures to batch create Furniture with the same properties
+- Seasonal Textures
 - Custom light sources
 - Animated textures
 - Custom click action (play sound)

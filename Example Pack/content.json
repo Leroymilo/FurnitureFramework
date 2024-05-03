@@ -75,7 +75,7 @@
 				"Up":		{"X": 32, "Y": 0, "Width": 16, "Height": 32},
 				"Left":		{"X": 48, "Y": 0, "Width": 16, "Height": 32}
 				// must have all directions
-			},	// in pixels
+			},
 			"Layers": {
 				"Up": [
 					{
@@ -129,32 +129,16 @@
 				// must have all directions
 			},
 
-			"Layers": {
-				"Down": [
-					{
-						"Source Rect": {"X": 0,  "Y": 32, "Width": 32, "Height": 32}
-						// in pixels
+			"Layers": [
+				{
+					"Source Rect": {
+						// Layer for up is transparent, can be omitted
+						"Right":	{"X": 32, "Y": 32, "Width": 32, "Height": 32},
+						"Up":		{"X": 64, "Y": 32, "Width": 32, "Height": 32},
+						"Left":		{"X": 96, "Y": 32, "Width": 32, "Height": 32}
 					}
-				],
-				"Right": [
-					{
-						"Source Rect": {"X": 32,  "Y": 32, "Width": 32, "Height": 32}
-						// in pixels
-					}
-				],
-				"Up": [
-					{
-						"Source Rect": {"X": 64,  "Y": 32, "Width": 32, "Height": 32}
-						// in pixels
-					}
-				],
-				"Left": [
-					{
-						"Source Rect": {"X": 96,  "Y": 32, "Width": 32, "Height": 32}
-						// in pixels
-					}
-				]
-			},
+				}
+			],
 
 			"Exclude from Random Sales": true,
 
@@ -217,29 +201,9 @@
 			},
 
 			"Layers": {
-				"Down": [
-					{
-						"Source Rect": {"X": 0,  "Y": 48, "Width": 32, "Height": 32}
-						// in pixels
-					}
-					
-				],
-				"Right": [
-					{
-						"Source Rect": {"X": 32, "Y": 48, "Width": 16, "Height": 48}
-						// in pixels
-					}
-					
-				],
 				"Up": [
 					{
 						"Source Rect": {"X": 48, "Y": 48, "Width": 32, "Height": 32}
-						// in pixels
-					}
-				],
-				"Left": [
-					{
-						"Source Rect": {"X": 80, "Y": 48, "Width": 16, "Height": 48}
 						// in pixels
 					}
 				]
@@ -309,34 +273,16 @@
 				// must have all directions
 			},
 
-			"Layers": {
-				"Down": [
-					{
-						"Source Rect": {"X": 0,  "Y": 48, "Width": 48, "Height": 32}
-						// in pixels
+			"Layers": [
+				{
+					"Source Rect": {
+						// Layer for up is transparent, can be omitted
+						"Right":	{"X": 48, "Y": 48, "Width": 32, "Height": 48},
+						"Up":		{"X": 80, "Y": 48, "Width": 48, "Height": 32},
+						"Left":		{"X": 128, "Y": 48, "Width": 32, "Height": 48}
 					}
-					
-				],
-				"Right": [
-					{
-						"Source Rect": {"X": 48, "Y": 48, "Width": 32, "Height": 48}
-						// in pixels
-					}
-					
-				],
-				"Up": [
-					{
-						"Source Rect": {"X": 80, "Y": 48, "Width": 48, "Height": 32}
-						// in pixels
-					}
-				],
-				"Left": [
-					{
-						"Source Rect": {"X": 128, "Y": 48, "Width": 32, "Height": 48}
-						// in pixels
-					}
-				]
-			},
+				}
+			],
 
 			"Exclude from Random Sales": true,
 
@@ -416,18 +362,22 @@
 			"Source Rect": {
 				"Horizontal":	{"X": 0,	"Y": 0, "Width": 32, "Height": 32},
 				"Vertical":		{"X": 32,	"Y": 0, "Width": 16, "Height": 48}
-				// must have all directions
 			},	// in pixels
 
 			"Exclude from Random Sales": true,
 
 			"Slots": {
 				"Horizontal": [
-					
+					{
+						"Area": {"X": 0, "Y": 11, "Width": 32, "Height": 13}
+					}
 				],
 				"Vertical": [
-
+					{
+						"Area": {"X": 0, "Y": 9, "Width": 16, "Height": 31}
+					}
 				]
+				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
 			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
