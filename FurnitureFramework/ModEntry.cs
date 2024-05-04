@@ -16,6 +16,8 @@ namespace FurnitureFramework
 		private static IMonitor? monitor;
 		private static IModHelper? helper;
 
+		private static string last_season = "spring";
+
 
 		public static bool print_debug = false;
 
@@ -47,6 +49,7 @@ namespace FurnitureFramework
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
+			helper.Events.GameLoop.DayStarted += on_day_started;
 			
 			HarmonyPatcher.patch();
         }
@@ -95,16 +98,19 @@ namespace FurnitureFramework
 				}
 				foreach((string key, JToken? f_data) in (JObject)furniture_token)
 				{
-					FurnitureType new_furniture;
-					if (f_data == null)
+					List<FurnitureType> new_furniture = new();
+					if (f_data is not JObject f_obj)
 					{
 						log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
 						continue;
 					}
 					try
 					{
-						new_furniture = new(pack, key, (JObject)f_data);
-						furniture[new_furniture.id] = new_furniture;
+						FurnitureType.make_furniture(
+							pack, key,
+							f_obj,
+							new_furniture
+						);
 					}
 					catch (Exception ex)
 					{
@@ -113,22 +119,33 @@ namespace FurnitureFramework
 						continue;
 					}
 
-					if (new_furniture.shop_id != null)
+					foreach (FurnitureType type in new_furniture)
 					{
-						if (!shops.ContainsKey(new_furniture.shop_id))
+						if (furniture.ContainsKey(type.id))
 						{
-							shops[new_furniture.shop_id] = new();
-						}
-					}
-
-					foreach (string shop_id in new_furniture.shops)
-					{
-						if (!shops.ContainsKey(shop_id))
-						{
-							shops[shop_id] = new();
+							log($"Duplicate Furniture: {type.id}, skipping Furniture.");
+							continue;
 						}
 
-						shops[shop_id].Add(new_furniture.id);
+						furniture[type.id] = type;
+
+						if (type.shop_id != null)
+						{
+							if (!shops.ContainsKey(type.shop_id))
+							{
+								shops[type.shop_id] = new();
+							}
+						}
+
+						foreach (string shop_id in type.shops)
+						{
+							if (!shops.ContainsKey(shop_id))
+							{
+								shops[shop_id] = new();
+							}
+
+							shops[shop_id].Add(type.id);
+						}
 					}
 				}
 			}
@@ -254,6 +271,20 @@ namespace FurnitureFramework
 					return true;
 			}
 			return false;
+		}
+
+        /// <inheritdoc cref="IGameLoopEvents.DayStarted"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_day_started(object? sender, DayStartedEventArgs e)
+		{
+			if (Game1.currentSeason == last_season) return;
+			last_season = Game1.currentSeason;
+
+			foreach (FurnitureType type in furniture.Values)
+			{
+				type.update_seasonal_texture(last_season);
+			}
 		}
     }
 }

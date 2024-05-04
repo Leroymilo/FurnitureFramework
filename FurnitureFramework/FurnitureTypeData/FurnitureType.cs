@@ -30,6 +30,9 @@ namespace FurnitureFramework
 		int placement_rules;
 		
 		Texture2D texture;
+		Dictionary<string, Texture2D> seasonal_textures = new();
+		bool is_seasonal;
+
 		List<Rectangle> source_rects = new();
 		
 		Layers layers;
@@ -52,7 +55,58 @@ namespace FurnitureFramework
 		public readonly string? shop_id = null;
 		public readonly HashSet<string> shops = new();
 
-		public FurnitureType(IContentPack pack, string id, JObject data)
+		public static void make_furniture(
+			IContentPack pack, string id, JObject data,
+			List<FurnitureType> list
+		)
+		{
+			JToken? texture_token = data.GetValue("Source Image");
+
+			if (texture_token is JObject texture_dict)
+			{
+				// texture variants
+				foreach (JProperty variant in texture_dict.Properties())
+				{
+					string? texture_path = (string?)variant.Value;
+
+					if (texture_path == null)
+					{
+						ModEntry.log(
+							$"Could not read Source Image at {variant.Path}, skipping variant.",
+							LogLevel.Warn
+						);
+						continue;
+					}
+
+					string v_id = $"{id}_{variant.Name}";
+
+					list.Add(new(
+						pack, v_id,
+						data, texture_path
+					));
+				}
+			}
+
+			else if (texture_token is JValue texture_value)
+			{
+				// single texture
+				string? texture_path = (string?)texture_value;
+
+				if (texture_path == null)
+				{
+					throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
+				}
+
+				list.Add(new(
+					pack, id,
+					data, texture_path
+				));
+			}
+			
+			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
+		}
+
+		public FurnitureType(IContentPack pack, string id, JObject data, string texture_path)
 		{
 			#region base attributes
 
@@ -74,9 +128,26 @@ namespace FurnitureFramework
 
 			#region textures & source rects
 
-			string text_path = data.Value<string>("Source Image")
-				?? throw new InvalidDataException($"Missing Texture for Furniture {id}");
-			texture = TextureManager.load(pack.ModContent, text_path);
+			is_seasonal = JC.extract(data, "Seasonal", false);
+
+			if (is_seasonal)
+			{
+				string extension = Path.GetExtension(texture_path);
+				string radical = texture_path.Replace(extension, "");
+
+				foreach (string season in Enum.GetNames(typeof(Season)))
+				{
+					string path = $"{radical}_{season.ToLower()}{extension}";
+					seasonal_textures[season.ToLower()] = TextureManager.load(pack.ModContent, path);
+				}
+
+				texture = seasonal_textures["spring"];
+			}
+
+			else
+			{
+				texture = TextureManager.load(pack.ModContent, texture_path);
+			}
 
 			JToken? rect_token = data.GetValue("Source Rect");
 			if (rect_token != null && rect_token.Type != JTokenType.Null)
@@ -117,6 +188,12 @@ namespace FurnitureFramework
 					shops.Add(shop_str);
 				}
 			}
+		}
+
+		public void update_seasonal_texture(string new_season)
+		{
+			if (!is_seasonal) return;
+			texture = seasonal_textures[new_season];
 		}
 
 		public void parse_rotations(JObject data)

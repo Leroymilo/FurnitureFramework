@@ -32,7 +32,7 @@ namespace FurnitureFramework
 
 				harmony.Patch(
 					original: original,
-					prefix: new(method)
+					prefix: new(method, Priority.High)
 				);
 			}
 

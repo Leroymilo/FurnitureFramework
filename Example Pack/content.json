@@ -52,6 +52,30 @@
 			// Adding the Custom Catalogue to Robin's Shop
 		},
 
+		"seasonal_bush_test": {
+			"Display Name": "Bush Test",
+			"Price": 0,
+
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+
+			"Indoors": false,
+			"Outdoors": true,
+
+			"Seasonal": true,
+			"Source Image": "assets/bush.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
+
+			"Exclude from Random Sales": true,
+
+			"Context Tags": [],
+
+			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+		},
+
 		"chair_test": {
 
 			"Display Name": "Chair Test",
@@ -120,7 +144,11 @@
 			"Indoors": true,
 			"Outdoors": true,
 
-			"Source Image": "assets/armchair.png",
+			"Source Image": {
+				"brown": "assets/armchair.png",
+				"yellow": "assets/armchair_yellow.png",
+				"blue": "assets/armchair_blue.png"
+			},
 			"Source Rect": {
 				"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
 				"Right":	{"X": 32, "Y": 0, "Width": 32, "Height": 32},
