@@ -78,11 +78,12 @@ namespace FurnitureFramework
 						continue;
 					}
 
-					string v_id = $"{id}_{variant.Name}";
+					string v_id = $"{id}_{variant.Name.ToLower()}";
 
 					list.Add(new(
 						pack, v_id,
-						data, texture_path
+						data, texture_path,
+						variant.Name
 					));
 				}
 			}
@@ -106,13 +107,14 @@ namespace FurnitureFramework
 			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 		}
 
-		public FurnitureType(IContentPack pack, string id, JObject data, string texture_path)
+		public FurnitureType(IContentPack pack, string id, JObject data, string texture_path, string variant_name = "")
 		{
 			#region base attributes
 
 			mod_id = pack.Manifest.UniqueID;
 			this.id = $"{mod_id}.{id}";
 			display_name = JC.extract(data, "Display Name", "No Name");
+			display_name = display_name.Replace("{{variant}}", variant_name);
 			type = JC.extract(data, "Force Type", "other");
 			price = JC.extract(data, "Price", 0);
 			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", false);

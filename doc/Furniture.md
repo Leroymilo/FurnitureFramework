@@ -59,17 +59,17 @@ It is **strongly** recommended to align all sprites on a 16x16 pixel grid, becau
 This field now supports variants: instead of giving a single path, you can give a dictionary of paths:
 ```json
 "Source Image": {
-	"brown": "assets/armchair.png",
-	"yellow": "assets/armchair_yellow.png",
-	"blue": "assets/armchair_blue.png"
+	"Brown": "assets/armchair.png",
+	"Yellow": "assets/armchair_yellow.png",
+	"Blue": "assets/armchair_blue.png"
 },
 ```
 This example is taken from the `armchair_test` Furniture of the Example Pack.
 
-Please note that this will create as many separate Furniture as source images are given, but all their properties (asside from Source Image) will be identical, including their Display Name.  
+Please note that this will create as many separate Furniture as source images are given, but all their properties (asside from Source Image) will be identical, including their Display Name. However, you can use the token `{{variant}}` in the Display Name field so that it will be replaced with the variant key (see the `armchair_test` Furniture in the Example Pack).  
 This is kind of a replacement for a compatibility with Alternative Textures because making this mod truly compatible with Alternative Textures will be hard to do.
 
-Note: it is possible to use both a dictionary of Source Images and [Seasonal](#seasonal) sprites, but all of the variants path must have seasonal variants.
+Note: it is possible to use both a dictionary of Source Images and [Seasonal](#seasonal) sprites, but all of the variants path given must have seasonal suffixes.
 
 ### Source Rect
 
@@ -152,7 +152,10 @@ The `seasonal_bush_test` in the Example Pack uses this feature.
 
 ### Force Type
 
-In this field, you can force the [type of the Furniture](https://stardewvalleywiki.com/Modding:Items#Furniture) (as a string). If you don't know how it works, don't set it, no type other than "other" has truly been tested. You might need it if you want to make a table to place other objects on, but it was not tested. Please report it if you find Furniture types that completely break the mod so that I can list them here.
+In this field, you can force the [type of the Furniture](https://stardewvalleywiki.com/Modding:Items#Furniture) (as a string). If you don't know how it works, don't set it, no type other than "other" has truly been tested. Please report it if you find Furniture types that completely break the mod so that I can list them here.
+
+Working types:
+- dresser
 
 ### Price
 

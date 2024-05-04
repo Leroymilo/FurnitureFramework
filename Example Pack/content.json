@@ -133,7 +133,7 @@
 
 		"armchair_test": {
 
-			"Display Name": "Armchair Test",
+			"Display Name": "{{variant}} Armchair Test",
 			"Price": 0,
 
 			// "Rotations": 4,
@@ -145,9 +145,9 @@
 			"Outdoors": true,
 
 			"Source Image": {
-				"brown": "assets/armchair.png",
-				"yellow": "assets/armchair_yellow.png",
-				"blue": "assets/armchair_blue.png"
+				"Brown": "assets/armchair.png",
+				"Yellow": "assets/armchair_yellow.png",
+				"Blue": "assets/armchair_blue.png"
 			},
 			"Source Rect": {
 				"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
