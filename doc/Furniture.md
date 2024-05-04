@@ -13,6 +13,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Source Rect](#source-rect)
 	* [Collisions](#collisions)
 * [Optional Fields](#optional-fields)
+	* [Seasonal](#seasonal)
 	* [Price](#price)
 	* [Indoor & Outdoor](#indoor--outdoor)
 	* [Exclude from Random Sales](#exclude-from-random-sales)
@@ -21,6 +22,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Shop Id](#shop-id)
 	* [Layers](#layers)
 	* [Seats](#seats)
+	* [Slots](#slots)
 
 ## Required Fields
 
@@ -53,6 +55,21 @@ You'll just have to remember to use these names as keys when defining directiona
 
 This is the path, **relative to your mod's directory**, to the spritesheet to use for this Furniture. All sprites used in drawing your Furniture in the game (all rotations and layers) have to be in the same spritesheet. It is possible to use the same spritesheet for multiple Furniture.  
 It is **strongly** recommended to align all sprites on a 16x16 pixel grid, because every game tile is 16x16 pixels large.
+
+This field now supports variants: instead of giving a single path, you can give a dictionary of paths:
+```json
+"Source Image": {
+	"brown": "assets/armchair.png",
+	"yellow": "assets/armchair_yellow.png",
+	"blue": "assets/armchair_blue.png"
+},
+```
+This example is taken from the `armchair_test` Furniture of the Example Pack.
+
+Please note that this will create as many separate Furniture as source images are given, but all their properties (asside from Source Image) will be identical, including their Display Name.  
+This is kind of a replacement for a compatibility with Alternative Textures because making this mod truly compatible with Alternative Textures will be hard to do.
+
+Note: it is possible to use both a dictionary of Source Images and [Seasonal](#seasonal) sprites, but all of the variants path must have seasonal variants.
 
 ### Source Rect
 
@@ -119,6 +136,19 @@ Note: if the topmost row or the rightmost column of your Map is fill with `.`, y
 Note 2: if your Furniture uses a custom collision Map, there's a good chance that you'll have to define [Layers](#layers) to avoid layering issues.
 
 ## Optional Fields
+
+### Seasonal
+
+This field will allow you to create Furniture with different Sprites depending on the season, it's a boolean (true or false).  
+If false, the [Source Image](#source-image) will be read as is and the mod will try to read the image from this path.   If true, the mod will try to read an image for each season, based on the given Source Image path. For example, if Source Image is `assets/bush.png`, the mod will try to read these 4 images:
+- `assets/bush_spring.png`
+- `assets/bush_summer.png`
+- `assets/bush_fall.png`
+- `assets/bush_winter.png`
+
+:warning: If any of these images is missing, the Furniture won't be created.
+
+The `seasonal_bush_test` in the Example Pack uses this feature.
 
 ### Force Type
 
