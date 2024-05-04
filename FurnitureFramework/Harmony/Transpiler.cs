@@ -139,12 +139,12 @@ namespace FurnitureFramework
 /* 	Replace :
 
 ldfld class Netcode.NetRectangle StardewValley.Object::boundingBox  04000B6D 
-callvirt instance !0 class Netcode.NetFieldBase`2<valuetype [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle, class Netcode.NetRectangle>::get_Value()  0A000379 
+callvirt instance !0 class Netcode.NetFieldBase`2<valuetype Microsoft.Xna.Framework.Rectangle, class Netcode.NetRectangle>::get_Value()  0A000379 
 stloc.s 4
 ldloca.s 4
 ldarg.1
 ldarg.2
-call instance bool [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle::Contains(int32, int32)  0A0006CD 
+call instance bool Microsoft.Xna.Framework.Rectangle::Contains(int32, int32)  0A0006CD 
 
 	With :
 
@@ -152,8 +152,8 @@ ldarg.1
 ldarg.2
 ldc.i4.0
 ldc.i4.0
-newobj instance void [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle::.ctor(int32, int32, int32, int32)
-callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(valuetype [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle)
+newobj instance void Microsoft.Xna.Framework.Rectangle::.ctor(int32, int32, int32, int32)
+callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(valuetype Microsoft.Xna.Framework.Rectangle)
 
 */
 
@@ -215,31 +215,35 @@ callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(v
 /* 	Replace :
 
 ldfld class Netcode.NetRectangle StardewValley.Object::boundingBox
-callvirt instance !0 class Netcode.NetFieldBase`2<valuetype [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle, class Netcode.NetRectangle>::get_Value()
+callvirt instance !0 class Netcode.NetFieldBase`2<valuetype Microsoft.Xna.Framework.Rectangle, class Netcode.NetRectangle>::get_Value()
 stloc.s 12
 ldloca.s 12
 ldloc.2
-ldfld float32 [MonoGame.Framework]Microsoft.Xna.Framework.Vector2::X
+ldfld float32 Microsoft.Xna.Framework.Vector2::X
 ldc.r4 64
 mul
 conv.i4
 ldloc.2
-ldfld float32 [MonoGame.Framework]Microsoft.Xna.Framework.Vector2::Y
+ldfld float32 Microsoft.Xna.Framework.Vector2::Y
 ldc.r4 64
 mul
 conv.i4
-call instance bool [MonoGame.Framework]Microsoft.Xna.Framework.Rectangle::Contains(int32, int32)
+call instance bool Microsoft.Xna.Framework.Rectangle::Contains(int32, int32)
 
 	With :
-	
-ldloc 2
-call Transpiler.check_collisions
-*/
 
-		static bool check_collisions(Furniture furniture, Vector2 tile_pos)
-		{
-			return furniture.IntersectsForCollision(new((tile_pos * 64f).ToPoint(), new Point(1,1)));
-		}
+ldloc.2
+ldc.r4 64
+call valuetype Microsoft.Xna.Framework.Vector2 Microsoft.Xna.Framework.Vector2::op_Multiply(valuetype Microsoft.Xna.Framework.Vector2, float32)
+stloc.0
+ldloca.s 0
+call instance valuetype Microsoft.Xna.Framework.Point Microsoft.Xna.Framework.Vector2::ToPoint()
+ldc.i4.1
+ldc.i4.1
+newobj instance void Microsoft.Xna.Framework.Point::.ctor(int32, int32)
+newobj instance void Microsoft.Xna.Framework.Rectangle::.ctor(valuetype Microsoft.Xna.Framework.Point, valuetype Microsoft.Xna.Framework.Point)
+callvirt instance bool ['Stardew Valley']StardewValley.Objects.Furniture::IntersectsForCollision(valuetype Microsoft.Xna.Framework.Rectangle)
+*/
 
 		public static IEnumerable<CodeInstruction> checkAction(
 			IEnumerable<CodeInstruction> instructions
@@ -285,9 +289,40 @@ call Transpiler.check_collisions
 			List<CodeInstruction> to_write = new()
 			{
 				new CodeInstruction(OpCodes.Ldloc_2),
+				new CodeInstruction(OpCodes.Ldc_R4, 64f),
 				new CodeInstruction(
 					OpCodes.Call,
-					AccessTools.Method(typeof(Transpiler), "check_collisions")
+					AccessTools.Method(
+						typeof(Vector2),
+						"op_Multiply",
+						new Type[] {typeof(Vector2), typeof(float)}
+					)
+				),
+				new CodeInstruction(OpCodes.Stloc_0),
+				new CodeInstruction(OpCodes.Ldloca_S, 0),
+				new CodeInstruction(
+					OpCodes.Call,
+					AccessTools.Method(typeof(Vector2), "ToPoint")
+				),
+				new CodeInstruction(OpCodes.Ldc_I4_1),
+				new CodeInstruction(OpCodes.Ldc_I4_1),
+				new CodeInstruction(
+					OpCodes.Newobj,
+					AccessTools.Constructor(
+						typeof(Point),
+						new Type[] {typeof(int), typeof(int)}
+					)
+				),
+				new CodeInstruction(
+					OpCodes.Newobj,
+					AccessTools.Constructor(
+						typeof(Rectangle),
+						new Type[] {typeof(Point), typeof(Point)}
+					)
+				),
+				new CodeInstruction(
+					OpCodes.Callvirt,
+					AccessTools.Method(typeof(Furniture), "IntersectsForCollision")
 				)
 			};
 
