@@ -69,3 +69,5 @@ Note that you can have as many custom Furniture as you want but their ids must b
 The `UniqueID` (followed by an dot `.`) of your mod will be automatically added to the id you give when the Furniture is added to the game. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`. You only need to worry about this if you want another mod (like a CP Pack): you'll need to use the id of the Furniture Pack.
 
 The next part of the tutorial, with details about the Furniture definition is [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
+
+You can also check the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Templates.md) to make relatively simple Furniture.
