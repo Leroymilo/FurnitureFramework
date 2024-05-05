@@ -157,6 +157,14 @@ In this field, you can force the [type of the Furniture](https://stardewvalleywi
 Working types:
 - dresser
 
+Do not use types:
+- chair
+- bench
+- couch
+- armchair
+- long table
+- table
+
 ### Price
 
 This is the default price of the Furniture, it will be used if it is added to a shop's item list without specifying a price.

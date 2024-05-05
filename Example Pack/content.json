@@ -5,13 +5,12 @@
 		// your mod's id will automatically be added to the furniture id
 		"simple_test": {
 			"Display Name": "Simple Test",
-			"Price": 0,
 
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 1,
 				"Height": 1
-			},
+			},	// in tiles
 
 			"Indoors": false,
 			"Outdoors": true,
@@ -19,16 +18,11 @@
 			"Source Image": "assets/simple.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"custom_catalogue": {
 			"Display Name": "Custom Catalogue",
-			"Price": 0,
 
 			"Rotations": 1,
 			"Collisions": {
@@ -42,11 +36,7 @@
 			"Source Image": "assets/catalogue.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
-			"Shop Id": "leroymilo.FurnitureFramework_custom_catalogue",
+			"Shop Id": "leroymilo.FurnitureExample.FF.custom_catalogue",
 			// To make a catalogue-like Furniture
 			"Shows in Shops": ["Carpenter"]
 			// Adding the Custom Catalogue to Robin's Shop
@@ -54,7 +44,6 @@
 
 		"seasonal_bush_test": {
 			"Display Name": "Bush Test",
-			"Price": 0,
 
 			"Rotations": 1,
 			"Collisions": {
@@ -69,17 +58,12 @@
 			"Source Image": "assets/bush.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"chair_test": {
 
 			"Display Name": "Chair Test",
-			"Price": 0,
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
@@ -109,10 +93,6 @@
 				]
 			},
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
@@ -128,16 +108,15 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"armchair_test": {
 
 			"Display Name": "{{variant}} Armchair Test",
-			"Price": 0,
 
-			// "Rotations": 4,
-			"Rotations": ["Down", "Right", "Up", "Left"],
+			"Rotations": 4,
+			// "Rotations": ["Down", "Right", "Up", "Left"],
 			// keys used in all other directional values
 			"Collisions": {"Width": 2, "Height": 1},
 
@@ -168,10 +147,6 @@
 				}
 			],
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
@@ -198,13 +173,12 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"bench_test": {
 
 			"Display Name": "Bench Test",
-			"Price": 0,
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
@@ -237,10 +211,6 @@
 				]
 			},
 
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
-
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
@@ -271,13 +241,12 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"couch_test": {
 
 			"Display Name": "Couch Test",
-			"Price": 0,
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
@@ -311,10 +280,6 @@
 					}
 				}
 			],
-
-			"Exclude from Random Sales": true,
-
-			"Context Tags": [],
 
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
@@ -364,12 +329,11 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"table_test": {
 			"Display Name": "Table Test",
-			"Price": 0,
 
 			"Rotations": 2,
 			// "Rotations": ["Horizontal", "Vertical"],
@@ -392,8 +356,6 @@
 				"Vertical":		{"X": 32,	"Y": 0, "Width": 16, "Height": 48}
 			},	// in pixels
 
-			"Exclude from Random Sales": true,
-
 			"Slots": {
 				"Horizontal": [
 					{
@@ -408,13 +370,12 @@
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
 
 		"living_room": {
 
 			"Display Name": "Living Room",
-			"Price": 0,
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
@@ -448,259 +409,248 @@
 				"Up":		{"X": 0, "Y": 64, "Width": 128, "Height": 64},
 				"Left":		{"X": 80, "Y": 128, "Width": 80, "Height": 96}
 				// must have all directions
-			},	// in pixels
+			},
 
 			"Layers": {
 				"Up": [
 					{
+						// Back of Long Couch, facing Up
 						"Source Rect": {"X": 80, "Y": 224, "Width": 64, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 32, "Y": 32},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 0	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 32, "Y": 32},
+						"Depth": 0
 					},
 					{
+						// Lower Arm of Couch facing Right
 						"Source Rect": {"X": 160, "Y": 128, "Width": 32, "Height": 48},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 0},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 1	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 0},
+						"Depth": 1
 					},
 					{
+						// Lower Arm of Armchair facing Left
 						"Source Rect": {"X": 192, "Y": 64, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 96, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 1	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 96, "Y": 16},
+						"Depth": 1
 					},
 					{
+						// Upper Arm of Armchair facing Left
 						"Source Rect": {"X": 192, "Y": 96, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 96, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 2	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 96, "Y": 16},
+						"Depth": 2
 					}
-					// no need to draw a layer with depth = collisions.height
+					// Upper Arm of Couch facing Right & Table are already drawn by the base sprite 
 				],
 				"Right": [
 					{
+						// Back of Armchair facing Up
 						"Source Rect": {"X": 0, "Y": 224, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 32, "Y": 64},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 0	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 32, "Y": 64},
+						"Depth": 0
 					},
 					{
+						// Lower Arm of Long Couch facing Right
 						"Source Rect": {"X": 128, "Y": 0, "Width": 32, "Height": 64},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 1	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 16},
+						"Depth": 1
 					},
 					{
-						"Source Rect": {"X": 64, "Y": 160, "Width": 16, "Height": 48},
-						// in pixels
-						"Draw Pos": {"X": 64, "Y": 32},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 3	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						// Table
+						"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
+						"Draw Pos": {"X": 64, "Y": 32},
+						"Depth": 3
 					},
 					{
+						// Upper Arm of Long Couch facing Right
 						"Source Rect": {"X": 128, "Y": 64, "Width": 32, "Height": 64},
 						// in pixels
-						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 4	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 16},
+						"Depth": 4
 					}
 				],
 				"Down": [
 					{
-						"Source Rect": {"X": 48, "Y": 32, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 48, "Y": 32},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 0	// Counting from the bottom of the bounding box
-						// Defaults to 0
-					},
-					{
+						// Lower Arm of Couch facing Left
 						"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
-						// in pixels
-						"Draw Pos": {"X": 96, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 0	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 96, "Y": 16},
+						"Depth": 0
 					},
 					{
+						// Lower Arm of Armchair facing Right
 						"Source Rect": {"X": 192, "Y": 0, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 1	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 16},
+						"Depth": 1
 					},
 					{
+						// Table
+						"Source Rect": {"X": 144, "Y": 224, "Width": 32, "Height": 32},
+						"Draw Pos": {"X": 48, "Y": 32},
+						"Depth": 1
+					},
+					{
+						// Upper Arm of Armchair facing Right
 						"Source Rect": {"X": 192, "Y": 32, "Width": 32, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 2	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 16},
+						"Depth": 2
 					},
 					{
+						// Upper Arm of Couch facing Left
 						"Source Rect": {"X": 192, "Y": 176, "Width": 32, "Height": 48},
-						// in pixels
-						"Draw Pos": {"X": 96, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 2	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 96, "Y": 16},
+						"Depth": 2
 					}
 				],
 				"Left": [
 					{
+						// Back of Couch facing Up
 						"Source Rect": {"X": 32, "Y": 224, "Width": 48, "Height": 32},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 64},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 0	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 0, "Y": 64},
+						"Depth": 0
 					},
 					{
+						// Lower Arm of Long Couch facing Left
 						"Source Rect": {"X": 160, "Y": 0, "Width": 32, "Height": 64},
-						// in pixels
-						"Draw Pos": {"X": 48, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 1	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 48, "Y": 16},
+						"Depth": 1
 					},
 					{
-						"Source Rect": {"X": 80, "Y": 144, "Width": 16, "Height": 48},
-						// in pixels
-						"Draw Pos": {"X": 0, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 4	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						// Table
+						"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
+						"Draw Pos": {"X": 0, "Y": 16},
+						"Depth": 4
 					},
 					{
+						// Upper Arm of Long Couch facing Left
 						"Source Rect": {"X": 160, "Y": 64, "Width": 32, "Height": 64},
-						// in pixels
-						"Draw Pos": {"X": 48, "Y": 16},	// Where to draw the layer, in pixels, relative to the back texture
-						// Defaults to {"X": 0, "Y": 0}
-						"Depth": 4	// Counting from the bottom of the bounding box
-						// Defaults to 0
+						"Draw Pos": {"X": 48, "Y": 16},
+						"Depth": 4
 					}
 				]
 			},
-
-			"Exclude from Random Sales": true,
-
+		
 			"Seats": {
 				"Down": [
 					{
+						// Left seat of Long Couch
 						"X": 2.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Center seat of Long Couch
 						"X": 3.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Right seat of Long Couch
 						"X": 4.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Seat of Armchair
 						"X": 1, "Y": 1,
 						"Player Direction": 1
 					},
 					{
+						// Top seat of Couch
 						"X": 6, "Y": 1,
 						"Player Direction": 3
 					},
 					{
+						// Bottom seat of Couch
 						"X": 6, "Y": 2,
 						"Player Direction": 3
 					}
 				],
 				"Right": [
 					{
+						// Left seat of Couch
 						"X": 2.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Right seat of Couch
 						"X": 3.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Top seat of Long Couch
 						"X": 1, "Y": 1,
 						"Player Direction": 1
 					},
 					{
+						// Center seat of Long Couch
 						"X": 1, "Y": 2,
 						"Player Direction": 1
 					},
 					{
+						// Bottom seat of Long Couch
 						"X": 1, "Y": 3,
 						"Player Direction": 1
 					},
 					{
+						// Seat of Armchair
 						"X": 2.5, "Y": 4,
 						"Player Direction": 0
 					}
 				],
 				"Up": [
 					{
+						// Top seat of Couch
 						"X": 1, "Y": 0,
 						"Player Direction": 1
 					},
 					{
+						// Bottom seat of Couch
 						"X": 1, "Y": 1,
 						"Player Direction": 1
 					},
 					{
+						// Seat of Armchair
 						"X": 6, "Y": 1,
 						"Player Direction": 3
 					},
 					{
+						// Left seat of Long Couch
 						"X": 2.5, "Y": 2,
 						"Player Direction": 0
 					},
 					{
+						// Center seat of Long Couch
 						"X": 3.5, "Y": 2,
 						"Player Direction": 0
 					},
 					{
+						// Right seat of Long Couch
 						"X": 4.5, "Y": 2,
 						"Player Direction": 0
 					}
 				],
 				"Left": [
 					{
+						// Seat of Armchair
 						"X": 1.5, "Y": 0,
 						"Player Direction": 2
 					},
 					{
+						// Top seat of Long Couch
 						"X": 3, "Y": 1,
 						"Player Direction": 3
 					},
 					{
+						// Center seat of Long Couch
 						"X": 3, "Y": 2,
 						"Player Direction": 3
 					},
 					{
+						// Bottom seat of Long Couch
 						"X": 3, "Y": 3,
 						"Player Direction": 3
 					},
 					{
+						// Left seat of Couch
 						"X": 0.5, "Y": 4,
 						"Player Direction": 0
 					},
 					{
+						// Right seat of Couch
 						"X": 1.5, "Y": 4,
 						"Player Direction": 0
 					}
@@ -734,7 +684,7 @@
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
-			"Shows in Shops": ["leroymilo.FurnitureFramework_custom_catalogue"]
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		}
 	}
 }
@@ -764,8 +714,5 @@
 // 		"For Rotations": 0
 // 	}
 // ],
-// "Is Dresser": false,
 // "Is Rug": false,
-// "Is Mural": false,
-// "Is Bed": false,
-// "Is TV": false
+// "Is Mural": false

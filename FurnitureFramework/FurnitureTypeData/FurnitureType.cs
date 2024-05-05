@@ -117,7 +117,7 @@ namespace FurnitureFramework
 			display_name = display_name.Replace("{{variant}}", variant_name);
 			type = JC.extract(data, "Force Type", "other");
 			price = JC.extract(data, "Price", 0);
-			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", false);
+			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", true);
 
 			placement_rules =
 				+ 1 * JC.extract(data, "Indoors", 1)
