@@ -204,4 +204,4 @@ Seats are what allow the Farmer to sit on your Furniture (duh), since they are q
 
 ### Slots
 
-Slots are where you can place items or other Furniture on a table Furniture. For now, you can only have a single slot per Furniture, but it is planned to add support for multiple slots per Furniture in a later update (it's kind of hard to do, so it's not a priority). Since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).
+Slots are where you can place items or other Furniture on a table Furniture. For now, you can only have a single slot per Furniture, but it is planned to add support for multiple slots per Furniture in a later update (it's kind of hard to do, so it's not a priority). Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).
