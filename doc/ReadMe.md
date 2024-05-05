@@ -5,7 +5,7 @@ If you want to use a mod (Furniture Pack) that was made for this Framework, you 
 # Author Tutorial
 
 Here is [the documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md) on how to create a Furniture Pack.  
-Here's a list of published mods using this template:
+Here's a list of published mods using this Framework:
 - [Lynn's Livingroom](https://www.nexusmods.com/stardewvalley/mods/23677)
 
 # Features
