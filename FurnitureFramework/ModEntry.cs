@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GenericModConfigMenu;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -15,6 +16,7 @@ namespace FurnitureFramework
     {
 		private static IMonitor? monitor;
 		private static IModHelper? helper;
+		private static ModConfig config;
 
 		private static string last_season = "spring";
 
@@ -45,6 +47,7 @@ namespace FurnitureFramework
 
 			monitor = Monitor;
 			ModEntry.helper = Helper;
+			config = helper.ReadConfig<ModConfig>();
 			HarmonyPatcher.harmony = new(ModManifest.UniqueID);
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
@@ -58,6 +61,43 @@ namespace FurnitureFramework
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
 		private void on_game_launched(object? sender, GameLaunchedEventArgs e)
+		{
+			parse_furniture_packs();
+			register_config();
+		}
+
+		private void register_config()
+		{
+			// get Generic Mod Config Menu's API (if it's installed)
+			var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+			if (configMenu is null)
+				return;
+
+			// register mod
+			configMenu.Register(
+				mod: ModManifest,
+				reset: () => config = new ModConfig(),
+				save: () => Helper.WriteConfig(config)
+			);
+
+			configMenu.AddKeybind(
+				mod: ModManifest,
+				name: () => "Slot Place Keybind",
+				tooltip: () => "The key to press to place an item in a slot.",
+				getValue: () => config.slot_place_key,
+				setValue: value => config.slot_place_key = value
+			);
+
+			configMenu.AddKeybind(
+				mod: ModManifest,
+				name: () => "Slot Take Keybind",
+				tooltip: () => "The key to press to take an item from a slot.",
+				getValue: () => config.slot_take_key,
+				setValue: value => config.slot_take_key = value
+			);
+		}
+
+		private void parse_furniture_packs()
 		{
 			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
 			{
@@ -170,10 +210,12 @@ namespace FurnitureFramework
 				log($"=== Debug Print {(print_debug ? "On": "Off")} ===", LogLevel.Info);
 			}
 
-			if (e.Button == SButton.MouseRight)
-			{
-				Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
+			bool placed = false;
+			
+			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
 
+			if (e.Button == config.slot_place_key)
+			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
 					furniture.TryGetValue(item.ItemId, out FurnitureType? type);
@@ -188,9 +230,20 @@ namespace FurnitureFramework
 						if (type.place_in_slot(item, pos, Game1.player))
 						{
 							Helper.Input.Suppress(e.Button);
+							placed = true;
 							break;
 						}
 					}
+				}
+			}
+
+			if (e.Button == config.slot_take_key && !placed)
+			{
+				foreach (Furniture item in Game1.currentLocation.furniture)
+				{
+					furniture.TryGetValue(item.ItemId, out FurnitureType? type);
+					if (type == null) continue;
+					if (!type.is_table) continue;
 
 					if (type.remove_from_slot(item, pos, Game1.player))
 					{
