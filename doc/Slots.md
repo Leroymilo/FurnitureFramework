@@ -13,7 +13,7 @@ A slot object has 2 fields:
 
 ## Area
 
-This is the rectangle (in pixels) where the slot is located on the sprite for this rotation. This area correspond to where you should click on the Furniture to place or remove something from the slot. Items placed in this slot will be centered in this area.  
+This is the rectangle (in pixels) where the slot is located on the sprite for this rotation. This area correspond to where you should click on the Furniture to place or remove something from the slot. Items placed in this slot will be roughly centered in this area.  
 Be carefull, the Area of a Slot is relative to the sprite for this rotation, not to the whole spritesheet. For example, in the Vertical Slot of the `table_test` Furniture of the Example Pack, since the Vertical Source Rect starts at (32, 0), the Vertical Area starting at (0, 8) is actually starting at (32, 8) on the spritesheet.
 
 This area can be directional, but if set as directional, the depth field will be ignored and default to 0.

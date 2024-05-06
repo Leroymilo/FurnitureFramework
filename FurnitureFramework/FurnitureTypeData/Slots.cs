@@ -269,6 +269,7 @@ namespace FurnitureFramework
 			Rectangle bb = obj.boundingBox.Value;
 
 			Vector2 draw_pos = bb.Center.ToVector2() - new Vector2(32);
+			draw_pos.Y -= 16;
 
 			depth = bottom - depth * 64 + 1;
 
@@ -285,7 +286,6 @@ namespace FurnitureFramework
 			}
 			else
 			{
-				draw_pos.Y -= 16;
 				draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
 				
 				sprite_batch.Draw(
