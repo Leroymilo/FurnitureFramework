@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
 
@@ -347,65 +346,12 @@ namespace FurnitureFramework
 				);
 			}
 
+			initialize_slots(furniture, rot);
+
 			// draw held object
-			if (furniture.heldObject.Value is StardewValley.Object obj)
+			if (furniture.heldObject.Value is Chest chest)
 			{
-				Rectangle bb = obj.boundingBox.Value;
-
-				Vector2 draw_pos = bb.Center.ToVector2() - new Vector2(32);
-
-				depth = bounding_box.Bottom - slots.get_depth(rot) * 64 + 1;
-
-				if (furniture.heldObject.Value is Furniture item)
-				{
-					draw_pos.Y += 64 - item.sourceRect.Height * 4;
-					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
-
-					item.drawAtNonTileSpot(
-						sprite_batch, draw_pos,
-						depth / 10000f,
-						alpha
-					);
-				}
-				else
-				{
-					draw_pos.Y -= 16;
-					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
-					
-					sprite_batch.Draw(
-						Game1.shadowTexture,
-						draw_pos + new Vector2(32f, 53f),
-						Game1.shadowTexture.Bounds,
-						Color.White * alpha, 0f,
-						Game1.shadowTexture.Bounds.Center.ToVector2(),
-						4f, SpriteEffects.None,
-						depth / 10000f
-					);
-
-					if (furniture.heldObject.Value is ColoredObject)
-					{
-						furniture.heldObject.Value.drawInMenu(
-							sprite_batch,
-							draw_pos, 1f, 1f,
-							(depth + 1) / 10000f,
-							StackDrawType.Hide, Color.White, drawShadow: false
-						);
-					}
-					else
-					{
-						ParsedItemData dataOrErrorItem2 = ItemRegistry.GetDataOrErrorItem(furniture.heldObject.Value.QualifiedItemId);
-					
-						sprite_batch.Draw(
-							dataOrErrorItem2.GetTexture(),
-							draw_pos,
-							dataOrErrorItem2.GetSourceRect(),
-							Color.White * alpha,
-							0f, Vector2.Zero, 4f,
-							SpriteEffects.None,
-							(depth + 1) / 10000f
-						);
-					}
-				}
+				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Bottom, alpha);
 				// draw depending on heldObject own stored bounding box
 			}
 
@@ -526,12 +472,6 @@ namespace FurnitureFramework
 			return;
 		}
 
-		public bool can_hold(Point tile)
-		{
-			// returns true if it has a table slot extending on tile at "tile"
-			return false;
-		}
-
 		public void canBePlacedHere(
 			Furniture furniture, GameLocation loc, Vector2 tile,
 			CollisionMask collisionMask, ref bool result
@@ -592,27 +532,55 @@ namespace FurnitureFramework
 			allow = !collides;
 		}
 
+		private void initialize_slots(Furniture furniture, int rot)
+		{
+			if (!is_table)
+			{
+				furniture.heldObject.Value = null;
+				return;
+			}
+
+			if (furniture.heldObject.Value is Chest) return;
+
+			StardewValley.Object held = furniture.heldObject.Value;
+			Chest chest = new Chest();
+			chest.Items.OverwriteWith(Enumerable.Repeat<Item?>(null, slots.get_count(rot)).ToList());
+			chest.Items[0] = held;
+			furniture.heldObject.Value = chest;
+		}
+
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
 		{
-			if (who.ActiveItem is not StardewValley.Object)
-				return false;
-			
-			if (furniture.heldObject.Value != null) return false;
-
 			int rot = furniture.currentRotation.Value;
 			
+			initialize_slots(furniture, rot);
+
+			if (who.ActiveItem is not StardewValley.Object) return false;
+			// player is not holding an object
+			
+			if (furniture.heldObject.Value is not Chest chest) return false;
+			// Furniture is not a proper initialized table
+
 			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
 			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
-			Rectangle? slot_area = slots.get_slot(rel_pos, rot);
-			if (slot_area == null) return false;
+			int slot_index = slots.get_slot(
+				rel_pos, rot,
+				out Rectangle slot_area
+			);
 
-			Point item_pos = slot_area.Value.Location * new Point(4) + this_pos;
+			if (slot_index < 0) return false;
+			// No slot found at this pixel
+
+			if (chest.Items[slot_index] is not null) return false;
+			// Slot already occupied
+
+			Point item_pos = slot_area.Location * new Point(4) + this_pos;
 			Rectangle bounding_box = new(
 				item_pos,
-				slot_area.Value.Size * new Point(4)
+				slot_area.Size * new Point(4)
 			);
 
 			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
@@ -621,7 +589,7 @@ namespace FurnitureFramework
 			obj_inst.TileLocation = item_pos.ToVector2() / 64f;
 			obj_inst.boundingBox.Value = bounding_box;
 
-			furniture.heldObject.Value = obj_inst;
+			chest.Items[slot_index] = obj_inst;
 
 			who.reduceActiveItemByOne();
 			Game1.currentLocation.playSound("woodyStep");
@@ -629,85 +597,41 @@ namespace FurnitureFramework
 			return true;
 		}
 
-		public Item? remove_from_slot(Furniture furniture, Point pos, Farmer who)
+		public bool remove_from_slot(Furniture furniture, Point pos, Farmer who)
 		{
-			if (furniture.heldObject.Value == null) return null;
-
 			int rot = furniture.currentRotation.Value;
+			
+			initialize_slots(furniture, rot);
+
+			if (furniture.heldObject.Value is not Chest chest) return false;
+			// Furniture is not a proper initialized table
 
 			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
 			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
-			Rectangle? slot_area = slots.get_slot(rel_pos, rot);
-			if (slot_area == null) return null;
+			int slot_index = slots.get_slot(
+				rel_pos, rot,
+				out Rectangle _
+			);
 
-			StardewValley.Object value = furniture.heldObject.Value;
-			furniture.heldObject.Value = null;
-			if (who.addItemToInventoryBool(value))
+			if (slot_index < 0) return false;
+			// No slot found at this pixel
+
+			Item item = chest.Items[slot_index];
+			if (item is not StardewValley.Object obj) return false;
+			// No Object in slot
+
+			if (who.addItemToInventoryBool(obj))
 			{
-				value.performRemoveAction();
+				obj.performRemoveAction();
+				chest.Items[slot_index] = null;
 				Game1.playSound("coin");
-				return value;
-			}
-			else
-			{
-				furniture.heldObject.Value = value;
+				return true;
 			}
 
-			return null;
+			return false;
 		}
-
-		// public void performObjectDropInAction(
-		// 	Furniture furniture, ref bool result, Item dropInItem,
-		// 	bool probe, Farmer who, bool returnFalseIfItemConsumed = false
-		// )
-		// {
-		// 	GameLocation location = furniture.Location;
-		// 	if (location == null)
-		// 	{
-		// 		result = false;
-		// 		return;
-		// 	}
-
-		// 	if (dropInItem is not StardewValley.Object @object)
-		// 	{
-		// 		result = false;
-		// 		return;
-		// 	}
-
-		// 	if (
-		// 		is_table &&
-		// 		furniture.heldObject.Value == null &&
-		// 		!@object.bigCraftable.Value && !(@object is Wallpaper) &&
-		// 		(@object is not Furniture item || (item.getTilesWide() == 1 && item.getTilesHigh() == 1)))
-		// 	{
-		// 		result = true;
-
-		// 		if (probe) return;
-
-		// 		furniture.heldObject.Value = (StardewValley.Object)@object.getOne();
-		// 		furniture.heldObject.Value.Location = furniture.Location;
-		// 		furniture.heldObject.Value.TileLocation = furniture.TileLocation;
-		// 		furniture.heldObject.Value.boundingBox.X = furniture.boundingBox.X;
-		// 		furniture.heldObject.Value.boundingBox.Y = furniture.boundingBox.Y;
-		// 		furniture.heldObject.Value.performDropDownAction(who);
-		// 		location.playSound("woodyStep");
-		// 		if (who != null)
-		// 		{
-		// 			who.reduceActiveItemByOne();
-		// 			if (returnFalseIfItemConsumed)
-		// 			{
-		// 				result = false;
-		// 				return;
-		// 			}
-		// 		}
-
-		// 		return;
-		// 	}
-
-		// 	result = false;
-		// }
 	}
 }

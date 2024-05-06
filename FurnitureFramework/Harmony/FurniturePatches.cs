@@ -63,6 +63,27 @@ namespace FurnitureFramework
 		}
 
 		#endregion
+
+		#region clicked
+
+		internal static bool clicked(
+			Furniture __instance
+		)
+		{
+			try
+			{
+				if (__instance.heldObject.Value is Chest)
+					return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(clicked)}:\n{ex}", LogLevel.Error);
+			}
+
+			return true; // run original logic
+		}
+
+		#endregion
 	}
 
 	internal class FurniturePostfixes

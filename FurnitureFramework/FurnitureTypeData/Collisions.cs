@@ -264,12 +264,6 @@ namespace FurnitureFramework
 							return true;
 							
 					}
-					else
-					{
-						// custom furniture
-						if (f_type.can_hold(tile))
-							return true;
-					}
 				}
 
 				return false;

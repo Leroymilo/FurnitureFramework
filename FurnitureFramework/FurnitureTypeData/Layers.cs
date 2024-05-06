@@ -55,7 +55,7 @@ namespace FurnitureFramework
 				{
 					if (rot_names == null)
 					{
-						error_msg = "No singular Player Direction given for non-directional Seat Data.";
+						error_msg = "No singular Source Rect given for non-directional Seat Data.";
 						return;
 					}
 

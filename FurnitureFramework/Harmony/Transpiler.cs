@@ -8,16 +8,18 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework
 {
+	#region helper
+
 	static class Transpiler
 	{
 
-		static bool are_equal(CodeInstruction a, CodeInstruction b, bool debug = false)
+		static public bool are_equal(CodeInstruction a, CodeInstruction b, bool debug = false)
 		{
 			if (a.IsStloc() && b.IsStloc())
 			{
 				return true;
 			}
-
+			
 			if (a.opcode != b.opcode) return false;
 
 			if (a.opcode == OpCodes.Callvirt)
@@ -36,7 +38,7 @@ namespace FurnitureFramework
 			return Equals(a.operand, b.operand);
 		}
 
-		static List<int> find_start_indices(
+		static public List<int> find_start_indices(
 			IEnumerable<CodeInstruction> original,
 			IEnumerable<CodeInstruction> to_find,
 			bool debug = false
@@ -81,7 +83,7 @@ namespace FurnitureFramework
 			return indices;
 		}
 
-		static IEnumerable<CodeInstruction> replace_instructions(
+		static public IEnumerable<CodeInstruction> replace_instructions(
 			IEnumerable<CodeInstruction> instructions,
 			List<CodeInstruction> to_replace,
 			List<CodeInstruction> to_write,
@@ -133,7 +135,12 @@ namespace FurnitureFramework
 
 			return new_inst;
 		}
+	}
 
+	#endregion
+
+	class LocationTranspiler
+	{
 
 		#region LowPriorityLeftClick
 /* 	Replace :
@@ -206,7 +213,7 @@ callvirt instance bool StardewValley.Objects.Furniture::IntersectsForCollision(v
 			};
 
 			// ModEntry.log($"Transpiling GameLocation.LowPriorityLeftClick");
-			return replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.replace_instructions(instructions, to_replace, to_write);
 		}
 
 		#endregion
@@ -327,7 +334,7 @@ callvirt instance bool ['Stardew Valley']StardewValley.Objects.Furniture::Inters
 			};
 
 			// ModEntry.log($"Transpiling GameLocation.checkAction");
-			return replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.replace_instructions(instructions, to_replace, to_write);
 		}
 
 		#endregion

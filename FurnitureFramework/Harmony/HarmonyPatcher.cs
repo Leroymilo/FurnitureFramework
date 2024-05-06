@@ -70,10 +70,12 @@ namespace FurnitureFramework
 				);
 			}
 			
-			foreach (MethodInfo method in typeof(Transpiler).GetMethods(
+			foreach (MethodInfo method in typeof(LocationTranspiler).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public
 			))
 			{
+				ModEntry.log($"Patching transpiler : {method.Name}", LogLevel.Trace);
+
 				MethodInfo original = AccessTools.DeclaredMethod(
 					typeof(GameLocation),
 					method.Name

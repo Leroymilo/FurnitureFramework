@@ -192,8 +192,7 @@ namespace FurnitureFramework
 						}
 					}
 
-					Item? picked_item = type.remove_from_slot(item, pos, Game1.player);
-					if (picked_item is not null)
+					if (type.remove_from_slot(item, pos, Game1.player))
 					{
 						Helper.Input.Suppress(e.Button);
 						break;
