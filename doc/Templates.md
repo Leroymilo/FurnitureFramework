@@ -221,7 +221,7 @@ This can be adapted for more complex Sittable Furniture, like a couch.
 
 ## Table Furniture
 
-This can be adapted for any Furniture with slots to place objects on it. Keep in mind that it's limited to a single slot per Furniture for now.
+This can be adapted for any Furniture with slots to place objects on it. This example has 2 slots.
 
 ```json
 {
@@ -247,12 +247,19 @@ This can be adapted for any Furniture with slots to place objects on it. Keep in
 	"Slots": {
 		"Horizontal": [
 			{
-				"Area": {"X": 0, "Y": 11, "Width": 32, "Height": 13}
+				"Area": {"X": 0, "Y": 10, "Width": 16, "Height": 16}
+			},
+			{
+				"Area": {"X": 16, "Y": 10, "Width": 16, "Height": 16}
 			}
 		],
 		"Vertical": [
 			{
-				"Area": {"X": 0, "Y": 9, "Width": 16, "Height": 31}
+				"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
+				"Depth": 1
+			},
+			{
+				"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16}
 			}
 		]
 		// The Area rectangle is in pixels, and is relative to the sprite for each rotation.

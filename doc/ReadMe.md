@@ -18,16 +18,24 @@ What parts of Furniture are customizable with this Framework:
 - Custom Collision Map
 - Placement Rules
 - Source Image
-- Source Rect
+- Custom Source Rect
+- Custom Source Rect for Icon
 - Custom Layers
 - Custom Seats
 - Custom Attached Shop (Catalogue like)
 - Shop it appears in
 - Exclude from random sales
 - Context Tags
-- Custom table item placement location (only one slot per Furniture)
+- Custom table slots
 - Texture Variants creating multiple Furniture
 - Seasonal Textures
+
+# Thanks
+
+Huge thanks to:
+- @LynnNexus for testing, feedback and bug report
+- @atravita for the initial idea to implement multiple slots per Furniture
+- The Stardew Valley modding community for all their help and support
 
 # TODO
 

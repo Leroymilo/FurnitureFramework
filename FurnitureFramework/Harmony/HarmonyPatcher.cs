@@ -70,6 +70,23 @@ namespace FurnitureFramework
 				);
 			}
 			
+			foreach (MethodInfo method in typeof(FurnitureTranspiler).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public
+			))
+			{
+				ModEntry.log($"Patching transpiler : {method.Name}", LogLevel.Trace);
+
+				MethodInfo original = AccessTools.DeclaredMethod(
+					typeof(Furniture),
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					transpiler: new(method)
+				);
+			}
+			
 			foreach (MethodInfo method in typeof(LocationTranspiler).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public
 			))

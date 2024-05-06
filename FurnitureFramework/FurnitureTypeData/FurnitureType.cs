@@ -33,6 +33,7 @@ namespace FurnitureFramework
 		bool is_seasonal;
 
 		List<Rectangle> source_rects = new();
+		public readonly Rectangle icon_rect = Rectangle.Empty;
 		
 		Layers layers;
 
@@ -157,6 +158,17 @@ namespace FurnitureFramework
 				source_rects.Add(texture.Bounds);
 			else
 				throw new InvalidDataException($"Missing Source Rectangles for Furniture {id}.");
+
+			JToken? icon_rect_token = data.GetValue("Icon Rect");
+			try
+			{
+				if (icon_rect_token != null)
+					icon_rect = JC.extract_rect(icon_rect_token);
+			}
+			catch (InvalidDataException) {}
+
+			if (icon_rect.IsEmpty)
+				icon_rect = source_rects[0];
 
 			layers = new(data.GetValue("Layers"), rot_names, texture);
 
@@ -584,6 +596,14 @@ namespace FurnitureFramework
 			);
 
 			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
+
+			if (obj_inst is Furniture furn)
+			{
+				Point size = furn.boundingBox.Value.Size / new Point(64);
+				if (size.X > 1 || size.Y > 1)
+					return false;
+				// cannot place furniture larger than 1x1
+			}
 
 			obj_inst.Location = furniture.Location;
 			obj_inst.TileLocation = item_pos.ToVector2() / 64f;

@@ -13,6 +13,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Source Rect](#source-rect)
 	* [Collisions](#collisions)
 * [Optional Fields](#optional-fields)
+	* [Icon Rect](#icon-rect)
 	* [Seasonal](#seasonal)
 	* [Price](#price)
 	* [Indoor & Outdoor](#indoor--outdoor)
@@ -137,6 +138,10 @@ Note 2: if your Furniture uses a custom collision Map, there's a good chance tha
 
 ## Optional Fields
 
+### Icon Rect
+
+This field is another Rectangle, like a [Source Rect](#source-rect). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu.
+
 ### Seasonal
 
 This field will allow you to create Furniture with different Sprites depending on the season, it's a boolean (true or false).  
@@ -212,4 +217,4 @@ Seats are what allow the Farmer to sit on your Furniture (duh), since they are q
 
 ### Slots
 
-Slots are where you can place items or other Furniture on a table Furniture. For now, you can only have a single slot per Furniture, but it is planned to add support for multiple slots per Furniture in a later update (it's kind of hard to do, so it's not a priority). Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).
+Slots are where you can place items or other Furniture on a table Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).

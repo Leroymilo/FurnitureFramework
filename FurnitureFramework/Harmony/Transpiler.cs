@@ -2,9 +2,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
+using StardewValley;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
-
-// I gave up on this, this is a postfix now.
 
 namespace FurnitureFramework
 {
@@ -335,6 +335,125 @@ callvirt instance bool ['Stardew Valley']StardewValley.Objects.Furniture::Inters
 
 			// ModEntry.log($"Transpiling GameLocation.checkAction");
 			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+		}
+
+		#endregion
+	}
+
+	class FurnitureTranspiler
+	{
+		#region drawInMenu
+/* 	Replace :
+
+ldloc.0
+ldc.i4.0
+ldloca.s 2
+initobj valuetype [System.Runtime]System.Nullable`1<int32>
+ldloc.2
+callvirt instance valuetype Microsoft.Xna.Framework.Rectangle StardewValley.ItemTypeDefinitions.ParsedItemData::GetSourceRect(int32, valuetype System.Nullable`1<int32>)
+
+	With :
+
+ldarg.0
+call get_icon_source_rect
+
+*/
+
+		static private Rectangle get_icon_source_rect(Furniture furniture)
+		{
+			ModEntry.furniture.TryGetValue(
+				furniture.ItemId,
+				out FurnitureType? furniture_type
+			);
+
+			if (furniture_type != null) return furniture_type.icon_rect;
+
+			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
+		}
+
+		static public IEnumerable<CodeInstruction> drawInMenu(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldloc_0),
+				new(OpCodes.Ldc_I4_0),
+				new(OpCodes.Ldloca_S, 2),
+				new(OpCodes.Initobj, typeof(int?)),
+				new(OpCodes.Ldloc_2),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(ParsedItemData),
+					"GetSourceRect"
+				))
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Ldarg_0),
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(FurnitureTranspiler),
+					"get_icon_source_rect"
+				))
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
+		}
+
+		#endregion
+
+		#region canBeRemoved
+/* 	Replace :
+
+ldfld class Netcode.NetRef`1<class StardewValley.Object> StardewValley.Object::heldObject
+callvirt instance !0 class Netcode.NetFieldBase`2<class StardewValley.Object, class Netcode.NetRef`1<class StardewValley.Object>>::get_Value()
+
+	With :
+
+call h
+
+*/
+		static private bool check_held_object(Furniture furniture)
+		{
+			StardewValley.Object held_obj = furniture.heldObject.Value;
+			if (held_obj == null) return false;
+
+			if (held_obj is Chest chest)
+			{
+				foreach (Item? item in chest.Items)
+				{
+					if (item != null) return true;
+				}
+
+				return false;	// empty chest
+			}
+
+			return true;
+		}
+
+		static public IEnumerable<CodeInstruction> canBeRemoved(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldfld, AccessTools.Field(
+					typeof(StardewValley.Object),
+					"heldObject"
+				)),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetRef<StardewValley.Object>),
+					"get_Value"
+				))
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(FurnitureTranspiler),
+					"check_held_object"
+				))
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
 		}
 
 		#endregion
