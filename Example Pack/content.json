@@ -692,6 +692,196 @@
 			},
 
 			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+		},
+
+		"corner_couch": {
+			"Display Name": "Corner Couch",
+
+			"Rotations": [
+				"Down J", "Down L","Right J", /*"Right L",*/
+				"Up J", "Up L", /*"Left J",*/ "Left L"
+			],
+
+			"Collisions": {
+				"Down J": {
+					"Width": 4, "Height": 2,
+					"Map": "XXXX/..XX"
+				},
+				"Down L": {
+					"Width": 4, "Height": 2,
+					"Map": "XXXX/XX.."
+				},
+				"Up J": {
+					"Width": 4, "Height": 2,
+					"Map": "XX../XXXX"
+				},
+				"Up L": {
+					"Width": 4, "Height": 2,
+					"Map": "..XX/XXXX"
+				},
+				"Right J": {
+					"Width": 3, "Height": 3,
+					"Map": "XXX/XX./XX."
+				},
+				"Right L": {
+					"Width": 3, "Height": 3,
+					"Map": "XX./XXX/XXX"
+				},
+				"Left J": {
+					"Width": 3, "Height": 3,
+					"Map": ".XX/XXX/XXX"
+				},
+				"Left L": {
+					"Width": 3, "Height": 3,
+					"Map": "XXX/.XX/.XX"
+				}
+			},
+
+			"Indoors": true,
+			"Outdoors": false,
+			
+			// Thanks to @oomps for the texture!
+			"Source Image": "assets/corner_couch.png",
+			"Source Rect": {
+				"Down J":	{"X": 0,	"Y": 0,		"Width": 64, "Height": 48},
+				"Down L":	{"X": 64,	"Y": 0,		"Width": 64, "Height": 48},
+				"Right J":	{"X": 128,	"Y": 0,		"Width": 48, "Height": 64},
+				"Right L":	{"X": 224,	"Y": 0,		"Width": 48, "Height": 64},
+				"Up J":		{"X": 0,	"Y": 48,	"Width": 64, "Height": 48},
+				"Up L":		{"X": 64,	"Y": 48,	"Width": 64, "Height": 48},
+				"Left J":	{"X": 176,	"Y": 0,		"Width": 48, "Height": 64},
+				"Left L":	{"X": 272,	"Y": 0,		"Width": 48, "Height": 64}
+			},
+
+			"Layers": [
+				{
+					"Source Rect": {
+						"Right J":	{"X": 128,	"Y": 64, "Width": 48, "Height": 64},
+						"Right L":	{"X": 224,	"Y": 64, "Width": 48, "Height": 64},
+						"Up J":		{"X": 0,	"Y": 96, "Width": 64, "Height": 48},
+						"Up L":		{"X": 64,	"Y": 96, "Width": 64, "Height": 48},
+						"Left J":	{"X": 176,	"Y": 64, "Width": 48, "Height": 64},
+						"Left L":	{"X": 272,	"Y": 64, "Width": 48, "Height": 64}
+					}
+				}
+			],
+
+			"Seats": {
+				"Down J": [
+					{
+						"X": 0.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 1.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 2.25, "Y": 0.625,
+						"Player Direction": 3
+					}
+				],
+				"Down L": [
+					{
+						"X": 1.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 2.5, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 0.75, "Y": 0.625,
+						"Player Direction": 1
+					}
+				],
+				"Right J": [
+					{
+						"X": 1.75, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 1, "Y": 0.75,
+						"Player Direction": 1
+					},
+					{
+						"X": 1, "Y": 1.5,
+						"Player Direction": 1
+					}
+				],
+				"Right L": [
+					{
+						"X": 0.875, "Y": 0,
+						"Player Direction": 1
+					},
+					{
+						"X": 0.875, "Y": 0.75,
+						"Player Direction": 1
+					},
+					{
+						"X": 1.75, "Y": 1.25,
+						"Player Direction": 0
+					}
+				],
+				"Up J": [
+					{
+						"X": 0.5, "Y": 0,
+						"Player Direction": 1
+					},
+					{
+						"X": 1.5, "Y": 1,
+						"Player Direction": 0
+					},
+					{
+						"X": 2.5, "Y": 1,
+						"Player Direction": 0
+					}
+				],
+				"Up L": [
+					{
+						"X": 2.5, "Y": 0,
+						"Player Direction": 3
+					},
+					{
+						"X": 0.5, "Y": 1,
+						"Player Direction": 0
+					},
+					{
+						"X": 1.5, "Y": 1,
+						"Player Direction": 0
+					}
+				],
+				"Left J": [
+					{
+						"X": 1.25, "Y": 0,
+						"Player Direction": 3
+					},
+					{
+						"X": 1.25, "Y": 0.75,
+						"Player Direction": 3
+					},
+					{
+						"X": 0.5, "Y": 1.25,
+						"Player Direction": 0
+					}
+				],
+				"Left L": [
+					{
+						"X": 0.25, "Y": 0,
+						"Player Direction": 2
+					},
+					{
+						"X": 1, "Y": 0.75,
+						"Player Direction": 3
+					},
+					{
+						"X": 1, "Y": 1.5,
+						"Player Direction": 3
+					}
+				]
+			},
+
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		}
 	}
 }

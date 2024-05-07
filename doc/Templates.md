@@ -13,6 +13,7 @@ All images referenced are in the assets of the Example Pack.
 - [Table Furniture](#table-furniture)
 - [Catalogue](#catalogue)
 - [Complex Furniture](#complex-furniture)
+	- [Corner Couch](#corner-couch)
 	- [Living Room](#living-room)
 
 ## Basic Furniture
@@ -301,6 +302,166 @@ You can also define a Shop in more details by using Content Patcher to patch Dat
 ## Complex Furniture
 
 Before trying to use one of these templates, it is strongly recommended to read about all of the features they use in the [documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
+
+### Corner Couch
+
+This is an example of a Furniture with:
+- 6 Rotations
+- Collision Maps
+- Seats
+- Layers
+
+Huge thanks to @oommps62 for providing the texture!
+
+```json
+{
+	"Display Name": "Corner Couch",
+
+	"Rotations": [
+		"Down J", "Down L","Right J",
+		"Up J", "Up L", "Left L"
+	],
+
+	"Collisions": {
+		"Down J": {
+			"Width": 4, "Height": 2,
+			"Map": "XXXX/..XX"
+		},
+		"Down L": {
+			"Width": 4, "Height": 2,
+			"Map": "XXXX/XX.."
+		},
+		"Up J": {
+			"Width": 4, "Height": 2,
+			"Map": "XX../XXXX"
+		},
+		"Up L": {
+			"Width": 4, "Height": 2,
+			"Map": "..XX/XXXX"
+		},
+		"Right J": {
+			"Width": 3, "Height": 3,
+			"Map": "XXX/XX./XX."
+		},
+		"Left L": {
+			"Width": 3, "Height": 3,
+			"Map": "XXX/.XX/.XX"
+		}
+	},
+
+	"Indoors": true,
+	"Outdoors": false,
+
+	"Source Image": "assets/corner_couch.png",
+	"Source Rect": {
+		"Down J":	{"X": 0,	"Y": 0,		"Width": 64, "Height": 48},
+		"Down L":	{"X": 64,	"Y": 0,		"Width": 64, "Height": 48},
+		"Right J":	{"X": 128,	"Y": 0,		"Width": 48, "Height": 64},
+		"Up J":		{"X": 0,	"Y": 48,	"Width": 64, "Height": 48},
+		"Up L":		{"X": 64,	"Y": 48,	"Width": 64, "Height": 48},
+		"Left L":	{"X": 272,	"Y": 0,		"Width": 48, "Height": 64}
+		// must have all directions
+	},
+
+	"Layers": [
+		{
+			"Source Rect": {
+				"Right J":	{"X": 128,	"Y": 64, "Width": 48, "Height": 64},
+				"Up J":		{"X": 0,	"Y": 96, "Width": 64, "Height": 48},
+				"Up L":		{"X": 64,	"Y": 96, "Width": 64, "Height": 48},
+				"Left L":	{"X": 272,	"Y": 64, "Width": 48, "Height": 64}
+			}
+		}
+	],
+
+	"Seats": {
+		"Down J": [
+			{
+				"X": 0.5, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 1.5, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 2.25, "Y": 0.625,
+				"Player Direction": 3
+			}
+		],
+		"Down L": [
+			{
+				"X": 1.5, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 2.5, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 0.75, "Y": 0.625,
+				"Player Direction": 1
+			}
+		],
+		"Right J": [
+			{
+				"X": 1.75, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 1, "Y": 0.75,
+				"Player Direction": 1
+			},
+			{
+				"X": 1, "Y": 1.5,
+				"Player Direction": 1
+			}
+		],
+		"Up J": [
+			{
+				"X": 0.5, "Y": 0,
+				"Player Direction": 1
+			},
+			{
+				"X": 1.5, "Y": 1,
+				"Player Direction": 0
+			},
+			{
+				"X": 2.5, "Y": 1,
+				"Player Direction": 0
+			}
+		],
+		"Up L": [
+			{
+				"X": 2.5, "Y": 0,
+				"Player Direction": 3
+			},
+			{
+				"X": 0.5, "Y": 1,
+				"Player Direction": 0
+			},
+			{
+				"X": 1.5, "Y": 1,
+				"Player Direction": 0
+			}
+		],
+		"Left L": [
+			{
+				"X": 0.25, "Y": 0,
+				"Player Direction": 2
+			},
+			{
+				"X": 1, "Y": 0.75,
+				"Player Direction": 3
+			},
+			{
+				"X": 1, "Y": 1.5,
+				"Player Direction": 3
+			}
+		]
+	}
+}
+```
 
 ### Living Room
 

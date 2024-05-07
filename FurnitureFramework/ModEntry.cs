@@ -229,7 +229,7 @@ namespace FurnitureFramework
 					{
 						if (type.place_in_slot(item, pos, Game1.player))
 						{
-							Helper.Input.Suppress(e.Button);
+							Helper.Input.Suppress(config.slot_place_key);
 							placed = true;
 							break;
 						}
@@ -247,7 +247,7 @@ namespace FurnitureFramework
 
 					if (type.remove_from_slot(item, pos, Game1.player))
 					{
-						Helper.Input.Suppress(e.Button);
+						Helper.Input.Suppress(config.slot_take_key);
 						break;
 					}
 				}
