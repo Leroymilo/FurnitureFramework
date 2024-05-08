@@ -943,6 +943,7 @@
 
 					"Frame Count": 1,
 					"Frame Duration": 5000,
+					"Loop Count": 1,
 					"Hold Last Frame": false,
 					"Flicker": false,
 

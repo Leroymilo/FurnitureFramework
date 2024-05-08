@@ -47,8 +47,6 @@ namespace FurnitureFramework
 
 		List<SoundData> sound_list = new();
 
-		public readonly bool has_toggle = false;
-
 		#region Sounds Parsing
 
 		public Sounds(JToken? sounds_token)
@@ -76,10 +74,6 @@ namespace FurnitureFramework
 						continue;
 					}
 					sound_list.Add(new_sound);
-					if (
-						new_sound.mode == SoundMode.on_turn_on ||
-						new_sound.mode == SoundMode.on_turn_off
-					) has_toggle = true;
 				}
 			}
 		}

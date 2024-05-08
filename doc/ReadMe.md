@@ -46,6 +46,8 @@ What parts of Furniture I plan to add customization to in this Framework:
 - Animated textures
 - Custom special furniture (TV, Bed, Dresser)
 - Custom light sources
+- Add directionality to some fields of Particles
+- Add Particle list of scales and list of scale_changes
 
 # Known Issues
 

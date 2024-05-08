@@ -39,6 +39,7 @@ namespace FurnitureFramework
 
 			int frame_count;
 			int frame_length;
+			int loop_count;
 			bool hold_last;
 			bool flicker;
 
@@ -143,14 +144,15 @@ namespace FurnitureFramework
 				scale = JC.extract(particle_obj, "Scale", 1f);
 				scale_change = JC.extract(particle_obj, "Scale Change", 0f);
 
-				string color_name = JC.extract(particle_obj, "Color", "Lime");
+				string color_name = JC.extract(particle_obj, "Color", "White");
 				SDColor c_color = SDColor.FromName(color_name);
 				color = new(c_color.R, c_color.G, c_color.B);
 				alpha = JC.extract(particle_obj, "Alpha", 1f);
 				alpha_fade = JC.extract(particle_obj, "Alpha Fade", 0f);
 
-				frame_count = JC.extract(particle_obj, "Frame Count", 0);
-				frame_length = JC.extract(particle_obj, "Frame Duration", 0);
+				frame_count = JC.extract(particle_obj, "Frame Count", 1);
+				frame_length = JC.extract(particle_obj, "Frame Duration", 1000);
+				loop_count = JC.extract(particle_obj, "Loop Count", 1);
 				hold_last = JC.extract(particle_obj, "Hold Last Frame", false);
 				flicker = JC.extract(particle_obj, "Flicker", false);
 
@@ -260,13 +262,14 @@ namespace FurnitureFramework
 					// acceleration = Vector2.Zero,
 					animationLength = frame_count,
 					interval = frame_length,
+					totalNumberOfLoops = loop_count,
 					holdLastFrame = hold_last,
 					flicker = flicker,
 					layerDepth = depth / 10000f,
 					scale = scale,
 					scaleChange = scale_change,
 					rotation = rotation,
-					rotationChange = Game1.random.Next(-5, 6) * MathF.PI / 256f
+					rotationChange = rot_speed
 				});
 			}
 

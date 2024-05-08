@@ -303,9 +303,9 @@ You can also define a Shop in more details by using Content Patcher to patch Dat
 ## Cauldron
 
 A cauldron has 3 specific properties:
-- it is [Toggleable]()
-- it has a [Layer]()
-- it has [Particles]()
+- it is [Toggleable](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#toggle)
+- it has a [Layer](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers)
+- it has [Particles](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#particles)
 
 This template can be easily reused, but make sure to understand each field before modifying it.
 

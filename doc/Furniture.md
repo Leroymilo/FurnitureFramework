@@ -13,17 +13,20 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Source Rect](#source-rect)
 	* [Collisions](#collisions)
 * [Optional Fields](#optional-fields)
-	* [Icon Rect](#icon-rect)
-	* [Seasonal](#seasonal)
+	* [Force Type](#force-type)
 	* [Price](#price)
 	* [Indoor & Outdoor](#indoor--outdoor)
-	* [Exclude from Random Sales](#exclude-from-random-sales)
 	* [Context Tags](#exclude-from-random-sales)
+	* [Exclude from Random Sales](#exclude-from-random-sales)
 	* [Shows in Shops](#shows-in-shops)
 	* [Shop Id](#shop-id)
+	* [Icon Rect](#icon-rect)
+	* [Seasonal](#seasonal)
 	* [Layers](#layers)
 	* [Seats](#seats)
 	* [Slots](#slots)
+	* [Toggle](#toggle)
+	* [Sounds](#sounds)
 
 ## Required Fields
 
@@ -102,58 +105,9 @@ This field is also the first [Directional Field](https://github.com/Leroymilo/Fu
 
 ### Collisions
 
-This field defines the collisions of your Furniture, it's what defines what part of the Furniture the player will not be able to walk through and place other Furniture on.
-
-This field is [Directional](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Directional%20Fields.md).
-
-It's 2 main properties give the size ***in game tiles*** of the bounding box:
-- "Width"
-- "Height"
-
-They are required to properly define a the collisions of a Furniture, they must be integers.
-
-The other propery of the Collisions field is its "Map", with it, you to decide for each tile of the bounding box if it is traversable or not. For example, this is the perfect tool if you want to make an arch that you can walk under.  
-To define a custom collision Map, you first have to write it as a square of characters of the size of the bounding box. Let's take the "Living Room" Furniture from the Example Pack, it's made of Furniture from the game to give a proper reference. Here's its main sprite:  
-![The main sprite for the Living Room Furniture](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/images/collision_map_example.gif)  
-This gif shows that its bounding box is 8x3, and its collision Map is represented by:
-```
-..XXXX..
-XX....XX
-......XX
-```
-In a collision Map, the tiles where the player can walk are represented by `.` and the tiles where they can't are represented by `X`. For now (maybe forever), the precision of the collision Map is limited to tiles.
-
-To properly put the collision Map in the Collisions model, the newlines have to be replaced by forward slashes `/`, which would look like this:
-```json
-{
-	"Width": 8,
-	"Height": 3,
-	"Map": "..XXXX../XX....XX/......XX"
-}
-```
-
-Note: if the topmost row or the rightmost column of your Map is fill with `.`, you can remove it and reduce the bounding box size accordingly.
-
-Note 2: if your Furniture uses a custom collision Map, there's a good chance that you'll have to define [Layers](#layers) to avoid layering issues.
+This field defines the collisions of your Furniture, it's what defines what part of the Furniture the player will not be able to walk through and place other Furniture on. Since they are quite complicated, they have their own [Collisions documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Collisions.md).
 
 ## Optional Fields
-
-### Icon Rect
-
-This field is another Rectangle, like a [Source Rect](#source-rect). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu.
-
-### Seasonal
-
-This field will allow you to create Furniture with different Sprites depending on the season, it's a boolean (true or false).  
-If false, the [Source Image](#source-image) will be read as is and the mod will try to read the image from this path.   If true, the mod will try to read an image for each season, based on the given Source Image path. For example, if Source Image is `assets/bush.png`, the mod will try to read these 4 images:
-- `assets/bush_spring.png`
-- `assets/bush_summer.png`
-- `assets/bush_fall.png`
-- `assets/bush_winter.png`
-
-:warning: If any of these images is missing, the Furniture won't be created.
-
-The `seasonal_bush_test` in the Example Pack uses this feature.
 
 ### Force Type
 
@@ -178,13 +132,13 @@ This is the default price of the Furniture, it will be used if it is added to a 
 
 These fields define if the Furniture can be placed respectively indoor and outdoor. They both accept boolean values (true or false, without quotation marks), and default to true. If both are set to false, your Furniture will be indoor only because of how the game is coded.
 
-### Exclude from Random Sales
-
-This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
-
 ### Context Tags
 
 This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).
+
+### Exclude from Random Sales
+
+This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
 
 ### Shows in Shops
 
@@ -207,6 +161,23 @@ An example of this is in the [Example Pack](https://github.com/Leroymilo/Furnitu
 
 Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it for example).
 
+### Icon Rect
+
+This field is another Rectangle, like a [Source Rect](#source-rect). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu.
+
+### Seasonal
+
+This field will allow you to create Furniture with different Sprites depending on the season, it's a boolean (true or false).  
+If false, the [Source Image](#source-image) will be read as is and the mod will try to read the image from this path.   If true, the mod will try to read an image for each season, based on the given Source Image path. For example, if Source Image is `assets/bush.png`, the mod will try to read these 4 images:
+- `assets/bush_spring.png`
+- `assets/bush_summer.png`
+- `assets/bush_fall.png`
+- `assets/bush_winter.png`
+
+:warning: If any of these images is missing, the Furniture won't be created.
+
+The `seasonal_bush_test` in the Example Pack uses this feature.
+
 ### Layers
 
 Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Layers.md).
@@ -218,3 +189,17 @@ Seats are what allow the Farmer to sit on your Furniture (duh), since they are q
 ### Slots
 
 Slots are where you can place items or other Furniture on a table Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).
+
+### Toggle
+
+This field is boolean (true or false) and will make a Furniture toggleable. "Toggleable" means that it can be turned on and off with right-click.  
+When a Furniture can be toggled, every sprite in its spritesheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the origin of the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
+
+A good example of this is the `Custom Cauldron` Furniture in the Example Pack: you can see in its spritesheet that it has its base sprite in the top left corner, and a Layer in the bottom left corner, while the "On" variants of these sprites are on the left.  
+![Custom Cauldron spritesheet](https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/%5BFF%5D%20Example%20Pack/assets/cauldron.png)
+
+### Sounds
+
+With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Sounds.md).
+
+### Particles
