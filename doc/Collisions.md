@@ -29,6 +29,8 @@ To properly put the collision Map in the Collisions model, the newlines have to 
 }
 ```
 
+If your Custom Collision Map is filled with void `.`, it will be ignored (because you won't be able to pick-up a furniture with no Collisions).
+
 Note: if the topmost row or the rightmost column of your Map is fill with `.`, you can remove it and reduce the bounding box size accordingly.
 
 Note 2: if your Furniture uses a custom collision Map, there's a good chance that you'll have to define [Layers](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers) to avoid layering issues.

@@ -26,8 +26,6 @@ namespace FurnitureFramework
 			HashSet<Point> game_tiles = new();
 			// in game coordinates (tile coordinates * 64)
 
-			public readonly bool is_passable = false;
-
 			#region CollisionData Parsing
 
 			public CollisionData(JObject col_object)
@@ -98,10 +96,7 @@ namespace FurnitureFramework
 						}
 					}
 
-					has_tiles = true;
-					if (tiles.Count < size.X * size.Y)
-						is_passable = true;
-					// to allow the player to un-sit properly
+					has_tiles = tiles.Count > 0;
 				}
 			}
 
