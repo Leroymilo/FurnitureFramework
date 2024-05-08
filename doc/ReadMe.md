@@ -29,6 +29,9 @@ What parts of Furniture are customizable with this Framework:
 - Custom table slots
 - Texture Variants creating multiple Furniture
 - Seasonal Textures
+- Toggleable Furniture
+- Sounds on toggle and/or on click
+- Custom Particles
 
 # Thanks
 
@@ -40,11 +43,9 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Custom light sources
 - Animated textures
-- Custom click action (play sound)
-- Custom toggle state (on/off like a fireplace)
-- Custom furniture properties (TV, Bed, Dresser)
+- Custom special furniture (TV, Bed, Dresser)
+- Custom light sources
 
 # Known Issues
 

@@ -357,6 +357,7 @@ namespace FurnitureFramework
 			{
 				depth = bounding_box.Top;
 				if (is_mural) depth -= 32;
+				depth = MathF.BitIncrement(depth);
 			}
 			depth /= 10000f;
 
@@ -694,24 +695,8 @@ namespace FurnitureFramework
 				if (furniture.GetSittingFarmerCount() > sit_count)
 					had_action = true;
 			}
-
-			// // Take held object (commented to avoid place-pick in same click)
-			// if (furniture.heldObject.Value != null)
-			// {
-			// 	ModEntry.log("Taking held object through checkForAction");
-			// 	StardewValley.Object value = furniture.heldObject.Value;
-			// 	furniture.heldObject.Value = null;
-			// 	if (who.addItemToInventoryBool(value))
-			// 	{
-			// 		value.performRemoveAction();
-			// 		Game1.playSound("coin");
-			// 		had_action =  true;
-			// 	}
-			// 	else
-			// 	{
-			// 		furniture.heldObject.Value = value;
-			// 	}
-			// }
+			
+			// maybe add place in slot or remove from slot?
 		}
 	}
 }

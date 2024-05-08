@@ -27,12 +27,15 @@ namespace FurnitureFramework
 			List<float> depths = new();
 			Vector2 base_speed = Vector2.Zero;
 
-			Color color;
-			float alpha;
-			float alpha_fade;
+			List<float> rotations = new();
+			List<float> rot_speeds = new();
 
 			float scale;
 			float scale_change;
+
+			Color color;
+			float alpha;
+			float alpha_fade;
 
 			int frame_count;
 			int frame_length;
@@ -89,24 +92,53 @@ namespace FurnitureFramework
 					return;
 				}
 
-				error_msg = "Invalid or missing Depths field.";
 				JToken? depths_token = particle_obj.GetValue("Depths");
-				if (depths_token is not JArray depths_arr) return;
-				foreach (JToken depth_token in depths_arr)
+				if (depths_token is JArray depths_arr)
 				{
-					if (
-						depth_token.Type != JTokenType.Float &&
-						depth_token.Type != JTokenType.Integer
-					) continue;
-					depths.Add((float)depth_token);
+					foreach (JToken depth_token in depths_arr)
+					{
+						if (
+							depth_token.Type != JTokenType.Float &&
+							depth_token.Type != JTokenType.Integer
+						) continue;
+						depths.Add((float)depth_token);
+					}
 				}
-				if (depths.Count == 0) return;
+				if (depths.Count == 0) depths.Add(0);
 
 				JToken? speed_token = particle_obj.GetValue("Speed");
 				if (speed_token is JObject speed_obj)
 				{
 					base_speed = JC.extract_position(speed_obj);
 				}
+
+				JToken? rots_token = particle_obj.GetValue("Rotations");
+				if (rots_token is JArray rots_arr)
+				{
+					foreach (JToken rot_token in rots_arr)
+					{
+						if (
+							rot_token.Type != JTokenType.Float &&
+							rot_token.Type != JTokenType.Integer
+						) continue;
+						rotations.Add((float)rot_token);
+					}
+				}
+				if (rotations.Count == 0) rotations.Add(0);
+
+				JToken? rot_speeds_token = particle_obj.GetValue("Rotation Speeds");
+				if (rot_speeds_token is JArray rot_speeds_arr)
+				{
+					foreach (JToken rot_speed_token in rot_speeds_arr)
+					{
+						if (
+							rot_speed_token.Type != JTokenType.Float &&
+							rot_speed_token.Type != JTokenType.Integer
+						) continue;
+						rot_speeds.Add((float)rot_speed_token);
+					}
+				}
+				if (rot_speeds.Count == 0) rot_speeds.Add(0);
 
 				scale = JC.extract(particle_obj, "Scale", 1f);
 				scale_change = JC.extract(particle_obj, "Scale Change", 0f);
@@ -190,6 +222,7 @@ namespace FurnitureFramework
 				if (speed_ is null) speed = base_speed;
 				else speed = speed_.Value;
 
+				// for burst
 				float new_alpha_fade;
 				if (speed.Length() * base_speed.Length() > 0)
 				{
@@ -197,7 +230,6 @@ namespace FurnitureFramework
 					new_alpha_fade -= speed.Length() > base_speed.Length() ? 0.002f: 0f;
 				}
 				else new_alpha_fade = alpha_fade;
-
 
 				float depth = depths[Game1.random.Next(depths.Count)];
 				depth = furniture.boundingBox.Bottom - depth * 64f;
@@ -211,6 +243,9 @@ namespace FurnitureFramework
 					Game1.random.NextSingle()
 				) * spawn_rect.Size.ToVector2() * 4f;
 				position -= source_rect.Size.ToVector2() * 2f;
+
+				float rotation = rotations[Game1.random.Next(rotations.Count)];
+				float rot_speed = rot_speeds[Game1.random.Next(rot_speeds.Count)];
 
 				furniture.Location.temporarySprites.Add(
 				new TemporaryAnimatedSprite()
@@ -230,6 +265,7 @@ namespace FurnitureFramework
 					layerDepth = depth / 10000f,
 					scale = scale,
 					scaleChange = scale_change,
+					rotation = rotation,
 					rotationChange = Game1.random.Next(-5, 6) * MathF.PI / 256f
 				});
 			}

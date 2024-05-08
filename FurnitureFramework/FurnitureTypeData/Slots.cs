@@ -23,7 +23,7 @@ namespace FurnitureFramework
 			Rectangle single_area;
 			bool is_directional = false;
 
-			public readonly float depth = 0;
+			public readonly float depth = 0.1f;
 
 			Vector2 offset = Vector2.Zero;
 			bool draw_shadow = true;
@@ -84,15 +84,8 @@ namespace FurnitureFramework
 				}
 
 				// Parsing optional layer depth
-
-				JToken? depth_token = slot_obj.GetValue("Depth");
-				if (depth_token != null &&
-					(depth_token.Type == JTokenType.Float ||
-					depth_token.Type == JTokenType.Integer)
-				)
-				{
-					depth = (float)depth_token;
-				}
+				
+				depth = JC.extract(slot_obj, "Depth", 0.1f);
 
 				// Parsing optional offset
 
@@ -158,6 +151,7 @@ namespace FurnitureFramework
 
 				float draw_depth = bottom - depth * 64;
 				draw_depth = draw_depth / 10000f;
+				draw_depth = MathF.BitIncrement(draw_depth);
 				draw_depth = MathF.BitIncrement(draw_depth);
 				// plus epsilon to make sure it's drawn over the layer at the same depth
 

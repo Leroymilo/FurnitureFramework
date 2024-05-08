@@ -12,6 +12,7 @@ All images referenced are in the assets of the Example Pack.
 	- [Couch](#couch)
 - [Table Furniture](#table-furniture)
 - [Catalogue](#catalogue)
+- [Cauldron](#cauldron)
 - [Complex Furniture](#complex-furniture)
 	- [Corner Couch](#corner-couch)
 	- [Living Room](#living-room)
@@ -298,6 +299,86 @@ This is an example of how to make a custom catalogue throught the Furniture Fram
 
 If you want other Furniture to show up in this Catalogue, you have to add the field `"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]` to their definition.  
 You can also define a Shop in more details by using Content Patcher to patch Data/Shops, see [the wiki](https://stardewvalleywiki.com/Modding:Shops) for more info about custom Shops. Shops with an ID that already exists should be attached to the Furniture without having their definition modified. The same way goes for Shop Items: if you define a Shop Item in a CP Patch, it won't be overwritten by the Furniture Framework. If you have any issue with this feature, ping me in the [modding channel of the Stardew Valley Discord server](https://discord.com/channels/137344473976799233/156109690059751424) so that I can help you.
+
+## Cauldron
+
+A cauldron has 3 specific properties:
+- it is [Toggleable]()
+- it has a [Layer]()
+- it has [Particles]()
+
+This template can be easily reused, but make sure to understand each field before modifying it.
+
+```json
+{
+	"Display Name": "Custom Cauldron",
+
+	"Rotations": 1,
+	"Collisions": {
+		"Width": 2,
+		"Height": 1
+	},	// in tiles
+
+	"Indoors": true,
+	"Outdoors": true,
+
+	"Source Image": "assets/cauldron.png",
+	"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
+
+	"Layers": [
+		{
+			"Source Rect": {"X": 0, "Y": 32, "Width": 32, "Height": 32}
+		}
+	],
+
+	"Sounds": [
+		{
+			"Mode": "on_turn_on",
+			"Name": "bubbles"
+		},
+		{
+			"Mode": "on_turn_on",
+			"Name": "fireball"
+		}
+	],
+
+	"Particles": [
+		{
+			"Source Image": "assets/smoke.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 10, "Height": 10},
+			"Emission Interval": 500,
+
+			"Spawn Rect": {"X": 12, "Y": 15, "Width": 8, "Height": 4},
+			"Depths": [0.1, 0.3, 0.5, 0.7, 0.9],
+			"Speed": {"X": 0, "Y": -0.5},
+
+			"Rotations": [],
+			"Rotation Speeds": [
+				-0.061, -0.049, -0.037, -0.025, -0.012,
+				0, 0.012, 0.025, 0.037, 0.049, 0.061
+			],
+
+			"Scale": 3,
+			"Scale Change": 0.01,
+
+			"Color": "Lime",
+			"Alpha": 0.75,
+			"Alpha Fade": 0.0027,
+
+			"Frame Count": 1,
+			"Frame Duration": 5000,
+			"Hold Last Frame": false,
+			"Flicker": false,
+
+			"Emit When On": true,
+			"Emit When Off": false,
+			"Burst": true
+		}
+	],
+
+	"Toggle": true
+}
+```
 
 ## Complex Furniture
 

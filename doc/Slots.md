@@ -48,11 +48,11 @@ It can be omitted, its default value being (0, 0).
 
 This is the depth at which the item in the slot should be drawn, it's mesured in tiles, starting with 0 at the bottom of the bounding box. See the "Living Room" furniture in the Example Pack to have examples of layers with depth.  
 It can be a float (decimal value), but it's recommended to keep it an integer if you don't need to have precise layering.  
-If it's below zero, the placed items might be drawn in front Furniture placed in front of this Furniture. If it's over the value of the field Height of the Furniture's Collisions it will be drawn behind the base sprite of the Furniture.
+If it's equal or less than zero, the placed items will be drawn in front of the Furniture placed in front of this Furniture. If it's over the value of the field "Height" of the Furniture's Collisions it will be drawn behind the base sprite of the Furniture.
 
 As a general rule, if you have to create a [Layer](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers) for the part of the Furniture where you'll place the spot, then the spot should have the same depth (or lower) as the corresponding layer.
 
-Defaults to `0`.
+Defaults to `0.1`.
 
 ## Example
 
