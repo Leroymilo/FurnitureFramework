@@ -30,7 +30,7 @@ What parts of Furniture are customizable with this Framework:
 - Texture Variants creating multiple Furniture
 - Seasonal Textures
 - Toggleable Furniture
-- Sounds on toggle and/or on click
+- Custom Sound Effects
 - Custom Particles
 
 # Thanks

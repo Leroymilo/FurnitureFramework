@@ -67,6 +67,15 @@ namespace FurnitureFramework
 		{
 			parse_furniture_packs();
 			register_config();
+
+			if (
+				Helper.ModRegistry.IsLoaded("PeacefulEnd.AlternativeTextures")
+				&& !config.disable_AT_warning
+			)
+			{
+				log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
+				log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
+			}
 		}
 
 		private void register_config()
@@ -98,6 +107,16 @@ namespace FurnitureFramework
 				getValue: () => config.slot_take_key,
 				setValue: value => config.slot_take_key = value
 			);
+
+			configMenu.AddBoolOption(
+				mod: ModManifest,
+				name: () => "Disable AT Warning",
+				tooltip: () => "Check this to disable the warning about Alternative Textures.",
+				getValue: () => config.disable_AT_warning,
+				setValue: value => config.disable_AT_warning = value
+			);
+
+
 		}
 
 		private void parse_furniture_packs()
