@@ -159,7 +159,7 @@ namespace FurnitureFramework
 			List<string>? rot_names = null
 		)
 		{
-			foreach (JToken seat_token in seats_arr.Children())
+			foreach (JToken seat_token in seats_arr)
 			{
 				if (seat_token is not JObject seat_obj) continue;
 

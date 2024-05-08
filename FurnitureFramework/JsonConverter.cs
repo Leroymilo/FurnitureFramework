@@ -11,6 +11,10 @@ namespace FurnitureFramework
 	{
 		public static T extract<T>(JObject data, string key, T def) where T : notnull
 		{
+JToken? token = data.GetValue(key);
+if (token is null || token.Type == JTokenType.Null)
+	return def;
+
 			T? value = data.Value<T?>(key);
 			if (value == null)
 				return def;

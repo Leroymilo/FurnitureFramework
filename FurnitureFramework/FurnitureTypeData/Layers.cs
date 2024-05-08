@@ -123,19 +123,22 @@ namespace FurnitureFramework
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
 				Vector2 texture_pos, float base_depth,
-				int rot = -1
+				int rot = -1, bool is_on = false
 			)
 			{
-				Rectangle? source_rect;
+				Rectangle? rect_;
 
 				if (is_directional)
 				{
-					source_rect = directional_source_rects[rot];
+					rect_ = directional_source_rects[rot];
 				}
 				else
-					source_rect = single_source_rect;
+					rect_ = single_source_rect;
 				
-				if(source_rect == null) return;
+				if(rect_ is not Rectangle source_rect) return;
+
+				if (is_on)
+					source_rect.X += source_rect.Width;
 
 				sprite_batch.Draw(
 					texture, texture_pos + draw_pos, source_rect,
@@ -194,7 +197,7 @@ namespace FurnitureFramework
 			Texture2D texture, List<string>? rot_names = null
 		)
 		{
-			foreach (JToken layer_token in layers_arr.Children())
+			foreach (JToken layer_token in layers_arr)
 			{
 				if (layer_token is not JObject layer_obj) continue;
 
@@ -217,7 +220,8 @@ namespace FurnitureFramework
 
 		public void draw(
 			SpriteBatch sprite_batch, Color color,
-			Vector2 texture_pos, float base_depth, int rot
+			Vector2 texture_pos, float base_depth,
+			int rot, bool is_on
 		)
 		{
 			if (!has_layers) return;
@@ -231,7 +235,7 @@ namespace FurnitureFramework
 
 			foreach (LayerData layer in cur_layers)
 			{
-				layer.draw(sprite_batch, color, texture_pos, base_depth, rot);
+				layer.draw(sprite_batch, color, texture_pos, base_depth, rot, is_on);
 			}
 		}
 

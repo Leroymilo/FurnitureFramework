@@ -359,10 +359,10 @@
 			"Slots": {
 				"Horizontal": [
 					{
-						"Area": {"X": 0, "Y": 10, "Width": 16, "Height": 16}
+						"Area": {"X": 0, "Y": 11, "Width": 16, "Height": 13}
 					},
 					{
-						"Area": {"X": 16, "Y": 10, "Width": 16, "Height": 16}
+						"Area": {"X": 16, "Y": 11, "Width": 16, "Height": 13}
 					}
 				],
 				"Vertical": [
@@ -882,6 +882,71 @@
 			},
 
 			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+		},
+
+		"cauldron_test": {
+			"Display Name": "Custom Cauldron",
+
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},	// in tiles
+
+			"Indoors": true,
+			"Outdoors": true,
+
+			"Source Image": "assets/cauldron.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
+
+			"Layers": [
+				{
+					"Source Rect": {"X": 0, "Y": 32, "Width": 32, "Height": 32}
+				}
+			],
+
+			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
+
+			"Sounds": [
+				{
+					"Mode": "on_turn_on",
+					"Name": "bubbles"
+				},
+				{
+					"Mode": "on_turn_on",
+					"Name": "fireball"
+				}
+			],
+
+			"Particles": [
+				{
+					"Source Image": "assets/smoke.png",
+					"Source Rect": {"X": 0, "Y": 0, "Width": 10, "Height": 10},
+					"Emission Interval": 500,
+
+					"Spawn Rect": {"X": 12, "Y": 15, "Width": 8, "Height": 4},
+					"Depths": [0.1, 0.3, 0.5, 0.7, 0.9],
+					"Speed": {"X": 0, "Y": -0.5},
+
+					"Scale": 3,
+					"Scale Change": 0.01,
+
+					"Color": "Lime",
+					"Alpha": 0.75,
+					"Alpha Fade": 0.0027,
+
+					"Frame Count": 1,
+					"Frame Duration": 5000,
+					"Hold Last Frame": false,
+					"Flicker": false,
+
+					"Emit When On": true,
+					"Emit When Off": false,
+					"Burst": true	// default true
+				}
+			],
+
+			"Toggle": true
 		}
 	}
 }

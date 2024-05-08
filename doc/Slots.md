@@ -13,16 +13,42 @@ A slot object has 2 fields:
 
 ## Area
 
-This is the rectangle (in pixels) where the slot is located on the sprite for this rotation. This area correspond to where you should click on the Furniture to place or remove something from the slot. Items placed in this slot will be roughly centered in this area.  
+This is the rectangle (in pixels) where the slot is located on the sprite for this rotation. This area correspond to where you should click on the Furniture to place or remove something from the slot.  
+Items placed in this slot will be horizontally centered in this area, and they will be aligned to the bottom of this area (the lowest pixel of the item sprite will be on the same line as the lowest pixel of the area). This can be changed with the Offset field.  
+
 Be carefull, the Area of a Slot is relative to the sprite for this rotation, not to the whole spritesheet. For example, in the Vertical Slot of the `table_test` Furniture of the Example Pack, since the Vertical Source Rect starts at (32, 0), the Vertical Area starting at (0, 8) is actually starting at (32, 8) on the spritesheet.
 
-This area can be directional, but if set as directional, the depth field will be ignored and default to 0.
+Note: It is not recommended to define overlapping areas, but if you do they will be prioritized in the order they were defined.
+
+This area can be directional.
+
+## Offset
+
+An offset, in pixels to change the default position of the item placed in this slot (it usually depends on the Area).  It has 2 fields X and Y, both can be decimal:
+```json
+"Offset": {"X": 12, "Y": 5}
+```
+It can be omitted, its default value being (0, 0).
+
+## Draw Shadow
+
+A boolean (true or false) that tells the game wether or not to draw the shadow of the placed item. Furnitures placed on Furniture have no added shadow.  
+If the shadow is enabled, items will be drawn 1 (one) pixel higher.
+
+## Shadow Offset
+
+An offset, in pixels to change the default position of the shadow of the item placed in this slot (it usually depends on the Area).  
+It has 2 fields X and Y, both can be decimal:
+```json
+"Offset": {"X": 12, "Y": 5}
+```
+It can be omitted, its default value being (0, 0).
 
 ## Depth
 
-This is the depth at which the item in the slot should be drawn, it's mesured in tiles, starting from the bottom of the bounding box. If 0, it will be drawn over anything that is above the bottom of the bounding box of the Furniture. See the "Living Room" furniture in the Example Pack to have examples of layers with depth.
-
-It can be a float (decimal value), but it's recommended to keep it an integer if you don't need to have layers more precise than a tile.
+This is the depth at which the item in the slot should be drawn, it's mesured in tiles, starting with 0 at the bottom of the bounding box. See the "Living Room" furniture in the Example Pack to have examples of layers with depth.  
+It can be a float (decimal value), but it's recommended to keep it an integer if you don't need to have precise layering.  
+If it's below zero, the placed items might be drawn in front Furniture placed in front of this Furniture. If it's over the value of the field Height of the Furniture's Collisions it will be drawn behind the base sprite of the Furniture.
 
 As a general rule, if you have to create a [Layer](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers) for the part of the Furniture where you'll place the spot, then the spot should have the same depth (or lower) as the corresponding layer.
 

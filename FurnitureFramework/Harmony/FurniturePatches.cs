@@ -260,5 +260,28 @@ namespace FurnitureFramework
 		}
 
 		#endregion
+
+		#region updateWhenCurrentLocation
+
+		internal static void updateWhenCurrentLocation(
+			Furniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.updateWhenCurrentLocation(__instance);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
+			}
+		}
+
+		#endregion
 	}
 }

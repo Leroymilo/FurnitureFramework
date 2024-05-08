@@ -53,9 +53,12 @@ namespace FurnitureFramework
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
 			helper.Events.GameLoop.DayStarted += on_day_started;
+			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			
 			HarmonyPatcher.patch();
         }
+
+		#region On Game Launched
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
         /// <param name="sender">The event sender.</param>
@@ -194,6 +197,7 @@ namespace FurnitureFramework
 			Helper.GameContent.InvalidateCache("Data/Furniture");
 		}
 
+		#endregion
 
         /// <inheritdoc cref="IInputEvents.ButtonPressed"/>
         /// <param name="sender">The event sender.</param>
@@ -336,6 +340,32 @@ namespace FurnitureFramework
 			foreach (FurnitureType type in furniture.Values)
 			{
 				type.update_seasonal_texture(last_season);
+			}
+		}
+
+        /// <inheritdoc cref="IWorldEvents.FurnitureListChanged"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_furniture_list_changed(object? sender, FurnitureListChangedEventArgs e)
+		{
+			foreach (Furniture furniture in e.Added)
+			{
+				ModEntry.furniture.TryGetValue(
+					furniture.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.on_placed(furniture);
+			}
+			
+			foreach (Furniture furniture in e.Removed)
+			{
+				ModEntry.furniture.TryGetValue(
+					furniture.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.on_removed(furniture);
 			}
 		}
     }

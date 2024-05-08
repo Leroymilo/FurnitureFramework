@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Extensions;
 using StardewValley.Objects;
 
 
@@ -54,6 +55,10 @@ namespace FurnitureFramework
 
 		public readonly string? shop_id = null;
 		public readonly HashSet<string> shops = new();
+
+		Sounds sounds;
+		bool can_be_toggled = false;
+		Particles particles;
 
 		public static void make_furniture(
 			IContentPack pack, string id, JObject data,
@@ -193,7 +198,7 @@ namespace FurnitureFramework
 			JToken? shops_token = data.GetValue("Shows in Shops");
 			if (shops_token is JArray shops_array)
 			{
-				foreach (JToken shop_token in shops_array.Children())
+				foreach (JToken shop_token in shops_array)
 				{
 					if (shop_token.Type != JTokenType.String) continue;
 					string? shop_str = (string?)shop_token;
@@ -201,13 +206,36 @@ namespace FurnitureFramework
 					shops.Add(shop_str);
 				}
 			}
+
+			can_be_toggled = JC.extract(data, "Toggle", false);
+
+			sounds = new(data.GetValue("Sounds"));
+
+			particles = new(pack, data.GetValue("Particles"));
 		}
 
-		public void update_seasonal_texture(string new_season)
+		public string get_string_data()
 		{
-			if (!is_seasonal) return;
-			texture = seasonal_textures[new_season];
+			string result = display_name;
+			result += $"/{type}";
+			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
+			result += $"/1 1";	// overwritten by updateRotation
+			result += $"/{rotations}";
+			result += $"/{price}";
+			result += $"/{placement_rules}";
+			result += $"/{display_name}";
+			result += $"/0";
+			result += $"/{id}";	// texture path
+			result += $"/{exclude_from_random_sales}";
+			if (context_tags.Count > 0)
+				result += $"/" + context_tags.Join(delimiter: " ");
+
+			// ModEntry.log(result);
+
+			return result;
 		}
+
+		#region Rotation
 
 		public void parse_rotations(JObject data)
 		{
@@ -243,7 +271,7 @@ namespace FurnitureFramework
 
 			if (rot_token is JArray rot_arr)
 			{
-				foreach (JToken key_token in rot_arr.Children())
+				foreach (JToken key_token in rot_arr)
 				{
 					if (key_token.Type != JTokenType.String) continue;
 					string? key = (string?)key_token;
@@ -272,25 +300,33 @@ namespace FurnitureFramework
 			throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
 		}
 
-		public string get_string_data()
+		public void rotate(Furniture furniture)
 		{
-			string result = display_name;
-			result += $"/{type}";
-			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
-			result += $"/1 1";	// overwritten by updateRotation
-			result += $"/{rotations}";
-			result += $"/{price}";
-			result += $"/{placement_rules}";
-			result += $"/{display_name}";
-			result += $"/0";
-			result += $"/{id}";	// texture path
-			result += $"/{exclude_from_random_sales}";
-			if (context_tags.Count > 0)
-				result += $"/" + context_tags.Join(delimiter: " ");
+			int rot = furniture.currentRotation.Value;
+			rot = (rot + 1) % rotations;
 
-			// ModEntry.log(result);
+			if (rot < 0) rot = 0;
 
-			return result;
+			furniture.currentRotation.Value = rot;
+			furniture.updateRotation();
+		}
+
+		public void updateRotation(Furniture furniture)
+		{
+			int rot = furniture.currentRotation.Value;
+			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+
+			furniture.boundingBox.Value = collisions.get_bounding_box(pos, rot);
+		}
+
+		#endregion
+
+		#region Texture & Drawing
+
+		public void update_seasonal_texture(string new_season)
+		{
+			if (!is_seasonal) return;
+			texture = seasonal_textures[new_season];
 		}
 
 		public Texture2D get_icon_texture()
@@ -310,14 +346,17 @@ namespace FurnitureFramework
 			float depth;
 			Vector2 position;
 			Rectangle bounding_box = collisions.get_bounding_box(pos, rot);
+			Rectangle source_rect = source_rects[rot].Clone();
+
+			if (furniture.IsOn)
+				source_rect.X += source_rect.Width;
 
 			// computing common depth :
 			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
 			{
-				depth = bounding_box.Top + 16;
-				if (is_mural) depth -= 48;
-				else depth -= 8;
+				depth = bounding_box.Top;
+				if (is_mural) depth -= 32;
 			}
 			depth /= 10000f;
 
@@ -326,7 +365,7 @@ namespace FurnitureFramework
 			{
 				position = new(
 					bounding_box.X,
-					bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height)
+					bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height)
 				);
 			}
 
@@ -335,7 +374,7 @@ namespace FurnitureFramework
 			{
 				position = new(
 					64*x,
-					64*y - (source_rects[rot].Height * 4 - bounding_box.Height)
+					64*y - (source_rect.Height * 4 - bounding_box.Height)
 				);
 			}
 
@@ -345,7 +384,7 @@ namespace FurnitureFramework
 			position = Game1.GlobalToLocal(Game1.viewport, position);
 
 			sprite_batch.Draw(
-				texture, position, source_rects[rot],
+				texture, position, source_rect,
 				color, 0f, Vector2.Zero, 4f, effects, depth
 			);
 
@@ -354,7 +393,7 @@ namespace FurnitureFramework
 				layers.draw(
 					sprite_batch, color,
 					position, bounding_box.Bottom,
-					rot
+					rot, furniture.IsOn
 				);
 			}
 
@@ -387,12 +426,16 @@ namespace FurnitureFramework
 
 			if (Game1.debugMode)
 			{
-				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rects[rot].Height * 4 - bounding_box.Height));
+				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
 
 			// ModEntry.print_debug = false;
 		}
+
+		#endregion
+
+		#region Methods for Seats
 
 		public void GetSeatPositions(Furniture furniture, ref List<Vector2> list)
 		{
@@ -412,69 +455,10 @@ namespace FurnitureFramework
 			int? new_sit_dir = seats.get_sitting_direction(rot, seat_index);
 			if (new_sit_dir != null) sit_dir = (int)new_sit_dir;
 		}
-		
-		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
-		{
-			if (justCheckingForActivity) return;
-			// had_action is already true from original method
 
-			// Shop
-			if (shop_id != null)
-			{
-				if (Utility.TryOpenShopMenu(shop_id, Game1.currentLocation))
-					had_action = true;
-			}
+		#endregion
 
-			// Play Sound
-
-			// Toggle
-
-			// Seats
-			if (seats.has_seats && !had_action)
-			{
-				int sit_count = furniture.GetSittingFarmerCount();
-				who.BeginSitting(furniture);
-				if (furniture.GetSittingFarmerCount() > sit_count)
-					had_action = true;
-			}
-
-			// // Take held object (commented to avoid place-pick in same click)
-			// if (furniture.heldObject.Value != null)
-			// {
-			// 	ModEntry.log("Taking held object through checkForAction");
-			// 	StardewValley.Object value = furniture.heldObject.Value;
-			// 	furniture.heldObject.Value = null;
-			// 	if (who.addItemToInventoryBool(value))
-			// 	{
-			// 		value.performRemoveAction();
-			// 		Game1.playSound("coin");
-			// 		had_action =  true;
-			// 	}
-			// 	else
-			// 	{
-			// 		furniture.heldObject.Value = value;
-			// 	}
-			// }
-		}
-
-		public void rotate(Furniture furniture)
-		{
-			int rot = furniture.currentRotation.Value;
-			rot = (rot + 1) % rotations;
-
-			if (rot < 0) rot = 0;
-
-			furniture.currentRotation.Value = rot;
-			furniture.updateRotation();
-		}
-
-		public void updateRotation(Furniture furniture)
-		{
-			int rot = furniture.currentRotation.Value;
-			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
-
-			furniture.boundingBox.Value = collisions.get_bounding_box(pos, rot);
-		}
+		#region Methods for Collisions
 
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
 		{
@@ -544,6 +528,10 @@ namespace FurnitureFramework
 			allow = !collides;
 		}
 
+		#endregion
+
+		#region Methods for Slots
+
 		private void initialize_slots(Furniture furniture, int rot)
 		{
 			if (!is_table)
@@ -555,7 +543,7 @@ namespace FurnitureFramework
 			if (furniture.heldObject.Value is Chest) return;
 
 			StardewValley.Object held = furniture.heldObject.Value;
-			Chest chest = new Chest();
+			Chest chest = new();
 			chest.Items.OverwriteWith(Enumerable.Repeat<Item?>(null, slots.get_count(rot)).ToList());
 			chest.Items[0] = held;
 			furniture.heldObject.Value = chest;
@@ -589,12 +577,6 @@ namespace FurnitureFramework
 			if (chest.Items[slot_index] is not null) return false;
 			// Slot already occupied
 
-			Point item_pos = slot_area.Location * new Point(4) + this_pos;
-			Rectangle bounding_box = new(
-				item_pos,
-				slot_area.Size * new Point(4)
-			);
-
 			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
 
 			if (obj_inst is Furniture furn)
@@ -606,8 +588,7 @@ namespace FurnitureFramework
 			}
 
 			obj_inst.Location = furniture.Location;
-			obj_inst.TileLocation = item_pos.ToVector2() / 64f;
-			obj_inst.boundingBox.Value = bounding_box;
+			obj_inst.TileLocation = this_pos.ToVector2() / 64f;
 
 			chest.Items[slot_index] = obj_inst;
 
@@ -652,6 +633,85 @@ namespace FurnitureFramework
 			}
 
 			return false;
+		}
+
+		#endregion
+
+		#region Methods for Particles
+
+		public void updateWhenCurrentLocation(Furniture furniture)
+		{
+			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+			particles.update_timer(furniture, ms_time);
+		}
+
+		public void on_removed(Furniture furniture)
+		{
+			particles.free_timers(furniture);
+			furniture.lastNoteBlockSoundTime = 0;
+		}
+
+		public void on_placed(Furniture furniture)
+		{
+			particles.burst(furniture);
+		}
+
+		#endregion
+
+		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
+		{
+			if (justCheckingForActivity) return;
+			// had_action is already true from original method
+
+			// Shop
+			if (shop_id != null)
+			{
+				if (Utility.TryOpenShopMenu(shop_id, Game1.currentLocation))
+					had_action = true;
+			}
+
+			// Play Sound
+
+			// Toggle
+			if (can_be_toggled)
+			{
+				furniture.IsOn = !furniture.IsOn;
+
+				sounds.play(furniture.Location, furniture.IsOn);
+
+				particles.burst(furniture);
+			}
+			else
+			{
+				sounds.play(furniture.Location);
+			}
+
+			// Seats
+			if (seats.has_seats && !had_action)
+			{
+				int sit_count = furniture.GetSittingFarmerCount();
+				who.BeginSitting(furniture);
+				if (furniture.GetSittingFarmerCount() > sit_count)
+					had_action = true;
+			}
+
+			// // Take held object (commented to avoid place-pick in same click)
+			// if (furniture.heldObject.Value != null)
+			// {
+			// 	ModEntry.log("Taking held object through checkForAction");
+			// 	StardewValley.Object value = furniture.heldObject.Value;
+			// 	furniture.heldObject.Value = null;
+			// 	if (who.addItemToInventoryBool(value))
+			// 	{
+			// 		value.performRemoveAction();
+			// 		Game1.playSound("coin");
+			// 		had_action =  true;
+			// 	}
+			// 	else
+			// 	{
+			// 		furniture.heldObject.Value = value;
+			// 	}
+			// }
 		}
 	}
 }

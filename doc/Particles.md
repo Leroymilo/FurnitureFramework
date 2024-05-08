@@ -1,0 +1,1 @@
+Colors: https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties

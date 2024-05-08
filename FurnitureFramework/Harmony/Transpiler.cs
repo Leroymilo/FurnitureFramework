@@ -409,7 +409,7 @@ callvirt instance !0 class Netcode.NetFieldBase`2<class StardewValley.Object, cl
 
 	With :
 
-call h
+call check_held_object
 
 */
 		static private bool check_held_object(Furniture furniture)

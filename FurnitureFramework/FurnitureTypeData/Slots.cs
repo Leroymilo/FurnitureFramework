@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -23,6 +24,10 @@ namespace FurnitureFramework
 			bool is_directional = false;
 
 			public readonly float depth = 0;
+
+			Vector2 offset = Vector2.Zero;
+			bool draw_shadow = true;
+			Vector2 shadow_offset = Vector2.Zero;
 
 			#region SlotData Parsing
 
@@ -76,8 +81,6 @@ namespace FurnitureFramework
 					if (!has_rect) return;
 					
 					is_directional = true;
-					is_valid = true;
-					return;	// no draw pos or depth if source rect is directional
 				}
 
 				// Parsing optional layer depth
@@ -89,6 +92,29 @@ namespace FurnitureFramework
 				)
 				{
 					depth = (float)depth_token;
+				}
+
+				// Parsing optional offset
+
+				JToken? offset_token = slot_obj.GetValue("Offset");
+				if (offset_token != null)
+				{
+					offset = JC.extract_position(offset_token);
+				}
+
+				// Parsing optional draw shadow
+
+				draw_shadow = JC.extract(slot_obj, "Draw Shadow", true);
+				
+
+				// Parsing optional shadow offset
+				if (draw_shadow)
+				{
+					JToken? s_offset_token = slot_obj.GetValue("Shadow Offset");
+					if (s_offset_token != null)
+					{
+						shadow_offset = JC.extract_position(s_offset_token);
+					}
 				}
 
 				is_valid = true;
@@ -103,6 +129,98 @@ namespace FurnitureFramework
 				if (is_directional)
 					return directional_areas[rot];
 				return single_area;
+			}
+
+			public bool draw_obj(
+				int rot,
+				SpriteBatch sprite_batch,
+				Item item,
+				int bottom,
+				float alpha
+			)
+			{
+				Rectangle area;
+				if (is_directional)
+				{
+					Rectangle? area_ = directional_areas[rot];
+					if (area_ == null) return false;
+					area = area_.Value;
+				}
+				else
+					area = single_area;
+
+				if (item is not StardewValley.Object obj) return true;
+
+				Vector2 draw_pos = obj.TileLocation * 64;
+				draw_pos.X += area.Center.X * 4 - 32;	// Horizontally centered
+				draw_pos.Y += area.Bottom * 4;			// Vertically bottom aligned
+				draw_pos += offset * 4;
+
+				float draw_depth = bottom - depth * 64;
+				draw_depth = draw_depth / 10000f;
+				draw_depth = MathF.BitIncrement(draw_depth);
+				// plus epsilon to make sure it's drawn over the layer at the same depth
+
+				if (obj is Furniture furn)
+				{
+					draw_pos.Y -= furn.sourceRect.Height * 4;
+					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
+
+					furn.drawAtNonTileSpot(
+						sprite_batch, draw_pos,
+						draw_depth,
+						alpha
+					);
+					return true;
+				}
+				
+				draw_pos.Y -= 64;
+				draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
+				
+				if (draw_shadow)
+				{
+					sprite_batch.Draw(
+						Game1.shadowTexture,
+						draw_pos + new Vector2(32f, 48f) + shadow_offset * 4,
+						Game1.shadowTexture.Bounds,
+						Color.White * alpha, 0f,
+						Game1.shadowTexture.Bounds.Center.ToVector2(),
+						4f, SpriteEffects.None,
+						draw_depth
+					);
+
+					draw_depth = MathF.BitIncrement(draw_depth);
+					// plus epsilon to make sure it's drawn over the shadow
+
+					draw_pos.Y -= 4; // to leave space to show the shadow
+				}
+
+
+				if (obj is ColoredObject)
+				{
+					obj.drawInMenu(
+						sprite_batch,
+						draw_pos, 1f, 1f,
+						draw_depth,
+						StackDrawType.Hide, Color.White, drawShadow: false
+					);
+				}
+				else
+				{
+					ParsedItemData dataOrErrorItem2 = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
+				
+					sprite_batch.Draw(
+						dataOrErrorItem2.GetTexture(),
+						draw_pos,
+						dataOrErrorItem2.GetSourceRect(),
+						Color.White * alpha,
+						0f, Vector2.Zero, 4f,
+						SpriteEffects.None,
+						draw_depth
+					);
+				}
+
+				return true;
 			}
 
 			#endregion
@@ -158,7 +276,7 @@ namespace FurnitureFramework
 			List<string>? rot_names = null
 		)
 		{
-			foreach (JToken slot_token in slots_arr.Children())
+			foreach (JToken slot_token in slots_arr)
 			{
 				if (slot_token is not JObject slot_obj) continue;
 
@@ -203,18 +321,6 @@ namespace FurnitureFramework
 			return -1;
 		}
 
-		public float get_depth(int rot, int slot_id = 0)
-		{
-			if (is_directional)
-			{
-				return directional_slots[rot][slot_id].depth;
-			}
-			else
-			{
-				return singular_slots[slot_id].depth;
-			}
-		}
-
 		public int get_count(int rot)
 		{
 			if (is_directional)
@@ -243,84 +349,15 @@ namespace FurnitureFramework
 			else
 				slots = singular_slots;
 
-			foreach (SlotData slot in slots)
+			foreach (Item item in items)
 			{
-				Rectangle? area_ = slot.get_area(rot);
-				if (area_ is not Rectangle) continue;
-
-				Item item = items[index];
-				index ++;
-
-				if (item is not StardewValley.Object obj)
-					continue;
-				
-				draw_obj(sprite_batch, obj, slot.depth, bottom, alpha);	
-			}
-		}
-
-		private void draw_obj(
-			SpriteBatch sprite_batch,
-			StardewValley.Object obj,
-			float depth,
-			int bottom,
-			float alpha
-		)
-		{
-			Rectangle bb = obj.boundingBox.Value;
-
-			Vector2 draw_pos = bb.Center.ToVector2() - new Vector2(32);
-			draw_pos.Y -= 16;
-
-			depth = bottom - depth * 64 + 1;
-
-			if (obj is Furniture item)
-			{
-				draw_pos.Y += 64 - item.sourceRect.Height * 4;
-				draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
-
-				item.drawAtNonTileSpot(
-					sprite_batch, draw_pos,
-					depth / 10000f,
-					alpha
-				);
-			}
-			else
-			{
-				draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
-				
-				sprite_batch.Draw(
-					Game1.shadowTexture,
-					draw_pos + new Vector2(32f, 53f),
-					Game1.shadowTexture.Bounds,
-					Color.White * alpha, 0f,
-					Game1.shadowTexture.Bounds.Center.ToVector2(),
-					4f, SpriteEffects.None,
-					depth / 10000f
-				);
-
-				if (obj is ColoredObject)
+				while(!slots[index].draw_obj(
+					rot, sprite_batch, item, bottom, alpha
+				))
 				{
-					obj.drawInMenu(
-						sprite_batch,
-						draw_pos, 1f, 1f,
-						(depth + 1) / 10000f,
-						StackDrawType.Hide, Color.White, drawShadow: false
-					);
+					index++;
 				}
-				else
-				{
-					ParsedItemData dataOrErrorItem2 = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
-				
-					sprite_batch.Draw(
-						dataOrErrorItem2.GetTexture(),
-						draw_pos,
-						dataOrErrorItem2.GetSourceRect(),
-						Color.White * alpha,
-						0f, Vector2.Zero, 4f,
-						SpriteEffects.None,
-						(depth + 1) / 10000f
-					);
-				}
+				index++;
 			}
 		}
 
