@@ -9,6 +9,8 @@ Here's a list of published mods using this Framework:
 - [Lynn's Livingroom](https://www.nexusmods.com/stardewvalley/mods/23677)
 - [Basic Wardrobes](https://www.nexusmods.com/stardewvalley/mods/23666)
 
+If you are a C# mod author and need an API for this mod, you can either make it and ask for a merge request, or ping me on the SV discord server, I should be able to make it for you.
+
 # Features
 
 What parts of Furniture are customizable with this Framework:
@@ -33,6 +35,8 @@ What parts of Furniture are customizable with this Framework:
 - Toggleable Furniture
 - Custom Sound Effects
 - Custom Particles
+- Animated base Sprite and Layers
+- Support for some special Furniture (Dresser, TV)
 
 # Thanks
 
@@ -44,8 +48,7 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Animated textures
-- Custom special furniture (TV, Bed, Dresser)
+- Support for other special furniture (Bed, Fish Tank, Randomized Plant (?))
 - Custom light sources
 - Add directionality to some fields of Particles
 - Add Particle list of scales and list of scale_changes
