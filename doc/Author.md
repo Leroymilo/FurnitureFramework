@@ -4,7 +4,7 @@ This is a tutorial on how to create a Content Pack for the [Furniture Framework]
 
 If you don't know how to format a json data file, please read a tutorial about it so that the rest of this tutorial makes sense.
 
-This tutorial and documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/Example%20Pack) as an example, sometimes without a link.
+This tutorial and documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/%5BFF%5D%20Example%20Pack) as an example, sometimes without a link.
 
 ## Contents
 
