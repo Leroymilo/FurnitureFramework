@@ -329,8 +329,6 @@ namespace FurnitureFramework
 
 	internal class StorageFurniturePostFixes
 	{
-		#region updateWhenCurrentLocation
-
 		internal static void updateWhenCurrentLocation(
 			StorageFurniture __instance
 		)
@@ -349,14 +347,12 @@ namespace FurnitureFramework
 				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
 			}
 		}
-
-		#endregion
 	}
 
 	internal class TVPostFixes
 	{
 		internal static Vector2 getScreenPosition(
-			TV __instance, Vector2 __result
+			Vector2 __result, TV __instance
 		)
 		{
 			try
@@ -371,6 +367,27 @@ namespace FurnitureFramework
 			catch (Exception ex)
 			{
 				ModEntry.log($"Failed in {nameof(getScreenPosition)}:\n{ex}", LogLevel.Error);
+			}
+			
+			return __result;
+		}
+
+		internal static float getScreenSizeModifier(
+			float __result, TV __instance
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.getScreenSizeModifier(ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(getScreenSizeModifier)}:\n{ex}", LogLevel.Error);
 			}
 			
 			return __result;

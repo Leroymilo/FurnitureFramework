@@ -172,14 +172,18 @@ Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so ma
 ### Animation
 
 You can define animations for your Furniture, but you'll need to fill a few fields for it to work:
+- `Frame Count` the number of animation frames
+- `Frame Duration` the length of every frame in milliseconds
+- `Animation Offset` the position of each frame relative to the preceding frame.
 
-####
+The `Animation Offset` is a vector field, with a Horizontal `X` component and a Vertical `Y` component. At every new animation frame, the top left of every Source Rect (base sprite and layers) will be moved by this offset, so you can have your animations aligned however you want in your spritesheet.
 
-####
+Note: if any of these field is zero ((0, 0) for the Offset), the animation will be disabled.  
 
-####
+Here's an example of the fields for a working animation:
+```json
 
-####
+```
 
 ### Special Type
 

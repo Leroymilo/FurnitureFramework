@@ -123,7 +123,7 @@ namespace FurnitureFramework
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
 				Vector2 texture_pos, float base_depth,
-				int rot = -1, bool is_on = false
+				int rot, bool is_on, Point c_anim_offset
 			)
 			{
 				Rectangle? rect_;
@@ -139,6 +139,7 @@ namespace FurnitureFramework
 
 				if (is_on)
 					source_rect.X += source_rect.Width;
+				source_rect.Location += c_anim_offset;
 
 				sprite_batch.Draw(
 					texture, texture_pos + draw_pos, source_rect,
@@ -221,7 +222,7 @@ namespace FurnitureFramework
 		public void draw(
 			SpriteBatch sprite_batch, Color color,
 			Vector2 texture_pos, float base_depth,
-			int rot, bool is_on
+			int rot, bool is_on, Point c_anim_offset
 		)
 		{
 			if (!has_layers) return;
@@ -235,7 +236,7 @@ namespace FurnitureFramework
 
 			foreach (LayerData layer in cur_layers)
 			{
-				layer.draw(sprite_batch, color, texture_pos, base_depth, rot, is_on);
+				layer.draw(sprite_batch, color, texture_pos, base_depth, rot, is_on, c_anim_offset);
 			}
 		}
 

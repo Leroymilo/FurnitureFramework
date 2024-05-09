@@ -1,0 +1,14 @@
+# How to define a Custom TV?
+
+To make a TV work, you only need 2 new fields:
+- "Screen Position"
+- "Screen Scale"
+
+```json
+"Screen Position": {"X": 6, "Y": 0},
+"Screen Scale": 2
+```
+
+The screen position is in pixels, starting from the top left of the sprite.
+
+The screen scale might not be very intuitive: most TVs have a screen scale of 4, except the Plasma TV and the Tropical TV with a scale of 2, so you can base your TV's screen scale from these values.

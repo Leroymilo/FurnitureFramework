@@ -5,8 +5,6 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
-using StardewValley.GameData.Machines;
-using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
 
@@ -24,56 +22,56 @@ namespace FurnitureFramework
 
 	class FurnitureType
 	{
-		private static string[] forbidden_rotation_names = {"Width", "Height"};
-
 		string mod_id;
-
 		public readonly string id;
 		string display_name;
 		string type;
-
-		int rotations;
-		List<string> rot_names = new();
-
-		Collisions collisions;
-
 		public readonly int price;
-		int placement_rules;
-		
-		Texture2D texture;
-		Dictionary<string, Texture2D> seasonal_textures = new();
-		bool is_seasonal;
-
-		List<Rectangle> source_rects = new();
-		public readonly Rectangle icon_rect = Rectangle.Empty;
-		
-		Layers layers;
-
 		bool exclude_from_random_sales;
 		List<string> context_tags = new();
+		int placement_rules;
+		int rotations;
+		bool can_be_toggled = false;
 
+		
+		bool is_seasonal;
+		Texture2D texture;
+		Dictionary<string, Texture2D> seasonal_textures = new();
+		List<Rectangle> source_rects = new();
+		public readonly Rectangle icon_rect = Rectangle.Empty;
+		Layers layers;
+
+
+		int frame_count = 0;
+		int frame_length = 0;
+		Point anim_offset = Point.Zero;
+		bool is_animated = false;
+
+
+		Collisions collisions;
 		Seats seats;
-
 		Slots slots;
+		public readonly bool is_table = false;
+		Sounds sounds;
+		Particles particles;
 
-		// TO ADD : torch fire positions, seats, placement spots
 
 		bool is_rug = false;
-		// bool can_be_toggled = false;
-		// bool can_be_placed_on = false;
 		bool is_mural = false;
-		public readonly bool is_table = false;
+
 
 		public readonly string? shop_id = null;
 		public readonly HashSet<string> shops = new();
 
-		Sounds sounds;
-		bool can_be_toggled = false;
-		Particles particles;
 
 		public readonly SpecialType s_type = SpecialType.None;
 
+
 		Vector2 screen_position = Vector2.Zero;
+		float screen_scale = 4;
+
+
+		#region Parsing
 
 		public static void make_furniture(
 			IContentPack pack, string id, JObject data,
@@ -81,6 +79,8 @@ namespace FurnitureFramework
 		)
 		{
 			JToken? texture_token = data.GetValue("Source Image");
+
+			#region Texture Variants
 
 			if (texture_token is JObject texture_dict)
 			{
@@ -108,6 +108,10 @@ namespace FurnitureFramework
 				}
 			}
 
+			#endregion
+
+			#region Single Texture
+
 			else if (texture_token is JValue texture_value)
 			{
 				// single texture
@@ -123,6 +127,8 @@ namespace FurnitureFramework
 					data, texture_path
 				));
 			}
+
+			#endregion
 			
 			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 		}
@@ -138,13 +144,17 @@ namespace FurnitureFramework
 			type = JC.extract(data, "Force Type", "other");
 			price = JC.extract(data, "Price", 0);
 			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", true);
+			JToken? tag_token = data.GetValue("Context Tags");
+			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
 
 			placement_rules =
 				+ 1 * JC.extract(data, "Indoors", 1)
 				+ 2 * JC.extract(data, "Outdoors", 1)
 				- 1;
 
-			parse_rotations(data);
+			List<string> rot_names = parse_rotations(data);
+
+			can_be_toggled = JC.extract(data, "Toggle", false);
 
 			#endregion
 
@@ -194,6 +204,20 @@ namespace FurnitureFramework
 
 			#endregion
 
+			#region animation
+
+			frame_count = JC.extract(data, "Frame Count", 0);
+			frame_length = JC.extract(data, "Frame Duration", 0);
+			JToken? anim_token = data.GetValue("Animation Offset");
+			if (anim_token is not null)
+				anim_offset = JC.extract_position(anim_token).ToPoint();
+			is_animated = frame_count > 0 && frame_length > 0;
+			is_animated &= anim_offset.X + anim_offset.Y > 0;
+
+			#endregion
+
+			#region data in classes
+
 			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
 
 			seats = new(data.GetValue("Seats"), rot_names);
@@ -201,8 +225,13 @@ namespace FurnitureFramework
 			slots = new(data.GetValue("Slots"), rot_names);
 			is_table = slots.has_slots;
 
-			JToken? tag_token = data.GetValue("Context Tags");
-			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
+			sounds = new(data.GetValue("Sounds"));
+
+			particles = new(pack, data.GetValue("Particles"));
+
+			#endregion
+
+			#region Shops
 
 			JToken? shop_id_token = data.GetValue("Shop Id");
 			if (shop_id_token != null && shop_id_token.Type == JTokenType.String)
@@ -222,17 +251,15 @@ namespace FurnitureFramework
 				}
 			}
 
-			can_be_toggled = JC.extract(data, "Toggle", false);
-
-			sounds = new(data.GetValue("Sounds"));
-
-			particles = new(pack, data.GetValue("Particles"));
+			#endregion
 
 			s_type = Enum.Parse<SpecialType>(JC.extract(data, "Special Type", "None"));
 			if (!Enum.IsDefined(s_type)) {
 				s_type = SpecialType.None;
 				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
 			}
+
+			#region TV
 
 			JToken? screen_token = data.GetValue("Screen Position");
 			if (screen_token is JObject)
@@ -249,37 +276,22 @@ namespace FurnitureFramework
 					);
 				}
 			}
+
+			screen_scale = JC.extract(data, "Screen Scale", 4f);
+
+			#endregion
 		}
 
-		public string get_string_data()
+		public List<string> parse_rotations(JObject data)
 		{
-			string result = display_name;
-			result += $"/{type}";
-			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
-			result += $"/1 1";	// overwritten by updateRotation
-			result += $"/{rotations}";
-			result += $"/{price}";
-			result += $"/{placement_rules}";
-			result += $"/{display_name}";
-			result += $"/0";
-			result += $"/{id}";	// texture path
-			result += $"/{exclude_from_random_sales}";
-			if (context_tags.Count > 0)
-				result += $"/" + context_tags.Join(delimiter: " ");
+			List<string> rot_names = new();
 
-			// ModEntry.log(result);
-
-			return result;
-		}
-
-		#region Rotation
-
-		public void parse_rotations(JObject data)
-		{
 			JToken? rot_token = data.GetValue("Rotations");
 			if (rot_token == null || rot_token.Type == JTokenType.Null)
 				throw new InvalidDataException($"Missing Rotations for Furniture {id}.");
 			
+			#region Rotations number
+
 			if (rot_token is JValue rot_value)
 			{
 				try
@@ -294,17 +306,21 @@ namespace FurnitureFramework
 				switch (rotations)
 				{
 					case 1:
-						return;
+						return rot_names;
 					case 2:
 						rot_names.AddRange(new string[2]{"Horizontal", "Vertical"});
-						return;
+						return rot_names;
 					case 4:
 						rot_names.AddRange(new string[4]{"Down", "Right", "Up", "Left"});
-						return;
+						return rot_names;
 				}
 
 				throw new InvalidDataException($"Invalid Rotations for Furniture {id}, number can be 1, 2 or 4.");
 			}
+
+			#endregion
+
+			#region Rotations list
 
 			if (rot_token is JArray rot_arr)
 			{
@@ -331,11 +347,36 @@ namespace FurnitureFramework
 					ModEntry.log($"Furniture {id} has no valid rotation key, fallback to \"Rotations\": 1", LogLevel.Warn);
 				}
 
-				return;
+				return rot_names;
 			}
+
+			#endregion
 
 			throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
 		}
+
+		#endregion
+
+		public string get_string_data()
+		{
+			string result = display_name;
+			result += $"/{type}";
+			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
+			result += $"/-1";	// overwritten by updateRotation
+			result += $"/-1";	// overwritten by updateRotation
+			result += $"/{price}";
+			result += $"/{placement_rules}";
+			result += $"/{display_name}";
+			result += $"/0";
+			result += $"/{id}";	// texture path
+			result += $"/{exclude_from_random_sales}";
+			if (context_tags.Count > 0)
+				result += $"/" + context_tags.Join(delimiter: " ");
+
+			return result;
+		}
+
+		#region Rotation
 
 		public void rotate(Furniture furniture)
 		{
@@ -388,6 +429,15 @@ namespace FurnitureFramework
 			if (furniture.IsOn)
 				source_rect.X += source_rect.Width;
 
+			Point c_anim_offset = Point.Zero;
+			if (is_animated)
+			{
+				long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+				int frame = (int)(time_ms / frame_length) % frame_count;
+				c_anim_offset = anim_offset * new Point(frame);
+				source_rect.Location += c_anim_offset;
+			}
+
 			// computing common depth :
 			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
@@ -431,7 +481,7 @@ namespace FurnitureFramework
 				layers.draw(
 					sprite_batch, color,
 					position, bounding_box.Bottom,
-					rot, furniture.IsOn
+					rot, furniture.IsOn, c_anim_offset
 				);
 			}
 
@@ -469,16 +519,6 @@ namespace FurnitureFramework
 			}
 
 			// ModEntry.print_debug = false;
-		}
-
-		public void getScreenPosition(Furniture furniture, ref Vector2 position)
-		{
-			Rectangle bounding_box = furniture.boundingBox.Value;
-			position = bounding_box.Location.ToVector2();
-			position.Y += bounding_box.Height;
-			position.Y -= source_rects[furniture.currentRotation.Value].Height;
-			position += screen_position * 4f;
-			return;
 		}
 
 		#endregion
@@ -702,6 +742,24 @@ namespace FurnitureFramework
 		public void on_placed(Furniture furniture)
 		{
 			particles.burst(furniture);
+		}
+
+		#endregion
+
+		#region Methods for TVs
+
+		public void getScreenPosition(Furniture furniture, ref Vector2 position)
+		{
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			position = bounding_box.Location.ToVector2();
+			position.Y += bounding_box.Height;
+			position.Y -= source_rects[furniture.currentRotation.Value].Height;
+			position += screen_position * 4f;
+		}
+
+		public void getScreenSizeModifier(ref float scale)
+		{
+			scale = screen_scale;
 		}
 
 		#endregion
