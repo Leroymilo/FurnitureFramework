@@ -182,7 +182,9 @@ Note: if any of these field is zero ((0, 0) for the Offset), the animation will 
 
 Here's an example of the fields for a working animation:
 ```json
-
+"Frame Count": 7,
+"Frame Duration": 500,
+"Animation Offset": {"X": 16, "Y": 0}
 ```
 
 ### Special Type
