@@ -53,6 +53,40 @@ namespace FurnitureFramework
 				);
 			}
 
+			foreach (MethodInfo method in typeof(StorageFurniturePostFixes).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
+			))
+			{
+				ModEntry.log($"Patching postfix : {method.Name}", LogLevel.Trace);
+
+				MethodInfo original = AccessTools.DeclaredMethod(
+					typeof(StorageFurniture),
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					postfix: new(method)
+				);
+			}
+
+			foreach (MethodInfo method in typeof(TVPostFixes).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
+			))
+			{
+				ModEntry.log($"Patching postfix : {method.Name}", LogLevel.Trace);
+
+				MethodInfo original = AccessTools.DeclaredMethod(
+					typeof(TV),
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					postfix: new(method)
+				);
+			}
+
 			foreach (MethodInfo method in typeof(LocationPostfixes).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 			))

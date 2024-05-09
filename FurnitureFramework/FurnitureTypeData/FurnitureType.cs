@@ -5,11 +5,22 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
+using StardewValley.GameData.Machines;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
 
 namespace FurnitureFramework
 {
+
+	enum SpecialType {
+		None,
+		Dresser,
+		TV,
+		// Bed,
+		// FishTank,
+		// RandomizedPlant
+	}
 
 	class FurnitureType
 	{
@@ -59,6 +70,10 @@ namespace FurnitureFramework
 		Sounds sounds;
 		bool can_be_toggled = false;
 		Particles particles;
+
+		public readonly SpecialType s_type = SpecialType.None;
+
+		Vector2 screen_position = Vector2.Zero;
 
 		public static void make_furniture(
 			IContentPack pack, string id, JObject data,
@@ -212,6 +227,28 @@ namespace FurnitureFramework
 			sounds = new(data.GetValue("Sounds"));
 
 			particles = new(pack, data.GetValue("Particles"));
+
+			s_type = Enum.Parse<SpecialType>(JC.extract(data, "Special Type", "None"));
+			if (!Enum.IsDefined(s_type)) {
+				s_type = SpecialType.None;
+				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
+			}
+
+			JToken? screen_token = data.GetValue("Screen Position");
+			if (screen_token is JObject)
+			{
+				try
+				{
+					screen_position = JC.extract_position(screen_token);
+				}
+				catch (InvalidDataException)
+				{
+					ModEntry.log(
+						$"Invalid Screen Position at {data.Path}, defaulting to (0, 0).",
+						LogLevel.Warn
+					);
+				}
+			}
 		}
 
 		public string get_string_data()
@@ -432,6 +469,16 @@ namespace FurnitureFramework
 			}
 
 			// ModEntry.print_debug = false;
+		}
+
+		public void getScreenPosition(Furniture furniture, ref Vector2 position)
+		{
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			position = bounding_box.Location.ToVector2();
+			position.Y += bounding_box.Height;
+			position.Y -= source_rects[furniture.currentRotation.Value].Height;
+			position += screen_position * 4f;
+			return;
 		}
 
 		#endregion

@@ -81,4 +81,4 @@ Here's the list of Layers for this Furniture facing down:
 ]
 ```
 
-Keep in mind that the Source Rect is defined from [this spritesheet](https://github.com/Leroymilo/FurnitureFramework/tree/main/Example%20Pack/assets/living_room.png).
+Keep in mind that the Source Rect is defined from [this spritesheet](https://github.com/Leroymilo/FurnitureFramework/tree/main/%5BFF%5D%20Example%20Pack/assets/living_room.png).

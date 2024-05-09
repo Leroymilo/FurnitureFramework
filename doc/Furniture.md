@@ -2,7 +2,7 @@
 
 To make Furniture highly customizable, the definition of a Furniture has a lot of properties. But don't worry, everything is explained here, and there's a good chance you won't need to use everything.
 
-Once again, this documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/Example%20Pack) as an example, it is strongly recommeded to go back and forth between the explanation here and the example to identify what is being explained.
+Once again, this documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/%5BFF%5D%20Example%20Pack) as an example, it is strongly recommeded to go back and forth between the explanation here and the example to identify what is being explained.
 
 ## Contents
 
@@ -13,13 +13,17 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Source Rect](#source-rect)
 	* [Collisions](#collisions)
 * [Optional Fields](#optional-fields)
-	* [Force Type](#force-type)
-	* [Price](#price)
-	* [Indoor & Outdoor](#indoor--outdoor)
-	* [Context Tags](#exclude-from-random-sales)
-	* [Exclude from Random Sales](#exclude-from-random-sales)
-	* [Shows in Shops](#shows-in-shops)
-	* [Shop Id](#shop-id)
+	* [Vanilla Fields](#vanilla-fields)
+		* [Force Type](#force-type)
+		* [Price](#price)
+		* [Indoor & Outdoor](#indoor--outdoor)
+		* [Context Tags](#exclude-from-random-sales)
+		* [Exclude from Random Sales](#exclude-from-random-sales)
+	* [Custom Catalogue Shop](#custom-catalogue-shop)
+		* [Shows in Shops](#shows-in-shops)
+		* [Shop Id](#shop-id)
+	* [Animation](#animation)
+	* [Special Type](#special-type)
 	* [Icon Rect](#icon-rect)
 	* [Seasonal](#seasonal)
 	* [Layers](#layers)
@@ -109,48 +113,52 @@ This field defines the collisions of your Furniture, it's what defines what part
 
 ## Optional Fields
 
-### Force Type
+### Vanilla Fields
 
-In this field, you can force the [type of the Furniture](https://stardewvalleywiki.com/Modding:Items#Furniture) (as a string). If you don't know how it works, don't set it, no type other than "other" has truly been tested. Please report it if you find Furniture types that completely break the mod so that I can list them here.
+These fields are basically what you'll find in a Furniture defined in [`Data/Furniture`](https://stardewvalleywiki.com/Modding:Items#Furniture).
 
-Working types:
-- dresser
+#### Force Type
 
-Do not use types:
+In this field, you can force the vanilla type of the Furniture (as a string). If you don't know how it works, don't set it, most types have not been tested and are replaced with other fields in the Furniture Framework. Please report it if you find Furniture types that completely break the mod so that I can list them here.
+
+Do not use these types:
 - chair
 - bench
 - couch
 - armchair
 - long table
 - table
+- dresser
 
-### Price
+#### Price
 
 This is the default price of the Furniture, it will be used if it is added to a shop's item list without specifying a price.
 
-### Indoor & Outdoor
+#### Indoor & Outdoor
 
 These fields define if the Furniture can be placed respectively indoor and outdoor. They both accept boolean values (true or false, without quotation marks), and default to true. If both are set to false, your Furniture will be indoor only because of how the game is coded.
 
-### Context Tags
+#### Context Tags
 
 This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).
 
-### Exclude from Random Sales
+#### Exclude from Random Sales
 
 This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
 
-### Shows in Shops
+### Custom Catalogue Shop
 
-This is an array (a list) of string Shop IDs where you want your Furniture to show-up, it defaults to an empty list. For example, having:
+#### Shows in Shops
+
+This is an array (a list) of string Shop IDs where you want your Furniture to show-up, it defaults to an empty list.  For example, having:
 ```json
 "Shows in Shops": ["Carpenter"]
 ```
-will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki.
+will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki. Be carefull, some shops have some weird quirks when their owner is not around.
 
 When used in combination to the "Shop Id" field, you can create a custom Catalogue for your custom Furniture.
 
-### Shop Id
+#### Shop Id
 
 The Shop ID of the Shop the game should open when right-clicking on the Furniture, it's a string that defaults to `null` (no Shop attached).  
 You can attach one of the [vanilla Shops](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs), or your own Shop.  
@@ -160,6 +168,31 @@ You can then use the same Shop ID in the "Shows in Shops" field of other Furnitu
 An example of this is in the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/Example%20Pack/content.json).
 
 Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it for example).
+
+### Animation
+
+You can define animations for your Furniture, but you'll need to fill a few fields for it to work:
+
+####
+
+####
+
+####
+
+####
+
+### Special Type
+
+This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one if these values:
+- None (no special type)
+- Dresser
+- [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/types/TV.md)
+
+Some Special Types have their own documentation linked in this list for extra info.
+
+Other types that I need to add:
+- Bed
+- FishTank
 
 ### Icon Rect
 
@@ -203,3 +236,5 @@ A good example of this is the `Custom Cauldron` Furniture in the Example Pack: y
 With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Sounds.md).
 
 ### Particles
+
+Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Particles.md).

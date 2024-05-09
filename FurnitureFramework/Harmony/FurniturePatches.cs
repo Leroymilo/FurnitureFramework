@@ -88,6 +88,46 @@ namespace FurnitureFramework
 
 	internal class FurniturePostfixes
 	{
+		#region GetFurnitureInstance
+
+		internal static Furniture GetFurnitureInstance(
+			Furniture __result,
+			string itemId, Vector2? position = null
+		)
+		{
+			if (!position.HasValue)
+			{
+				position = Vector2.Zero;
+			}
+
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__result.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				if (furniture_type is not null)
+				{
+					switch (furniture_type.s_type)
+					{
+						case SpecialType.Dresser:
+							return new StorageFurniture(itemId, position.Value);
+						case SpecialType.TV:
+							return new TV(itemId, position.Value);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(GetFurnitureInstance)}:\n{ex}", LogLevel.Error);
+			}
+
+			return __result;
+		}
+
+		#endregion
+
 		#region updateRotation
 
 		internal static void updateRotation(Furniture __instance)
@@ -228,7 +268,7 @@ namespace FurnitureFramework
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(canBePlacedHere)}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Failed in {nameof(AllowPlacementOnThisTile)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -278,10 +318,62 @@ namespace FurnitureFramework
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
 		#endregion
+	}
+
+	// Other Fixes for Special Furniture
+
+	internal class StorageFurniturePostFixes
+	{
+		#region updateWhenCurrentLocation
+
+		internal static void updateWhenCurrentLocation(
+			StorageFurniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.updateWhenCurrentLocation(__instance);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
+			}
+		}
+
+		#endregion
+	}
+
+	internal class TVPostFixes
+	{
+		internal static Vector2 getScreenPosition(
+			TV __instance, Vector2 __result
+		)
+		{
+			try
+			{
+				ModEntry.furniture.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.getScreenPosition(__instance, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(getScreenPosition)}:\n{ex}", LogLevel.Error);
+			}
+			
+			return __result;
+		}
 	}
 }
