@@ -49,7 +49,7 @@ The `content.json` file is a model with only 2 fields:
 
 ### Format
 
-The format you're using for your Furniture Pack, for now, only the `"Format": 1` is supported, this number will get larger with future versions.
+The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Format changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Format%20changelogs.md).
 
 ### Furniture
 
