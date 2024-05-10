@@ -12,6 +12,7 @@ This tutorial and documentation uses the [Example Pack](https://github.com/Leroy
 * [Content](#content)
 	* [Format](#format)
 	* [Furniture](#furniture)
+* [Commands](#commands)
 
 ## Manifest
 
@@ -71,3 +72,11 @@ The `UniqueID` (followed by an dot `.`) of your mod will be automatically added 
 The next part of the tutorial, with details about the Furniture definition is [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
 
 You can also check the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Templates.md) to make relatively simple Furniture.
+
+## Commands
+
+Here's details about console commands:
+
+### reload_furniture_pack
+
+Reloads the furniture pack with the given UniqueID. It will add new Furniture and edit changed Furniture but not remove Furniture that was removed from the pack.

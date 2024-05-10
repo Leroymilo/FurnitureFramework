@@ -67,6 +67,7 @@ namespace FurnitureFramework
 		{
 			parse_furniture_packs();
 			register_config();
+			register_commands();
 
 			if (
 				Helper.ModRegistry.IsLoaded("PeacefulEnd.AlternativeTextures")
@@ -119,102 +120,146 @@ namespace FurnitureFramework
 
 		}
 
+		#region Commands
+
+		private void reload_pack(string command, string[] args)
+		{
+			string UID = args[0];
+			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
+			{
+				if (pack.Manifest.UniqueID == UID)
+				{
+					load_pack(pack, true);
+					return;
+				}
+			}
+
+			log($"Could not find Furniture Pack {UID}.", LogLevel.Warn);
+		}
+
+		private void register_commands()
+		{
+			Helper.ConsoleCommands.Add(
+				"reload_furniture_pack",
+				"Reloads a Furniture Pack.\n\nUsage: reload_furniture_pack <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.",
+				reload_pack
+			);
+		}
+
+		#endregion
+
+		#region Furniture Pack Parsing
+
+		private bool check_format(int format)
+		{
+			switch (format)
+			{
+				case 1: return true;
+				default:
+					log($"Invalid format {format}, skipping Furniture Pack.", LogLevel.Error);
+					return false;
+			}
+		}
+
+		private void load_pack(IContentPack pack, bool replace = false)
+		{
+			string UID = pack.Manifest.UniqueID;
+
+			log($"Reading Furniture Types of {UID}...");
+			JObject data;
+			try
+			{
+				data = pack.ModContent.Load<JObject>("content.json");
+			}
+			catch (ContentLoadException ex)
+			{
+				log($"Could not load content.json for {UID}:\n{ex}", LogLevel.Error);
+				return;
+			}
+
+			JToken? format_token = data.GetValue("Format");
+			if (format_token is null || format_token.Type != JTokenType.Integer)
+			{
+				log("Invalid or missing Format, skipping Furniture Pack.", LogLevel.Error);
+				return;
+			}
+			
+			int format = (int)format_token;
+			if(!check_format(format)) return;
+
+			JToken? furniture_token = data.GetValue("Furniture");
+			if (furniture_token == null)
+			{
+				log("Missing \"Furniture\" field in content.json, skipping Furniture Pack.", LogLevel.Error);
+				return;
+			}
+			foreach((string key, JToken? f_data) in (JObject)furniture_token)
+			{
+				List<FurnitureType> new_furniture = new();
+				if (f_data is not JObject f_obj)
+				{
+					log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
+					continue;
+				}
+				try
+				{
+					FurnitureType.make_furniture(
+						pack, key,
+						f_obj,
+						new_furniture
+					);
+				}
+				catch (Exception ex)
+				{
+					log(ex.ToString(), LogLevel.Error);
+					log($"Failed to load data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
+					continue;
+				}
+
+				foreach (FurnitureType type in new_furniture)
+				{
+					if (!replace && furniture.ContainsKey(type.id))
+					{
+						log($"Duplicate Furniture: {type.id}, skipping Furniture.");
+						continue;
+					}
+
+					furniture[type.id] = type;
+
+					if (type.shop_id != null)
+					{
+						if (!shops.ContainsKey(type.shop_id))
+						{
+							shops[type.shop_id] = new();
+						}
+					}
+
+					foreach (string shop_id in type.shops)
+					{
+						if (!shops.ContainsKey(shop_id))
+						{
+							shops[shop_id] = new();
+						}
+
+						shops[shop_id].Add(type.id);
+					}
+				}
+			}
+		}
+
 		private void parse_furniture_packs()
 		{
 			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
 			{
-				string UID = pack.Manifest.UniqueID;
-
-				log($"Reading Furniture Types of {UID}...");
-				JObject data;
-				try
-				{
-					data = pack.ModContent.Load<JObject>("content.json");
-				}
-				catch (ContentLoadException ex)
-				{
-					log($"Could not load content.json for {UID}:\n{ex}", LogLevel.Error);
-					continue;
-				}
-
-				int? format;
-				try
-				{
-					format = data.Value<int?>("Format");
-					if (format == null) throw new NullReferenceException("Value is null or missing");
-				}
-				catch (Exception ex)
-				{
-					log("No valid format given (should be a number), trying to read as latest format.", LogLevel.Warn);
-					log($"{ex}", LogLevel.Trace);
-					format = 1;
-				}
-				// for backwards compatibility
-
-
-				JToken? furniture_token = data.GetValue("Furniture");
-				if (furniture_token == null)
-				{
-					log("Missing \"Furniture\" field in content.json, skipping Content Pack.", LogLevel.Error);
-					continue;
-				}
-				foreach((string key, JToken? f_data) in (JObject)furniture_token)
-				{
-					List<FurnitureType> new_furniture = new();
-					if (f_data is not JObject f_obj)
-					{
-						log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
-						continue;
-					}
-					try
-					{
-						FurnitureType.make_furniture(
-							pack, key,
-							f_obj,
-							new_furniture
-						);
-					}
-					catch (Exception ex)
-					{
-						log(ex.ToString(), LogLevel.Error);
-						log($"Failed to load data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
-						continue;
-					}
-
-					foreach (FurnitureType type in new_furniture)
-					{
-						if (furniture.ContainsKey(type.id))
-						{
-							log($"Duplicate Furniture: {type.id}, skipping Furniture.");
-							continue;
-						}
-
-						furniture[type.id] = type;
-
-						if (type.shop_id != null)
-						{
-							if (!shops.ContainsKey(type.shop_id))
-							{
-								shops[type.shop_id] = new();
-							}
-						}
-
-						foreach (string shop_id in type.shops)
-						{
-							if (!shops.ContainsKey(shop_id))
-							{
-								shops[shop_id] = new();
-							}
-
-							shops[shop_id].Add(type.id);
-						}
-					}
-				}
+				load_pack(pack);
 			}
 
 			log("Finished loading Furniture Types.");
 			Helper.GameContent.InvalidateCache("Data/Furniture");
+			Helper.GameContent.InvalidateCache("Data/Shops");
 		}
+
+		#endregion
 
 		#endregion
 
