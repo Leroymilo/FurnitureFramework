@@ -81,7 +81,7 @@ namespace FurnitureFramework
 
 				emit_interval = JC.extract(particle_obj, "Emission Interval", 500);
 
-				error_msg = "Invalid or missing Spawn Rect field.";
+				error_msg = "Missing or invalid Spawn Rect field.";
 				JToken? spawn_rect_token = particle_obj.GetValue("Spawn Rect");
 				if (spawn_rect_token == null) return;
 				try

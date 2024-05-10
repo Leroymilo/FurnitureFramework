@@ -27,21 +27,17 @@ namespace FurnitureFramework
 
 				// Parsing required seat position
 
-				error_msg = "Missing X coordinate in Seat Data.";
-				JToken? x_token = seat_obj.GetValue("X");
-				if (x_token == null ||
-					(x_token.Type != JTokenType.Float &&
-					x_token.Type != JTokenType.Integer)
-				) return;
-				position.X = (float)x_token;
-
-				error_msg = "Missing Y coordinate in Seat Data.";
-				JToken? y_token = seat_obj.GetValue("Y");
-				if (y_token == null ||
-					(y_token.Type != JTokenType.Float &&
-					y_token.Type != JTokenType.Integer)
-				) return;
-				position.Y = (float)y_token;
+				error_msg = "Missing or invalid Position in Seat Data";
+				JToken? pos_token = seat_obj.GetValue("Position");
+				if (pos_token is null || pos_token.Type != JTokenType.Object) return;
+				try
+				{
+					position = JC.extract_position(pos_token);
+				}
+				catch (InvalidDataException)
+				{
+					return;
+				}
 
 				// Parsing player direction
 				error_msg = "Missing Player Direction in Seat Data.";

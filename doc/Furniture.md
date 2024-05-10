@@ -83,27 +83,7 @@ Note: it is possible to use both a dictionary of Source Images and [Seasonal](#s
 
 This defines what part of the provided image will be used as your Furniture sprite.
 
-This field is a Rectangle, it is important to understand how it works because it will be used later in other fields.
-If you are familiar with CP, it is the same data model used in the fields `ToArea` and `FromArea` of an `EditImage` patch.  
-A rectangle has 4 properties, all the mesurements are ***in image pixels*** and must be integers:
-- "X": the horizontal position of the top-left of the rectangle
-- "Y": the vertical position of the top-right of the rectangle
-- "Width": the width of the rectangle
-- "Height": the height of the rectangle
-
-A proper rectangle would look like this:
-```json
-{"X": 64, "Y": 32, "Width": 32, "Height": 32}
-```
-or, if spread on multiple lines, like this:
-```json
-{
-	"X": 64,
-	"Y": 32,
-	"Width": 32,
-	"Height": 32
-}
-```
+This field is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md), it is important to understand how it works because it will be used later in other fields.
 
 This field is also the first [Directional Field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Directional%20Fields.md) you'll encounter, so make sure to check how they work.
 

@@ -78,53 +78,55 @@ namespace FurnitureFramework
 			List<FurnitureType> list
 		)
 		{
-			JToken? texture_token = data.GetValue("Source Image");
+			JToken? t_token = data.GetValue("Source Image");
 
 			#region Texture Variants
 
-			if (texture_token is JObject texture_dict)
+			if (t_token is JObject t_dict)
 			{
 				// texture variants
-				foreach (JProperty variant in texture_dict.Properties())
-				{
-					string? texture_path = (string?)variant.Value;
 
-					if (texture_path == null)
+				bool has_valid = false;
+
+				foreach ((string name, JToken? t_path) in t_dict)
+				{
+					if(t_path is null || t_path.Type != JTokenType.String)
 					{
 						ModEntry.log(
-							$"Could not read Source Image at {variant.Path}, skipping variant.",
+							$"Could not read Source Image path at {t_dict.Path}: {name}, skipping variant.",
 							LogLevel.Warn
 						);
 						continue;
 					}
 
-					string v_id = $"{id}_{variant.Name.ToLower()}";
+					string v_id = $"{id}_{name.ToLower()}";
 
 					list.Add(new(
-						pack, v_id,
-						data, texture_path,
-						variant.Name
+						pack, v_id, data,
+						t_path.ToString(),
+						name
 					));
+					has_valid = true;
 				}
+
+				if (!has_valid)
+					throw new InvalidDataException("Source Image dictionary has no valid path.");
 			}
 
 			#endregion
 
 			#region Single Texture
 
-			else if (texture_token is JValue texture_value)
+			else if (t_token is JValue t_value)
 			{
 				// single texture
-				string? texture_path = (string?)texture_value;
 
-				if (texture_path == null)
-				{
+				if (t_value.Type != JTokenType.String)
 					throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
-				}
 
 				list.Add(new(
 					pack, id,
-					data, texture_path
+					data, t_value.ToString()
 				));
 			}
 
@@ -135,32 +137,27 @@ namespace FurnitureFramework
 
 		public FurnitureType(IContentPack pack, string id, JObject data, string texture_path, string variant_name = "")
 		{
-			#region base attributes
+			JToken? token;
+
+			#region attributes for Data/Furniture
 
 			mod_id = pack.Manifest.UniqueID;
 			this.id = $"{mod_id}.{id}";
-			display_name = JC.extract(data, "Display Name", "No Name");
+			display_name = JsonParser.parse(data.GetValue("Display Name"), "No Name");
 			display_name = display_name.Replace("{{variant}}", variant_name);
-			type = JC.extract(data, "Force Type", "other");
-			price = JC.extract(data, "Price", 0);
-			exclude_from_random_sales = JC.extract(data, "Exclude from Random Sales", true);
-			JToken? tag_token = data.GetValue("Context Tags");
-			if (tag_token != null) JC.get_list_of_string(tag_token, context_tags);
+			type = JsonParser.parse(data.GetValue("Force Type"), "other");
+			price = JsonParser.parse(data.GetValue("Price"), 0);
+			exclude_from_random_sales = JsonParser.parse(data.GetValue("Exclude from Random Sales"), true);
+			JsonParser.try_parse(data.GetValue("Context Tags"), ref context_tags);
+			placement_rules = JsonParser.parse(data.GetValue("Placement Restriction"), 2);
 
-			placement_rules =
-				+ 1 * JC.extract(data, "Indoors", 1)
-				+ 2 * JC.extract(data, "Outdoors", 1)
-				- 1;
-
-			List<string> rot_names = parse_rotations(data);
-
-			can_be_toggled = JC.extract(data, "Toggle", false);
+			List<string> rot_names = parse_rotations(data.GetValue("Rotations"));
 
 			#endregion
 
 			#region textures & source rects
 
-			is_seasonal = JC.extract(data, "Seasonal", false);
+			is_seasonal = JsonParser.parse(data.GetValue("Seasonal"), false);
 
 			if (is_seasonal)
 			{
@@ -175,27 +172,20 @@ namespace FurnitureFramework
 
 				texture = seasonal_textures["spring"];
 			}
-
 			else
 			{
 				texture = TextureManager.load(pack.ModContent, texture_path);
 			}
 
-			JToken? rect_token = data.GetValue("Source Rect");
-			if (rect_token != null && rect_token.Type != JTokenType.Null)
-				JC.get_directional_rectangles(rect_token, source_rects, rot_names);
-			else if (rotations == 1)
-				source_rects.Add(texture.Bounds);
-			else
-				throw new InvalidDataException($"Missing Source Rectangles for Furniture {id}.");
+			token = data.GetValue("Source Rect");
+			if (!JsonParser.try_parse(token, rot_names, ref source_rects))
+				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {id}.");
+			if (source_rects.Count < rotations)
+				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {id}.");
 
-			JToken? icon_rect_token = data.GetValue("Icon Rect");
-			try
-			{
-				if (icon_rect_token != null)
-					icon_rect = JC.extract_rect(icon_rect_token);
-			}
-			catch (InvalidDataException) {}
+			token = data.GetValue("Icon Rect");
+			if (!JsonParser.try_parse(token, ref icon_rect))
+				icon_rect = source_rects[0];
 
 			if (icon_rect.IsEmpty)
 				icon_rect = source_rects[0];
@@ -206,11 +196,11 @@ namespace FurnitureFramework
 
 			#region animation
 
-			frame_count = JC.extract(data, "Frame Count", 0);
-			frame_length = JC.extract(data, "Frame Duration", 0);
-			JToken? anim_token = data.GetValue("Animation Offset");
-			if (anim_token is not null)
-				anim_offset = JC.extract_position(anim_token).ToPoint();
+			frame_count = JsonParser.parse(data.GetValue("Frame Count"), 0);
+			frame_length = JsonParser.parse(data.GetValue("Frame Duration"), 0);
+			token = data.GetValue("Animation Offset");
+			if (token != null && !JsonParser.try_parse(token, ref anim_offset))
+				ModEntry.log($"Invalid Animation Offset, ignoring animation");
 			is_animated = frame_count > 0 && frame_length > 0;
 			is_animated &= anim_offset.X + anim_offset.Y > 0;
 
@@ -233,27 +223,14 @@ namespace FurnitureFramework
 
 			#region Shops
 
-			JToken? shop_id_token = data.GetValue("Shop Id");
-			if (shop_id_token != null && shop_id_token.Type == JTokenType.String)
-			{
-				shop_id = (string?)shop_id_token;
-			}
-
-			JToken? shops_token = data.GetValue("Shows in Shops");
-			if (shops_token is JArray shops_array)
-			{
-				foreach (JToken shop_token in shops_array)
-				{
-					if (shop_token.Type != JTokenType.String) continue;
-					string? shop_str = (string?)shop_token;
-					if (shop_str == null) continue;
-					shops.Add(shop_str);
-				}
-			}
+			shop_id = JsonParser.parse<string?>(data.GetValue("Shop Id"), null);
+			JsonParser.try_parse(data.GetValue("Shows in Shops"), ref shops);
 
 			#endregion
 
-			s_type = Enum.Parse<SpecialType>(JC.extract(data, "Special Type", "None"));
+			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
+
+			s_type = Enum.Parse<SpecialType>(JsonParser.parse(data.GetValue("Special Type"), "None"));
 			if (!Enum.IsDefined(s_type)) {
 				s_type = SpecialType.None;
 				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
@@ -261,84 +238,38 @@ namespace FurnitureFramework
 
 			#region TV
 
-			JToken? screen_token = data.GetValue("Screen Position");
-			if (screen_token is JObject)
-			{
-				try
-				{
-					screen_position = JC.extract_position(screen_token);
-				}
-				catch (InvalidDataException)
-				{
-					ModEntry.log(
-						$"Invalid Screen Position at {data.Path}, defaulting to (0, 0).",
-						LogLevel.Warn
-					);
-				}
-			}
-
-			screen_scale = JC.extract(data, "Screen Scale", 4f);
+			JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
+			screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
 
 			#endregion
 		}
 
-		public List<string> parse_rotations(JObject data)
+		public List<string> parse_rotations(JToken? token)
 		{
-			List<string> rot_names = new();
-
-			JToken? rot_token = data.GetValue("Rotations");
-			if (rot_token == null || rot_token.Type == JTokenType.Null)
-				throw new InvalidDataException($"Missing Rotations for Furniture {id}.");
+			if (token == null || token.Type == JTokenType.Null)
+				throw new InvalidDataException($"Missing or invalid Rotations for Furniture {id}.");
 			
 			#region Rotations number
 
-			if (rot_token is JValue rot_value)
+			if (JsonParser.try_parse(token, ref rotations))
 			{
-				try
+				return rotations switch
 				{
-					rotations = (int)rot_value;
-				}
-				catch
-				{
-					throw new InvalidDataException($"Invalid Rotations for Furniture {id}, should be a number or a list of names.");
-				}
-
-				switch (rotations)
-				{
-					case 1:
-						return rot_names;
-					case 2:
-						rot_names.AddRange(new string[2]{"Horizontal", "Vertical"});
-						return rot_names;
-					case 4:
-						rot_names.AddRange(new string[4]{"Down", "Right", "Up", "Left"});
-						return rot_names;
-				}
-
-				throw new InvalidDataException($"Invalid Rotations for Furniture {id}, number can be 1, 2 or 4.");
+					1 => new(),
+					2 => new() { "Horizontal", "Vertical" },
+					4 => new() { "Down", "Right", "Up", "Left" },
+					_ => throw new InvalidDataException($"Invalid Rotations for Furniture {id}, number can be 1, 2 or 4."),
+				};
 			}
 
 			#endregion
 
 			#region Rotations list
 
-			if (rot_token is JArray rot_arr)
+			List<string> rot_names = new();
+
+			if (JsonParser.try_parse(token, ref rot_names))
 			{
-				foreach (JToken key_token in rot_arr)
-				{
-					if (key_token.Type != JTokenType.String) continue;
-					string? key = (string?)key_token;
-					if (key == null) continue;
-
-					if (rot_names.Contains(key))
-					{
-						ModEntry.log($"Furniture {id} has duplicate rotation key {key}", LogLevel.Warn);
-						continue;
-					}
-
-					rot_names.Add(key);
-				}
-
 				rotations = rot_names.Count;
 
 				if (rotations == 0)

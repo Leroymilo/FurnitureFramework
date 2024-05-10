@@ -1,5 +1,5 @@
 {
-	"Format": 1,
+	"Format": 2,
 
 	"Furniture": {
 		// your mod's id will automatically be added to the furniture id
@@ -12,8 +12,7 @@
 				"Height": 1
 			},	// in tiles
 
-			"Indoors": false,
-			"Outdoors": true,
+			"Placement Restriction": 1,
 
 			"Source Image": "assets/simple.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
@@ -30,8 +29,7 @@
 				"Height": 1
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/catalogue.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
@@ -51,8 +49,7 @@
 				"Height": 1
 			},
 
-			"Indoors": false,
-			"Outdoors": true,
+			"Placement Restriction": 1,
 
 			"Seasonal": true,
 			"Source Image": "assets/bush.png",
@@ -73,8 +70,7 @@
 				"Height": 1
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/chair.png",
 			"Source Rect": {
@@ -96,7 +92,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Right": 1,
@@ -120,8 +116,7 @@
 			// keys used in all other directional values
 			"Collisions": {"Width": 2, "Height": 1},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": {
 				"Brown": "assets/armchair.png",
@@ -150,7 +145,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Down": 2
@@ -158,14 +153,14 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Right": 1
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Left": 3
 					}	// structure is : {<furniture rotation> : <player direction>}
@@ -190,8 +185,7 @@
 				"Left": 	{"Width": 1, "Height": 2}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/bench.png",
 			"Source Rect": {
@@ -214,7 +208,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Right": 1,
@@ -224,7 +218,7 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Down": 2
@@ -232,7 +226,7 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 0, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Right": 1,
 						"Left": 3
@@ -258,8 +252,7 @@
 				"Left": 	{"Width": 2, "Height": 2}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/couch.png",
 			"Source Rect": {
@@ -281,53 +274,48 @@
 				}
 			],
 
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"X": 0.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 0, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				}
-			],
+			"Seats": {
+				"Up": [
+					{
+						"Position": {"X": 0.5, "Y": 0},
+						"Player Direction": 0
+					},
+					{
+						"Position": {"X": 1.5, "Y": 0},
+						"Player Direction": 0
+					}
+				],
+				"Right": [
+					{
+						"Position": {"X": 1, "Y": 0},
+						"Player Direction": 1
+					},
+					{
+						"Position": {"X": 1, "Y": 1},
+						"Player Direction": 1
+					}
+				],
+				"Down": [
+					{
+						"Position": {"X": 0.5, "Y": 0},
+						"Player Direction": 2
+					},
+					{
+						"Position": {"X": 1.5, "Y": 0},
+						"Player Direction": 2
+					}
+				],
+				"Left": [
+					{
+						"Position": {"X": 0, "Y": 0},
+						"Player Direction": 3
+					},
+					{
+						"Position": {"X": 0, "Y": 1},
+						"Player Direction": 3
+					}
+				]
+			},
 
 			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
 		},
@@ -347,8 +335,7 @@
 				}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/table.png",
 			"Source Rect": {
@@ -406,8 +393,7 @@
 				}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/living_room.png",
 			"Source Rect": {
@@ -537,128 +523,128 @@
 				"Down": [
 					{
 						// Left seat of Long Couch
-						"X": 2.5, "Y": 0,
+						"Postion": {"X": 2.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3.5, "Y": 0,
+						"Postion": {"X": 3.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Right seat of Long Couch
-						"X": 4.5, "Y": 0,
+						"Postion": {"X": 4.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Seat of Armchair
-						"X": 1, "Y": 1,
+						"Postion": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Top seat of Couch
-						"X": 6, "Y": 1,
+						"Postion": {"X": 6, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Bottom seat of Couch
-						"X": 6, "Y": 2,
+						"Postion": {"X": 6, "Y": 2},
 						"Player Direction": 3
 					}
 				],
 				"Right": [
 					{
 						// Left seat of Couch
-						"X": 2.5, "Y": 0,
+						"Postion": {"X": 2.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Right seat of Couch
-						"X": 3.5, "Y": 0,
+						"Postion": {"X": 3.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Top seat of Long Couch
-						"X": 1, "Y": 1,
+						"Postion": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Center seat of Long Couch
-						"X": 1, "Y": 2,
+						"Postion": {"X": 1, "Y": 2},
 						"Player Direction": 1
 					},
 					{
 						// Bottom seat of Long Couch
-						"X": 1, "Y": 3,
+						"Postion": {"X": 1, "Y": 3},
 						"Player Direction": 1
 					},
 					{
 						// Seat of Armchair
-						"X": 2.5, "Y": 4,
+						"Postion": {"X": 2.5, "Y": 4},
 						"Player Direction": 0
 					}
 				],
 				"Up": [
 					{
 						// Top seat of Couch
-						"X": 1, "Y": 0,
+						"Postion": {"X": 1, "Y": 0},
 						"Player Direction": 1
 					},
 					{
 						// Bottom seat of Couch
-						"X": 1, "Y": 1,
+						"Postion": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Seat of Armchair
-						"X": 6, "Y": 1,
+						"Postion": {"X": 6, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Left seat of Long Couch
-						"X": 2.5, "Y": 2,
+						"Postion": {"X": 2.5, "Y": 2},
 						"Player Direction": 0
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3.5, "Y": 2,
+						"Postion": {"X": 3.5, "Y": 2},
 						"Player Direction": 0
 					},
 					{
 						// Right seat of Long Couch
-						"X": 4.5, "Y": 2,
+						"Postion": {"X": 4.5, "Y": 2},
 						"Player Direction": 0
 					}
 				],
 				"Left": [
 					{
 						// Seat of Armchair
-						"X": 1.5, "Y": 0,
+						"Postion": {"X": 1.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Top seat of Long Couch
-						"X": 3, "Y": 1,
+						"Postion": {"X": 3, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3, "Y": 2,
+						"Postion": {"X": 3, "Y": 2},
 						"Player Direction": 3
 					},
 					{
 						// Bottom seat of Long Couch
-						"X": 3, "Y": 3,
+						"Postion": {"X": 3, "Y": 3},
 						"Player Direction": 3
 					},
 					{
 						// Left seat of Couch
-						"X": 0.5, "Y": 4,
+						"Postion": {"X": 0.5, "Y": 4},
 						"Player Direction": 0
 					},
 					{
 						// Right seat of Couch
-						"X": 1.5, "Y": 4,
+						"Postion": {"X": 1.5, "Y": 4},
 						"Player Direction": 0
 					}
 				]
@@ -737,8 +723,7 @@
 				}
 			},
 
-			"Indoors": true,
-			"Outdoors": false,
+			"Placement Restriction": 0,
 			
 			// Thanks to @oomps for the texture!
 			"Source Image": "assets/corner_couch.png",
@@ -769,113 +754,113 @@
 			"Seats": {
 				"Down J": [
 					{
-						"X": 0.5, "Y": 0,
+						"Postion": {"X": 0.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 1.5, "Y": 0,
+						"Postion": {"X": 1.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 2.25, "Y": 0.625,
+						"Postion": {"X": 2.25, "Y": 0.625},
 						"Player Direction": 3
 					}
 				],
 				"Down L": [
 					{
-						"X": 1.5, "Y": 0,
+						"Postion": {"X": 1.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 2.5, "Y": 0,
+						"Postion": {"X": 2.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 0.75, "Y": 0.625,
+						"Postion": {"X": 0.75, "Y": 0.625},
 						"Player Direction": 1
 					}
 				],
 				"Right J": [
 					{
-						"X": 1.75, "Y": 0,
+						"Postion": {"X": 1.75, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 1, "Y": 0.75,
+						"Postion": {"X": 1, "Y": 0.75},
 						"Player Direction": 1
 					},
 					{
-						"X": 1, "Y": 1.5,
+						"Postion": {"X": 1, "Y": 1.5},
 						"Player Direction": 1
 					}
 				],
 				"Right L": [
 					{
-						"X": 0.875, "Y": 0,
+						"Postion": {"X": 0.875, "Y": 0},
 						"Player Direction": 1
 					},
 					{
-						"X": 0.875, "Y": 0.75,
+						"Postion": {"X": 0.875, "Y": 0.75},
 						"Player Direction": 1
 					},
 					{
-						"X": 1.75, "Y": 1.25,
+						"Postion": {"X": 1.75, "Y": 1.25},
 						"Player Direction": 0
 					}
 				],
 				"Up J": [
 					{
-						"X": 0.5, "Y": 0,
+						"Postion": {"X": 0.5, "Y": 0},
 						"Player Direction": 1
 					},
 					{
-						"X": 1.5, "Y": 1,
+						"Postion": {"X": 1.5, "Y": 1},
 						"Player Direction": 0
 					},
 					{
-						"X": 2.5, "Y": 1,
+						"Postion": {"X": 2.5, "Y": 1},
 						"Player Direction": 0
 					}
 				],
 				"Up L": [
 					{
-						"X": 2.5, "Y": 0,
+						"Postion": {"X": 2.5, "Y": 0},
 						"Player Direction": 3
 					},
 					{
-						"X": 0.5, "Y": 1,
+						"Postion": {"X": 0.5, "Y": 1},
 						"Player Direction": 0
 					},
 					{
-						"X": 1.5, "Y": 1,
+						"Postion": {"X": 1.5, "Y": 1},
 						"Player Direction": 0
 					}
 				],
 				"Left J": [
 					{
-						"X": 1.25, "Y": 0,
+						"Postion": {"X": 1.25, "Y": 0},
 						"Player Direction": 3
 					},
 					{
-						"X": 1.25, "Y": 0.75,
+						"Postion": {"X": 1.25, "Y": 0.75},
 						"Player Direction": 3
 					},
 					{
-						"X": 0.5, "Y": 1.25,
+						"Postion": {"X": 0.5, "Y": 1.25},
 						"Player Direction": 0
 					}
 				],
 				"Left L": [
 					{
-						"X": 0.25, "Y": 0,
+						"Postion": {"X": 0.25, "Y": 0},
 						"Player Direction": 2
 					},
 					{
-						"X": 1, "Y": 0.75,
+						"Postion": {"X": 1, "Y": 0.75},
 						"Player Direction": 3
 					},
 					{
-						"X": 1, "Y": 1.5,
+						"Postion": {"X": 1, "Y": 1.5},
 						"Player Direction": 3
 					}
 				]
@@ -893,8 +878,7 @@
 				"Height": 1
 			},	// in tiles
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/cauldron.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
@@ -963,8 +947,7 @@
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/neko_statues.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
@@ -983,8 +966,7 @@
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/neko_statues.png",
 			"Source Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 32},	// in pixels

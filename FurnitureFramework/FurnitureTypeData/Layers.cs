@@ -155,6 +155,8 @@ namespace FurnitureFramework
 
 		public bool has_layers {get; private set;} = false;
 
+		List<List<LayerData>> dir_layers = new();
+
 		List<List<LayerData>> directional_layers = new();
 		List<LayerData> singular_layers = new();
 		bool is_directional = false;
@@ -170,7 +172,8 @@ namespace FurnitureFramework
 
 			if (layers_token is JArray layers_arr)
 			{
-				parse_layer_array(layers_arr, singular_layers, texture, rot_names);
+				List<LayerData> list = new();
+				parse_layer_array(layers_arr, list, texture, rot_names);
 			}
 
 			// Case 2 : directional layers
@@ -205,9 +208,9 @@ namespace FurnitureFramework
 				LayerData layer = new(layer_obj, texture, rot_names);
 				if (!layer.is_valid)
 				{
-					ModEntry.log($"Invalid Layer Data at {layer_token.Path}:", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log($"\t{layer.error_msg}", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log("Skipping Layer.", StardewModdingAPI.LogLevel.Warn);
+					ModEntry.log($"Invalid Layer Data at {layer_token.Path}:", LogLevel.Warn);
+					ModEntry.log($"\t{layer.error_msg}", LogLevel.Warn);
+					ModEntry.log("Skipping Layer.", LogLevel.Warn);
 					continue;
 				}
 				has_layers = true;
