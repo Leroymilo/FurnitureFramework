@@ -125,16 +125,25 @@ namespace FurnitureFramework
 		private void reload_pack(string command, string[] args)
 		{
 			string UID = args[0];
+			bool found_pack = false;
+
 			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
 			{
 				if (pack.Manifest.UniqueID == UID)
 				{
 					load_pack(pack, true);
-					return;
+					found_pack = true;
+					break;
 				}
 			}
 
-			log($"Could not find Furniture Pack {UID}.", LogLevel.Warn);
+			if (found_pack)
+			{
+				Helper.GameContent.InvalidateCache("Data/Furniture");
+				Helper.GameContent.InvalidateCache("Data/Shops");
+			}
+			else
+				log($"Could not find Furniture Pack {UID}.", LogLevel.Warn);
 		}
 
 		private void register_commands()
