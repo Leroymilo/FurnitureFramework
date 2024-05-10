@@ -141,6 +141,7 @@ namespace FurnitureFramework
 			{
 				Helper.GameContent.InvalidateCache("Data/Furniture");
 				Helper.GameContent.InvalidateCache("Data/Shops");
+				log($"Finished reloading {UID}.");
 			}
 			else
 				log($"Could not find Furniture Pack {UID}.", LogLevel.Warn);
