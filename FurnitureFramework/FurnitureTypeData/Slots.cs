@@ -19,9 +19,7 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
-			List<Rectangle?> directional_areas = new();
-			Rectangle single_area;
-			bool is_directional = false;
+			public readonly Rectangle area;
 
 			public readonly float depth = 0.1f;
 
@@ -37,50 +35,16 @@ namespace FurnitureFramework
 
 				error_msg = "Missing or Invalid Area.";
 				JToken? area_token = slot_obj.GetValue("Area");
-				if (area_token is not JObject area_obj)
+				if (area_token is not JObject)
 					return;
-
-				// Case 1 : non-directional area
-				bool has_rect = true;
+				
 				try
 				{
-					single_area = JC.extract_rect(area_token);
+					area = JC.extract_rect(area_token);
 				}
 				catch (InvalidDataException)
 				{
-					has_rect = false;
-				}
-
-				// Case 2 : directional area
-
-				if (!has_rect)
-				{
-					if (rot_names == null)
-					{
-						error_msg = "No singular Area given for non-directional Seat Data.";
-						return;
-					}
-
-					foreach (string rot_name in rot_names)
-					{
-						area_token = area_obj.GetValue(rot_name);
-						Rectangle? area = null;
-						if (area_token is JObject)
-						{
-							try
-							{
-								area = JC.extract_rect(area_token);
-								has_rect = true;
-							}
-							catch (InvalidDataException) {}
-						}
-						directional_areas.Add(area);
-					}
-
-					error_msg = "Area is directional with no valid value.";
-					if (!has_rect) return;
-					
-					is_directional = true;
+					return;
 				}
 
 				// Parsing optional layer depth
@@ -117,33 +81,14 @@ namespace FurnitureFramework
 
 			#region SlotData Methods
 
-			public Rectangle? get_area(int rot)
-			{
-				if (is_directional)
-					return directional_areas[rot];
-				return single_area;
-			}
-
-			public bool draw_obj(
+			public void draw_obj(
 				int rot,
 				SpriteBatch sprite_batch,
-				Item item,
+				StardewValley.Object obj,
 				int bottom,
 				float alpha
 			)
 			{
-				Rectangle area;
-				if (is_directional)
-				{
-					Rectangle? area_ = directional_areas[rot];
-					if (area_ == null) return false;
-					area = area_.Value;
-				}
-				else
-					area = single_area;
-
-				if (item is not StardewValley.Object obj) return true;
-
 				Vector2 draw_pos = obj.TileLocation * 64;
 				draw_pos.X += area.Center.X * 4 - 32;	// Horizontally centered
 				draw_pos.Y += area.Bottom * 4;			// Vertically bottom aligned
@@ -165,7 +110,7 @@ namespace FurnitureFramework
 						draw_depth,
 						alpha
 					);
-					return true;
+					return;
 				}
 				
 				draw_pos.Y -= 64;
@@ -213,8 +158,6 @@ namespace FurnitureFramework
 						draw_depth
 					);
 				}
-
-				return true;
 			}
 
 			#endregion
@@ -294,7 +237,6 @@ namespace FurnitureFramework
 		public int get_slot(Point rel_pos, int rot, out Rectangle area)
 		{	
 			List<SlotData> slots;
-			area = Rectangle.Empty;
 
 			if (is_directional)
 				slots = directional_slots[rot];
@@ -303,15 +245,13 @@ namespace FurnitureFramework
 			
 			foreach ((SlotData slot, int index) in slots.Select((value, index) => (value, index)))
 			{
-				Rectangle? area_ = slot.get_area(rot);
-				if (area_ is null) continue;
-
-				if (!area_.Value.Contains(rel_pos)) continue;
+				if (!slot.area.Contains(rel_pos)) continue;
 				
-				area = area_.Value;
+				area = slot.area;
 				return index;
 			}
 
+			area = Rectangle.Empty;
 			return -1;
 		}
 
@@ -323,7 +263,6 @@ namespace FurnitureFramework
 			}
 			else
 			{
-				// to change to count slots without the current rotation
 				return singular_slots.Count;
 			}
 		}
@@ -335,23 +274,17 @@ namespace FurnitureFramework
 			float alpha
 		)
 		{
-			int index = 0;
-
 			List<SlotData> slots;
 			if (is_directional)
 				slots = directional_slots[rot];
 			else
 				slots = singular_slots;
 
-			foreach (Item item in items)
+			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
-				while(!slots[index].draw_obj(
-					rot, sprite_batch, item, bottom, alpha
-				))
-				{
-					index++;
-				}
-				index++;
+				if (item is not StardewValley.Object obj) continue;
+
+				slots[i].draw_obj(rot, sprite_batch, obj, bottom, alpha);
 			}
 		}
 

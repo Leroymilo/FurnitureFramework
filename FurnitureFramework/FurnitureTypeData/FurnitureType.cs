@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
+using StardewValley.Minigames;
 using StardewValley.Objects;
 
 
@@ -628,13 +629,40 @@ namespace FurnitureFramework
 				return;
 			}
 
-			if (furniture.heldObject.Value is Chest) return;
+			int slots_count = slots.get_count(rot);
 
-			StardewValley.Object held = furniture.heldObject.Value;
-			Chest chest = new();
-			chest.Items.OverwriteWith(Enumerable.Repeat<Item?>(null, slots.get_count(rot)).ToList());
-			chest.Items[0] = held;
-			furniture.heldObject.Value = chest;
+			if (furniture.heldObject.Value is Chest chest)
+			{
+				if (chest.Items.Count > slots_count)
+				{
+					ModEntry.log("Too many items in Furniture, how did this even happen?", LogLevel.Warn);
+					ModEntry.log("Dropping excess items.");
+					while (chest.Items.Count > slots_count)
+					{
+						Item item = chest.Items[slots_count];
+						Game1.createItemDebris(
+							item,
+							furniture.boundingBox.Center.ToVector2(),
+							0
+						);
+						chest.Items.RemoveAt(slots_count);
+					}
+				}
+			}
+
+			else
+			{
+				StardewValley.Object held = furniture.heldObject.Value;
+				chest = new();
+				chest.Items.Add(held);
+				furniture.heldObject.Value = chest;
+			}
+
+			chest.Items.AddRange(
+				Enumerable.Repeat<Item?>(null,
+					slots.get_count(rot) - chest.Items.Count
+				).ToList()
+			);
 		}
 
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
@@ -733,17 +761,6 @@ namespace FurnitureFramework
 			particles.update_timer(furniture, ms_time);
 		}
 
-		public void on_removed(Furniture furniture)
-		{
-			particles.free_timers(furniture);
-			furniture.lastNoteBlockSoundTime = 0;
-		}
-
-		public void on_placed(Furniture furniture)
-		{
-			particles.burst(furniture);
-		}
-
 		#endregion
 
 		#region Methods for TVs
@@ -802,6 +819,22 @@ namespace FurnitureFramework
 			}
 			
 			// maybe add place in slot or remove from slot?
+		}
+
+		public void on_removed(Furniture furniture)
+		{
+			particles.free_timers(furniture);
+			furniture.lastNoteBlockSoundTime = 0;
+
+			furniture.heldObject.Value = null;
+		}
+
+		public void on_placed(Furniture furniture)
+		{
+			particles.burst(furniture);
+			int rot = furniture.currentRotation.Value;
+
+			initialize_slots(furniture, rot);
 		}
 	}
 }
