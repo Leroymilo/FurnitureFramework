@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
-using StardewValley.Minigames;
 using StardewValley.Objects;
 
 
@@ -633,20 +632,16 @@ namespace FurnitureFramework
 
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				if (chest.Items.Count > slots_count)
+				while (chest.Items.Count > slots_count)
 				{
-					ModEntry.log("Too many items in Furniture, how did this even happen?", LogLevel.Warn);
-					ModEntry.log("Dropping excess items.");
-					while (chest.Items.Count > slots_count)
-					{
-						Item item = chest.Items[slots_count];
-						Game1.createItemDebris(
-							item,
-							furniture.boundingBox.Center.ToVector2(),
-							0
-						);
-						chest.Items.RemoveAt(slots_count);
-					}
+					Item item = chest.Items[slots_count];
+					chest.Items.RemoveAt(slots_count);
+					if (item is null) continue;
+					Game1.createItemDebris(
+						item,
+						furniture.boundingBox.Center.ToVector2(),
+						0
+					);
 				}
 			}
 
@@ -658,11 +653,14 @@ namespace FurnitureFramework
 				furniture.heldObject.Value = chest;
 			}
 
-			chest.Items.AddRange(
-				Enumerable.Repeat<Item?>(null,
-					slots.get_count(rot) - chest.Items.Count
-				).ToList()
-			);
+			if (chest.Items.Count < slots_count)
+			{
+				chest.Items.AddRange(
+					Enumerable.Repeat<Item?>(null,
+						slots_count - chest.Items.Count
+					).ToList()
+				);
+			}
 		}
 
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
