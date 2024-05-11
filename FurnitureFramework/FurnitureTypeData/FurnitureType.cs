@@ -178,9 +178,10 @@ namespace FurnitureFramework
 			}
 
 			token = data.GetValue("Source Rect");
-			if (!JsonParser.try_parse(token, rot_names, ref source_rects))
+			List<Rectangle?> n_source_rects = new();
+			if (!JsonParser.try_parse(token, rot_names, ref n_source_rects))
 				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {id}.");
-			if (source_rects.Count < rotations)
+			if (!JsonParser.try_rm_null(n_source_rects, ref source_rects))
 				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {id}.");
 
 			token = data.GetValue("Icon Rect");
@@ -190,7 +191,7 @@ namespace FurnitureFramework
 			if (icon_rect.IsEmpty)
 				icon_rect = source_rects[0];
 
-			layers = new(data.GetValue("Layers"), rot_names, texture);
+			layers = Layers.make_layers(data.GetValue("Layers"), rot_names, texture);
 
 			#endregion
 

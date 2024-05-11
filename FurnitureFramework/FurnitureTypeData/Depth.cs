@@ -9,6 +9,11 @@ namespace FurnitureFramework
 
 		#region Parsing
 
+		public Depth()
+		{
+			tile = 0;
+		}
+
 		public Depth(JToken? token)
 		{
 			if (token is JObject obj)

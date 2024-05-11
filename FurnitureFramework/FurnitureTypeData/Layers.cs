@@ -3,6 +3,7 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.CompilerServices;
 
 namespace FurnitureFramework
 {
@@ -16,102 +17,73 @@ namespace FurnitureFramework
 			public readonly string? error_msg;
 
 			Texture2D texture;
-
-			Rectangle single_source_rect;
-			List<Rectangle?> directional_source_rects = new();
-			bool is_directional = false;
-
+			Rectangle source_rect;
 
 			Vector2 draw_pos = Vector2.Zero;
-			float depth = 0;
+			readonly Depth depth;
 			
 			#region LayerData Parsing
 
-			public LayerData(JObject layer_obj, Texture2D source_texture, List<string>? rot_names)
+			// When LayerData can have directional source rects
+			public static List<LayerData?> make_layers(
+				JObject layer_obj, Texture2D source_texture, 
+				List<string> rot_names
+			)
+			{
+				List<LayerData?> result = new();
+				JToken? rect_token = layer_obj.GetValue("Source Rect");
+
+				Rectangle source_rect = Rectangle.Empty;
+				if (JsonParser.try_parse(rect_token, ref source_rect))
+				{
+					LayerData layer = new(layer_obj, source_texture, source_rect);
+					result.AddRange(Enumerable.Repeat(layer, rot_names.Count));
+					return result;
+				}
+
+				List<Rectangle?> source_rects = new();
+				if (JsonParser.try_parse(rect_token, rot_names, ref source_rects))
+				{
+					foreach (Rectangle? rect in source_rects)
+					{
+						if (rect is null) result.Add(null);
+						else result.Add(new(layer_obj, source_texture, rect.Value));
+					}
+					return result;
+				}
+
+				throw new InvalidDataException("Missing or invalid Source Rect.");
+			}
+			
+			// When LayerData cannot have directional source rects
+			public static LayerData make_layer(
+				JObject layer_obj, Texture2D source_texture
+			)
+			{
+				Rectangle source_rect = Rectangle.Empty;
+				if (JsonParser.try_parse(layer_obj.GetValue("Source Rect"), ref source_rect))
+				{
+					return new(layer_obj, source_texture, source_rect);
+				}
+
+				throw new InvalidDataException("Missing or invalid Source Rect.");
+			}
+
+			private LayerData(JObject layer_obj, Texture2D source_texture, Rectangle rect)
 			{
 				texture = source_texture;
-
-				// Parsing required layer source rectangle
-
-				error_msg = "Missing or Invalid Source Rectangle.";
-				JToken? rect_token = layer_obj.GetValue("Source Rect");
-				if (rect_token is not JObject rect_obj)
-					return;
-
-				// Case 1 : non-directional source rectangle
-				bool has_rect = true;
-				try
-				{
-					single_source_rect = JC.extract_rect(rect_token);
-				}
-				catch (InvalidDataException)
-				{
-					has_rect = false;
-				}
-
-				// Case 2 : directional source rectangle
-
-				if (!has_rect)
-				{
-					if (rot_names == null)
-					{
-						error_msg = "No singular Source Rect given for non-directional Seat Data.";
-						return;
-					}
-
-					foreach (string rot_name in rot_names)
-					{
-						rect_token = rect_obj.GetValue(rot_name);
-						Rectangle? source_rect = null;
-						if (rect_token is JObject)
-						{
-							try
-							{
-								source_rect = JC.extract_rect(rect_token);
-								has_rect = true;
-							}
-							catch (InvalidDataException) {}
-						}
-						directional_source_rects.Add(source_rect);
-					}
-
-					error_msg = "Source Rect is directional with no valid value.";
-					if (!has_rect) return;
-					
-					is_directional = true;
-					is_valid = true;
-					return;	// no draw pos or depth if source rect is directional
-				}
+				source_rect = rect;
 
 				// Parsing optional layer draw position
 
 				JToken? pos_token = layer_obj.GetValue("Draw Pos");
-				if (pos_token != null && pos_token.Type != JTokenType.Null)
-				{
-					try
-					{
-						draw_pos = JC.extract_position(pos_token);
-					}
-					catch (InvalidDataException)
-					{
-						ModEntry.log(
-							$"Invalid Draw Position at {pos_token.Path}, defaulting to (0, 0).",
-							LogLevel.Warn
-						);
-					}
-				}
+				JsonParser.try_parse(pos_token, ref draw_pos);
 				draw_pos *= new Vector2(4);	// game rendering scale
 
 				// Parsing optional layer depth
 
-				JToken? depth_token = layer_obj.GetValue("Depth");
-				if (depth_token != null &&
-					(depth_token.Type == JTokenType.Float ||
-					depth_token.Type == JTokenType.Integer)
-				)
-				{
-					depth = (float)depth_token;
-				}
+				try { depth = new(layer_obj.GetValue("Depth")); }
+				catch (InvalidDataException) { depth = new(); }
 
 				is_valid = true;
 			}
@@ -123,20 +95,9 @@ namespace FurnitureFramework
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
 				Vector2 texture_pos, float base_depth,
-				int rot, bool is_on, Point c_anim_offset
+				bool is_on, Point c_anim_offset
 			)
 			{
-				Rectangle? rect_;
-
-				if (is_directional)
-				{
-					rect_ = directional_source_rects[rot];
-				}
-				else
-					rect_ = single_source_rect;
-				
-				if(rect_ is not Rectangle source_rect) return;
-
 				if (is_on)
 					source_rect.X += source_rect.Width;
 				source_rect.Location += c_anim_offset;
@@ -144,7 +105,7 @@ namespace FurnitureFramework
 				sprite_batch.Draw(
 					texture, texture_pos + draw_pos, source_rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
-					(base_depth - depth * 64) / 10000f
+					depth.get_value(base_depth)
 				);
 			}
 
@@ -154,68 +115,120 @@ namespace FurnitureFramework
 		#endregion
 
 		public bool has_layers {get; private set;} = false;
-
-		List<List<LayerData>> dir_layers = new();
-
-		List<List<LayerData>> directional_layers = new();
-		List<LayerData> singular_layers = new();
-		bool is_directional = false;
+		List<List<LayerData>> layers = new();
 
 		#region Layers Parsing
 
-		public Layers(JToken? layers_token, List<string> rot_names, Texture2D texture)
+		public static Layers make_layers(JToken? token, List<string> rot_names, Texture2D texture)
 		{
-			if (layers_token == null || layers_token.Type == JTokenType.Null)
-				return;	// No layers
-
-			// Case 1 : non-directional layers
-
-			if (layers_token is JArray layers_arr)
+			int rot_count = 1;
+			bool directional = false;
+			if (rot_names.Count > 0)
 			{
-				List<LayerData> list = new();
-				parse_layer_array(layers_arr, list, texture, rot_names);
+				rot_count = rot_names.Count;
+				directional = true;
 			}
+			Layers result = new(rot_count);
 
-			// Case 2 : directional layers
-
-			else if (layers_token is JObject layers_obj)
+			if (token is JArray layers_arr)
 			{
-				foreach (string rot_name in rot_names)
+				foreach (JToken layer_token in layers_arr)
 				{
-					List<LayerData> layer_list = new();
-
-					JToken? layers_dir_token = layers_obj.GetValue(rot_name);
-					if (layers_dir_token is JArray layers_dir_arr)
-					{
-						parse_layer_array(layers_dir_arr, layer_list, texture, null);
-					}
-					directional_layers.Add(layer_list);
+					if (layer_token is not JObject layer_obj) continue;
+					if (directional)
+						result.add_layers(layer_obj, texture, rot_names);
+					else
+						result.add_layer(layer_obj, texture);
 				}
-
-				is_directional = true;
 			}
+
+			else if (token is JObject dir_layers_obj)
+			{
+				foreach ((string key, int rot) in rot_names.Select((value, index) => (value, index)))
+				{
+					JToken? dir_layers_tok = dir_layers_obj.GetValue(key);
+					if (dir_layers_tok is not JArray dir_layers_arr) continue;
+
+					foreach (JToken layer_token in dir_layers_arr)
+					{
+						if (layer_token is not JObject layer_obj) continue;
+						result.add_layer(layer_obj, texture, rot);
+					}
+				}
+			}
+
+			return result;
 		}
 
-		private void parse_layer_array(
-			JArray layers_arr, List<LayerData> layer_list,
-			Texture2D texture, List<string>? rot_names = null
-		)
+		private void add_layers(JObject layer_obj, Texture2D texture, List<string> rot_names)
 		{
-			foreach (JToken layer_token in layers_arr)
+			List<LayerData?> list;
+			try
 			{
-				if (layer_token is not JObject layer_obj) continue;
-
-				LayerData layer = new(layer_obj, texture, rot_names);
+				list = LayerData.make_layers(layer_obj, texture, rot_names);
+			}
+			catch (InvalidDataException ex)
+			{
+				ModEntry.log($"Invalid layer at {layer_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{ex.Message}", LogLevel.Warn);
+				ModEntry.log("Skipping Layer.", LogLevel.Warn);
+				return;
+			}
+			
+			foreach ((LayerData? layer, int rot) in list.Select((value, index) => (value, index)))
+			{
+				if (layer is null) continue;
 				if (!layer.is_valid)
 				{
-					ModEntry.log($"Invalid Layer Data at {layer_token.Path}:", LogLevel.Warn);
+					ModEntry.log($"Invalid layer at {layer_obj.Path}->{rot_names[rot]}:", LogLevel.Warn);
 					ModEntry.log($"\t{layer.error_msg}", LogLevel.Warn);
 					ModEntry.log("Skipping Layer.", LogLevel.Warn);
 					continue;
 				}
+				layers[rot].Add(layer);
 				has_layers = true;
-				layer_list.Add(layer);
 			}
+		}
+
+		private void add_layer(JObject layer_obj, Texture2D texture, int? rot = null)
+		{
+			LayerData layer;
+			try
+			{
+				layer = LayerData.make_layer(layer_obj, texture);
+			}
+			catch (InvalidDataException ex)
+			{
+				ModEntry.log($"Invalid layer at {layer_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{ex.Message}", LogLevel.Warn);
+				ModEntry.log("Skipping Layer.", LogLevel.Warn);
+				return;
+			}
+
+			if (!layer.is_valid)
+			{
+				ModEntry.log($"Invalid layer at {layer_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{layer.error_msg}", LogLevel.Warn);
+				ModEntry.log("Skipping Layer.", LogLevel.Warn);
+				return;
+			}
+
+			if (rot is null)
+			{
+				foreach (List<LayerData> layer_list in layers)
+				{
+					layer_list.Add(layer);
+				}
+			}
+			else layers[rot.Value].Add(layer);
+
+			has_layers = true;
+		}
+
+		private Layers(int rot_nb)
+		{
+			for (int i = 0; i < rot_nb; i++)
+				layers.Add(new());
 		}
 
 		#endregion
@@ -230,16 +243,9 @@ namespace FurnitureFramework
 		{
 			if (!has_layers) return;
 
-			List<LayerData> cur_layers;
-			
-			if (is_directional)
-				cur_layers = directional_layers[rot];
-			else
-				cur_layers = singular_layers;
-
-			foreach (LayerData layer in cur_layers)
+			foreach (LayerData layer in layers[rot])
 			{
-				layer.draw(sprite_batch, color, texture_pos, base_depth, rot, is_on, c_anim_offset);
+				layer.draw(sprite_batch, color, texture_pos, base_depth, is_on, c_anim_offset);
 			}
 		}
 
