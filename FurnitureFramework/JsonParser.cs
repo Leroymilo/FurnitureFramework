@@ -1,13 +1,8 @@
-using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework
 {
-	interface IRect {
-
-	}
-
 	static class JsonParser
 	{
 		public static bool try_parse<T>(JToken? token, ref T result)
@@ -107,28 +102,6 @@ namespace FurnitureFramework
 				return true;
 			}
 
-			return false;
-		}
-
-		public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle> result)
-		{
-			result.Clear();
-			if (rot_names.Count == 0)
-			{
-				if(!try_parse(token, out Rectangle rect)) return false;
-				result.Add(rect);
-				return true;
-			}
-			else if (token is JObject rect_dict)
-			{
-				foreach (string key in rot_names)
-				{
-					JToken? rect_token = rect_dict.GetValue(key);
-					if (try_parse(rect_token, out Rectangle rect))
-						result.Add(rect);
-				}
-				return true;
-			}
 			return false;
 		}
 

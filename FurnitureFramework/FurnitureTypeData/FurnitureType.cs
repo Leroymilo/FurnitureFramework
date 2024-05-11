@@ -7,7 +7,6 @@ using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.Objects;
 
-
 namespace FurnitureFramework
 {
 
