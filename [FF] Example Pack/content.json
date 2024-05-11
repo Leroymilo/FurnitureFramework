@@ -940,9 +940,9 @@
 			"Toggle": true
 		},
 
-		"white_cat_statue": {
+		"cat_statue": {
 			// Sprite by SonreirAngel for Seasonal Japanese Buildings
-			"Display Name": "White Cat Statue",
+			"Display Name": "{{RectVariant}} Cat Statue",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
@@ -951,26 +951,10 @@
 
 			"Source Image": "assets/neko_statues.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
-
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
-
-			"Frame Count": 7,
-			"Frame Duration": 500,
-			"Animation Offset": {"X": 16, "Y": 0}
-		},
-
-		"black_cat_statue": {
-			// Sprite by SonreirAngel for Seasonal Japanese Buildings
-			"Display Name": "Black Cat Statue",
-
-			"Rotations": 1,
-			"Collisions": {"Width": 1, "Height": 1},
-
-			"Placement Restriction": 2,
-
-			"Source Image": "assets/neko_statues.png",
-			"Source Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 32},	// in pixels
-			"Icon Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 32},		// in pixels
+			"Source Rect Offsets": {
+				"White": {"X": 0, "Y": 0},
+				"Black": {"X": 0, "Y": 32}
+			},
 
 			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
 
