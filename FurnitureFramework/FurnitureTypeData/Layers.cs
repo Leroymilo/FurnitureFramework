@@ -25,8 +25,8 @@ namespace FurnitureFramework
 
 			// When LayerData can have directional source rects
 			public static List<LayerData?> make_layers(
-				JObject layer_obj, Texture2D source_texture, 
-				List<string> rot_names
+				JObject layer_obj, Texture2D source_texture,
+				Point rect_offset, List<string> rot_names
 			)
 			{
 				List<LayerData?> result = new();
@@ -35,6 +35,7 @@ namespace FurnitureFramework
 				Rectangle source_rect = Rectangle.Empty;
 				if (JsonParser.try_parse(rect_token, ref source_rect))
 				{
+					source_rect.Location += rect_offset;
 					LayerData layer = new(layer_obj, source_texture, source_rect);
 					result.AddRange(Enumerable.Repeat(layer, rot_names.Count));
 					return result;
@@ -43,10 +44,14 @@ namespace FurnitureFramework
 				List<Rectangle?> source_rects = new();
 				if (JsonParser.try_parse(rect_token, rot_names, ref source_rects))
 				{
-					foreach (Rectangle? rect in source_rects)
+					foreach (Rectangle? rect_ in source_rects)
 					{
-						if (rect is null) result.Add(null);
-						else result.Add(new(layer_obj, source_texture, rect.Value));
+						if (rect_ is null) result.Add(null);
+						else {
+							Rectangle rect = rect_.Value;
+							rect.Location += rect_offset;
+							result.Add(new(layer_obj, source_texture, rect));
+						}
 					}
 					return result;
 				}
@@ -56,12 +61,13 @@ namespace FurnitureFramework
 			
 			// When LayerData cannot have directional source rects
 			public static LayerData make_layer(
-				JObject layer_obj, Texture2D source_texture
+				JObject layer_obj, Texture2D source_texture, Point rect_offset
 			)
 			{
 				Rectangle source_rect = Rectangle.Empty;
 				if (JsonParser.try_parse(layer_obj.GetValue("Source Rect"), ref source_rect))
 				{
+					source_rect.Location += rect_offset;
 					return new(layer_obj, source_texture, source_rect);
 				}
 
@@ -118,7 +124,7 @@ namespace FurnitureFramework
 
 		#region Layers Parsing
 
-		public static Layers make_layers(JToken? token, List<string> rot_names, Texture2D texture)
+		public static Layers make_layers(JToken? token, List<string> rot_names, Texture2D texture, Point rect_offset)
 		{
 			int rot_count = 1;
 			bool directional = false;
@@ -135,9 +141,9 @@ namespace FurnitureFramework
 				{
 					if (layer_token is not JObject layer_obj) continue;
 					if (directional)
-						result.add_layers(layer_obj, texture, rot_names);
+						result.add_layers(layer_obj, texture, rect_offset, rot_names);
 					else
-						result.add_layer(layer_obj, texture);
+						result.add_layer(layer_obj, texture, rect_offset);
 				}
 			}
 
@@ -151,7 +157,7 @@ namespace FurnitureFramework
 					foreach (JToken layer_token in dir_layers_arr)
 					{
 						if (layer_token is not JObject layer_obj) continue;
-						result.add_layer(layer_obj, texture, rot);
+						result.add_layer(layer_obj, texture, rect_offset, rot);
 					}
 				}
 			}
@@ -159,12 +165,12 @@ namespace FurnitureFramework
 			return result;
 		}
 
-		private void add_layers(JObject layer_obj, Texture2D texture, List<string> rot_names)
+		private void add_layers(JObject layer_obj, Texture2D texture, Point rect_offset, List<string> rot_names)
 		{
 			List<LayerData?> list;
 			try
 			{
-				list = LayerData.make_layers(layer_obj, texture, rot_names);
+				list = LayerData.make_layers(layer_obj, texture, rect_offset, rot_names);
 			}
 			catch (InvalidDataException ex)
 			{
@@ -189,12 +195,12 @@ namespace FurnitureFramework
 			}
 		}
 
-		private void add_layer(JObject layer_obj, Texture2D texture, int? rot = null)
+		private void add_layer(JObject layer_obj, Texture2D texture, Point rect_offset, int? rot = null)
 		{
 			LayerData layer;
 			try
 			{
-				layer = LayerData.make_layer(layer_obj, texture);
+				layer = LayerData.make_layer(layer_obj, texture, rect_offset);
 			}
 			catch (InvalidDataException ex)
 			{

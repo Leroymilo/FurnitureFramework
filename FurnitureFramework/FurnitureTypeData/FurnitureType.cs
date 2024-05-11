@@ -21,6 +21,8 @@ namespace FurnitureFramework
 
 	class FurnitureType
 	{
+		#region Fields
+
 		string mod_id;
 		public readonly string id;
 		string display_name;
@@ -69,6 +71,7 @@ namespace FurnitureFramework
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
 
+		#endregion
 
 		#region Parsing
 
@@ -77,14 +80,91 @@ namespace FurnitureFramework
 			List<FurnitureType> list
 		)
 		{
+			JToken? r_token = data.GetValue("Source Rect Offsets");
+
+			#region Source Rect Variants Dict
+
+			if (r_token is JObject r_dict)
+			{
+				bool has_valid = false;
+
+				foreach ((string name, JToken? rect_token) in r_dict)
+				{
+					Point offset = new();
+					if (!JsonParser.try_parse(rect_token, ref offset))
+					{
+						ModEntry.log(
+							$"Invalid Source Rect Offset at {r_dict.Path}: {name}, skipping variant.",
+							LogLevel.Warn
+						);
+						continue;
+					}
+
+					string v_id = $"{id}_{name.ToLower()}";
+
+					make_furniture(
+						pack, v_id, data, list, 
+						offset, name
+					);
+					has_valid = true;
+				}
+
+				if (!has_valid)
+					throw new InvalidDataException("Source Rect Offsets dictionary has no valid path.");
+			}
+
+			#endregion
+
+			#region Source Rect Variants List 
+
+			else if (r_token is JArray r_array)
+			{
+				bool has_valid = false;
+
+				foreach ((JToken rect_token, int i) in r_array.Children().Select((value, index) => (value, index)))
+				{
+					Point offset = new();
+					if (!JsonParser.try_parse(rect_token, ref offset))
+					{
+						ModEntry.log(
+							$"Invalid Source Rect Offset at {rect_token.Path}, skipping variant.",
+							LogLevel.Warn
+						);
+						continue;
+					}
+
+					string v_id = $"{id}_{i}";
+
+					make_furniture(
+						pack, v_id, data, list, 
+						offset
+					);
+					has_valid = true;
+				}
+
+				if (!has_valid)
+					throw new InvalidDataException("Source Rect Offsets list has no valid path.");
+			}
+
+			#endregion
+
+			// Single Source Rect
+			else make_furniture(pack, id, data, list);
+
+		}
+
+		public static void make_furniture(
+			IContentPack pack, string id, JObject data,
+			List<FurnitureType> list,
+			Point rect_offset = new(), string rect_var = ""
+		)
+		{
 			JToken? t_token = data.GetValue("Source Image");
 
-			#region Texture Variants
+			#region Texture Variants Dict
 
 			if (t_token is JObject t_dict)
 			{
-				// texture variants
-
 				bool has_valid = false;
 
 				foreach ((string name, JToken? t_path) in t_dict)
@@ -102,8 +182,8 @@ namespace FurnitureFramework
 
 					list.Add(new(
 						pack, v_id, data,
-						t_path.ToString(),
-						name
+						rect_offset, t_path.ToString(),
+						rect_var, name
 					));
 					has_valid = true;
 				}
@@ -114,18 +194,50 @@ namespace FurnitureFramework
 
 			#endregion
 
+			#region Texture Variants Array
+
+			else if (t_token is JArray t_array)
+			{
+				bool has_valid = false;
+
+				foreach ((JToken t_path, int i) in t_array.Children().Select((value, index) => (value, index)))
+				{
+					if(t_path.Type != JTokenType.String)
+					{
+						ModEntry.log(
+							$"Could not read Source Image path at {t_path.Path}, skipping variant.",
+							LogLevel.Warn
+						);
+						continue;
+					}
+
+					string v_id = $"{id}_{i}";
+
+					list.Add(new(
+						pack, v_id, data,
+						rect_offset, t_path.ToString(),
+						rect_var
+					));
+					has_valid = true;
+				}
+
+				if (!has_valid)
+					throw new InvalidDataException("Source Image list has no valid path.");
+			}
+
+			#endregion
+
 			#region Single Texture
 
 			else if (t_token is JValue t_value)
 			{
-				// single texture
-
 				if (t_value.Type != JTokenType.String)
 					throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 
 				list.Add(new(
-					pack, id,
-					data, t_value.ToString()
+					pack, id, data,
+					rect_offset, t_value.ToString(),
+					rect_var
 				));
 			}
 
@@ -134,7 +246,10 @@ namespace FurnitureFramework
 			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 		}
 
-		public FurnitureType(IContentPack pack, string id, JObject data, string texture_path, string variant_name = "")
+		public FurnitureType(
+			IContentPack pack, string id, JObject data,
+			Point rect_offset, string texture_path,
+			string rect_var = "", string image_var = "")
 		{
 			JToken? token;
 
@@ -143,7 +258,8 @@ namespace FurnitureFramework
 			mod_id = pack.Manifest.UniqueID;
 			this.id = $"{mod_id}.{id}";
 			display_name = JsonParser.parse(data.GetValue("Display Name"), "No Name");
-			display_name = display_name.Replace("{{variant}}", variant_name);
+			display_name = display_name.Replace("{{ImageVariant}}", image_var);
+			display_name = display_name.Replace("{{RectVariant}}", rect_var);
 			type = JsonParser.parse(data.GetValue("Force Type"), "other");
 			price = JsonParser.parse(data.GetValue("Price"), 0);
 			exclude_from_random_sales = JsonParser.parse(data.GetValue("Exclude from Random Sales"), true);
@@ -182,6 +298,14 @@ namespace FurnitureFramework
 				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {id}.");
 			if (!JsonParser.try_rm_null(n_source_rects, ref source_rects))
 				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {id}.");
+			
+			for (int i = 0; i < source_rects.Count; i++)
+			{
+				source_rects[i] = new(
+					source_rects[i].Location + rect_offset,
+					source_rects[i].Size
+				);
+			}
 
 			token = data.GetValue("Icon Rect");
 			if (!JsonParser.try_parse(token, ref icon_rect))
@@ -190,7 +314,7 @@ namespace FurnitureFramework
 			if (icon_rect.IsEmpty)
 				icon_rect = source_rects[0];
 
-			layers = Layers.make_layers(data.GetValue("Layers"), rot_names, texture);
+			layers = Layers.make_layers(data.GetValue("Layers"), rot_names, texture, rect_offset);
 
 			#endregion
 
