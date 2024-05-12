@@ -87,15 +87,8 @@ namespace FurnitureFramework
 
 			public float get_player_depth(float top)
 			{
-				if (depth is null)
-				{
-					return (position.Y + 1f) * 64f / 10000f;
-					// taken from Farmer.getDrawLayer
-				}
-				else
-				{
-					return depth.get_value(top);
-				}
+				if (depth is null) return -1;	// keep default depth
+				else return depth.get_value(top);
 			}
 
 			#endregion

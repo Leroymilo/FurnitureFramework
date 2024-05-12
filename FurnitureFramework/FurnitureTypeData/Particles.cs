@@ -173,7 +173,7 @@ namespace FurnitureFramework
 					(!emit_when_on || !furniture.IsOn) &&
 					(!emit_when_off || furniture.IsOn)
 				) return;
-				
+
 				if (time_ms - particle_timers[timer_id] > emit_interval)
 				{
 					make(furniture);
@@ -198,11 +198,6 @@ namespace FurnitureFramework
 
 			public void make(Furniture furniture, Vector2? speed_ = null)
 			{
-				if (
-					(!emit_when_on || !furniture.IsOn) &&
-					(!emit_when_off || furniture.IsOn)
-				) return;
-
 				Vector2 speed;
 				if (speed_ is null) speed = base_speed;
 				else speed = speed_.Value;

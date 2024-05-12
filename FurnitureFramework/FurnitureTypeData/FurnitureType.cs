@@ -604,6 +604,15 @@ namespace FurnitureFramework
 			if (new_sit_dir >= 0) sit_dir = new_sit_dir;
 		}
 
+		public void GetSittingDepth(Furniture furniture, Farmer who, ref float depth)
+		{
+			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
+			int rot = furniture.currentRotation.Value;
+
+			float new_sit_depth = seats.get_sitting_depth(rot, seat_index, furniture.boundingBox.Top);
+			if (new_sit_depth >= 0) depth = new_sit_depth;
+		}
+
 		#endregion
 
 		#region Methods for Collisions

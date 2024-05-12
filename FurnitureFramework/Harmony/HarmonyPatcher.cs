@@ -87,6 +87,23 @@ namespace FurnitureFramework
 				);
 			}
 
+			foreach (MethodInfo method in typeof(FarmerPostfixes).GetMethods(
+				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
+			))
+			{
+				ModEntry.log($"Patching postfix : {method.Name}", LogLevel.Trace);
+
+				MethodInfo original = AccessTools.DeclaredMethod(
+					typeof(Farmer),
+					method.Name
+				);
+
+				harmony.Patch(
+					original: original,
+					postfix: new(method)
+				);
+			}
+
 			foreach (MethodInfo method in typeof(LocationPostfixes).GetMethods(
 				BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 			))
