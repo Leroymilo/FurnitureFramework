@@ -1,9 +1,9 @@
 {
-	"Format": 1,
+	"Format": 2,
 
 	"Furniture": {
 		// your mod's id will automatically be added to the furniture id
-		"simple_test": {
+		"{{ModID}}.simple_test": {
 			"Display Name": "Simple Test",
 
 			"Rotations": 1,
@@ -12,16 +12,15 @@
 				"Height": 1
 			},	// in tiles
 
-			"Indoors": false,
-			"Outdoors": true,
+			"Placement Restriction": 1,
 
 			"Source Image": "assets/simple.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"custom_catalogue": {
+		"{{ModID}}.custom_catalogue": {
 			"Display Name": "Custom Catalogue",
 
 			"Rotations": 1,
@@ -30,19 +29,18 @@
 				"Height": 1
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/catalogue.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
 
-			"Shop Id": "leroymilo.FurnitureExample.FF.custom_catalogue",
+			"Shop Id": "{{ModID}}.custom_catalogue",
 			// To make a catalogue-like Furniture
 			"Shows in Shops": ["Carpenter"]
 			// Adding the Custom Catalogue to Robin's Shop
 		},
 
-		"seasonal_bush_test": {
+		"{{ModID}}.seasonal_bush_test": {
 			"Display Name": "Bush Test",
 
 			"Rotations": 1,
@@ -51,17 +49,16 @@
 				"Height": 1
 			},
 
-			"Indoors": false,
-			"Outdoors": true,
+			"Placement Restriction": 1,
 
 			"Seasonal": true,
 			"Source Image": "assets/bush.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"chair_test": {
+		"{{ModID}}.chair_test": {
 
 			"Display Name": "Chair Test",
 
@@ -73,8 +70,7 @@
 				"Height": 1
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/chair.png",
 			"Source Rect": {
@@ -96,7 +92,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Right": 1,
@@ -108,20 +104,19 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"armchair_test": {
+		"{{ModID}}.armchair_test": {
 
-			"Display Name": "{{variant}} Armchair Test",
+			"Display Name": "{{ImageVariant}} Armchair Test",
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
 			// keys used in all other directional values
 			"Collisions": {"Width": 2, "Height": 1},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": {
 				"Brown": "assets/armchair.png",
@@ -150,7 +145,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Down": 2
@@ -158,14 +153,14 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Right": 1
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Left": 3
 					}	// structure is : {<furniture rotation> : <player direction>}
@@ -173,10 +168,10 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"bench_test": {
+		"{{ModID}}.bench_test": {
 
 			"Display Name": "Bench Test",
 
@@ -190,8 +185,7 @@
 				"Left": 	{"Width": 1, "Height": 2}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/bench.png",
 			"Source Rect": {
@@ -214,7 +208,7 @@
 			"Seats": [
 				// positions are from the top left of the Bounding Box (not the texture!)
 				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Right": 1,
@@ -224,7 +218,7 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Up": 0,
 						"Down": 2
@@ -232,7 +226,7 @@
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
-					"X": 0, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
+					"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
 						"Right": 1,
 						"Left": 3
@@ -241,10 +235,10 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"couch_test": {
+		"{{ModID}}.couch_test": {
 
 			"Display Name": "Couch Test",
 
@@ -258,8 +252,7 @@
 				"Left": 	{"Width": 2, "Height": 2}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/couch.png",
 			"Source Rect": {
@@ -270,69 +263,74 @@
 				// must have all directions
 			},
 
-			"Layers": [
-				{
-					"Source Rect": {
-						// Layer for up is transparent, can be omitted
-						"Right":	{"X": 48, "Y": 48, "Width": 32, "Height": 48},
-						"Up":		{"X": 80, "Y": 48, "Width": 48, "Height": 32},
-						"Left":		{"X": 128, "Y": 48, "Width": 32, "Height": 48}
+			"Layers": {
+				"Right": [
+					{
+						"Source Rect": {"X": 48, "Y": 48, "Width": 32, "Height": 48},
+						"Depth": {"Tile": 1, "Sub": 1000}
 					}
-				}
-			],
+				],
+				"Up": [
+					{
+						"Source Rect": {"X": 80, "Y": 48, "Width": 48, "Height": 32},
+						"Depth": {"Tile": 0, "Sub": 1000}
+					}
+				],
+				"Left": [
+					{
+						"Source Rect": {"X": 128, "Y": 48, "Width": 32, "Height": 48},
+						"Depth": {"Tile": 1, "Sub": 1000}
+					}
+				]
+			},
 
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"X": 0.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1.5, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 1, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 0, "Y": 0,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"X": 0, "Y": 1,		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				}
-			],
+			"Seats": {
+				"Up": [
+					{
+						"Position": {"X": 0.5, "Y": 0},
+						"Player Direction": 0
+					},
+					{
+						"Position": {"X": 1.5, "Y": 0},
+						"Player Direction": 0
+					}
+				],
+				"Right": [
+					{
+						"Position": {"X": 1, "Y": 0},
+						"Player Direction": 1
+					},
+					{
+						"Position": {"X": 1, "Y": 1},
+						"Player Direction": 1
+					}
+				],
+				"Down": [
+					{
+						"Position": {"X": 0.5, "Y": 0},
+						"Player Direction": 2
+					},
+					{
+						"Position": {"X": 1.5, "Y": 0},
+						"Player Direction": 2
+					}
+				],
+				"Left": [
+					{
+						"Position": {"X": 0, "Y": 0},
+						"Player Direction": 3
+					},
+					{
+						"Position": {"X": 0, "Y": 1},
+						"Player Direction": 3
+					}
+				]
+			},
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"table_test": {
+		"{{ModID}}.table_test": {
 			"Display Name": "Table Test",
 
 			"Rotations": 2,
@@ -347,8 +345,7 @@
 				}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/table.png",
 			"Source Rect": {
@@ -367,20 +364,20 @@
 				],
 				"Vertical": [
 					{
-						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
-						"Depth": 1
+						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16}
 					},
 					{
-						"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16}
+						"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16},
+						"Depth": 1
 					}
 				]
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"living_room": {
+		"{{ModID}}.living_room": {
 
 			"Display Name": "Living Room",
 
@@ -406,8 +403,7 @@
 				}
 			},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/living_room.png",
 			"Source Rect": {
@@ -424,25 +420,25 @@
 						// Back of Long Couch, facing Up
 						"Source Rect": {"X": 80, "Y": 224, "Width": 64, "Height": 32},
 						"Draw Pos": {"X": 32, "Y": 32},
-						"Depth": 0
+						"Depth": {"Tile": 2, "Sub": 1000}
 					},
 					{
 						// Lower Arm of Couch facing Right
 						"Source Rect": {"X": 160, "Y": 128, "Width": 32, "Height": 48},
 						"Draw Pos": {"X": 0, "Y": 0},
-						"Depth": 1
+						"Depth": {"Tile": 1, "Sub": 1000}
 					},
 					{
 						// Lower Arm of Armchair facing Left
 						"Source Rect": {"X": 192, "Y": 64, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 96, "Y": 16},
-						"Depth": 1
+						"Depth": {"Tile": 1, "Sub": 1000}
 					},
 					{
 						// Upper Arm of Armchair facing Left
 						"Source Rect": {"X": 192, "Y": 96, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 96, "Y": 16},
-						"Depth": 2
+						"Depth": 1
 					}
 					// Upper Arm of Couch facing Right & Table are already drawn by the base sprite 
 				],
@@ -451,26 +447,25 @@
 						// Back of Armchair facing Up
 						"Source Rect": {"X": 0, "Y": 224, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 32, "Y": 64},
-						"Depth": 0
+						"Depth": {"Tile": 4, "Sub": 1000}
 					},
 					{
 						// Lower Arm of Long Couch facing Right
 						"Source Rect": {"X": 128, "Y": 0, "Width": 32, "Height": 64},
 						"Draw Pos": {"X": 0, "Y": 16},
-						"Depth": 1
+						"Depth": {"Tile": 3, "Sub": 1000}
 					},
 					{
 						// Table
 						"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
 						"Draw Pos": {"X": 64, "Y": 32},
-						"Depth": 3
+						"Depth": 2
 					},
 					{
 						// Upper Arm of Long Couch facing Right
 						"Source Rect": {"X": 128, "Y": 64, "Width": 32, "Height": 64},
-						// in pixels
 						"Draw Pos": {"X": 0, "Y": 16},
-						"Depth": 4
+						"Depth": 1
 					}
 				],
 				"Down": [
@@ -478,31 +473,31 @@
 						// Lower Arm of Couch facing Left
 						"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
 						"Draw Pos": {"X": 96, "Y": 16},
-						"Depth": 0
+						"Depth": {"Tile": 2, "Sub": 1000}
 					},
 					{
 						// Lower Arm of Armchair facing Right
 						"Source Rect": {"X": 192, "Y": 0, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 0, "Y": 16},
-						"Depth": 1
+						"Depth": {"Tile": 1, "Sub": 1000}
 					},
 					{
 						// Table
 						"Source Rect": {"X": 144, "Y": 224, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 48, "Y": 32},
-						"Depth": 1
+						"Depth": 2
 					},
 					{
 						// Upper Arm of Armchair facing Right
 						"Source Rect": {"X": 192, "Y": 32, "Width": 32, "Height": 32},
 						"Draw Pos": {"X": 0, "Y": 16},
-						"Depth": 2
+						"Depth": 1
 					},
 					{
 						// Upper Arm of Couch facing Left
 						"Source Rect": {"X": 192, "Y": 176, "Width": 32, "Height": 48},
 						"Draw Pos": {"X": 96, "Y": 16},
-						"Depth": 2
+						"Depth": 1
 					}
 				],
 				"Left": [
@@ -510,25 +505,25 @@
 						// Back of Couch facing Up
 						"Source Rect": {"X": 32, "Y": 224, "Width": 48, "Height": 32},
 						"Draw Pos": {"X": 0, "Y": 64},
-						"Depth": 0
+						"Depth": {"Tile": 4, "Sub": 1000}
 					},
 					{
 						// Lower Arm of Long Couch facing Left
 						"Source Rect": {"X": 160, "Y": 0, "Width": 32, "Height": 64},
 						"Draw Pos": {"X": 48, "Y": 16},
-						"Depth": 1
+						"Depth": {"Tile": 3, "Sub": 1000}
 					},
 					{
 						// Table
 						"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
 						"Draw Pos": {"X": 0, "Y": 16},
-						"Depth": 4
+						"Depth": 1
 					},
 					{
 						// Upper Arm of Long Couch facing Left
 						"Source Rect": {"X": 160, "Y": 64, "Width": 32, "Height": 64},
 						"Draw Pos": {"X": 48, "Y": 16},
-						"Depth": 4
+						"Depth": 1
 					}
 				]
 			},
@@ -537,128 +532,128 @@
 				"Down": [
 					{
 						// Left seat of Long Couch
-						"X": 2.5, "Y": 0,
+						"Position": {"X": 2.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3.5, "Y": 0,
+						"Position": {"X": 3.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Right seat of Long Couch
-						"X": 4.5, "Y": 0,
+						"Position": {"X": 4.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Seat of Armchair
-						"X": 1, "Y": 1,
+						"Position": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Top seat of Couch
-						"X": 6, "Y": 1,
+						"Position": {"X": 6, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Bottom seat of Couch
-						"X": 6, "Y": 2,
+						"Position": {"X": 6, "Y": 2},
 						"Player Direction": 3
 					}
 				],
 				"Right": [
 					{
 						// Left seat of Couch
-						"X": 2.5, "Y": 0,
+						"Position": {"X": 2.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Right seat of Couch
-						"X": 3.5, "Y": 0,
+						"Position": {"X": 3.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Top seat of Long Couch
-						"X": 1, "Y": 1,
+						"Position": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Center seat of Long Couch
-						"X": 1, "Y": 2,
+						"Position": {"X": 1, "Y": 2},
 						"Player Direction": 1
 					},
 					{
 						// Bottom seat of Long Couch
-						"X": 1, "Y": 3,
+						"Position": {"X": 1, "Y": 3},
 						"Player Direction": 1
 					},
 					{
 						// Seat of Armchair
-						"X": 2.5, "Y": 4,
+						"Position": {"X": 2.5, "Y": 4},
 						"Player Direction": 0
 					}
 				],
 				"Up": [
 					{
 						// Top seat of Couch
-						"X": 1, "Y": 0,
+						"Position": {"X": 1, "Y": 0},
 						"Player Direction": 1
 					},
 					{
 						// Bottom seat of Couch
-						"X": 1, "Y": 1,
+						"Position": {"X": 1, "Y": 1},
 						"Player Direction": 1
 					},
 					{
 						// Seat of Armchair
-						"X": 6, "Y": 1,
+						"Position": {"X": 6, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Left seat of Long Couch
-						"X": 2.5, "Y": 2,
+						"Position": {"X": 2.5, "Y": 2},
 						"Player Direction": 0
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3.5, "Y": 2,
+						"Position": {"X": 3.5, "Y": 2},
 						"Player Direction": 0
 					},
 					{
 						// Right seat of Long Couch
-						"X": 4.5, "Y": 2,
+						"Position": {"X": 4.5, "Y": 2},
 						"Player Direction": 0
 					}
 				],
 				"Left": [
 					{
 						// Seat of Armchair
-						"X": 1.5, "Y": 0,
+						"Position": {"X": 1.5, "Y": 0},
 						"Player Direction": 2
 					},
 					{
 						// Top seat of Long Couch
-						"X": 3, "Y": 1,
+						"Position": {"X": 3, "Y": 1},
 						"Player Direction": 3
 					},
 					{
 						// Center seat of Long Couch
-						"X": 3, "Y": 2,
+						"Position": {"X": 3, "Y": 2},
 						"Player Direction": 3
 					},
 					{
 						// Bottom seat of Long Couch
-						"X": 3, "Y": 3,
+						"Position": {"X": 3, "Y": 3},
 						"Player Direction": 3
 					},
 					{
 						// Left seat of Couch
-						"X": 0.5, "Y": 4,
+						"Position": {"X": 0.5, "Y": 4},
 						"Player Direction": 0
 					},
 					{
 						// Right seat of Couch
-						"X": 1.5, "Y": 4,
+						"Position": {"X": 1.5, "Y": 4},
 						"Player Direction": 0
 					}
 				]
@@ -667,224 +662,35 @@
 			"Slots": {
 				"Down": [
 					{
-						"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13}
+						"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13},
+						"Depth": 2
 					}
 				],
 				"Right": [
 					{
 						"Area": {"X": 64, "Y": 41, "Width": 16, "Height": 31},
-						"Depth": 1
+						"Depth": 2
 					}
 				],
 				"Up": [
 					{
 						"Area": {"X": 48, "Y": 11, "Width": 32, "Height": 13},
-						"Depth": 2
+						"Depth": 0
 					}
 				],
 				"Left": [
 					{
 						"Area": {"X": 0, "Y": 25, "Width": 16, "Height": 31},
-						"Depth": 2
+						"Depth": 1
 					}
 				]
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"corner_couch": {
-			"Display Name": "Corner Couch",
-
-			"Rotations": [
-				"Down J", "Down L","Right J", /*"Right L",*/
-				"Up J", "Up L", /*"Left J",*/ "Left L"
-			],
-
-			"Collisions": {
-				"Down J": {
-					"Width": 4, "Height": 2,
-					"Map": "XXXX/..XX"
-				},
-				"Down L": {
-					"Width": 4, "Height": 2,
-					"Map": "XXXX/XX.."
-				},
-				"Up J": {
-					"Width": 4, "Height": 2,
-					"Map": "XX../XXXX"
-				},
-				"Up L": {
-					"Width": 4, "Height": 2,
-					"Map": "..XX/XXXX"
-				},
-				"Right J": {
-					"Width": 3, "Height": 3,
-					"Map": "XXX/XX./XX."
-				},
-				"Right L": {
-					"Width": 3, "Height": 3,
-					"Map": "XX./XXX/XXX"
-				},
-				"Left J": {
-					"Width": 3, "Height": 3,
-					"Map": ".XX/XXX/XXX"
-				},
-				"Left L": {
-					"Width": 3, "Height": 3,
-					"Map": "XXX/.XX/.XX"
-				}
-			},
-
-			"Indoors": true,
-			"Outdoors": false,
-			
-			// Thanks to @oomps for the texture!
-			"Source Image": "assets/corner_couch.png",
-			"Source Rect": {
-				"Down J":	{"X": 0,	"Y": 0,		"Width": 64, "Height": 48},
-				"Down L":	{"X": 64,	"Y": 0,		"Width": 64, "Height": 48},
-				"Right J":	{"X": 128,	"Y": 0,		"Width": 48, "Height": 64},
-				"Right L":	{"X": 224,	"Y": 0,		"Width": 48, "Height": 64},
-				"Up J":		{"X": 0,	"Y": 48,	"Width": 64, "Height": 48},
-				"Up L":		{"X": 64,	"Y": 48,	"Width": 64, "Height": 48},
-				"Left J":	{"X": 176,	"Y": 0,		"Width": 48, "Height": 64},
-				"Left L":	{"X": 272,	"Y": 0,		"Width": 48, "Height": 64}
-			},
-
-			"Layers": [
-				{
-					"Source Rect": {
-						"Right J":	{"X": 128,	"Y": 64, "Width": 48, "Height": 64},
-						"Right L":	{"X": 224,	"Y": 64, "Width": 48, "Height": 64},
-						"Up J":		{"X": 0,	"Y": 96, "Width": 64, "Height": 48},
-						"Up L":		{"X": 64,	"Y": 96, "Width": 64, "Height": 48},
-						"Left J":	{"X": 176,	"Y": 64, "Width": 48, "Height": 64},
-						"Left L":	{"X": 272,	"Y": 64, "Width": 48, "Height": 64}
-					}
-				}
-			],
-
-			"Seats": {
-				"Down J": [
-					{
-						"X": 0.5, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 1.5, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 2.25, "Y": 0.625,
-						"Player Direction": 3
-					}
-				],
-				"Down L": [
-					{
-						"X": 1.5, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 2.5, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 0.75, "Y": 0.625,
-						"Player Direction": 1
-					}
-				],
-				"Right J": [
-					{
-						"X": 1.75, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 1, "Y": 0.75,
-						"Player Direction": 1
-					},
-					{
-						"X": 1, "Y": 1.5,
-						"Player Direction": 1
-					}
-				],
-				"Right L": [
-					{
-						"X": 0.875, "Y": 0,
-						"Player Direction": 1
-					},
-					{
-						"X": 0.875, "Y": 0.75,
-						"Player Direction": 1
-					},
-					{
-						"X": 1.75, "Y": 1.25,
-						"Player Direction": 0
-					}
-				],
-				"Up J": [
-					{
-						"X": 0.5, "Y": 0,
-						"Player Direction": 1
-					},
-					{
-						"X": 1.5, "Y": 1,
-						"Player Direction": 0
-					},
-					{
-						"X": 2.5, "Y": 1,
-						"Player Direction": 0
-					}
-				],
-				"Up L": [
-					{
-						"X": 2.5, "Y": 0,
-						"Player Direction": 3
-					},
-					{
-						"X": 0.5, "Y": 1,
-						"Player Direction": 0
-					},
-					{
-						"X": 1.5, "Y": 1,
-						"Player Direction": 0
-					}
-				],
-				"Left J": [
-					{
-						"X": 1.25, "Y": 0,
-						"Player Direction": 3
-					},
-					{
-						"X": 1.25, "Y": 0.75,
-						"Player Direction": 3
-					},
-					{
-						"X": 0.5, "Y": 1.25,
-						"Player Direction": 0
-					}
-				],
-				"Left L": [
-					{
-						"X": 0.25, "Y": 0,
-						"Player Direction": 2
-					},
-					{
-						"X": 1, "Y": 0.75,
-						"Player Direction": 3
-					},
-					{
-						"X": 1, "Y": 1.5,
-						"Player Direction": 3
-					}
-				]
-			},
-
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]
-		},
-
-		"cauldron_test": {
+		"{{ModID}}.cauldron_test": {
 			"Display Name": "Custom Cauldron",
 
 			"Rotations": 1,
@@ -893,8 +699,7 @@
 				"Height": 1
 			},	// in tiles
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/cauldron.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 32},	// in pixels
@@ -905,7 +710,7 @@
 				}
 			],
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"],
 
 			"Sounds": [
 				{
@@ -956,41 +761,23 @@
 			"Toggle": true
 		},
 
-		"white_cat_statue": {
+		"{{ModID}}.cat_statue": {
 			// Sprite by SonreirAngel for Seasonal Japanese Buildings
-			"Display Name": "White Cat Statue",
+			"Display Name": "{{RectVariant}} Cat Statue",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
 
-			"Indoors": true,
-			"Outdoors": true,
+			"Placement Restriction": 2,
 
 			"Source Image": "assets/neko_statues.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
+			"Source Rect Offsets": {
+				"White": {"X": 0, "Y": 0},
+				"Black": {"X": 0, "Y": 32}
+			},
 
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
-
-			"Frame Count": 7,
-			"Frame Duration": 500,
-			"Animation Offset": {"X": 16, "Y": 0}
-		},
-
-		"black_cat_statue": {
-			// Sprite by SonreirAngel for Seasonal Japanese Buildings
-			"Display Name": "Black Cat Statue",
-
-			"Rotations": 1,
-			"Collisions": {"Width": 1, "Height": 1},
-
-			"Indoors": true,
-			"Outdoors": true,
-
-			"Source Image": "assets/neko_statues.png",
-			"Source Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 32},	// in pixels
-			"Icon Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 32},		// in pixels
-
-			"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"],
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"],
 
 			"Frame Count": 7,
 			"Frame Duration": 500,

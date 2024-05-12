@@ -17,7 +17,7 @@ namespace FurnitureFramework
 				return __result;
 			// no hit or hit non-furniture object
 
-			ModEntry.furniture.TryGetValue(
+			ModEntry.f_cache.TryGetValue(
 				furniture.ItemId,
 				out FurnitureType? furniture_type
 			);

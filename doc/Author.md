@@ -13,6 +13,7 @@ This tutorial and documentation uses the [Example Pack](https://github.com/Leroy
 	* [Format](#format)
 	* [Furniture](#furniture)
 * [Commands](#commands)
+* [Mixed Content Pack](#mixed-content-pack)
 
 ## Manifest
 
@@ -28,7 +29,8 @@ Like any other content pack, you will need a `manifest.json` file to make your F
 	"Description": "An example pack for the Furniture Framework",
 	"UniqueID": "leroymilo.FurnitureExample.FF",
 	"ContentPackFor": {
-		"UniqueID": "leroymilo.FurnitureFramework"
+		"UniqueID": "leroymilo.FurnitureFramework",
+		"MinimumVersion": "2.0.0"
 	},
 	"UpdateKeys": [ "Nexus:23458" ]
 }
@@ -37,11 +39,9 @@ Like any other content pack, you will need a `manifest.json` file to make your F
 You need to make sure that the `UniqueID` for your Furniture Pack is unique, a good way to ensure this is too use your username as a part of it.  
 The number in the `UpdateKeys` field points to the page of your mod, if you post your mod on [Nexus](https://www.nexusmods.com/stardewvalley/), this number appears in the url of your mod's page.
 
-If your Furniture Pack is coupled with a CP Content Pack, they have to have distincts `UniqueID`s (usually prefixing them with `FF` and `CP` is enough).
-
 ## Content
 
-This is the file where you define all your custom Fruniture. Please keep in mind that all file paths that you will write in it have to be relative to your mod's directory (where `content.json` and `manifest.json` are), it is strongly recommended to put all images in the `assets` folder of your mod.
+This is the file where you define all your custom Furniture. Please keep in mind that all file paths that you will write in it have to be relative to your mod's directory (where `content.json` and `manifest.json` are), it is strongly recommended to put all images in the `assets` folder of your mod.
 
 :warning: <span style="color:red">**WARNING**</span>: Unlike a CP Content Pack, names in this field are <span style="color:red">**CASE SENSITIVE**</span>, make sure you don't forget capital letters when writting field names or ids.
 
@@ -49,7 +49,7 @@ The `content.json` file is a model with only 2 fields:
 
 ### Format
 
-The format you're using for your Furniture Pack, for now, only the `"Format": 1` is supported, this number will get larger with future versions.
+The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Format changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Format%20changelogs.md). The current Format is 2.
 
 ### Furniture
 
@@ -66,8 +66,11 @@ Each entry in this dictionary has the Id of the Furniture for key and the Furnit
 }
 ```
 
-Note that you can have as many custom Furniture as you want but their ids must be all differents from each other.  
-The `UniqueID` (followed by an dot `.`) of your mod will be automatically added to the id you give when the Furniture is added to the game. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`. You only need to worry about this if you want another mod (like a CP Pack): you'll need to use the id of the Furniture Pack.
+Note: you can have as many custom Furniture as you want but their IDs must be all differents from each other.  
+It is strongly recommended to add `{{ModID}}.` at the start of every new Furniture ID to avoid conflicts with other mods or the game itself. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`.  
+You should also be able to modify vanilla Furniture by using their vanilla ID, doing so might be tricky for some Furniture because some properties are hardcoded (like the catalogues and the cauldron) so be carefull of what you modify.
+
+Note 2: when using [Furniture Variants](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#variants), the variation name or number will be automatically added to the original ID so that each variation can exist in the game.
 
 The next part of the tutorial, with details about the Furniture definition is [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
 
@@ -79,4 +82,40 @@ Here's details about console commands:
 
 ### reload_furniture_pack
 
-Reloads the furniture pack with the given UniqueID. It will add new Furniture and edit changed Furniture but not remove Furniture that was removed from the pack.
+Reloads the furniture pack with the given UniqueID. It will add new Furniture and edit changed Furniture but not remove Furniture that was removed from the pack.  
+There are some known limits to this command:
+- Changing a Furniture's ID will create a new Furniture without removing the one with the old ID
+- Changing a Furniture's rotations will break already placed Furniture of this type
+- Removing slots and seats will remove anything that was in it, or cause errors
+- Particles might break?
+
+## Mixed Content Pack
+
+There are multiple cases where you might want your mod to be both a CP content pack and a Furniture pack, for exemple if your pack has Furniture and other items or buildings.  
+This is very easy: you basically have to make 2 separate mods, but since SMAPI is smart when reading mods, you can upload them together on Nexus (or other mod website) as a single file structured like this:
+```
+My Mod
+└───[CP] My Mod
+│	└───assets
+│	│	└───(your assets for the CP pack)
+│	└───manifest.json
+│	│	{
+│	│		...
+│	│		"UniqueID": "MyName.MyMod.CP"
+│	│		...
+│	│	}
+│	└───content.json
+└───[FF] My Mod
+	└───assets
+	│	└───(your assets for the FF pack)
+	└───manifest.json
+	│	{
+	│		...
+	│		"UniqueID": "MyName.MyMod.FF"
+	│		...
+	│	}
+	└───content.json
+```
+
+It is VERY IMPORTANT that the UniqueIDs of the 2 mods are different so that SMAPI correctly loads both.  
+However, you can use the same update key for both, just make sure that both mods have the same version.

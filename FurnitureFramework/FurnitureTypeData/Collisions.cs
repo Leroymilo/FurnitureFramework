@@ -247,7 +247,7 @@ namespace FurnitureFramework
 
 				foreach (Furniture item in loc.furniture)
 				{
-					ModEntry.furniture.TryGetValue(item.ItemId, out FurnitureType? f_type);
+					ModEntry.f_cache.TryGetValue(item.ItemId, out FurnitureType? f_type);
 					if (f_type == null)
 					{
 						// vanilla furniture
@@ -255,9 +255,7 @@ namespace FurnitureFramework
 							item.furniture_type.Value == 11 &&
 							item.IntersectsForCollision(tile_rect) &&
 							item.heldObject.Value == null
-						)
-							return true;
-							
+						) return true;
 					}
 				}
 

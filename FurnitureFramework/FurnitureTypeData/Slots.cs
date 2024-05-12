@@ -2,6 +2,7 @@ using System.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
@@ -20,59 +21,34 @@ namespace FurnitureFramework
 			public readonly string? error_msg;
 
 			public readonly Rectangle area;
-
-			public readonly float depth = 0.1f;
-
+			Depth depth = new();
 			Vector2 offset = Vector2.Zero;
 			bool draw_shadow = true;
 			Vector2 shadow_offset = Vector2.Zero;
 
 			#region SlotData Parsing
 
-			public SlotData(JObject slot_obj, List<string>? rot_names = null)
+			public SlotData(JObject slot_obj)
 			{
 				// Parsing required layer area
-
-				error_msg = "Missing or Invalid Area.";
-				JToken? area_token = slot_obj.GetValue("Area");
-				if (area_token is not JObject)
-					return;
-				
-				try
+				if (!JsonParser.try_parse(slot_obj.GetValue("Area"), ref area))
 				{
-					area = JC.extract_rect(area_token);
-				}
-				catch (InvalidDataException)
-				{
+					error_msg = "Missing or Invalid Area.";
 					return;
 				}
 
 				// Parsing optional layer depth
+				try { depth = new(slot_obj["Depth"]); }
+				catch (InvalidDataException) {}
 				
-				depth = JC.extract(slot_obj, "Depth", 0.1f);
-
 				// Parsing optional offset
-
-				JToken? offset_token = slot_obj.GetValue("Offset");
-				if (offset_token != null)
-				{
-					offset = JC.extract_position(offset_token);
-				}
+				JsonParser.try_parse(slot_obj.GetValue("Offset"), ref offset);
 
 				// Parsing optional draw shadow
-
-				draw_shadow = JC.extract(slot_obj, "Draw Shadow", true);
+				draw_shadow = JsonParser.parse(slot_obj.GetValue("Draw Shadow"), true);
 				
-
 				// Parsing optional shadow offset
-				if (draw_shadow)
-				{
-					JToken? s_offset_token = slot_obj.GetValue("Shadow Offset");
-					if (s_offset_token != null)
-					{
-						shadow_offset = JC.extract_position(s_offset_token);
-					}
-				}
+				JsonParser.try_parse(slot_obj.GetValue("Shadow Offset"), ref shadow_offset);
 
 				is_valid = true;
 			}
@@ -85,7 +61,7 @@ namespace FurnitureFramework
 				int rot,
 				SpriteBatch sprite_batch,
 				StardewValley.Object obj,
-				int bottom,
+				float top,
 				float alpha
 			)
 			{
@@ -94,9 +70,7 @@ namespace FurnitureFramework
 				draw_pos.Y += area.Bottom * 4;			// Vertically bottom aligned
 				draw_pos += offset * 4;
 
-				float draw_depth = bottom - depth * 64;
-				draw_depth = draw_depth / 10000f;
-				draw_depth = MathF.BitIncrement(draw_depth);
+				float draw_depth = depth.get_value(top);
 				draw_depth = MathF.BitIncrement(draw_depth);
 				// plus epsilon to make sure it's drawn over the layer at the same depth
 
@@ -168,66 +142,75 @@ namespace FurnitureFramework
 
 	
 		public bool has_slots {get; private set;} = false;
-
-		List<List<SlotData>> directional_slots = new();
-		List<SlotData> singular_slots = new();
-		bool is_directional = false;
+		List<List<SlotData>> slots = new();
 
 		#region Slots Parsing
 
-		public Slots(JToken? slots_token, List<string> rot_names)
+		public static Slots make_slots(JToken? token, List<string> rot_names)
 		{
-			
-			if (slots_token == null || slots_token.Type == JTokenType.Null)
-				return;	// No slots
-
-			// Case 1 : non-directional slots
-
-			if (slots_token is JArray slots_arr)
+			int rot_count = 1;
+			bool directional = false;
+			if (rot_names.Count > 0)
 			{
-				parse_slot_array(slots_arr, singular_slots, rot_names);
+				rot_count = rot_names.Count;
+				directional = true;
 			}
+			Slots result = new(rot_count);
 
-			// Case 2 : directional slots
-
-			else if (slots_token is JObject slots_obj)
+			if (token is JArray slots_arr)
 			{
-				foreach (string rot_name in rot_names)
+				foreach (JToken slot_token in slots_arr)
 				{
-					List<SlotData> slot_list = new();
-
-					JToken? slots_dir_token = slots_obj.GetValue(rot_name);
-					if (slots_dir_token is JArray slots_dir_arr)
-					{
-						parse_slot_array(slots_dir_arr, slot_list, null);
-					}
-					directional_slots.Add(slot_list);
+					if (slot_token is not JObject slot_obj) continue;
+					result.add_slot(slot_obj);
 				}
-
-				is_directional = true;
 			}
+
+			else if (directional && token is JObject dir_slots_obj)
+			{
+				foreach ((string key, int rot) in rot_names.Select((value, index) => (value, index)))
+				{
+					JToken? dir_slots_tok = dir_slots_obj.GetValue(key);
+					if (dir_slots_tok is not JArray dir_slots_arr) continue;
+
+					foreach (JToken slot_token in dir_slots_arr)
+					{
+						if (slot_token is not JObject slot_obj) continue;
+						result.add_slot(slot_obj, rot);
+					}
+				}
+			}
+
+			return result;
 		}
 
-		private void parse_slot_array(
-			JArray slots_arr, List<SlotData> slot_list,
-			List<string>? rot_names = null
-		)
+		private void add_slot(JObject slot_obj, int? rot = null)
 		{
-			foreach (JToken slot_token in slots_arr)
+			SlotData slot = new(slot_obj);
+			if (!slot.is_valid)
 			{
-				if (slot_token is not JObject slot_obj) continue;
-
-				SlotData slot = new(slot_obj, rot_names);
-				if (!slot.is_valid)
-				{
-					ModEntry.log($"Invalid Slot Data at {slot_token.Path}:", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log($"\t{slot.error_msg}", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log("Skipping Slot.", StardewModdingAPI.LogLevel.Warn);
-					continue;
-				}
-				has_slots = true;
-				slot_list.Add(slot);
+				ModEntry.log($"Invalid slot at {slot_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{slot.error_msg}", LogLevel.Warn);
+				ModEntry.log("Skipping Slot.", LogLevel.Warn);
+				return;
 			}
+
+			if (rot is null)
+			{
+				foreach (List<SlotData> slot_list in slots)
+				{
+					slot_list.Add(slot);
+				}
+			}
+			else slots[rot.Value].Add(slot);
+
+			has_slots = true;
+		}
+
+		private Slots(int rot_count)
+		{
+			for (int i = 0; i < rot_count; i++)
+				slots.Add(new());
 		}
 
 		#endregion
@@ -236,14 +219,7 @@ namespace FurnitureFramework
 
 		public int get_slot(Point rel_pos, int rot, out Rectangle area)
 		{	
-			List<SlotData> slots;
-
-			if (is_directional)
-				slots = directional_slots[rot];
-			else
-				slots = singular_slots;
-			
-			foreach ((SlotData slot, int index) in slots.Select((value, index) => (value, index)))
+			foreach ((SlotData slot, int index) in slots[rot].Select((value, index) => (value, index)))
 			{
 				if (!slot.area.Contains(rel_pos)) continue;
 				
@@ -257,34 +233,21 @@ namespace FurnitureFramework
 
 		public int get_count(int rot)
 		{
-			if (is_directional)
-			{
-				return directional_slots[rot].Count;
-			}
-			else
-			{
-				return singular_slots.Count;
-			}
+			return slots[rot].Count;
 		}
 
 		public void draw(
 			SpriteBatch sprite_batch,
 			IList<Item> items,
-			int rot, int bottom,
+			int rot, float top,
 			float alpha
 		)
 		{
-			List<SlotData> slots;
-			if (is_directional)
-				slots = directional_slots[rot];
-			else
-				slots = singular_slots;
-
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
 				if (item is not StardewValley.Object obj) continue;
 
-				slots[i].draw_obj(rot, sprite_batch, obj, bottom, alpha);
+				slots[rot][i].draw_obj(rot, sprite_batch, obj, top, alpha);
 			}
 		}
 

@@ -141,7 +141,6 @@ namespace FurnitureFramework
 
 	class LocationTranspiler
 	{
-
 		#region LowPriorityLeftClick
 /* 	Replace :
 
@@ -361,7 +360,7 @@ call get_icon_source_rect
 
 		static private Rectangle get_icon_source_rect(Furniture furniture)
 		{
-			ModEntry.furniture.TryGetValue(
+			ModEntry.f_cache.TryGetValue(
 				furniture.ItemId,
 				out FurnitureType? furniture_type
 			);

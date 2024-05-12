@@ -14,17 +14,16 @@ namespace FurnitureFramework
     /// <summary>The mod entry point.</summary>
     internal sealed class ModEntry : Mod
     {
-		private static IMonitor? monitor;
-		private static IModHelper? helper;
-		private static ModConfig config;
+		const int FORMAT = 2;
 
-		private static string last_season = "spring";
-
+		static IMonitor? monitor;
+		static IModHelper? helper;
+		static ModConfig config;
 
 		public static bool print_debug = false;
 
-
-		public static readonly Dictionary<string, FurnitureType> furniture = new();
+		static string last_season = "spring";
+		public static readonly Dictionary<string, FurnitureType> f_cache = new();
 		public static readonly Dictionary<string, List<string>> shops = new();
 
 		static public IModHelper get_helper()
@@ -164,10 +163,17 @@ namespace FurnitureFramework
 		{
 			switch (format)
 			{
-				case 1: return true;
-				default:
-					log($"Invalid format {format}, skipping Furniture Pack.", LogLevel.Error);
+				case > FORMAT:
+				case < 1:
+					log($"Invalid Format: {format}, skipping Furniture Pack.", LogLevel.Error);
 					return false;
+				case < FORMAT:
+					log($"Format {format} is outdated, skipping Furniture Pack.", LogLevel.Error);
+					log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
+					log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
+					log("If you are the author, check the Format changelogs in the documentation to update your Pack.", LogLevel.Info);
+					return false;
+				case FORMAT: return true;
 			}
 		}
 
@@ -190,27 +196,29 @@ namespace FurnitureFramework
 			JToken? format_token = data.GetValue("Format");
 			if (format_token is null || format_token.Type != JTokenType.Integer)
 			{
-				log("Invalid or missing Format, skipping Furniture Pack.", LogLevel.Error);
+				log("Missing or invalid Format, skipping Furniture Pack.", LogLevel.Error);
 				return;
 			}
 			
 			int format = (int)format_token;
 			if(!check_format(format)) return;
 
-			JToken? furniture_token = data.GetValue("Furniture");
-			if (furniture_token == null)
+			JToken? fs_token = data.GetValue("Furniture");
+			if (fs_token is not JObject fs_object)
 			{
-				log("Missing \"Furniture\" field in content.json, skipping Furniture Pack.", LogLevel.Error);
+				log("Missing or invalid \"Furniture\" field in content.json, skipping Furniture Pack.", LogLevel.Error);
 				return;
 			}
-			foreach((string key, JToken? f_data) in (JObject)furniture_token)
+			foreach((string key, JToken? f_data) in fs_object)
 			{
 				List<FurnitureType> new_furniture = new();
+
 				if (f_data is not JObject f_obj)
 				{
 					log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
 					continue;
 				}
+
 				try
 				{
 					FurnitureType.make_furniture(
@@ -228,13 +236,13 @@ namespace FurnitureFramework
 
 				foreach (FurnitureType type in new_furniture)
 				{
-					if (!replace && furniture.ContainsKey(type.id))
+					if (!replace && f_cache.ContainsKey(type.id))
 					{
 						log($"Duplicate Furniture: {type.id}, skipping Furniture.");
 						continue;
 					}
 
-					furniture[type.id] = type;
+					f_cache[type.id] = type;
 
 					if (type.shop_id != null)
 					{
@@ -282,11 +290,13 @@ namespace FurnitureFramework
             if (!Context.IsWorldReady)
                 return;
 			
-			if (e.Button == SButton.K)
-			{
-				print_debug = !print_debug;
-				log($"=== Debug Print {(print_debug ? "On": "Off")} ===", LogLevel.Info);
-			}
+			// if (e.Button == SButton.K)
+			// {
+			// 	print_debug = !print_debug;
+			// 	log($"=== Debug Print {(print_debug ? "On": "Off")} ===", LogLevel.Info);
+			// }
+
+			#region Slot Interactions
 
 			bool placed = false;
 			
@@ -296,21 +306,14 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					furniture.TryGetValue(item.ItemId, out FurnitureType? type);
-					if (type == null) continue;
-					if (!type.is_table) continue;
+					f_cache.TryGetValue(item.ItemId, out FurnitureType? type);
+					if (type == null || !type.is_table) continue;
 
-					if (
-						Game1.player.ActiveObject is not null &&
-						!Game1.player.ActiveObject.bigCraftable.Value
-					)
+					if (type.place_in_slot(item, pos, Game1.player))
 					{
-						if (type.place_in_slot(item, pos, Game1.player))
-						{
-							Helper.Input.Suppress(config.slot_place_key);
-							placed = true;
-							break;
-						}
+						Helper.Input.Suppress(config.slot_place_key);
+						placed = true;
+						break;
 					}
 				}
 			}
@@ -319,7 +322,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					furniture.TryGetValue(item.ItemId, out FurnitureType? type);
+					f_cache.TryGetValue(item.ItemId, out FurnitureType? type);
 					if (type == null) continue;
 					if (!type.is_table) continue;
 
@@ -330,6 +333,8 @@ namespace FurnitureFramework
 					}
 				}
 			}
+
+			#endregion
         }
 
 
@@ -342,12 +347,14 @@ namespace FurnitureFramework
 			{
 				e.Edit(asset => {
 					var editor = asset.AsDictionary<string, string>().Data;
-					foreach ((string id, FurnitureType f) in furniture)
+					foreach ((string id, FurnitureType f) in f_cache)
 					{
 						editor[id] = f.get_string_data();
 					}
 				});
 			}
+
+			#region Add custom shops
 
 			if (e.NameWithoutLocale.StartsWith("Data/Shops"))
 			{
@@ -377,7 +384,7 @@ namespace FurnitureFramework
 								{
 									Id = f_id,
 									ItemId = $"(F){f_id}",
-									Price = furniture[f_id].price
+									Price = f_cache[f_id].price
 								};
 
 								editor[shop_id].Items.Add(shop_item_data);
@@ -387,9 +394,11 @@ namespace FurnitureFramework
 				});
 			}
 
-			if (furniture.ContainsKey(e.Name.Name))
+			#endregion
+
+			if (f_cache.ContainsKey(e.Name.Name))
 			{
-				e.LoadFrom(furniture[e.Name.Name].get_icon_texture, AssetLoadPriority.Medium);
+				e.LoadFrom(f_cache[e.Name.Name].get_icon_texture, AssetLoadPriority.Medium);
 			}
 		}
 
@@ -411,7 +420,7 @@ namespace FurnitureFramework
 			if (Game1.currentSeason == last_season) return;
 			last_season = Game1.currentSeason;
 
-			foreach (FurnitureType type in furniture.Values)
+			foreach (FurnitureType type in f_cache.Values)
 			{
 				type.update_seasonal_texture(last_season);
 			}
@@ -424,7 +433,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				ModEntry.furniture.TryGetValue(
+				f_cache.TryGetValue(
 					furniture.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -434,7 +443,7 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				ModEntry.furniture.TryGetValue(
+				f_cache.TryGetValue(
 					furniture.ItemId,
 					out FurnitureType? furniture_type
 				);
