@@ -31,8 +31,7 @@ This can be adapted for any Furniture having no rotations.
 		"Height": 1
 	},	// in tiles
 
-	"Indoors": false,
-	"Outdoors": true,
+	"Placement Restriction": 1,	// outdoors only
 
 	"Source Image": "assets/simple.png",
 	"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 48},	// in pixels
@@ -52,8 +51,7 @@ This can be adapted for any Seasonal Furniture having no rotations.
 		"Height": 1
 	},
 
-	"Indoors": false,
-	"Outdoors": true,
+	"Placement Restriction": 1,	// outdoors only
 
 	"Seasonal": true,
 	"Source Image": "assets/bush.png",
@@ -85,8 +83,7 @@ This can be adapted for any chair-like Furniture with 4 rotations and a simple f
 		// in tiles
 	},
 
-	"Indoors": true,
-	"Outdoors": true,
+	"Placement Restriction": 2,	// indoors & outdoors
 
 	"Source Image": "assets/chair.png",
 	"Source Rect": {
@@ -112,7 +109,7 @@ This can be adapted for any chair-like Furniture with 4 rotations and a simple f
 	"Seats": [
 		// positions are from the top left of the Bounding Box (not the texture!)
 		{
-			"X": 0, "Y": 0,		// in tiles, can be decimal
+			"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal
 			"Player Direction": {
 				"Up": 0,
 				"Right": 1,
@@ -142,11 +139,10 @@ This can be adapted for more complex Sittable Furniture, like a couch.
 		"Up": 		{"Width": 3, "Height": 1},
 		"Left": 	{"Width": 2, "Height": 2}
 		// in tiles
-		// Each rotation has its own Bounding Box Size.
+		// each rotation has its own Bounding Box Size.
 	},
 
-	"Indoors": true,
-	"Outdoors": true,
+	"Placement Restriction": 2,	// indoors & outdoors
 
 	"Source Image": "assets/couch.png",
 	"Source Rect": {
@@ -158,66 +154,78 @@ This can be adapted for more complex Sittable Furniture, like a couch.
 		// must have all directions
 	},
 
-	"Layers": [
-		{
-			"Source Rect": {
-				// Layer for Up is transparent, can be omitted
-				"Right":	{"X": 48, "Y": 48, "Width": 32, "Height": 48},
-				"Up":		{"X": 80, "Y": 48, "Width": 48, "Height": 32},
-				"Left":		{"X": 128, "Y": 48, "Width": 32, "Height": 48}
+	"Layers": {
+		// Layer for Down is transparent, can be omitted
+		"Right": [
+			{
+				"Source Rect": {"X": 48, "Y": 48, "Width": 32, "Height": 48},
+				"Depth": {"Tile": 1, "Sub": 1000}
 			}
-		}
-	],
+		],
+		"Up": [
+			{
+				"Source Rect": {"X": 80, "Y": 48, "Width": 48, "Height": 32},
+				"Depth": {"Tile": 0, "Sub": 1000}
+			}
+		],
+		"Left": [
+			{
+				"Source Rect": {"X": 128, "Y": 48, "Width": 32, "Height": 48},
+				"Depth": {"Tile": 1, "Sub": 1000}
+			}
+		]
+	},
 
-	"Seats": [
-		// positions are from the top left of the Bounding Box (not the texture!)
-		{
-			// Left seat when facing Up or Down
-			"X": 0.5, "Y": 0,
-			"Player Direction": {
-				"Up": 0,
-				"Down": 2
+	"Seats": {
+		"Up": [
+			{
+				// Left seat
+				"Position": {"X": 0.5, "Y": 0},
+				"Player Direction": 0
+			},
+			{
+				// Right seat
+				"Position": {"X": 1.5, "Y": 0},
+				"Player Direction": 0
 			}
-		},
-		{
-			// Right seat when facing Up or Down
-			"X": 1.5, "Y": 0,
-			"Player Direction": {
-				"Up": 0,
-				"Down": 2
+		],
+		"Right": [
+			{
+				// Top seat
+				"Position": {"X": 1, "Y": 0},
+				"Player Direction": 1
+			},
+			{
+				// Bottom seat
+				"Position": {"X": 1, "Y": 1},
+				"Player Direction": 1
 			}
-		},
-		{
-			// Top seat when facing Right
-			"X": 1, "Y": 0,
-			"Player Direction": {
-				"Right": 1
+		],
+		"Down": [
+			{
+				// Left seat
+				"Position": {"X": 0.5, "Y": 0},
+				"Player Direction": 2
+			},
+			{
+				// Right seat
+				"Position": {"X": 1.5, "Y": 0},
+				"Player Direction": 2
 			}
-		},
-		{
-			// Bottom seat when facing Right
-			"X": 1, "Y": 1,
-			"Player Direction": {
-				"Right": 1
+		],
+		"Left": [
+			{
+				// Top seat
+				"Position": {"X": 0, "Y": 0},
+				"Player Direction": 3
+			},
+			{
+				// Bottom seat
+				"Position": {"X": 0, "Y": 1},
+				"Player Direction": 3
 			}
-		},
-		{
-			// Top seat when facing Left
-			"X": 0, "Y": 0,
-			"Player Direction": {
-				"Left": 3
-			}
-		},
-		{
-			// Bottom seat when facing Left
-			"X": 0, "Y": 1,
-			"Player Direction": {
-				"Left": 3
-			}
-		}
-		// About the Player Direction values:
-		// 0 means Up, 1 means Right, 2 means Down and 3 means Left.
-	]
+		]
+	},
 }
 ```
 
@@ -236,8 +244,7 @@ This can be adapted for any Furniture with slots to place objects on it. This ex
 		// in tiles
 	},
 
-	"Indoors": true,
-	"Outdoors": true,
+	"Placement Restriction": 2,	// indoors & outdoors
 
 	"Source Image": "assets/table.png",
 	"Source Rect": {
@@ -257,18 +264,18 @@ This can be adapted for any Furniture with slots to place objects on it. This ex
 		],
 		"Vertical": [
 			{
-				"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
-				"Depth": 1
+				"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16}
 			},
 			{
-				"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16}
+				"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16},
+				"Depth": 1
 			}
 		]
 		// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 	}
 }
 ```
-Be carefull, the Area of a Slot is relative to the sprite for this rotation, not to the whole spritesheet. In this example, since the Vertical Source Rect starts at (32, 0), the Vertical Area starting at (0, 9) is actually starting at (32, 9) on the spritesheet.
+Be carefull, the Area of a Slot is relative to the sprite for this rotation, not to the whole sprite-sheet. In this example, since the Vertical Source Rect starts at (32, 0), the Vertical Area starting at (0, 8) is actually starting at (32, 8) on the sprite-sheet.
 
 ## Catalogue
 
@@ -282,22 +289,22 @@ This is an example of how to make a custom catalogue throught the Furniture Fram
 	"Collisions": {
 		"Width": 1,
 		"Height": 1
-	},	// in tiles
+		// in tiles
+	},
 
-	"Indoors": true,
-	"Outdoors": true,
+	"Placement Restriction": 2,	// indoors & outdoors
 
 	"Source Image": "assets/catalogue.png",
 	"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32},	// in pixels
 
-	"Shop Id": "leroymilo.FurnitureExample.FF.custom_catalogue",
-	// To create a Shop. It is strongly recommended to include your mod's UniqueID
+	"Shop Id": "{{ModID}}.custom_catalogue",
+	// To create a Shop. It is strongly recommended to use the {{ModID}}.
 	"Shows in Shops": ["Carpenter"]
 	// Adding the Custom Catalogue to Robin's Shop
 }
 ```
 
-If you want other Furniture to show up in this Catalogue, you have to add the field `"Shows in Shops": ["leroymilo.FurnitureExample.FF.custom_catalogue"]` to their definition.  
+If you want other Furniture to show up in this Catalogue, you have to add the field `"Shows in Shops": ["{{ModID}}.custom_catalogue"]` to their definition.  
 You can also define a Shop in more details by using Content Patcher to patch Data/Shops, see [the wiki](https://stardewvalleywiki.com/Modding:Shops) for more info about custom Shops. Shops with an ID that already exists should be attached to the Furniture without having their definition modified. The same way goes for Shop Items: if you define a Shop Item in a CP Patch, it won't be overwritten by the Furniture Framework. If you have any issue with this feature, ping me in the [modding channel of the Stardew Valley Discord server](https://discord.com/channels/137344473976799233/156109690059751424) so that I can help you.
 
 ## Cauldron
@@ -384,166 +391,6 @@ This template can be easily reused, but make sure to understand each field befor
 
 Before trying to use one of these templates, it is strongly recommended to read about all of the features they use in the [documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
 
-### Corner Couch
-
-This is an example of a Furniture with:
-- 6 Rotations
-- Collision Maps
-- Seats
-- Layers
-
-Huge thanks to @oommps62 for providing the texture!
-
-```json
-{
-	"Display Name": "Corner Couch",
-
-	"Rotations": [
-		"Down J", "Down L","Right J",
-		"Up J", "Up L", "Left L"
-	],
-
-	"Collisions": {
-		"Down J": {
-			"Width": 4, "Height": 2,
-			"Map": "XXXX/..XX"
-		},
-		"Down L": {
-			"Width": 4, "Height": 2,
-			"Map": "XXXX/XX.."
-		},
-		"Up J": {
-			"Width": 4, "Height": 2,
-			"Map": "XX../XXXX"
-		},
-		"Up L": {
-			"Width": 4, "Height": 2,
-			"Map": "..XX/XXXX"
-		},
-		"Right J": {
-			"Width": 3, "Height": 3,
-			"Map": "XXX/XX./XX."
-		},
-		"Left L": {
-			"Width": 3, "Height": 3,
-			"Map": "XXX/.XX/.XX"
-		}
-	},
-
-	"Indoors": true,
-	"Outdoors": false,
-
-	"Source Image": "assets/corner_couch.png",
-	"Source Rect": {
-		"Down J":	{"X": 0,	"Y": 0,		"Width": 64, "Height": 48},
-		"Down L":	{"X": 64,	"Y": 0,		"Width": 64, "Height": 48},
-		"Right J":	{"X": 128,	"Y": 0,		"Width": 48, "Height": 64},
-		"Up J":		{"X": 0,	"Y": 48,	"Width": 64, "Height": 48},
-		"Up L":		{"X": 64,	"Y": 48,	"Width": 64, "Height": 48},
-		"Left L":	{"X": 272,	"Y": 0,		"Width": 48, "Height": 64}
-		// must have all directions
-	},
-
-	"Layers": [
-		{
-			"Source Rect": {
-				"Right J":	{"X": 128,	"Y": 64, "Width": 48, "Height": 64},
-				"Up J":		{"X": 0,	"Y": 96, "Width": 64, "Height": 48},
-				"Up L":		{"X": 64,	"Y": 96, "Width": 64, "Height": 48},
-				"Left L":	{"X": 272,	"Y": 64, "Width": 48, "Height": 64}
-			}
-		}
-	],
-
-	"Seats": {
-		"Down J": [
-			{
-				"X": 0.5, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 1.5, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 2.25, "Y": 0.625,
-				"Player Direction": 3
-			}
-		],
-		"Down L": [
-			{
-				"X": 1.5, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 2.5, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 0.75, "Y": 0.625,
-				"Player Direction": 1
-			}
-		],
-		"Right J": [
-			{
-				"X": 1.75, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 1, "Y": 0.75,
-				"Player Direction": 1
-			},
-			{
-				"X": 1, "Y": 1.5,
-				"Player Direction": 1
-			}
-		],
-		"Up J": [
-			{
-				"X": 0.5, "Y": 0,
-				"Player Direction": 1
-			},
-			{
-				"X": 1.5, "Y": 1,
-				"Player Direction": 0
-			},
-			{
-				"X": 2.5, "Y": 1,
-				"Player Direction": 0
-			}
-		],
-		"Up L": [
-			{
-				"X": 2.5, "Y": 0,
-				"Player Direction": 3
-			},
-			{
-				"X": 0.5, "Y": 1,
-				"Player Direction": 0
-			},
-			{
-				"X": 1.5, "Y": 1,
-				"Player Direction": 0
-			}
-		],
-		"Left L": [
-			{
-				"X": 0.25, "Y": 0,
-				"Player Direction": 2
-			},
-			{
-				"X": 1, "Y": 0.75,
-				"Player Direction": 3
-			},
-			{
-				"X": 1, "Y": 1.5,
-				"Player Direction": 3
-			}
-		]
-	}
-}
-```
-
 ### Living Room
 
 This is an example of a Furniture with:
@@ -559,7 +406,6 @@ This is an example of a Furniture with:
 	"Display Name": "Living Room",
 
 	"Rotations": 4,
-
 	"Collisions": {
 		"Down": 	{
 			"Width": 8, "Height": 3,
@@ -579,8 +425,7 @@ This is an example of a Furniture with:
 		}
 	},
 
-	"Indoors": true,
-	"Outdoors": true,
+	"Placement Restriction": 2,
 
 	"Source Image": "assets/living_room.png",
 	"Source Rect": {
@@ -596,25 +441,25 @@ This is an example of a Furniture with:
 				// Back of Long Couch, facing Up
 				"Source Rect": {"X": 80, "Y": 224, "Width": 64, "Height": 32},
 				"Draw Pos": {"X": 32, "Y": 32},
-				"Depth": 0
+				"Depth": {"Tile": 2, "Sub": 1000}
 			},
 			{
 				// Lower Arm of Couch facing Right
 				"Source Rect": {"X": 160, "Y": 128, "Width": 32, "Height": 48},
 				"Draw Pos": {"X": 0, "Y": 0},
-				"Depth": 1
+				"Depth": {"Tile": 1, "Sub": 1000}
 			},
 			{
 				// Lower Arm of Armchair facing Left
 				"Source Rect": {"X": 192, "Y": 64, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 96, "Y": 16},
-				"Depth": 1
+				"Depth": {"Tile": 1, "Sub": 1000}
 			},
 			{
 				// Upper Arm of Armchair facing Left
 				"Source Rect": {"X": 192, "Y": 96, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 96, "Y": 16},
-				"Depth": 2
+				"Depth": 1
 			}
 			// Upper Arm of Couch facing Right & Table are already drawn by the base sprite 
 		],
@@ -623,26 +468,25 @@ This is an example of a Furniture with:
 				// Back of Armchair facing Up
 				"Source Rect": {"X": 0, "Y": 224, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 32, "Y": 64},
-				"Depth": 0
+				"Depth": {"Tile": 4, "Sub": 1000}
 			},
 			{
 				// Lower Arm of Long Couch facing Right
 				"Source Rect": {"X": 128, "Y": 0, "Width": 32, "Height": 64},
 				"Draw Pos": {"X": 0, "Y": 16},
-				"Depth": 1
+				"Depth": {"Tile": 3, "Sub": 1000}
 			},
 			{
 				// Table
-				"Source Rect": {"X": 64, "Y": 160, "Width": 16, "Height": 48},
+				"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
 				"Draw Pos": {"X": 64, "Y": 32},
-				"Depth": 3
+				"Depth": 2
 			},
 			{
 				// Upper Arm of Long Couch facing Right
 				"Source Rect": {"X": 128, "Y": 64, "Width": 32, "Height": 64},
-				// in pixels
 				"Draw Pos": {"X": 0, "Y": 16},
-				"Depth": 4
+				"Depth": 1
 			}
 		],
 		"Down": [
@@ -650,31 +494,31 @@ This is an example of a Furniture with:
 				// Lower Arm of Couch facing Left
 				"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
 				"Draw Pos": {"X": 96, "Y": 16},
-				"Depth": 0
+				"Depth": {"Tile": 2, "Sub": 1000}
 			},
 			{
 				// Lower Arm of Armchair facing Right
 				"Source Rect": {"X": 192, "Y": 0, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 0, "Y": 16},
-				"Depth": 1
+				"Depth": {"Tile": 1, "Sub": 1000}
 			},
 			{
 				// Table
-				"Source Rect": {"X": 48, "Y": 32, "Width": 32, "Height": 32},
+				"Source Rect": {"X": 144, "Y": 224, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 48, "Y": 32},
-				"Depth": 1
+				"Depth": 2
 			},
 			{
 				// Upper Arm of Armchair facing Right
 				"Source Rect": {"X": 192, "Y": 32, "Width": 32, "Height": 32},
 				"Draw Pos": {"X": 0, "Y": 16},
-				"Depth": 2
+				"Depth": 1
 			},
 			{
 				// Upper Arm of Couch facing Left
 				"Source Rect": {"X": 192, "Y": 176, "Width": 32, "Height": 48},
 				"Draw Pos": {"X": 96, "Y": 16},
-				"Depth": 2
+				"Depth": 1
 			}
 		],
 		"Left": [
@@ -682,25 +526,25 @@ This is an example of a Furniture with:
 				// Back of Couch facing Up
 				"Source Rect": {"X": 32, "Y": 224, "Width": 48, "Height": 32},
 				"Draw Pos": {"X": 0, "Y": 64},
-				"Depth": 0
+				"Depth": {"Tile": 4, "Sub": 1000}
 			},
 			{
 				// Lower Arm of Long Couch facing Left
 				"Source Rect": {"X": 160, "Y": 0, "Width": 32, "Height": 64},
 				"Draw Pos": {"X": 48, "Y": 16},
-				"Depth": 1
+				"Depth": {"Tile": 3, "Sub": 1000}
 			},
 			{
 				// Table
-				"Source Rect": {"X": 80, "Y": 144, "Width": 16, "Height": 48},
+				"Source Rect": {"X": 176, "Y": 208, "Width": 16, "Height": 48},
 				"Draw Pos": {"X": 0, "Y": 16},
-				"Depth": 4
+				"Depth": 1
 			},
 			{
 				// Upper Arm of Long Couch facing Left
 				"Source Rect": {"X": 160, "Y": 64, "Width": 32, "Height": 64},
 				"Draw Pos": {"X": 48, "Y": 16},
-				"Depth": 4
+				"Depth": 1
 			}
 		]
 	},
@@ -709,158 +553,159 @@ This is an example of a Furniture with:
 		"Down": [
 			{
 				// Left seat of Long Couch
-				"X": 2.5, "Y": 0,
+				"Position": {"X": 2.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Center seat of Long Couch
-				"X": 3.5, "Y": 0,
+				"Position": {"X": 3.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Right seat of Long Couch
-				"X": 4.5, "Y": 0,
+				"Position": {"X": 4.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Seat of Armchair
-				"X": 1, "Y": 1,
+				"Position": {"X": 1, "Y": 1},
 				"Player Direction": 1
 			},
 			{
 				// Top seat of Couch
-				"X": 6, "Y": 1,
+				"Position": {"X": 6, "Y": 1},
 				"Player Direction": 3
 			},
 			{
 				// Bottom seat of Couch
-				"X": 6, "Y": 2,
+				"Position": {"X": 6, "Y": 2},
 				"Player Direction": 3
 			}
 		],
 		"Right": [
 			{
 				// Left seat of Couch
-				"X": 2.5, "Y": 0,
+				"Position": {"X": 2.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Right seat of Couch
-				"X": 3.5, "Y": 0,
+				"Position": {"X": 3.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Top seat of Long Couch
-				"X": 1, "Y": 1,
+				"Position": {"X": 1, "Y": 1},
 				"Player Direction": 1
 			},
 			{
 				// Center seat of Long Couch
-				"X": 1, "Y": 2,
+				"Position": {"X": 1, "Y": 2},
 				"Player Direction": 1
 			},
 			{
 				// Bottom seat of Long Couch
-				"X": 1, "Y": 3,
+				"Position": {"X": 1, "Y": 3},
 				"Player Direction": 1
 			},
 			{
 				// Seat of Armchair
-				"X": 2.5, "Y": 4,
+				"Position": {"X": 2.5, "Y": 4},
 				"Player Direction": 0
 			}
 		],
 		"Up": [
 			{
 				// Top seat of Couch
-				"X": 1, "Y": 0,
+				"Position": {"X": 1, "Y": 0},
 				"Player Direction": 1
 			},
 			{
 				// Bottom seat of Couch
-				"X": 1, "Y": 1,
+				"Position": {"X": 1, "Y": 1},
 				"Player Direction": 1
 			},
 			{
 				// Seat of Armchair
-				"X": 6, "Y": 1,
+				"Position": {"X": 6, "Y": 1},
 				"Player Direction": 3
 			},
 			{
 				// Left seat of Long Couch
-				"X": 2.5, "Y": 2,
+				"Position": {"X": 2.5, "Y": 2},
 				"Player Direction": 0
 			},
 			{
 				// Center seat of Long Couch
-				"X": 3.5, "Y": 2,
+				"Position": {"X": 3.5, "Y": 2},
 				"Player Direction": 0
 			},
 			{
 				// Right seat of Long Couch
-				"X": 4.5, "Y": 2,
+				"Position": {"X": 4.5, "Y": 2},
 				"Player Direction": 0
 			}
 		],
 		"Left": [
 			{
 				// Seat of Armchair
-				"X": 1.5, "Y": 0,
+				"Position": {"X": 1.5, "Y": 0},
 				"Player Direction": 2
 			},
 			{
 				// Top seat of Long Couch
-				"X": 3, "Y": 1,
+				"Position": {"X": 3, "Y": 1},
 				"Player Direction": 3
 			},
 			{
 				// Center seat of Long Couch
-				"X": 3, "Y": 2,
+				"Position": {"X": 3, "Y": 2},
 				"Player Direction": 3
 			},
 			{
 				// Bottom seat of Long Couch
-				"X": 3, "Y": 3,
+				"Position": {"X": 3, "Y": 3},
 				"Player Direction": 3
 			},
 			{
 				// Left seat of Couch
-				"X": 0.5, "Y": 4,
+				"Position": {"X": 0.5, "Y": 4},
 				"Player Direction": 0
 			},
 			{
 				// Right seat of Couch
-				"X": 1.5, "Y": 4,
+				"Position": {"X": 1.5, "Y": 4},
 				"Player Direction": 0
 			}
 		]
 	},
 
 	"Slots": {
+		// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 		"Down": [
 			{
-				"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13}
+				"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13},
+				"Depth": 2
 			}
 		],
 		"Right": [
 			{
 				"Area": {"X": 64, "Y": 41, "Width": 16, "Height": 31},
-				"Depth": 1
+				"Depth": 2
 			}
 		],
 		"Up": [
 			{
 				"Area": {"X": 48, "Y": 11, "Width": 32, "Height": 13},
-				"Depth": 2
+				"Depth": 0
 			}
 		],
 		"Left": [
 			{
 				"Area": {"X": 0, "Y": 25, "Width": 16, "Height": 31},
-				"Depth": 2
+				"Depth": 1
 			}
 		]
-		// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 	}
 }
 ```

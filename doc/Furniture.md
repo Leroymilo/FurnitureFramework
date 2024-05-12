@@ -2,7 +2,7 @@
 
 To make Furniture highly customizable, the definition of a Furniture has a lot of properties. But don't worry, everything is explained here, and there's a good chance you won't need to use everything.
 
-Once again, this documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/%5BFF%5D%20Example%20Pack) as an example, it is strongly recommeded to go back and forth between the explanation here and the example to identify what is being explained.
+Once again, this documentation uses the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/tree/main/%5BFF%5D%20Example%20Pack) as an example, it is strongly recommeded to go back and forth between the explanation here and the examples to identify what is being explained.
 
 ## Contents
 
@@ -22,6 +22,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Custom Catalogue Shop](#custom-catalogue-shop)
 		* [Shows in Shops](#shows-in-shops)
 		* [Shop Id](#shop-id)
+	* [Variants](#variants)
 	* [Animation](#animation)
 	* [Special Type](#special-type)
 	* [Icon Rect](#icon-rect)
@@ -37,7 +38,20 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 ### Display Name
 
 This is the name of the Furniture as it will be displayed in game, it has basically no restriction, except that it must be a string (text between quotation marks `"`).  
-This field is not actually required, but it doesn't really make sense to ommit it, it will default to "No Name".
+This field is not actually required, but it doesn't really make sense to not have it: it will default to "No Name".
+
+If using [Furniture Variants](#variants), you can use 2 tokens to use the variants keys in the Furniture Display Name:
+- `{{ImageVariant}}`
+- `{{RectVariant}}`
+
+For example, the `"{{ImageVariant}} Armchair Test"` Furniture from the Example Pack will create 3 Furniture:
+- Brown Armchair Test
+- Yellow Armchair Test
+- Blue Armchair Test
+
+And the `"{{RectVariant}} Cat Statue"` Furniture will create 2 Furniture:
+- White Cat Statue
+- Black Cat Statue
 
 ### Rotations
 
@@ -61,23 +75,8 @@ You'll just have to remember to use these names as keys when defining directiona
 
 ### Source Image
 
-This is the path, **relative to your mod's directory**, to the spritesheet to use for this Furniture. All sprites used in drawing your Furniture in the game (all rotations and layers) have to be in the same spritesheet. It is possible to use the same spritesheet for multiple Furniture.  
-It is **strongly** recommended to align all sprites on a 16x16 pixel grid, because every game tile is 16x16 pixels large.
-
-This field now supports variants: instead of giving a single path, you can give a dictionary of paths:
-```json
-"Source Image": {
-	"Brown": "assets/armchair.png",
-	"Yellow": "assets/armchair_yellow.png",
-	"Blue": "assets/armchair_blue.png"
-},
-```
-This example is taken from the `armchair_test` Furniture of the Example Pack.
-
-Please note that this will create as many separate Furniture as source images are given, but all their properties (asside from Source Image) will be identical, including their Display Name. However, you can use the token `{{variant}}` in the Display Name field so that it will be replaced with the variant key (see the `armchair_test` Furniture in the Example Pack).  
-This is kind of a replacement for a compatibility with Alternative Textures because making this mod truly compatible with Alternative Textures will be hard to do.
-
-Note: it is possible to use both a dictionary of Source Images and [Seasonal](#seasonal) sprites, but all of the variants path given must have seasonal suffixes.
+This is the path, **relative to your mod's directory**, to the sprite-sheet to use for this Furniture. All sprites used in drawing your Furniture in the game (all rotations and layers) have to be in the same sprite-sheet. It is possible to use the same sprite-sheet for multiple Furniture.  
+<span style="color:red">It is **strongly** recommended to align all sprites on a 16x16 pixel grid</span>, because every game tile is 16x16 pixels large, not doing so will cause a lot of issues down the line.
 
 ### Source Rect
 
@@ -89,7 +88,7 @@ This field is also the first [Directional Field](https://github.com/Leroymilo/Fu
 
 ### Collisions
 
-This field defines the collisions of your Furniture, it's what defines what part of the Furniture the player will not be able to walk through and place other Furniture on. Since they are quite complicated, they have their own [Collisions documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Collisions.md).
+This field defines the collisions of your Furniture, it's what defines what part of the Furniture the player will not be able to walk through and place other Furniture on. Since they are quite complicated, they have their own [Collisions documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Collisions.md).
 
 ## Optional Fields
 
@@ -112,11 +111,14 @@ Do not use these types:
 
 #### Price
 
-This is the default price of the Furniture, it will be used if it is added to a shop's item list without specifying a price.
+This is the default price of the Furniture, it will be used if it is added to a shop's item list without specifying a price. It defaults to 0g.
 
-#### Indoor & Outdoor
+#### Placement Restriction
 
-These fields define if the Furniture can be placed respectively indoor and outdoor. They both accept boolean values (true or false, without quotation marks), and default to true. If both are set to false, your Furniture will be indoor only because of how the game is coded.
+This field is a number that defines if the Furniture can be placed indoor and/or outdoor. Here are the possible values:
+- `0`: indoors only
+- `1`: outdoors only
+- `2`: indoors and outdoors
 
 #### Context Tags
 
@@ -128,26 +130,76 @@ This defines wether or not this Furniture will show-up in random sales in the va
 
 ### Custom Catalogue Shop
 
+Those fields are related to Shops and Catalogues.
+
 #### Shows in Shops
 
 This is an array (a list) of string Shop IDs where you want your Furniture to show-up, it defaults to an empty list.  For example, having:
 ```json
 "Shows in Shops": ["Carpenter"]
 ```
-will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki. Be carefull, some shops have some weird quirks when their owner is not around.
+will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki.
 
 When used in combination to the "Shop Id" field, you can create a custom Catalogue for your custom Furniture.
+
+The token `{{ModID}}` can be used in this field.
 
 #### Shop Id
 
 The Shop ID of the Shop the game should open when right-clicking on the Furniture, it's a string that defaults to `null` (no Shop attached).  
-You can attach one of the [vanilla Shops](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs), or your own Shop.  
+You can attach one of the [vanilla Shops](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs), or your own Shop. Be carefull, some shops have some weird quirks when their owner is not around.  
 By default, if the Shop ID given doesn't match any existing shop, a default shop based on the vanilla Furniture Catalogue (no owner) will be created.  
-You can then use the same Shop ID in the "Shows in Shops" field of other Furniture you created to add them to this new Catalogue. If you want to add more rules to your custom Catalogue (multipliers, owners, ...), you'll need to define it in another Content Pack using Content Patcher.
+You can then use the same Shop ID in the "Shows in Shops" field of other Furniture you created to add them to this new Catalogue. If you want to add more rules to your custom Catalogue (multipliers, owners, ...), you'll need to define it in another Pack using Content Patcher, see how to make a [Mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack).
 
-An example of this is in the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/Example%20Pack/content.json).
+An example of this is in the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/%5BFF%5D%20Example%20Pack/content.json).
+
+The token `{{ModID}}` can be used in this field.
 
 Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it for example).
+
+### Variants
+
+This is kind of a replacement for a compatibility with Alternative Textures because making this mod truly compatible with Alternative Textures might not be possible.
+You might want to create a batch of Furniture with the same properties but different sprites, there are 2 options for this:
+
+#### Image Variants
+
+Image Variants will allow you to have each variant based on a different Source Image.
+
+To define them, instead of giving a single path in the [Source Image](#source-image), you can give a dictionary of paths:
+```json
+"Source Image": {
+	"Brown": "assets/armchair.png",
+	"Yellow": "assets/armchair_yellow.png",
+	"Blue": "assets/armchair_blue.png"
+},
+```
+This example is taken from the `armchair_test` Furniture of the Example Pack.
+
+Note: this will create as many separate Furniture as source images are given, but all their properties (aside from Source Image) will be identical, including their Display Name. However, you can use the `{{ImageVariant}}` token in the Display Name field so that it will be replaced with the variant key (see the `armchair_test` Furniture in the Example Pack).  
+
+Note 2: it is possible to use both Source Images Variants and [Seasonal](#seasonal) sprites, but all of the variants path given must have seasonal suffixes.
+
+Note 3: you can also use a list of Source Image Variants instead of a dictionary but the `{{ImageVariant}}` token will be empty.
+
+#### Rect Variants
+
+Rect Variants will allow you to have each variant based on a different part of the Source Image.
+
+To define them, you have to give `"Source Rect Offsets"`:
+```json
+"Source Rect Offsets": {
+	"White": {"X": 0, "Y": 0},
+	"Black": {"X": 0, "Y": 32}
+},
+```
+This example is taken from the `cat_statue` Furniture of the Example Pack.
+
+These Offsets are **integer** [Vectors](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) that defines by how many pixels the original source rect (or source rects if directional) should be offset to find the sprites for the given Variant.
+
+Note: this will create as many separate Furniture as offsets are given, but all their properties will be identical, including their Display Name. However, you can use the `{{RectVariant}}` token in the Display Name field so that it will be replaced with the variant key (see the `cat_statue` Furniture in the Example Pack).  
+
+Note 2: you can also use a list of Source Rect Offsets instead of a dictionary but the `{{RectVariant}}` token will be empty.
 
 ### Animation
 
@@ -156,23 +208,25 @@ You can define animations for your Furniture, but you'll need to fill a few fiel
 - `Frame Duration` the length of every frame in milliseconds
 - `Animation Offset` the position of each frame relative to the preceding frame.
 
-The `Animation Offset` is a vector field, with a Horizontal `X` component and a Vertical `Y` component. At every new animation frame, the top left of every Source Rect (base sprite and layers) will be moved by this offset, so you can have your animations aligned however you want in your spritesheet.
+The `Animation Offset` is an **Integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) field. At every new animation frame, the top left of every Source Rect (base sprite and layers) will be moved by this offset, so you can have your animations aligned however you want in your sprite-sheet.
 
 Note: if any of these field is zero ((0, 0) for the Offset), the animation will be disabled.  
 
-Here's an example of the fields for a working animation:
+Here's an example of the fields for a working animation taken from the `cat_statue` in the Example Pack:
 ```json
 "Frame Count": 7,
 "Frame Duration": 500,
 "Animation Offset": {"X": 16, "Y": 0}
 ```
 
+Note 2: If using both [Source Rect Offsets](#rect-variants) and Animation, the offsets will be added together.
+
 ### Special Type
 
 This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one if these values:
 - None (no special type)
 - Dresser
-- [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/types/TV.md)
+- [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/TV.md)
 
 Some Special Types have their own documentation linked in this list for extra info.
 
@@ -182,7 +236,7 @@ Other types that I need to add:
 
 ### Icon Rect
 
-This field is another Rectangle, like a [Source Rect](#source-rect). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu.
+This field is another Rectangle, like a [Source Rect](#source-rect). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu. It is affected by [Variants](#variants).
 
 ### Seasonal
 
@@ -193,34 +247,34 @@ If false, the [Source Image](#source-image) will be read as is and the mod will 
 - `assets/bush_fall.png`
 - `assets/bush_winter.png`
 
-:warning: If any of these images is missing, the Furniture won't be created.
+:warning: <span style="color:red">If any of these images is missing, the Furniture won't be created!</span>
 
 The `seasonal_bush_test` in the Example Pack uses this feature.
 
 ### Layers
 
-Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Layers.md).
+Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Layers.md).
 
 ### Seats
 
-Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Seats.md).
+Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Seats.md).
 
 ### Slots
 
-Slots are where you can place items or other Furniture on a table Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Slots.md).
+Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Slots.md).
 
 ### Toggle
 
 This field is boolean (true or false) and will make a Furniture toggleable. "Toggleable" means that it can be turned on and off with right-click.  
-When a Furniture can be toggled, every sprite in its spritesheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the origin of the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
+When a Furniture can be toggled, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the origin of the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
 
-A good example of this is the `Custom Cauldron` Furniture in the Example Pack: you can see in its spritesheet that it has its base sprite in the top left corner, and a Layer in the bottom left corner, while the "On" variants of these sprites are on the left.  
-![Custom Cauldron spritesheet](https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/%5BFF%5D%20Example%20Pack/assets/cauldron.png)
+A good example of this is the `Custom Cauldron` Furniture in the Example Pack: you can see in its sprite-sheet that it has its base sprite in the top left corner, and a Layer in the bottom left corner, while the "On" variants of these sprites are on the right of the sprite-sheet.  
+![Custom Cauldron sprite-sheet](https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/%5BFF%5D%20Example%20Pack/assets/cauldron.png)
 
 ### Sounds
 
-With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Sounds.md).
+With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Sounds.md).
 
 ### Particles
 
-Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Particles.md).
+Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Particles.md).

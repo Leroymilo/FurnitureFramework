@@ -21,3 +21,5 @@ or, if spread on multiple lines, like this:
 	"Height": 32
 }
 ```
+
+Keep in mind that negative Y is up and positive Y is down.

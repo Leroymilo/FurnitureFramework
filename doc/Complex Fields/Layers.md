@@ -7,16 +7,12 @@ A layer object has 3 fields:
 
 ## Source Rect
 
-The part of the source image this layer should draw on the screen. It's a rectangle, see the Furniture's [Source Rect](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source-rect) for more info on how to define a Rectangle.  
-This field can be directional if the Layers list is not already directional. However the Draw Pos and Depth will be ignored if the Source Rect is directional.
+The part of the source image this layer should draw on the screen, it's a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md).  
+This field can be directional if the Layers list is not already directional.
 
 ## Draw Pos
 
-This is the position, in pixels, relative to the top left of the base sprite (for the current rotation), where the layer should be drawn. Its structure is:
-```json
-"Draw Pos": {"X": 32, "Y": 16}
-```
-Both X and Y are integers.
+This is the position, in pixels, relative to the top left of the base sprite (for the current rotation), where the layer should be drawn. It is an **integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md).
 
 Be carefull, the Draw Pos is relative to the sprite for this rotation, not to the whole spritesheet.  
 In the `living_room` Furniture of the Example Pack for example, the Layer "Back of Couch facing Up" for the Left Rotation has (0, 64) as Draw Pos, but since the Source Rect for the Left Rotation starts at (80, 128) the layer mentionned would actually be drawn at (80, 192) on the spritesheet.
@@ -25,15 +21,9 @@ Defaults to `{"X": 0, "Y": 0}`
 
 ## Depth
 
-This is the depth at which the layer should be drawn, it's mesured in tiles, starting from the bottom of the bounding box. If 0, it will be drawn over anything that is above the bottom of the bounding box of the Furniture. See the [Example](#example) to have examples of layers with depth.
+This is the [depth](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Depth.md) at which the layer should be drawn. See the [Example](#example) to have examples of layers with depth.
 
-It can be a float (decimal value), but it's recommended to keep it an integer if you don't need to have layers more precise than a tile.
-
-Using a depth equal to the Bounding Box Height of the Furniture will place the Layer on the same depth as the base sprite and will cause [Z-fighting](https://en.wikipedia.org/wiki/Z-fighting).
-
-Using a depth bigger than the Bounding Box Height of the Furniture will place the Layer behind the base sprite of the Furniture.
-
-Defaults to `0`
+Defaults to `{"Tile": 0, "Sub": 1000}` (so the bottom of the top-most tile of the Furniture's bounding box).
 
 ## Example
 
@@ -49,35 +39,35 @@ Here's the list of Layers for this Furniture facing down:
 ```json
 [
 	{
-		// Upper Arm of Armchair facing Right
-		"Source Rect": {"X": 192, "Y": 32, "Width": 32, "Height": 32},
-		"Draw Pos": {"X": 0, "Y": 16},
-		"Depth": 2
-	},
-	{
-		// Upper Arm of Couch facing Left
-		"Source Rect": {"X": 192, "Y": 176, "Width": 32, "Height": 48},
+		// Lower Arm of Couch facing Left
+		"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
 		"Draw Pos": {"X": 96, "Y": 16},
-		"Depth": 2
+		"Depth": {"Tile": 2, "Sub": 1000}
 	},
 	{
 		// Lower Arm of Armchair facing Right
 		"Source Rect": {"X": 192, "Y": 0, "Width": 32, "Height": 32},
 		"Draw Pos": {"X": 0, "Y": 16},
-		"Depth": 1
+		"Depth": {"Tile": 1, "Sub": 1000}
 	},
 	{
 		// Table
 		"Source Rect": {"X": 144, "Y": 224, "Width": 32, "Height": 32},
 		"Draw Pos": {"X": 48, "Y": 32},
+		"Depth": 2
+	},
+	{
+		// Upper Arm of Armchair facing Right
+		"Source Rect": {"X": 192, "Y": 32, "Width": 32, "Height": 32},
+		"Draw Pos": {"X": 0, "Y": 16},
 		"Depth": 1
 	},
 	{
-		// Lower Arm of Couch facing Left
-		"Source Rect": {"X": 192, "Y": 128, "Width": 32, "Height": 48},
+		// Upper Arm of Couch facing Left
+		"Source Rect": {"X": 192, "Y": 176, "Width": 32, "Height": 48},
 		"Draw Pos": {"X": 96, "Y": 16},
-		"Depth": 0
-	}	
+		"Depth": 1
+	}
 ]
 ```
 
