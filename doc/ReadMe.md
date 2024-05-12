@@ -48,8 +48,9 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Fix depth for base sprite and layers to avoid layering issues with the rest of the game.
-- Support for other special furniture (Bed, Fish Tank, Randomized Plant (?))
+- Support for mural Furniture
+- Support for Bed
+- Support for other special Furniture (Fish Tank, Randomized Plant (?))
 - Custom light sources
 - Add directionality to some fields of Particles
 - Add Particle list of scales and list of scale_changes
