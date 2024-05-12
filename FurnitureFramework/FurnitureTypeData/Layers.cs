@@ -13,13 +13,13 @@ namespace FurnitureFramework
 		private class LayerData
 		{
 			public readonly bool is_valid = false;
-			public readonly string? error_msg;
+			public readonly string? error_msg = "No error";
 
 			Texture2D texture;
 			Rectangle source_rect;
 
 			Vector2 draw_pos = Vector2.Zero;
-			readonly Depth depth;
+			readonly Depth depth = new(0, 1000);
 			
 			#region LayerData Parsing
 
@@ -32,8 +32,7 @@ namespace FurnitureFramework
 				List<LayerData?> result = new();
 				JToken? rect_token = layer_obj.GetValue("Source Rect");
 
-				Rectangle source_rect = Rectangle.Empty;
-				if (JsonParser.try_parse(rect_token, ref source_rect))
+				if (JsonParser.try_parse(rect_token, out Rectangle source_rect))
 				{
 					source_rect.Location += rect_offset;
 					LayerData layer = new(layer_obj, source_texture, source_rect);
@@ -64,8 +63,7 @@ namespace FurnitureFramework
 				JObject layer_obj, Texture2D source_texture, Point rect_offset
 			)
 			{
-				Rectangle source_rect = Rectangle.Empty;
-				if (JsonParser.try_parse(layer_obj.GetValue("Source Rect"), ref source_rect))
+				if (JsonParser.try_parse(layer_obj.GetValue("Source Rect"), out Rectangle source_rect))
 				{
 					source_rect.Location += rect_offset;
 					return new(layer_obj, source_texture, source_rect);
@@ -88,7 +86,7 @@ namespace FurnitureFramework
 				// Parsing optional layer depth
 
 				try { depth = new(layer_obj.GetValue("Depth")); }
-				catch (InvalidDataException) { depth = new(); }
+				catch (InvalidDataException) { }
 
 				is_valid = true;
 			}
@@ -99,7 +97,7 @@ namespace FurnitureFramework
 
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
-				Vector2 texture_pos, float base_depth,
+				Vector2 texture_pos, float top,
 				bool is_on, Point c_anim_offset
 			)
 			{
@@ -110,7 +108,7 @@ namespace FurnitureFramework
 				sprite_batch.Draw(
 					texture, texture_pos + draw_pos, source_rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
-					depth.get_value(base_depth)
+					depth.get_value(top)
 				);
 			}
 
@@ -147,7 +145,7 @@ namespace FurnitureFramework
 				}
 			}
 
-			else if (token is JObject dir_layers_obj)
+			else if (directional && token is JObject dir_layers_obj)
 			{
 				foreach ((string key, int rot) in rot_names.Select((value, index) => (value, index)))
 				{
@@ -242,7 +240,7 @@ namespace FurnitureFramework
 
 		public void draw(
 			SpriteBatch sprite_batch, Color color,
-			Vector2 texture_pos, float base_depth,
+			Vector2 texture_pos, float top,
 			int rot, bool is_on, Point c_anim_offset
 		)
 		{
@@ -250,7 +248,7 @@ namespace FurnitureFramework
 
 			foreach (LayerData layer in layers[rot])
 			{
-				layer.draw(sprite_batch, color, texture_pos, base_depth, is_on, c_anim_offset);
+				layer.draw(sprite_batch, color, texture_pos, top, is_on, c_anim_offset);
 			}
 		}
 

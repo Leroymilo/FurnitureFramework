@@ -9,9 +9,15 @@ namespace FurnitureFramework
 
 		#region Parsing
 
-		public Depth()
+		public Depth(int depth = 0)
 		{
-			tile = 0;
+			tile = depth;
+		}
+
+		public Depth(int depth, int sub)
+		{
+			tile = depth;
+			sub_tile = sub;
 		}
 
 		public Depth(JToken? token)

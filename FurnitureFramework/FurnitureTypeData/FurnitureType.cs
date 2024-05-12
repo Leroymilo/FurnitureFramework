@@ -62,7 +62,7 @@ namespace FurnitureFramework
 
 
 		public readonly string? shop_id = null;
-		public readonly HashSet<string> shops = new();
+		public readonly List<string> shops = new();
 
 
 		public readonly SpecialType s_type = SpecialType.None;
@@ -149,14 +149,14 @@ namespace FurnitureFramework
 			#endregion
 
 			// Single Source Rect
-			else make_furniture(pack, id, data, list);
+			else make_furniture(pack, id, data, list, Point.Zero);
 
 		}
 
 		public static void make_furniture(
 			IContentPack pack, string id, JObject data,
 			List<FurnitureType> list,
-			Point rect_offset = new(), string rect_var = ""
+			Point rect_offset, string rect_var = ""
 		)
 		{
 			JToken? t_token = data.GetValue("Source Image");
@@ -256,10 +256,10 @@ namespace FurnitureFramework
 			#region attributes for Data/Furniture
 
 			mod_id = pack.Manifest.UniqueID;
-			this.id = $"{mod_id}.{id}";
+			this.id = id.Replace("{{ModID}}", mod_id, true, null);
 			display_name = JsonParser.parse(data.GetValue("Display Name"), "No Name");
-			display_name = display_name.Replace("{{ImageVariant}}", image_var);
-			display_name = display_name.Replace("{{RectVariant}}", rect_var);
+			display_name = display_name.Replace("{{ImageVariant}}", image_var, true, null);
+			display_name = display_name.Replace("{{RectVariant}}", rect_var, true, null);
 			type = JsonParser.parse(data.GetValue("Force Type"), "other");
 			price = JsonParser.parse(data.GetValue("Price"), 0);
 			exclude_from_random_sales = JsonParser.parse(data.GetValue("Exclude from Random Sales"), true);
@@ -334,9 +334,9 @@ namespace FurnitureFramework
 
 			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
 
-			seats = new(data.GetValue("Seats"), rot_names);
+			seats = Seats.make_seats(data.GetValue("Seats"), rot_names);
 
-			slots = new(data.GetValue("Slots"), rot_names);
+			slots = Slots.make_slots(data.GetValue("Slots"), rot_names);
 			is_table = slots.has_slots;
 
 			sounds = new(data.GetValue("Sounds"));
@@ -348,7 +348,12 @@ namespace FurnitureFramework
 			#region Shops
 
 			shop_id = JsonParser.parse<string?>(data.GetValue("Shop Id"), null);
+			if (shop_id is string)
+				shop_id = shop_id.Replace("{{ModID}}", mod_id, true, null);
+			
 			JsonParser.try_parse(data.GetValue("Shows in Shops"), ref shops);
+			for (int i = 0; i < shops.Count; i++)
+				shops[i] = shops[i].Replace("{{ModID}}", mod_id, true, null);
 
 			#endregion
 
@@ -499,7 +504,7 @@ namespace FurnitureFramework
 			{
 				depth = bounding_box.Top;
 				if (is_mural) depth -= 32;
-				depth = MathF.BitIncrement(depth);
+				else depth += 16;
 			}
 			depth /= 10000f;
 
@@ -535,7 +540,7 @@ namespace FurnitureFramework
 			{
 				layers.draw(
 					sprite_batch, color,
-					position, bounding_box.Bottom,
+					position, bounding_box.Top,
 					rot, furniture.IsOn, c_anim_offset
 				);
 			}
@@ -545,7 +550,7 @@ namespace FurnitureFramework
 			// draw held object
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Bottom, alpha);
+				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Top, alpha);
 				// draw depending on heldObject own stored bounding box
 			}
 
@@ -595,8 +600,8 @@ namespace FurnitureFramework
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
 			int rot = furniture.currentRotation.Value;
 
-			int? new_sit_dir = seats.get_sitting_direction(rot, seat_index);
-			if (new_sit_dir != null) sit_dir = (int)new_sit_dir;
+			int new_sit_dir = seats.get_sitting_direction(rot, seat_index);
+			if (new_sit_dir >= 0) sit_dir = new_sit_dir;
 		}
 
 		#endregion
@@ -823,7 +828,7 @@ namespace FurnitureFramework
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
 			position.Y += bounding_box.Height;
-			position.Y -= source_rects[furniture.currentRotation.Value].Height;
+			position.Y -= source_rects[furniture.currentRotation.Value].Height * 4f;
 			position += screen_position * 4f;
 		}
 

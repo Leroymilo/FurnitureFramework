@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using StardewModdingAPI;
 
 namespace FurnitureFramework
 {
@@ -14,71 +15,68 @@ namespace FurnitureFramework
 			public readonly string? error_msg;
 
 			public readonly Vector2 position = new();
-
-			List<int?> directional_player_dir = new();
-			int single_player_dir;
-			bool is_directional = false;
+			public readonly int player_dir;
+			Depth? depth;
 
 			#region SeatData Parsing
 
-			public SeatData(JObject seat_obj, List<string>? rot_names = null)
+			// When SeatData can have directional source rects
+			public static List<SeatData?> make_seats(
+				JObject seat_obj, List<string> rot_names
+			)
 			{
-				// If rot_names is null, this seat cannot have directional player direction
+				List<SeatData?> result = new();
+				JToken? p_dir_token = seat_obj.GetValue("Player Direction");
 
-				// Parsing required seat position
-
-				error_msg = "Missing or invalid Position in Seat Data";
-				JToken? pos_token = seat_obj.GetValue("Position");
-				if (pos_token is null || pos_token.Type != JTokenType.Object) return;
-				try
+				int player_dir = 0;
+				if (JsonParser.try_parse(p_dir_token, ref player_dir))
 				{
-					position = JC.extract_position(pos_token);
-				}
-				catch (InvalidDataException)
-				{
-					return;
+					SeatData seat = new(seat_obj, player_dir);
+					result.AddRange(Enumerable.Repeat(seat, rot_names.Count));
+					return result;
 				}
 
-				// Parsing player direction
-				error_msg = "Missing Player Direction in Seat Data.";
-				JToken? pd_token = seat_obj.GetValue("Player Direction");
-				if (pd_token == null ||
-					(pd_token.Type != JTokenType.Integer &&
-					pd_token.Type != JTokenType.Object)
-				) return;
-
-				// Case 1 : non-directional player direction
-				if (pd_token.Type == JTokenType.Integer)
+				List<int?> p_dirs = new();
+				if (JsonParser.try_parse(p_dir_token, rot_names, ref p_dirs))
 				{
-					single_player_dir = (int)pd_token;
-				}
-				else if (rot_names == null)
-				{
-					error_msg = "No singular Player Direction given for non-directional Seat Data.";
-					return;
-				}
-
-				// Case 2 : directional player direction
-				else if (pd_token is JObject pd_obj)
-				{
-					bool has_p_dir = false;
-					foreach (string rot_name in rot_names)
+					foreach (int? p_dir_ in p_dirs)
 					{
-						pd_token = pd_obj.GetValue(rot_name);
-						int? player_dir = null;
-						if (pd_token != null && pd_token.Type == JTokenType.Integer)
-						{
-							player_dir = (int)pd_token;
-							has_p_dir = true;
-						}
-						directional_player_dir.Add(player_dir);
+						if (p_dir_ is null) result.Add(null);
+						else result.Add(new(seat_obj, p_dir_.Value));
 					}
-
-					error_msg = "Player Direction is directional with no valid value.";
-					if (!has_p_dir) return;
-					
-					is_directional = true;
+					return result;
 				}
+				ModEntry.log($"{p_dirs.Count}");
+
+				throw new InvalidDataException("Missing or invalid Player Direction.");
+			}
+			
+			// When SeatData cannot have directional source rects
+			public static SeatData make_seat(JObject seat_obj)
+			{
+				int p_dir = 0;
+				if (JsonParser.try_parse(seat_obj.GetValue("Player Direction"), ref p_dir))
+				{
+					return new(seat_obj, p_dir);
+				}
+
+				throw new InvalidDataException("Missing or invalid Player Direction.");
+			}
+
+			private SeatData(JObject seat_obj, int player_dir)
+			{
+				this.player_dir = player_dir;
+
+				// Parsing required seat draw position
+				if (!JsonParser.try_parse(seat_obj.GetValue("Position"), ref position))
+				{
+					error_msg = "Missing or invalid Position.";
+					return;
+				}
+
+				// Parsing optional player depth
+				try { depth = new(seat_obj.GetValue("Depth")); }
+				catch (InvalidDataException) { depth = null; }
 
 				is_valid = true;
 			}
@@ -87,22 +85,17 @@ namespace FurnitureFramework
 
 			#region SeatData Methods
 
-			public bool is_valid_seat(int rot)
+			public float get_player_depth(float top)
 			{
-				if (is_directional)
+				if (depth is null)
 				{
-					return directional_player_dir[rot] != null;
+					return (position.Y + 1f) * 64f / 10000f;
+					// taken from Farmer.getDrawLayer
 				}
-				return true;
-			}
-
-			public int? get_sitting_dir(int rot)
-			{
-				if (is_directional)
+				else
 				{
-					return directional_player_dir[rot];
+					return depth.get_value(top);
 				}
-				return single_player_dir;
 			}
 
 			#endregion
@@ -111,65 +104,120 @@ namespace FurnitureFramework
 		#endregion
 
 		public bool has_seats {get; private set;} = false;
-
-		List<List<SeatData>> directional_seats = new();
-		List<SeatData> singular_seats = new();
-		bool is_directional = false;
+		List<List<SeatData>> seats = new();
 
 		#region Seats Parsing
 
-		public Seats(JToken? seats_token, List<string> rot_names)
+		public static Seats make_seats(JToken? token, List<string> rot_names)
 		{
-			if (seats_token == null || seats_token.Type == JTokenType.Null)
-				return;	// No seats
-
-			// Case 1 : non-directional seats
-
-			if (seats_token is JArray seats_arr)
+			int rot_count = 1;
+			bool directional = false;
+			if (rot_names.Count > 0)
 			{
-				parse_seat_array(seats_arr, singular_seats, rot_names);
+				rot_count = rot_names.Count;
+				directional = true;
+			}
+			Seats result = new(rot_count);
+
+			if (token is JArray seats_arr)
+			{
+				foreach (JToken seat_token in seats_arr)
+				{
+					if (seat_token is not JObject seat_obj) continue;
+					if (directional)
+						result.add_seats(seat_obj, rot_names);
+					else
+						result.add_seat(seat_obj);
+				}
 			}
 
-			// Case 2 : directional seats
-
-			else if (seats_token is JObject seats_obj)
+			else if (directional && token is JObject dir_seats_obj)
 			{
-				foreach (string rot_name in rot_names)
+				foreach ((string key, int rot) in rot_names.Select((value, index) => (value, index)))
 				{
-					List<SeatData> seat_list = new();
+					JToken? dir_seats_tok = dir_seats_obj.GetValue(key);
+					if (dir_seats_tok is not JArray dir_seats_arr) continue;
 
-					JToken? seats_dir_token = seats_obj.GetValue(rot_name);
-					if (seats_dir_token is JArray seats_dir_arr)
+					foreach (JToken seat_token in dir_seats_arr)
 					{
-						parse_seat_array(seats_dir_arr, seat_list, null);
+						if (seat_token is not JObject seat_obj) continue;
+						result.add_seat(seat_obj, rot);
 					}
-					directional_seats.Add(seat_list);
 				}
+			}
 
-				is_directional = true;
+			return result;
+		}
+
+		private void add_seats(JObject seat_obj, List<string> rot_names)
+		{
+			List<SeatData?> list;
+			try
+			{
+				list = SeatData.make_seats(seat_obj, rot_names);
+			}
+			catch (InvalidDataException ex)
+			{
+				ModEntry.log($"Invalid seat at {seat_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{ex.Message}", LogLevel.Warn);
+				ModEntry.log("Skipping Seat.", LogLevel.Warn);
+				return;
+			}
+			
+			foreach ((SeatData? seat, int rot) in list.Select((value, index) => (value, index)))
+			{
+				if (seat is null) continue;
+				if (!seat.is_valid)
+				{
+					ModEntry.log($"Invalid seat at {seat_obj.Path}->{rot_names[rot]}:", LogLevel.Warn);
+					ModEntry.log($"\t{seat.error_msg}", LogLevel.Warn);
+					ModEntry.log("Skipping Seat.", LogLevel.Warn);
+					continue;
+				}
+				seats[rot].Add(seat);
+				has_seats = true;
 			}
 		}
 
-		private void parse_seat_array(
-			JArray seats_arr, List<SeatData> seat_list,
-			List<string>? rot_names = null
-		)
+		private void add_seat(JObject seat_obj, int? rot = null)
 		{
-			foreach (JToken seat_token in seats_arr)
+			SeatData seat;
+			try
 			{
-				if (seat_token is not JObject seat_obj) continue;
-
-				SeatData seat = new(seat_obj, rot_names);
-				if (!seat.is_valid)
-				{
-					ModEntry.log($"Invalid Seat Data at {seat_token.Path}:", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log($"\t{seat.error_msg}", StardewModdingAPI.LogLevel.Warn);
-					ModEntry.log("Skipping Seat.", StardewModdingAPI.LogLevel.Warn);
-					continue;
-				}
-				has_seats = true;
-				seat_list.Add(seat);
+				seat = SeatData.make_seat(seat_obj);
 			}
+			catch (InvalidDataException ex)
+			{
+				ModEntry.log($"Invalid seat at {seat_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{ex.Message}", LogLevel.Warn);
+				ModEntry.log("Skipping Seat.", LogLevel.Warn);
+				return;
+			}
+
+			if (!seat.is_valid)
+			{
+				ModEntry.log($"Invalid seat at {seat_obj.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{seat.error_msg}", LogLevel.Warn);
+				ModEntry.log("Skipping Seat.", LogLevel.Warn);
+				return;
+			}
+
+			if (rot is null)
+			{
+				foreach (List<SeatData> seat_list in seats)
+				{
+					seat_list.Add(seat);
+				}
+			}
+			else seats[rot.Value].Add(seat);
+
+			has_seats = true;
+		}
+
+		private Seats(int rot_count)
+		{
+			for (int i = 0; i < rot_count; i++)
+				seats.Add(new()); 
 		}
 
 		#endregion
@@ -180,62 +228,24 @@ namespace FurnitureFramework
 		{
 			if (!has_seats) return;
 
-			// Case 1 : non-directional seats
-
-			if (!is_directional)
+			foreach (SeatData seat in seats[rot])
 			{
-				foreach (SeatData seat in singular_seats)
-				{
-					if (seat.is_valid_seat(rot))
-						list.Add(tile_pos + seat.position);
-				}
-			}
-
-			// Case 2 : directional seats
-
-			else
-			{
-				foreach (SeatData seat in directional_seats[rot])
-				{
-					list.Add(tile_pos + seat.position);
-					// seats are always valid because the player dir is non-directional
-				}
+				list.Add(tile_pos + seat.position);
 			}
 		}
 
-		public int? get_sitting_direction(int rot, int seat_index)
+		public int get_sitting_direction(int rot, int seat_index)
 		{
-			if (!has_seats) return null;
+			if (!has_seats) return -1;
 
-			// Case 1 : non-directional seats
+			return seats[rot][seat_index].player_dir;
+		}
 
-			if (!is_directional)
-			{
-				foreach (SeatData seat in singular_seats)
-				{
-					int? sit_dir = seat.get_sitting_dir(rot);
-					if (sit_dir != null)
-					{
-						if (seat_index == 0)
-							return sit_dir;
-						seat_index--;
-					}
-				}
-			}
-
-			// Case 2 : directional seats
-
-			else
-			{
-				foreach (SeatData seat in directional_seats[rot])
-				{
-					if (seat_index == 0)
-						return seat.get_sitting_dir(rot);
-					seat_index--;
-				}
-			}
-
-			return null;
+		public float get_sitting_depth(int rot, int seat_index, float top)
+		{
+			if (!has_seats) return -1;
+			
+			return seats[rot][seat_index].get_player_depth(top);
 		}
 
 		#endregion

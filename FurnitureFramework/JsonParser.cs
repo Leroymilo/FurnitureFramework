@@ -9,6 +9,15 @@ namespace FurnitureFramework
 		{
 			if (token is null || token.Type == JTokenType.Null)
 				return false;
+
+			if (result is Rectangle)
+			{
+				try_parse(token, out Rectangle rect);
+				result = (T)(object)rect;
+				return true;
+			}
+			
+			if (token is JArray or JObject) return false;
 			
 			T? n_result = token.ToObject<T?>();
 			if (n_result is null) return false;
@@ -121,6 +130,31 @@ namespace FurnitureFramework
 					JToken? rect_token = rect_dict.GetValue(key);
 					if (try_parse(rect_token, out Rectangle rect))
 						result.Add(rect);
+					else result.Add(null);
+				}
+				return true;
+			}
+			return false;
+		}
+
+		public static bool try_parse(JToken? token, List<string> rot_names, ref List<int?> result)
+		{
+			result.Clear();
+			int i = 0;
+
+			if (rot_names.Count == 0)
+			{
+				if(!try_parse(token, ref i)) return false;
+				result.Add(i);
+				return true;
+			}
+			else if (token is JObject rect_dict)
+			{
+				foreach (string key in rot_names)
+				{
+					JToken? int_token = rect_dict.GetValue(key);
+					if (try_parse(int_token, ref i))
+						result.Add(i);
 					else result.Add(null);
 				}
 				return true;

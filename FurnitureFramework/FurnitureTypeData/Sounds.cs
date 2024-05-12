@@ -24,7 +24,7 @@ namespace FurnitureFramework
 
 			public SoundData(JObject sound_obj)
 			{
-				string mode_name = JC.extract(sound_obj, "Mode", "on_action");
+				string mode_name = JsonParser.parse(sound_obj.GetValue("Mode"), "on_action");
 				mode = Enum.Parse<SoundMode>(mode_name);
 				if (!Enum.IsDefined(mode))
 				{
@@ -32,7 +32,7 @@ namespace FurnitureFramework
 					return;
 				}
 
-				cue_name = JC.extract(sound_obj, "Name", "coin");
+				cue_name = JsonParser.parse(sound_obj.GetValue("Name"), "coin");
 				if (!Game1.soundBank.Exists(cue_name))
 				{
 					error_msg = "Invalid sound Name.";

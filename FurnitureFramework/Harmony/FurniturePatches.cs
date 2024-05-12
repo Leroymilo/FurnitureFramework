@@ -18,7 +18,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -45,7 +45,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -102,7 +102,7 @@ namespace FurnitureFramework
 
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__result.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -134,7 +134,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -158,7 +158,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -182,7 +182,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -208,7 +208,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -234,7 +234,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -259,7 +259,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -284,7 +284,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -309,7 +309,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -335,7 +335,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -357,7 +357,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);
@@ -378,7 +378,7 @@ namespace FurnitureFramework
 		{
 			try
 			{
-				ModEntry.furniture.TryGetValue(
+				ModEntry.f_cache.TryGetValue(
 					__instance.ItemId,
 					out FurnitureType? furniture_type
 				);

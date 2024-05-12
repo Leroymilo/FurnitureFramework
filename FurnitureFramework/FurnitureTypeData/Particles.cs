@@ -67,31 +67,15 @@ namespace FurnitureFramework
 
 				source_rect = texture.Bounds;
 				JToken? rect_token = particle_obj.GetValue("Source Rect");
-				if (rect_token is JObject)
-				{
-					try
-					{
-						source_rect = JC.extract_rect(rect_token);
-					}
-					catch (InvalidDataException)
-					{
-						source_rect = texture.Bounds;
-					}
-				}
+				if (!JsonParser.try_parse(rect_token, ref source_rect))
+					source_rect = texture.Bounds;
 
-				emit_interval = JC.extract(particle_obj, "Emission Interval", 500);
+				emit_interval = JsonParser.parse(particle_obj.GetValue("Emission Interval"), 500);
 
 				error_msg = "Missing or invalid Spawn Rect field.";
 				JToken? spawn_rect_token = particle_obj.GetValue("Spawn Rect");
-				if (spawn_rect_token == null) return;
-				try
-				{
-					spawn_rect = JC.extract_rect(spawn_rect_token);
-				}
-				catch (InvalidDataException)
-				{
+				if (!JsonParser.try_parse(spawn_rect_token, ref source_rect))
 					return;
-				}
 
 				JToken? depths_token = particle_obj.GetValue("Depths");
 				if (depths_token is JArray depths_arr)
@@ -107,11 +91,7 @@ namespace FurnitureFramework
 				}
 				if (depths.Count == 0) depths.Add(0);
 
-				JToken? speed_token = particle_obj.GetValue("Speed");
-				if (speed_token is JObject speed_obj)
-				{
-					base_speed = JC.extract_position(speed_obj);
-				}
+				JsonParser.try_parse(particle_obj.GetValue("Speed"), ref base_speed);
 
 				JToken? rots_token = particle_obj.GetValue("Rotations");
 				if (rots_token is JArray rots_arr)
@@ -141,24 +121,24 @@ namespace FurnitureFramework
 				}
 				if (rot_speeds.Count == 0) rot_speeds.Add(0);
 
-				scale = JC.extract(particle_obj, "Scale", 1f);
-				scale_change = JC.extract(particle_obj, "Scale Change", 0f);
+				scale = JsonParser.parse(particle_obj.GetValue("Scale"), 1f);
+				scale_change = JsonParser.parse(particle_obj.GetValue("Scale Change"), 0f);
 
-				string color_name = JC.extract(particle_obj, "Color", "White");
+				string color_name = JsonParser.parse(particle_obj.GetValue("Color"), "White");
 				SDColor c_color = SDColor.FromName(color_name);
 				color = new(c_color.R, c_color.G, c_color.B);
-				alpha = JC.extract(particle_obj, "Alpha", 1f);
-				alpha_fade = JC.extract(particle_obj, "Alpha Fade", 0f);
+				alpha = JsonParser.parse(particle_obj.GetValue("Alpha"), 1f);
+				alpha_fade = JsonParser.parse(particle_obj.GetValue("Alpha Fade"), 0f);
 
-				frame_count = JC.extract(particle_obj, "Frame Count", 1);
-				frame_length = JC.extract(particle_obj, "Frame Duration", 1000);
-				loop_count = JC.extract(particle_obj, "Loop Count", 1);
-				hold_last = JC.extract(particle_obj, "Hold Last Frame", false);
-				flicker = JC.extract(particle_obj, "Flicker", false);
+				frame_count = JsonParser.parse(particle_obj.GetValue("Frame Count"), 1);
+				frame_length = JsonParser.parse(particle_obj.GetValue("Frame Duration"), 1000);
+				loop_count = JsonParser.parse(particle_obj.GetValue("Loop Count"), 1);
+				hold_last = JsonParser.parse(particle_obj.GetValue("Hold Last Frame"), false);
+				flicker = JsonParser.parse(particle_obj.GetValue("Flicker"), false);
 
-				emit_when_on = JC.extract(particle_obj, "Emit When On", false);
-				emit_when_off = JC.extract(particle_obj, "Emit When Off", false);
-				does_burst = JC.extract(particle_obj, "Burst", false);
+				emit_when_on = JsonParser.parse(particle_obj.GetValue("Emit When On"), false);
+				emit_when_off = JsonParser.parse(particle_obj.GetValue("Emit When Off"), false);
+				does_burst = JsonParser.parse(particle_obj.GetValue("Burst"), false);
 
 				is_valid = true;
 			}
@@ -295,7 +275,7 @@ namespace FurnitureFramework
 				{
 					ModEntry.log($"Invalid Particle Data at {part_token.Path}:", LogLevel.Warn);
 					ModEntry.log($"\t{new_part.error_msg}", LogLevel.Warn);
-					ModEntry.log("Skipping particle data");
+					ModEntry.log("Skipping particle data", LogLevel.Warn);
 					continue;
 				}
 				particle_list.Add(new_part);
