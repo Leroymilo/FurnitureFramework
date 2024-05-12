@@ -9,7 +9,7 @@ namespace FurnitureFramework
 		private enum SoundMode {
 			on_turn_on,
 			on_turn_off,
-			on_action
+			on_click
 		}
 
 		#region SoundData
@@ -24,7 +24,7 @@ namespace FurnitureFramework
 
 			public SoundData(JObject sound_obj)
 			{
-				string mode_name = JsonParser.parse(sound_obj.GetValue("Mode"), "on_action");
+				string mode_name = JsonParser.parse(sound_obj.GetValue("Mode"), "on_click");
 				mode = Enum.Parse<SoundMode>(mode_name);
 				if (!Enum.IsDefined(mode))
 				{
@@ -89,7 +89,7 @@ namespace FurnitureFramework
 			foreach (SoundData sound in sound_list)
 			{
 				if (
-					sound.mode == SoundMode.on_action ||
+					sound.mode == SoundMode.on_click ||
 					(sound.mode == SoundMode.on_turn_on && turn_on) ||
 					(sound.mode == SoundMode.on_turn_off && turn_off)
 				)

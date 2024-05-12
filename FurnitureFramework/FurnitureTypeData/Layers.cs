@@ -3,6 +3,7 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley.Extensions;
 
 namespace FurnitureFramework
 {
@@ -101,12 +102,13 @@ namespace FurnitureFramework
 				bool is_on, Point c_anim_offset
 			)
 			{
+				Rectangle rect = source_rect.Clone();
 				if (is_on)
-					source_rect.X += source_rect.Width;
-				source_rect.Location += c_anim_offset;
+					rect.X += rect.Width;
+				rect.Location += c_anim_offset;
 
 				sprite_batch.Draw(
-					texture, texture_pos + draw_pos, source_rect,
+					texture, texture_pos + draw_pos, rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
 					depth.get_value(top)
 				);

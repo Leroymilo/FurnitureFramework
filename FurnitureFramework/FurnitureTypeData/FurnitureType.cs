@@ -851,8 +851,6 @@ namespace FurnitureFramework
 					had_action = true;
 			}
 
-			// Play Sound
-
 			// Toggle
 			if (can_be_toggled)
 			{

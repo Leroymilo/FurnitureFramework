@@ -74,7 +74,7 @@ namespace FurnitureFramework
 
 				error_msg = "Missing or invalid Spawn Rect field.";
 				JToken? spawn_rect_token = particle_obj.GetValue("Spawn Rect");
-				if (!JsonParser.try_parse(spawn_rect_token, ref source_rect))
+				if (!JsonParser.try_parse(spawn_rect_token, ref spawn_rect))
 					return;
 
 				JToken? depths_token = particle_obj.GetValue("Depths");
@@ -169,6 +169,11 @@ namespace FurnitureFramework
 
 			public void update_timer(Furniture furniture, int timer_id, long time_ms)
 			{
+				if (
+					(!emit_when_on || !furniture.IsOn) &&
+					(!emit_when_off || furniture.IsOn)
+				) return;
+				
 				if (time_ms - particle_timers[timer_id] > emit_interval)
 				{
 					make(furniture);
@@ -197,8 +202,6 @@ namespace FurnitureFramework
 					(!emit_when_on || !furniture.IsOn) &&
 					(!emit_when_off || furniture.IsOn)
 				) return;
-
-				// Change magic values into parameters
 
 				Vector2 speed;
 				if (speed_ is null) speed = base_speed;
