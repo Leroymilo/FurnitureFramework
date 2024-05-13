@@ -1,14 +1,21 @@
+using System.Reflection.Emit;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Patches
 {
-
 	internal class FurniturePrefixes
 	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Prefix;
+		static readonly Type base_type = typeof(Furniture);
+		#pragma warning restore 0414
+
 		#region draw
 
 		internal static bool draw(
@@ -114,8 +121,108 @@ namespace FurnitureFramework
 		#endregion
 	}
 
+	class FurnitureTranspilers
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Transpiler;
+		static readonly Type base_type = typeof(Furniture);
+		#pragma warning restore 0414
+
+		#region drawInMenu
+/* 	Replace :
+
+ldloc.0
+ldc.i4.0
+ldloca.s 2
+initobj valuetype [System.Runtime]System.Nullable`1<int32>
+ldloc.2
+callvirt instance valuetype Microsoft.Xna.Framework.Rectangle StardewValley.ItemTypeDefinitions.ParsedItemData::GetSourceRect(int32, valuetype System.Nullable`1<int32>)
+
+	With :
+
+ldarg.0
+call get_icon_source_rect
+
+*/
+
+		static IEnumerable<CodeInstruction> drawInMenu(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldloc_0),
+				new(OpCodes.Ldc_I4_0),
+				new(OpCodes.Ldloca_S, 2),
+				new(OpCodes.Initobj, typeof(int?)),
+				new(OpCodes.Ldloc_2),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(ParsedItemData),
+					"GetSourceRect"
+				))
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Ldarg_0),
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(FurnitureType),
+					"get_icon_source_rect"
+				))
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
+		}
+
+		#endregion
+
+		#region canBeRemoved
+/* 	Replace :
+
+ldfld class Netcode.NetRef`1<class StardewValley.Object> StardewValley.Object::heldObject
+callvirt instance !0 class Netcode.NetFieldBase`2<class StardewValley.Object, class Netcode.NetRef`1<class StardewValley.Object>>::get_Value()
+
+	With :
+
+call check_held_object
+
+*/
+
+		static IEnumerable<CodeInstruction> canBeRemoved(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldfld, AccessTools.Field(
+					typeof(StardewValley.Object),
+					"heldObject"
+				)),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetRef<StardewValley.Object>),
+					"get_Value"
+				))
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(FurnitureType),
+					"has_held_object"
+				))
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
+		}
+
+		#endregion
+	}
+
 	internal class FurniturePostfixes
 	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Postfix;
+		static readonly Type base_type = typeof(Furniture);
+		#pragma warning restore 0414
+
 		#region GetFurnitureInstance
 
 		internal static Furniture GetFurnitureInstance(
@@ -143,6 +250,8 @@ namespace FurnitureFramework
 							return new StorageFurniture(itemId, position.Value);
 						case SpecialType.TV:
 							return new TV(itemId, position.Value);
+						case SpecialType.Bed:
+							return new BedFurniture(itemId, position.Value);
 					}
 				}
 			}
@@ -357,6 +466,11 @@ namespace FurnitureFramework
 
 	internal class StorageFurniturePostFixes
 	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Postfix;
+		static readonly Type base_type = typeof(StorageFurniture);
+		#pragma warning restore 0414
+
 		internal static void updateWhenCurrentLocation(
 			StorageFurniture __instance
 		)
@@ -379,6 +493,11 @@ namespace FurnitureFramework
 
 	internal class TVPostFixes
 	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Postfix;
+		static readonly Type base_type = typeof(TV);
+		#pragma warning restore 0414
+
 		internal static Vector2 getScreenPosition(
 			Vector2 __result, TV __instance
 		)
@@ -420,5 +539,13 @@ namespace FurnitureFramework
 			
 			return __result;
 		}
+	}
+
+	internal class BedFurniturePostFixes
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Postfix;
+		static readonly Type base_type = typeof(BedFurniture);
+		#pragma warning restore 0414
 	}
 }

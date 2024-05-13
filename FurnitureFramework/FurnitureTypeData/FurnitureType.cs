@@ -14,7 +14,7 @@ namespace FurnitureFramework
 		None,
 		Dresser,
 		TV,
-		// Bed,
+		Bed,
 		// FishTank,
 		// RandomizedPlant
 	}
@@ -448,6 +448,18 @@ namespace FurnitureFramework
 			return texture.get_texture();
 		}
 
+		private static Rectangle get_icon_source_rect(Furniture furniture)
+		{
+			ModEntry.f_cache.TryGetValue(
+				furniture.ItemId,
+				out FurnitureType? furniture_type
+			);
+
+			if (furniture_type != null) return furniture_type.icon_rect;
+
+			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
+		}
+
 		#endregion
 
 		#region Drawing
@@ -825,6 +837,25 @@ namespace FurnitureFramework
 			}
 
 			return false;
+		}
+
+		// used in Furniture.canBeRemoved Transpiler
+		private static bool has_held_object(Furniture furniture)
+		{
+			StardewValley.Object held_obj = furniture.heldObject.Value;
+			if (held_obj == null) return false;
+
+			if (held_obj is Chest chest)
+			{
+				foreach (Item? item in chest.Items)
+				{
+					if (item != null) return true;
+				}
+
+				return false;	// empty chest
+			}
+
+			return true;
 		}
 
 		#endregion
