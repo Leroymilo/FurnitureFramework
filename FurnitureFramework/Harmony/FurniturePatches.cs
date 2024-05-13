@@ -37,6 +37,34 @@ namespace FurnitureFramework
 
 		#endregion
 
+		#region drawAtNonTileSpot
+
+		internal static bool drawAtNonTileSpot(
+			Furniture __instance, SpriteBatch spriteBatch,
+			Vector2 location, float layerDepth, float alpha = 1f
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				if (furniture_type == null) return true; // run original logic
+
+				furniture_type.drawAtNonTileSpot(__instance, spriteBatch, location, layerDepth, alpha);
+				return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(drawAtNonTileSpot)}:\n{ex}", LogLevel.Error);
+				return true; // run original logic
+			}
+		}
+
+		#endregion
+
 		#region rotate
 
 		internal static bool rotate(

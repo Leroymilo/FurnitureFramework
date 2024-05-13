@@ -59,4 +59,4 @@ What parts of Furniture I plan to add customization to in this Framework:
 
 # Known Issues
 
-- Nothing for now!
+- Placing Custom Furniture on a table (vanilla or custom) is kind of broken.

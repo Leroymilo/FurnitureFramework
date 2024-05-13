@@ -35,9 +35,7 @@ namespace FurnitureFramework
 		bool can_be_toggled = false;
 
 		
-		bool is_seasonal;
-		Texture2D texture;
-		Dictionary<string, Texture2D> seasonal_textures = new();
+		SeasonalTexture texture;
 		List<Rectangle> source_rects = new();
 		public readonly Rectangle icon_rect = Rectangle.Empty;
 		Layers layers;
@@ -272,25 +270,9 @@ namespace FurnitureFramework
 
 			#region textures & source rects
 
-			is_seasonal = JsonParser.parse(data.GetValue("Seasonal"), false);
+			bool is_seasonal = JsonParser.parse(data.GetValue("Seasonal"), false);
 
-			if (is_seasonal)
-			{
-				string extension = Path.GetExtension(texture_path);
-				string radical = texture_path.Replace(extension, "");
-
-				foreach (string season in Enum.GetNames(typeof(Season)))
-				{
-					string path = $"{radical}_{season.ToLower()}{extension}";
-					seasonal_textures[season.ToLower()] = TextureManager.load(pack.ModContent, path);
-				}
-
-				texture = seasonal_textures["spring"];
-			}
-			else
-			{
-				texture = TextureManager.load(pack.ModContent, texture_path);
-			}
+			texture = new(pack, texture_path, is_seasonal);
 
 			token = data.GetValue("Source Rect");
 			List<Rectangle?> n_source_rects = new();
@@ -459,17 +441,45 @@ namespace FurnitureFramework
 
 		#endregion
 
-		#region Texture & Drawing
-
-		public void update_seasonal_texture(string new_season)
-		{
-			if (!is_seasonal) return;
-			texture = seasonal_textures[new_season];
-		}
+		#region Texture
 
 		public Texture2D get_icon_texture()
 		{
-			return texture;
+			return texture.get_texture();
+		}
+
+		#endregion
+
+		#region Drawing
+
+		public void drawAtNonTileSpot(
+			Furniture furniture, SpriteBatch sprite_batch,
+			Vector2 position, float depth, float alpha = 1f
+		)
+		{
+			int rot = furniture.currentRotation.Value;
+
+			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
+
+			SpriteEffects effects = SpriteEffects.None;
+			Color color = Color.White * alpha;
+			Rectangle source_rect = source_rects[rot].Clone();
+
+			if (furniture.IsOn)
+				source_rect.X += source_rect.Width;
+
+			if (is_animated)
+			{
+				long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+				int frame = (int)(time_ms / frame_length) % frame_count;
+				Point c_anim_offset = anim_offset * new Point(frame);
+				source_rect.Location += c_anim_offset;
+			}
+
+			sprite_batch.Draw(
+				texture.get_texture(), position, source_rect,
+				color, 0f, Vector2.Zero, 4f, effects, depth
+			);
 		}
 
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
@@ -531,7 +541,7 @@ namespace FurnitureFramework
 			position = Game1.GlobalToLocal(Game1.viewport, position);
 
 			sprite_batch.Draw(
-				texture, position, source_rect,
+				texture.get_texture(), position, source_rect,
 				color, 0f, Vector2.Zero, 4f, effects, depth
 			);
 

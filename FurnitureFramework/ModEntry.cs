@@ -22,7 +22,6 @@ namespace FurnitureFramework
 
 		public static bool print_debug = false;
 
-		static string last_season = "spring";
 		public static readonly Dictionary<string, FurnitureType> f_cache = new();
 		public static readonly Dictionary<string, List<string>> shops = new();
 
@@ -51,7 +50,6 @@ namespace FurnitureFramework
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
-			helper.Events.GameLoop.DayStarted += on_day_started;
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			
 			HarmonyPatcher.patch();
@@ -417,20 +415,6 @@ namespace FurnitureFramework
 					return true;
 			}
 			return false;
-		}
-
-        /// <inheritdoc cref="IGameLoopEvents.DayStarted"/>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
-		private void on_day_started(object? sender, DayStartedEventArgs e)
-		{
-			if (Game1.currentSeason == last_season) return;
-			last_season = Game1.currentSeason;
-
-			foreach (FurnitureType type in f_cache.Values)
-			{
-				type.update_seasonal_texture(last_season);
-			}
 		}
 
         /// <inheritdoc cref="IWorldEvents.FurnitureListChanged"/>

@@ -16,7 +16,7 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string? error_msg = "No error";
 
-			Texture2D texture;
+			SeasonalTexture texture;
 			Rectangle source_rect;
 
 			Vector2 draw_pos = Vector2.Zero;
@@ -26,7 +26,7 @@ namespace FurnitureFramework
 
 			// When LayerData can have directional source rects
 			public static List<LayerData?> make_layers(
-				JObject layer_obj, Texture2D source_texture,
+				JObject layer_obj, SeasonalTexture source_texture,
 				Point rect_offset, List<string> rot_names
 			)
 			{
@@ -61,7 +61,7 @@ namespace FurnitureFramework
 			
 			// When LayerData cannot have directional source rects
 			public static LayerData make_layer(
-				JObject layer_obj, Texture2D source_texture, Point rect_offset
+				JObject layer_obj, SeasonalTexture source_texture, Point rect_offset
 			)
 			{
 				if (JsonParser.try_parse(layer_obj.GetValue("Source Rect"), out Rectangle source_rect))
@@ -73,7 +73,7 @@ namespace FurnitureFramework
 				throw new InvalidDataException("Missing or invalid Source Rect.");
 			}
 
-			private LayerData(JObject layer_obj, Texture2D source_texture, Rectangle rect)
+			private LayerData(JObject layer_obj, SeasonalTexture source_texture, Rectangle rect)
 			{
 				texture = source_texture;
 				source_rect = rect;
@@ -108,7 +108,7 @@ namespace FurnitureFramework
 				rect.Location += c_anim_offset;
 
 				sprite_batch.Draw(
-					texture, texture_pos + draw_pos, rect,
+					texture.get_texture(), texture_pos + draw_pos, rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
 					depth.get_value(top)
 				);
@@ -124,7 +124,7 @@ namespace FurnitureFramework
 
 		#region Layers Parsing
 
-		public static Layers make_layers(JToken? token, List<string> rot_names, Texture2D texture, Point rect_offset)
+		public static Layers make_layers(JToken? token, List<string> rot_names, SeasonalTexture texture, Point rect_offset)
 		{
 			int rot_count = 1;
 			bool directional = false;
@@ -165,7 +165,7 @@ namespace FurnitureFramework
 			return result;
 		}
 
-		private void add_layers(JObject layer_obj, Texture2D texture, Point rect_offset, List<string> rot_names)
+		private void add_layers(JObject layer_obj, SeasonalTexture texture, Point rect_offset, List<string> rot_names)
 		{
 			List<LayerData?> list;
 			try
@@ -195,7 +195,7 @@ namespace FurnitureFramework
 			}
 		}
 
-		private void add_layer(JObject layer_obj, Texture2D texture, Point rect_offset, int? rot = null)
+		private void add_layer(JObject layer_obj, SeasonalTexture texture, Point rect_offset, int? rot = null)
 		{
 			LayerData layer;
 			try
