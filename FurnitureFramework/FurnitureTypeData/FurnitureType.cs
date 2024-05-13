@@ -475,7 +475,6 @@ namespace FurnitureFramework
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
 			int rot = furniture.currentRotation.Value;
-			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
 			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
 
@@ -483,7 +482,7 @@ namespace FurnitureFramework
 			Color color = Color.White * alpha;
 			float depth;
 			Vector2 position;
-			Rectangle bounding_box = collisions.get_bounding_box(pos, rot);
+			Rectangle bounding_box = furniture.boundingBox.Value;
 			Rectangle source_rect = source_rects[rot].Clone();
 
 			if (furniture.IsOn)

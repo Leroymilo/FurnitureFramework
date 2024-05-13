@@ -123,6 +123,11 @@ namespace FurnitureFramework
 
 		private void reload_pack(string command, string[] args)
 		{
+			if (args.Count() == 0)
+			{
+				log("No ModID given.", LogLevel.Warn);
+				return;
+			}
 			string UID = args[0];
 			bool found_pack = false;
 
@@ -297,6 +302,8 @@ namespace FurnitureFramework
 			// }
 
 			#region Slot Interactions
+
+			if (!Game1.player.CanMove) return;
 
 			bool placed = false;
 			
