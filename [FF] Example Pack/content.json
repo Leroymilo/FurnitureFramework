@@ -782,6 +782,34 @@
 			"Frame Count": 7,
 			"Frame Duration": 500,
 			"Animation Offset": {"X": 16, "Y": 0}
+		},
+
+		"{{ModID}}.large_bed": {
+			"Display Name": "Large Bed",
+
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 5,
+				"Height": 3,
+				"Map": "XXXXX/...../XXXXX"
+			},
+
+			"Placement Restriction": 2,
+
+			"Source Image": "assets/large_bed.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 80, "Height": 64},	// in pixels
+
+			"Layers": [
+				{
+					"Source Rect": {"X": 0, "Y": 64, "Width": 80, "Height": 64},
+					"Depth": {"Tile": 2, "Sub": 1000}
+				}
+			],
+
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"],
+
+			"Special Type": "Bed",
+			"Bed Spot": {"X": 2, "Y": 1}
 		}
 	}
 }

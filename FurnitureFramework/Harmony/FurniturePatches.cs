@@ -498,6 +498,8 @@ call check_held_object
 		static readonly Type base_type = typeof(TV);
 		#pragma warning restore 0414
 
+		#region getScreenPosition
+
 		internal static Vector2 getScreenPosition(
 			Vector2 __result, TV __instance
 		)
@@ -519,6 +521,10 @@ call check_held_object
 			return __result;
 		}
 
+		#endregion
+
+		#region getScreenSizeModifier
+
 		internal static float getScreenSizeModifier(
 			float __result, TV __instance
 		)
@@ -539,6 +545,49 @@ call check_held_object
 			
 			return __result;
 		}
+
+		#endregion
+	}
+
+	// TODO for beds:
+	// prefix draw						Done
+	// postfix IntersectsForCollision	Done
+	// postfix GetBedSpot
+
+	internal class BedFurniturePreFixes
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Prefix;
+		static readonly Type base_type = typeof(BedFurniture);
+		#pragma warning restore 0414
+
+		#region draw
+
+		internal static bool draw(
+			BedFurniture __instance,
+			SpriteBatch spriteBatch, int x, int y, float alpha = 1f
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				if (furniture_type == null) return true; // run original logic
+
+				furniture_type.draw(__instance, spriteBatch, x, y, alpha);
+				return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
+				return true; // run original logic
+			}
+		}
+
+		#endregion
 	}
 
 	internal class BedFurniturePostFixes
@@ -547,5 +596,85 @@ call check_held_object
 		static readonly PatchType patch_type = PatchType.Postfix;
 		static readonly Type base_type = typeof(BedFurniture);
 		#pragma warning restore 0414
+
+		#region IntersectsForCollision
+
+		internal static bool IntersectsForCollision(
+			bool __result, BedFurniture __instance,
+			Rectangle rect
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.IntersectsForCollision(__instance, rect, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+	
+		#region GetBedSpot
+
+		internal static Point GetBedSpot(
+			Point __result, BedFurniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.GetBedSpot(__instance, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(GetBedSpot)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+
+		#region DoesTileHaveProperty
+
+		internal static bool DoesTileHaveProperty(
+			bool __result, BedFurniture __instance,
+			int tile_x, int tile_y,
+			string property_name, string layer_name,
+			ref string property_value
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.DoesTileHaveProperty(
+					__instance, tile_x, tile_y,
+					property_name, layer_name,
+					ref property_value, ref __result
+				);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(DoesTileHaveProperty)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
 	}
 }

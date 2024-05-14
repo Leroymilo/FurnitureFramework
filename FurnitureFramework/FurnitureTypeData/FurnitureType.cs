@@ -68,10 +68,13 @@ namespace FurnitureFramework
 
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
+		Point bed_spot = new(1);
 
 		#endregion
 
 		#region Parsing
+
+		#region Makers
 
 		public static void make_furniture(
 			IContentPack pack, string id, JObject data,
@@ -244,6 +247,8 @@ namespace FurnitureFramework
 			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 		}
 
+		#endregion
+
 		public FurnitureType(
 			IContentPack pack, string id, JObject data,
 			Point rect_offset, string texture_path,
@@ -314,7 +319,7 @@ namespace FurnitureFramework
 
 			#region data in classes
 
-			collisions = new(data.GetValue("Collisions"), rot_names, this.id);
+			collisions = new(data.GetValue("Collisions"), rot_names);
 
 			seats = Seats.make_seats(data.GetValue("Seats"), rot_names);
 
@@ -341,16 +346,18 @@ namespace FurnitureFramework
 
 			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
 
+			#region Special Furniture
+
 			s_type = Enum.Parse<SpecialType>(JsonParser.parse(data.GetValue("Special Type"), "None"));
 			if (!Enum.IsDefined(s_type)) {
 				s_type = SpecialType.None;
 				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
 			}
 
-			#region TV
-
 			JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
 			screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
+
+			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
 
 			#endregion
 		}
@@ -641,7 +648,7 @@ namespace FurnitureFramework
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
 		{
 			int rot = furniture.currentRotation.Value;
-			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+			Point pos = furniture.boundingBox.Value.Location;
 			collides = collisions.is_colliding(rect, pos, rot);
 			return;
 		}
@@ -870,9 +877,9 @@ namespace FurnitureFramework
 
 		#endregion
 
-		#region Methods for TVs
+		#region Methods for Special Furniture
 
-		public void getScreenPosition(Furniture furniture, ref Vector2 position)
+		public void getScreenPosition(TV furniture, ref Vector2 position)
 		{
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
@@ -884,6 +891,50 @@ namespace FurnitureFramework
 		public void getScreenSizeModifier(ref float scale)
 		{
 			scale = screen_scale;
+		}
+
+		public void GetBedSpot(BedFurniture furniture, ref Point spot)
+		{
+			spot = furniture.TileLocation.ToPoint() + bed_spot;
+		}
+
+		public void DoesTileHaveProperty(BedFurniture furniture,
+			int tile_x, int tile_y,
+			string property_name, string layer_name,
+			ref string property_value,
+			ref bool result
+		)
+		{
+			if (layer_name != "Back" || property_name != "TouchAction")
+				return;
+
+			int rot = furniture.currentRotation.Value;
+
+			Point tile_pos = furniture.TileLocation.ToPoint();
+			Point size = collisions.get_size(rot);
+			if (size.X < 3 || size.Y < 3) return;
+
+			if (!furniture.modData.ContainsKey("checked_bed_tile"))
+				furniture.modData["checked_bed_tile"] = "false";
+
+			if (
+				tile_x > tile_pos.X && tile_y > tile_pos.Y &&
+				tile_x < tile_pos.X + size.X - 1 &&
+				tile_y < tile_pos.Y + size.Y - 1
+			)
+			{
+				if (furniture.modData["checked_bed_tile"] != "true")
+				{
+					furniture.modData["checked_bed_tile"] = "true";
+					property_value = "Sleep";
+					result = true;
+				}
+			}
+			else
+			{
+				furniture.modData["checked_bed_tile"] = "false";
+				result = false;
+			}
 		}
 
 		#endregion

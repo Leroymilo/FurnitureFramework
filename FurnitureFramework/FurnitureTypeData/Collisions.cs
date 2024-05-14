@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
@@ -18,7 +19,7 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
-			Point size = new();
+			public readonly Point size = new();
 			Point game_size;
 
 			bool has_tiles = false;
@@ -267,59 +268,49 @@ namespace FurnitureFramework
 
 		#endregion
 
-		List<CollisionData> directional_collisions = new();
-		CollisionData single_collision;
-		bool is_directional = false;
+		List<CollisionData> collisions = new();
 
 		#region Collisions Parsing
 
-		public Collisions(JToken? cols_token, List<string>? rotations, string id)
+		public Collisions(JToken? token, List<string> rot_names)
 		{
-			if (cols_token == null || cols_token is not JObject cols_obj)
-				throw new InvalidDataException($"Missing Collisions for {id}.");
-			
-			// Case 1 : non-directional collisions
-			single_collision = new CollisionData(cols_obj);
-			if (single_collision.is_valid) return;
+			int rot_count = 1;
+			bool directional = false;
+			if (rot_names.Count > 0)
+			{
+				rot_count = rot_names.Count;
+				directional = true;
+			}
 
-			// Case 2 : directional collisions
-			if (rotations == null)
+			if (token is not JObject collision_obj)
+				throw new InvalidDataException("Invalid or missing Collisions.");
+			
+			CollisionData collision = new(collision_obj);
+			if (collision.is_valid)
 			{
-				ModEntry.log(
-					$"Invalid non-directional Collisions for non-directional Furniture {id}",
-					LogLevel.Error
-				);
-				throw new InvalidDataException(single_collision.error_msg);
+				// Single collision
+
+				collisions.AddRange(Enumerable.Repeat(collision, rot_count));
+			}
+
+			else if (directional)
+			{
+				foreach ((string key, int rot) in rot_names.Select((value, index) => (value, index)))
+				{
+					JToken? dir_col_tok = collision_obj.GetValue(key);
+					if (dir_col_tok is not JObject dir_col_obj)
+					{
+						string msg = $"Invalid Collisions or missing directional Collisions for direction {key}";
+						throw new InvalidDataException(msg);
+					}
+					collisions.Add(new(dir_col_obj));
+				}
 			}
 			
-			foreach (string rot_name in rotations)
+			else
 			{
-				JToken? col_token = cols_obj.GetValue(rot_name);
-				if (col_token == null || col_token is not JObject col_obj)
-				{
-					string msg = $"Collisions for {id} are invalid: ";
-					msg += "cannot parse as Single Collision nor as Directional Collisions";
-					msg += $" (No Collision Data for rotation {rot_name}).";
-					throw new InvalidDataException(msg);
-				}
-				else
-				{
-					CollisionData collision = new(col_obj);
-					if (collision.is_valid)
-					{
-						directional_collisions.Add(collision);
-					}
-					else
-					{
-						ModEntry.log(
-							$"Invalid Directional Collision for {id} -> {rot_name}.",
-							LogLevel.Error
-						);
-						throw new InvalidDataException(collision.error_msg);
-					}
-				}
+				throw new InvalidDataException("Invalid or missing non-directionnal Collisions.");
 			}
-			is_directional = true;
 		}
 
 		#endregion
@@ -328,22 +319,12 @@ namespace FurnitureFramework
 
 		public Rectangle get_bounding_box(Point this_game_pos, int this_rot = 0)
 		{
-			// Case 1 : non-directional collisions
-			if (!is_directional)
-			return single_collision.get_bounding_box(this_game_pos);
-
-			// Case 2 : directional collisions
-			return directional_collisions[this_rot].get_bounding_box(this_game_pos);
+			return collisions[this_rot].get_bounding_box(this_game_pos);
 		}
 
 		public bool is_colliding(Rectangle rect, Point this_game_pos, int this_rot = 0)
 		{
-			// Case 1 : non-directional collisions
-			if (!is_directional)
-			return single_collision.is_colliding(rect, this_game_pos);
-
-			// Case 2 : directional collisions
-			return directional_collisions[this_rot].is_colliding(rect, this_game_pos);
+			return collisions[this_rot].is_colliding(rect, this_game_pos);
 		}
 
 		public bool can_be_placed_here(
@@ -351,12 +332,12 @@ namespace FurnitureFramework
 			CollisionMask collisionMask, CollisionMask passable_ignored
 		)
 		{
-			// Case 1 : non-directional collisions
-			if (!is_directional)
-			return single_collision.can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
+			return collisions[rot].can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
+		}
 
-			// Case 2 : directional collisions
-			return directional_collisions[rot].can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
+		public Point get_size(int rot)
+		{
+			return collisions[rot].size;
 		}
 
 		#endregion
