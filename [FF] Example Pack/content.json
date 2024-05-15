@@ -810,6 +810,36 @@
 
 			"Special Type": "Bed",
 			"Bed Spot": {"X": 2, "Y": 1}
+		},
+
+		"{{ModID}}.rug_test": {
+			"Display Name": "Rug Test",
+
+			"Rotations": 1,
+			"Collisions": {"Width": 4, "Height": 3},
+
+			"Placement Restriction": 0,
+			"Placement Type": "Rug",
+
+			"Source Image": "assets/rug.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 64, "Height": 48},	// in pixels
+
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
+		},
+
+		"{{ModID}}.painting_test": {
+			"Display Name": "Painting Test",
+
+			"Rotations": 1,
+			"Collisions": {"Width": 3, "Height": 2},
+
+			"Placement Restriction": 0,
+			"Placement Type": "Mural",
+
+			"Source Image": "assets/painting.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 48, "Height": 32},	// in pixels
+
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		}
 	}
 }

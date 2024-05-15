@@ -19,6 +19,12 @@ namespace FurnitureFramework
 		// RandomizedPlant
 	}
 
+	enum PlacementType {
+		Normal,
+		Rug,
+		Mural
+	}
+
 	class FurnitureType
 	{
 		#region Fields
@@ -55,8 +61,7 @@ namespace FurnitureFramework
 		Particles particles;
 
 
-		bool is_rug = false;
-		bool is_mural = false;
+		PlacementType p_type = PlacementType.Normal;
 
 
 		public readonly string? shop_id = null;
@@ -346,6 +351,12 @@ namespace FurnitureFramework
 
 			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
 
+			p_type = Enum.Parse<PlacementType>(JsonParser.parse(data.GetValue("Placement Type"), "Normal"));
+			if (!Enum.IsDefined(p_type)) {
+				p_type = PlacementType.Normal;
+				ModEntry.log($"Invalid Placement Type at {data.Path}, defaulting to Normal.", LogLevel.Warn);
+			}
+
 			#region Special Furniture
 
 			s_type = Enum.Parse<SpecialType>(JsonParser.parse(data.GetValue("Special Type"), "None"));
@@ -527,11 +538,12 @@ namespace FurnitureFramework
 			}
 
 			// computing common depth :
-			if (is_rug) depth = 2E-09f + furniture.TileLocation.Y;
+			if (p_type == PlacementType.Rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
 			{
 				depth = bounding_box.Top;
-				if (is_mural) depth -= 32;
+				if (p_type == PlacementType.Mural)
+					depth -= 32;
 				else depth += 16;
 			}
 			depth /= 10000f;
@@ -708,6 +720,8 @@ namespace FurnitureFramework
 				Collisions.tile_game_size
 			);
 
+
+
 			bool collides = true;
 			IntersectsForCollision(furniture, tile_rect, ref collides);
 			allow = !collides;
@@ -873,6 +887,22 @@ namespace FurnitureFramework
 		{
 			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
 			particles.update_timer(furniture, ms_time);
+		}
+
+		#endregion
+
+		#region Methods for Placement Type
+
+		public void isGroundFurniture(ref bool is_ground_f)
+		{
+			is_ground_f = p_type != PlacementType.Mural;
+			ModEntry.log($"{id} is ground furniture: {is_ground_f}");
+		}
+
+		public void isPassable(ref bool is_passable)
+		{
+			is_passable = p_type == PlacementType.Rug;
+			ModEntry.log($"{id} is passable: {is_passable}");
 		}
 
 		#endregion

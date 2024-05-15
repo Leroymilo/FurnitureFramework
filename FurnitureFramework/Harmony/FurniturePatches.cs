@@ -460,6 +460,56 @@ call check_held_object
 		}
 
 		#endregion
+
+		#region isGroundFurniture
+
+		internal static bool isGroundFurniture(
+			bool __result, Furniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.isGroundFurniture(ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(isGroundFurniture)}:\n{ex}", LogLevel.Error);
+			}
+
+			return __result;
+		}
+
+		#endregion
+
+		#region isPassable
+
+		internal static bool isPassable(
+			bool __result, Furniture __instance
+		)
+		{
+			try
+			{
+				ModEntry.f_cache.TryGetValue(
+					__instance.ItemId,
+					out FurnitureType? furniture_type
+				);
+
+				furniture_type?.isPassable(ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(isPassable)}:\n{ex}", LogLevel.Error);
+			}
+
+			return __result;
+		}
+
+		#endregion
 	}
 
 	// Other Fixes for Special Furniture

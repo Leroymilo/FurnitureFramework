@@ -1,5 +1,7 @@
 # How to define Custom Layers?
 
+![Layers](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/images/layers.png)
+
 The Layers field of a Furniture is a (directional) list of layer objects.  
 See the Example Pack for examples.
 
