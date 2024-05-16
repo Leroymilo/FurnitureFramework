@@ -137,7 +137,7 @@ namespace FurnitureFramework
 			}
 
 			public bool can_be_placed_here(
-				GameLocation loc, Point tile_pos,
+				Furniture furniture, GameLocation loc, Point tile_pos,
 				CollisionMask collisionMask, CollisionMask passable_ignored)
 			{
 				if (has_tiles)
@@ -145,6 +145,7 @@ namespace FurnitureFramework
 					foreach (Point tile in tiles)
 					{
 						if (!is_tile_free(
+							furniture,
 							tile + tile_pos, loc,
 							collisionMask, passable_ignored
 						))
@@ -167,6 +168,7 @@ namespace FurnitureFramework
 							}
 
 							if (!is_tile_free(
+								furniture,
 								new Point(x, y) + tile_pos, loc,
 								collisionMask, passable_ignored
 							))
@@ -180,7 +182,7 @@ namespace FurnitureFramework
 			}
 
 			private bool is_tile_free(
-				Point tile, GameLocation loc,
+				Furniture furniture, Point tile, GameLocation loc,
 				CollisionMask collisionMask, CollisionMask passable_ignored
 			)
 			{
@@ -197,16 +199,25 @@ namespace FurnitureFramework
 				{
 					// obstructed by non-rug furniture
 					if (
-						(item.furniture_type.Value != 12 /*|| furniture.furniture_type.Value == 12*/) &&
+						!item.isPassable() &&
 						item.GetBoundingBox().Contains(center) &&
 						!item.AllowPlacementOnThisTile(tile.X, tile.Y)
 					)
 					{
 						return false;
 					}
+
+					// cannot stack rugs
+					if (
+						item.isPassable() && furniture.isPassable() &&
+						item.GetBoundingBox().Contains(center)
+					)
+					{
+						return false;
+					}
 				}
 
-				if (loc.objects.TryGetValue(v_tile, out var value) /*&& (!value.isPassable() || !furniture.isPassable())*/)
+				if (loc.objects.TryGetValue(v_tile, out var value) && value.isPassable() && furniture.isPassable())
 				{
 					return false;
 				}
@@ -328,11 +339,12 @@ namespace FurnitureFramework
 		}
 
 		public bool can_be_placed_here(
-			int rot, GameLocation loc, Point tile_pos,
+			Furniture furniture, GameLocation loc, Point tile_pos,
 			CollisionMask collisionMask, CollisionMask passable_ignored
 		)
 		{
-			return collisions[rot].can_be_placed_here(loc, tile_pos, collisionMask, passable_ignored);
+			int rot = furniture.currentRotation.Value;
+			return collisions[rot].can_be_placed_here(furniture, loc, tile_pos, collisionMask, passable_ignored);
 		}
 
 		public Point get_size(int rot)

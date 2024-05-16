@@ -357,6 +357,9 @@ namespace FurnitureFramework
 				ModEntry.log($"Invalid Placement Type at {data.Path}, defaulting to Normal.", LogLevel.Warn);
 			}
 
+			if (p_type == PlacementType.Rug) type = "rug";
+			if (p_type == PlacementType.Mural) type = "painting";
+
 			#region Special Furniture
 
 			s_type = Enum.Parse<SpecialType>(JsonParser.parse(data.GetValue("Special Type"), "None"));
@@ -464,18 +467,6 @@ namespace FurnitureFramework
 		public Texture2D get_icon_texture()
 		{
 			return texture.get_texture();
-		}
-
-		private static Rectangle get_icon_source_rect(Furniture furniture)
-		{
-			ModEntry.f_cache.TryGetValue(
-				furniture.ItemId,
-				out FurnitureType? furniture_type
-			);
-
-			if (furniture_type != null) return furniture_type.icon_rect;
-
-			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
 		}
 
 		#endregion
@@ -659,10 +650,14 @@ namespace FurnitureFramework
 
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
 		{
+			if (p_type == PlacementType.Rug)
+			{
+				collides = false;
+				return;
+			}
 			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.boundingBox.Value.Location;
 			collides = collisions.is_colliding(rect, pos, rot);
-			return;
 		}
 
 		public void canBePlacedHere(
@@ -670,8 +665,6 @@ namespace FurnitureFramework
 			CollisionMask collisionMask, ref bool result
 		)
 		{
-			if (result) return;	// no need to check, it already checked the bounding box.
-
 			// don't change this part
 
 			if (!loc.CanPlaceThisFurnitureHere(furniture))
@@ -682,12 +675,11 @@ namespace FurnitureFramework
 
 			if (!furniture.isGroundFurniture())
 			{
-				tile.Y = furniture.GetModifiedWallTilePosition(loc, (int)tile.X, (int)tile.Y);
+				tile.Y -= 1;
 			}
 
 			CollisionMask passable_ignored = CollisionMask.Buildings | CollisionMask.Flooring | CollisionMask.TerrainFeatures;
-			bool is_passable = furniture.isPassable();
-			if (is_passable)
+			if (furniture.isPassable())
 			{
 				passable_ignored |= CollisionMask.Characters | CollisionMask.Farmers;
 			}
@@ -696,8 +688,7 @@ namespace FurnitureFramework
 
 			// Actual collision detection made by collisions
 
-			int rot = furniture.currentRotation.Value;
-			if (!collisions.can_be_placed_here(rot, loc, tile.ToPoint(), collisionMask, passable_ignored))
+			if (!collisions.can_be_placed_here(furniture, loc, tile.ToPoint(), collisionMask, passable_ignored))
 			{
 				result = false;
 				return;
@@ -715,16 +706,7 @@ namespace FurnitureFramework
 
 		public void AllowPlacementOnThisTile(Furniture furniture, int x, int y, ref bool allow)
 		{
-			Rectangle tile_rect = new(
-				new Point(x, y) * Collisions.tile_game_size,
-				Collisions.tile_game_size
-			);
-
-
-
-			bool collides = true;
-			IntersectsForCollision(furniture, tile_rect, ref collides);
-			allow = !collides;
+			allow = !is_clicked(furniture, x * 64, y * 64);
 		}
 
 		#endregion
@@ -896,13 +878,11 @@ namespace FurnitureFramework
 		public void isGroundFurniture(ref bool is_ground_f)
 		{
 			is_ground_f = p_type != PlacementType.Mural;
-			ModEntry.log($"{id} is ground furniture: {is_ground_f}");
 		}
 
 		public void isPassable(ref bool is_passable)
 		{
 			is_passable = p_type == PlacementType.Rug;
-			ModEntry.log($"{id} is passable: {is_passable}");
 		}
 
 		#endregion
@@ -965,6 +945,47 @@ namespace FurnitureFramework
 				furniture.modData["checked_bed_tile"] = "false";
 				result = false;
 			}
+		}
+
+		#endregion
+
+		#region Methods for Transpilers
+
+		private static Rectangle get_icon_source_rect(Furniture furniture)
+		{
+			ModEntry.f_cache.TryGetValue(
+				furniture.ItemId,
+				out FurnitureType? furniture_type
+			);
+
+			if (furniture_type != null) return furniture_type.icon_rect;
+
+			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
+		}
+
+		public static bool is_clicked(Furniture furniture, int x, int y)
+		{
+			ModEntry.f_cache.TryGetValue(
+				furniture.ItemId,
+				out FurnitureType? furniture_type
+			);
+
+			if (furniture_type is null || furniture_type.p_type == PlacementType.Rug)
+			{
+				return furniture.boundingBox.Value.Contains(x, y);
+			}
+			else
+			{
+				Rectangle rect = new(x, y, 1, 1);
+				bool clicks = false;
+				furniture_type.IntersectsForCollision(furniture, rect, ref clicks);
+				return clicks;
+			}
+		}
+
+		public static bool is_clicked(Furniture furniture, Point pos)
+		{
+			return is_clicked(furniture, pos.X, pos.Y);
 		}
 
 		#endregion
