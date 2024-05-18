@@ -839,29 +839,29 @@
 			"Source Image": "assets/painting.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 48, "Height": 32},	// in pixels
 
-			"Slots": [
-				{
-					"Area": {"X": 0, "Y": 0, "Width": 16, "Height": 16}
-				},
-				{
-					"Area": {"X": 0, "Y": 16, "Width": 16, "Height": 16},
-					"Depth": 1
-				},
-				{
-					"Area": {"X": 16, "Y": 0, "Width": 16, "Height": 16}
-				},
-				{
-					"Area": {"X": 16, "Y": 16, "Width": 16, "Height": 16},
-					"Depth": 1
-				},
-				{
-					"Area": {"X": 32, "Y": 0, "Width": 16, "Height": 16}
-				},
-				{
-					"Area": {"X": 32, "Y": 16, "Width": 16, "Height": 16},
-					"Depth": 1
-				}
-			],
+			// "Slots": [
+			// 	{
+			// 		"Area": {"X": 0, "Y": 0, "Width": 16, "Height": 16}
+			// 	},
+			// 	{
+			// 		"Area": {"X": 0, "Y": 16, "Width": 16, "Height": 16},
+			// 		"Depth": 1
+			// 	},
+			// 	{
+			// 		"Area": {"X": 16, "Y": 0, "Width": 16, "Height": 16}
+			// 	},
+			// 	{
+			// 		"Area": {"X": 16, "Y": 16, "Width": 16, "Height": 16},
+			// 		"Depth": 1
+			// 	},
+			// 	{
+			// 		"Area": {"X": 32, "Y": 0, "Width": 16, "Height": 16}
+			// 	},
+			// 	{
+			// 		"Area": {"X": 32, "Y": 16, "Width": 16, "Height": 16},
+			// 		"Depth": 1
+			// 	}
+			// ],
 
 			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		}

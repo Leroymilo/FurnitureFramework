@@ -227,12 +227,22 @@ This kind of replace the "Type" field in the vanilla Furniture data. It's a stri
 - None (no special type)
 - Dresser
 - [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/TV.md)
+- [Bed](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/Bed.md)
 
 Some Special Types have their own documentation linked in this list for extra info.
 
 Other types that I need to add:
-- Bed
 - FishTank
+- RandomPlant
+
+### Placement Type
+
+This will change the way you place the Furniture, it's only used for Rugs and Wall mounted Furniture. The possible values are:
+- Normal
+- Rug
+- Mural
+
+Please note that Rug Furniture can't have right-click interactions. However, Mural Furniture are compatible with all other features.
 
 ### Icon Rect
 
