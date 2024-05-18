@@ -572,7 +572,7 @@ namespace FurnitureFramework
 			{
 				layers.draw(
 					sprite_batch, color,
-					bounding_box.Location,
+					position, bounding_box.Top,
 					rot, furniture.IsOn, c_anim_offset
 				);
 			}
@@ -582,7 +582,7 @@ namespace FurnitureFramework
 			// draw held object
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Location, alpha);
+				slots.draw(sprite_batch, chest.Items, rot, position, bounding_box.Top, alpha);
 				// draw depending on heldObject own stored bounding box
 			}
 

@@ -60,23 +60,22 @@ namespace FurnitureFramework
 			public void draw_obj(
 				SpriteBatch sprite_batch,
 				StardewValley.Object obj,
-				Point pos,
+				Vector2 pos, float top,
 				float alpha
 			)
 			{
-				Vector2 draw_pos = pos.ToVector2();
+				Vector2 draw_pos = pos;
 				draw_pos.X += area.Center.X * 4 - 32;	// Horizontally centered
 				draw_pos.Y += area.Bottom * 4;			// Vertically bottom aligned
 				draw_pos += offset * 4;
 
-				float draw_depth = depth.get_value(pos.Y);
+				float draw_depth = depth.get_value(top);
 				draw_depth = MathF.BitIncrement(draw_depth);
 				// plus epsilon to make sure it's drawn over the layer at the same depth
 
 				if (obj is Furniture furn)
 				{
 					draw_pos.Y -= furn.sourceRect.Height * 4;
-					draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
 
 					furn.drawAtNonTileSpot(
 						sprite_batch, draw_pos,
@@ -87,7 +86,6 @@ namespace FurnitureFramework
 				}
 				
 				draw_pos.Y -= 64;
-				draw_pos = Game1.GlobalToLocal(Game1.viewport, draw_pos);
 				
 				if (draw_shadow)
 				{
@@ -235,7 +233,7 @@ namespace FurnitureFramework
 		public void draw(
 			SpriteBatch sprite_batch,
 			IList<Item> items,
-			int rot, Point pos,
+			int rot, Vector2 pos, float top,
 			float alpha
 		)
 		{
@@ -243,7 +241,7 @@ namespace FurnitureFramework
 			{
 				if (item is not StardewValley.Object obj) continue;
 
-				slots[rot][i].draw_obj(sprite_batch, obj, pos, alpha);
+				slots[rot][i].draw_obj(sprite_batch, obj, pos, top, alpha);
 			}
 		}
 

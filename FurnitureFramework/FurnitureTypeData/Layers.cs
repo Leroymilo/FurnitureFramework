@@ -98,7 +98,7 @@ namespace FurnitureFramework
 
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
-				Point position,
+				Vector2 position, float top,
 				bool is_on, Point c_anim_offset
 			)
 			{
@@ -108,9 +108,9 @@ namespace FurnitureFramework
 				rect.Location += c_anim_offset;
 
 				sprite_batch.Draw(
-					texture.get_texture(), position.ToVector2() + draw_pos, rect,
+					texture.get_texture(), position + draw_pos, rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
-					depth.get_value(position.Y)
+					depth.get_value(top)
 				);
 			}
 
@@ -242,7 +242,7 @@ namespace FurnitureFramework
 
 		public void draw(
 			SpriteBatch sprite_batch, Color color,
-			Point position,
+			Vector2 position, float top,
 			int rot, bool is_on, Point c_anim_offset
 		)
 		{
@@ -250,7 +250,7 @@ namespace FurnitureFramework
 
 			foreach (LayerData layer in layers[rot])
 			{
-				layer.draw(sprite_batch, color, position, is_on, c_anim_offset);
+				layer.draw(sprite_batch, color, position, top, is_on, c_anim_offset);
 			}
 		}
 
