@@ -190,7 +190,7 @@ namespace FurnitureFramework
 				Vector2 center = (v_tile + new Vector2(0.5f)) * 64;
 
 				// checking for general map placeability
-				if (!loc.isTilePlaceable(v_tile, false))
+				if (!loc.isTilePlaceable(v_tile, furniture.isPassable()))
 				{
 					return false;
 				}
@@ -222,17 +222,14 @@ namespace FurnitureFramework
 					return false;
 				}
 
-				/*if (!furniture.isGroundFurniture())
-				{*/
+				if (!furniture.isGroundFurniture())
+				{
 					if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
 					{
 						return false;
 					}
-				//}
 
-				if (loc.IsTileBlockedBy(v_tile, collisionMask, passable_ignored))
-				{
-					return false;
+					return true;
 				}
 
 				if (

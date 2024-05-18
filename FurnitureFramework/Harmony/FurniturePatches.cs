@@ -366,7 +366,7 @@ call check_held_object
 		internal static bool canBePlacedHere(
 			bool __result, Furniture __instance,
 			GameLocation l, Vector2 tile,
-			CollisionMask collisionMask = CollisionMask.All, bool showError = false
+			CollisionMask collisionMask = CollisionMask.All
 		)
 		{
 			try

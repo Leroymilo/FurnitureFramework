@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
+using StardewValley.Locations;
 using StardewValley.Objects;
 
 namespace FurnitureFramework
@@ -669,13 +670,13 @@ namespace FurnitureFramework
 
 			if (!loc.CanPlaceThisFurnitureHere(furniture))
 			{
-				// false
+				result = false;
 				return;
 			}
 
 			if (!furniture.isGroundFurniture())
 			{
-				tile.Y -= 1;
+				tile.Y = furniture.GetModifiedWallTilePosition(loc, (int)tile.X, (int)tile.Y);
 			}
 
 			CollisionMask passable_ignored = CollisionMask.Buildings | CollisionMask.Flooring | CollisionMask.TerrainFeatures;
@@ -694,12 +695,33 @@ namespace FurnitureFramework
 				return;
 			}
 
-			if (furniture.GetAdditionalFurniturePlacementStatus(loc, (int)tile.X * 64, (int)tile.Y * 64) != 0)
+			if (p_type == PlacementType.Mural)
 			{
-				result = false;
-				return;
-			}
 
+				Point point = tile.ToPoint();
+
+				if (loc is not DecoratableLocation dec_loc) 
+				{
+					result = false;
+					return;
+				}
+
+				if (
+					!((
+						dec_loc.isTileOnWall(point.X, point.Y) &&
+						dec_loc.GetWallTopY(point.X, point.Y) == point.Y
+					) ||
+					(
+						dec_loc.isTileOnWall(point.X, point.Y - 1) &&
+						dec_loc.GetWallTopY(point.X, point.Y) + 1 == point.Y
+					))
+				)
+				{
+					result = false;
+					return;
+				}
+			}
+			
 			result = true;
 			return;
 		}
