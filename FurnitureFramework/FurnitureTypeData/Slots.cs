@@ -58,19 +58,18 @@ namespace FurnitureFramework
 			#region SlotData Methods
 
 			public void draw_obj(
-				int rot,
 				SpriteBatch sprite_batch,
 				StardewValley.Object obj,
-				float top,
+				Point pos,
 				float alpha
 			)
 			{
-				Vector2 draw_pos = obj.TileLocation * 64;
+				Vector2 draw_pos = pos.ToVector2();
 				draw_pos.X += area.Center.X * 4 - 32;	// Horizontally centered
 				draw_pos.Y += area.Bottom * 4;			// Vertically bottom aligned
 				draw_pos += offset * 4;
 
-				float draw_depth = depth.get_value(top);
+				float draw_depth = depth.get_value(pos.Y);
 				draw_depth = MathF.BitIncrement(draw_depth);
 				// plus epsilon to make sure it's drawn over the layer at the same depth
 
@@ -217,17 +216,14 @@ namespace FurnitureFramework
 
 		#region Slots Methods
 
-		public int get_slot(Point rel_pos, int rot, out Rectangle area)
+		public int get_slot(Point rel_pos, int rot)
 		{	
 			foreach ((SlotData slot, int index) in slots[rot].Select((value, index) => (value, index)))
 			{
 				if (!slot.area.Contains(rel_pos)) continue;
-				
-				area = slot.area;
 				return index;
 			}
-
-			area = Rectangle.Empty;
+			
 			return -1;
 		}
 
@@ -239,7 +235,7 @@ namespace FurnitureFramework
 		public void draw(
 			SpriteBatch sprite_batch,
 			IList<Item> items,
-			int rot, float top,
+			int rot, Point pos,
 			float alpha
 		)
 		{
@@ -247,7 +243,7 @@ namespace FurnitureFramework
 			{
 				if (item is not StardewValley.Object obj) continue;
 
-				slots[rot][i].draw_obj(rot, sprite_batch, obj, top, alpha);
+				slots[rot][i].draw_obj(sprite_batch, obj, pos, alpha);
 			}
 		}
 

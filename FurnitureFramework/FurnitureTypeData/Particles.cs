@@ -214,15 +214,15 @@ namespace FurnitureFramework
 				float depth = depths[Game1.random.Next(depths.Count)];
 				depth = furniture.boundingBox.Bottom - depth * 64f;
 
-				Vector2 position = furniture.TileLocation * 64f;
+				Point position = furniture.boundingBox.Value.Location;
 				position.Y += furniture.boundingBox.Value.Height;
-				position.Y -= furniture.sourceRect.Height * 4f;
-				position += spawn_rect.Location.ToVector2() * 4f;
-				position += new Vector2(
-					Game1.random.NextSingle(),
-					Game1.random.NextSingle()
-				) * spawn_rect.Size.ToVector2() * 4f;
-				position -= source_rect.Size.ToVector2() * 2f;
+				position.Y -= furniture.sourceRect.Height * 4;
+				position += spawn_rect.Location * new Point(4);
+				position += new Point(
+					(int)(Game1.random.NextSingle() * spawn_rect.Size.X * 4),
+					(int)(Game1.random.NextSingle() * spawn_rect.Size.Y * 4)
+				);
+				position -= source_rect.Size * new Point(2);
 
 				float rotation = rotations[Game1.random.Next(rotations.Count)];
 				float rot_speed = rot_speeds[Game1.random.Next(rot_speeds.Count)];
@@ -232,7 +232,7 @@ namespace FurnitureFramework
 				{
 					texture = texture,
 					sourceRect = source_rect,
-					position = position,
+					position = position.ToVector2(),
 					alpha = alpha,
 					alphaFade = new_alpha_fade,
 					color = color,

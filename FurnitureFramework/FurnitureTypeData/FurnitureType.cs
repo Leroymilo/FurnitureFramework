@@ -572,7 +572,7 @@ namespace FurnitureFramework
 			{
 				layers.draw(
 					sprite_batch, color,
-					position, bounding_box.Top,
+					bounding_box.Location,
 					rot, furniture.IsOn, c_anim_offset
 				);
 			}
@@ -582,7 +582,7 @@ namespace FurnitureFramework
 			// draw held object
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Top, alpha);
+				slots.draw(sprite_batch, chest.Items, rot, bounding_box.Location, alpha);
 				// draw depending on heldObject own stored bounding box
 			}
 
@@ -622,7 +622,7 @@ namespace FurnitureFramework
 			// This is a postfix, it keeps the original seat positions.
 
 			int cur_rot = furniture.currentRotation.Value;
-			Vector2 tile_pos = furniture.TileLocation;
+			Vector2 tile_pos = furniture.boundingBox.Value.Location.ToVector2() / 64f;
 			
 			seats.get_seat_positions(cur_rot, tile_pos, list);
 		}
@@ -795,10 +795,7 @@ namespace FurnitureFramework
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
-			int slot_index = slots.get_slot(
-				rel_pos, rot,
-				out Rectangle slot_area
-			);
+			int slot_index = slots.get_slot(rel_pos, rot);
 
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
@@ -817,7 +814,6 @@ namespace FurnitureFramework
 			}
 
 			obj_inst.Location = furniture.Location;
-			obj_inst.TileLocation = this_pos.ToVector2() / 64f;
 
 			chest.Items[slot_index] = obj_inst;
 
@@ -841,10 +837,7 @@ namespace FurnitureFramework
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
-			int slot_index = slots.get_slot(
-				rel_pos, rot,
-				out Rectangle _
-			);
+			int slot_index = slots.get_slot(rel_pos, rot);
 
 			if (slot_index < 0) return false;
 			// No slot found at this pixel

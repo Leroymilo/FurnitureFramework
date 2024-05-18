@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;

@@ -82,7 +82,7 @@ namespace FurnitureFramework
 
 				JToken? pos_token = layer_obj.GetValue("Draw Pos");
 				JsonParser.try_parse(pos_token, ref draw_pos);
-				draw_pos *= new Vector2(4);	// game rendering scale
+				draw_pos *= 4f;	// game rendering scale
 
 				// Parsing optional layer depth
 
@@ -98,7 +98,7 @@ namespace FurnitureFramework
 
 			public void draw(
 				SpriteBatch sprite_batch, Color color,
-				Vector2 texture_pos, float top,
+				Point position,
 				bool is_on, Point c_anim_offset
 			)
 			{
@@ -108,9 +108,9 @@ namespace FurnitureFramework
 				rect.Location += c_anim_offset;
 
 				sprite_batch.Draw(
-					texture.get_texture(), texture_pos + draw_pos, rect,
+					texture.get_texture(), position.ToVector2() + draw_pos, rect,
 					color, 0f, Vector2.Zero, 4f, SpriteEffects.None,
-					depth.get_value(top)
+					depth.get_value(position.Y)
 				);
 			}
 
@@ -242,7 +242,7 @@ namespace FurnitureFramework
 
 		public void draw(
 			SpriteBatch sprite_batch, Color color,
-			Vector2 texture_pos, float top,
+			Point position,
 			int rot, bool is_on, Point c_anim_offset
 		)
 		{
@@ -250,7 +250,7 @@ namespace FurnitureFramework
 
 			foreach (LayerData layer in layers[rot])
 			{
-				layer.draw(sprite_batch, color, texture_pos, top, is_on, c_anim_offset);
+				layer.draw(sprite_batch, color, position, is_on, c_anim_offset);
 			}
 		}
 
