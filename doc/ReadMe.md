@@ -38,7 +38,8 @@ What parts of Furniture are customizable with this Framework:
 - Custom Sound Effects
 - Custom Particles
 - Animated base Sprite and Layers
-- Support for some special Furniture (Dresser, TV)
+- Support for some special Furniture (Dresser, TV, Bed)
+- Support for Rugs and Wall-mounted Furniture
 
 # Thanks
 
@@ -50,13 +51,11 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Support for mural Furniture
-- Support for Bed
-- Support for other special Furniture (Fish Tank, Randomized Plant (?))
 - Custom light sources
+- Support for other special Furniture (Fish Tank, Randomized Plant (?))
 - Add directionality to some fields of Particles
 - Add Particle list of scales and list of scale_changes
 
 # Known Issues
 
-- Placing Custom Furniture on a table (vanilla or custom) is kind of broken.
+- None for now!
