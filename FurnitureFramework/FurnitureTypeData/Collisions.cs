@@ -190,9 +190,7 @@ namespace FurnitureFramework
 
 				// checking for general map placeability
 				if (!loc.isTilePlaceable(v_tile, furniture.isPassable()))
-				{
 					return false;
-				}
 
 				foreach (Furniture item in loc.furniture)
 				{
@@ -201,44 +199,29 @@ namespace FurnitureFramework
 						!item.isPassable() &&
 						item.GetBoundingBox().Contains(center) &&
 						!item.AllowPlacementOnThisTile(tile.X, tile.Y)
-					)
-					{
-						return false;
-					}
+					) return false;
 
 					// cannot stack rugs
 					if (
 						item.isPassable() && furniture.isPassable() &&
 						item.GetBoundingBox().Contains(center)
-					)
-					{
-						return false;
-					}
+					) return false;
 				}
 
 				if (loc.objects.TryGetValue(v_tile, out var value) && value.isPassable() && furniture.isPassable())
-				{
 					return false;
-				}
+
+				if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
+					return false;
 
 				if (!furniture.isGroundFurniture())
-				{
-					if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
-					{
-						return false;
-					}
-
 					return true;
-				}
-
+				
 				if (
 					loc.terrainFeatures.ContainsKey(v_tile) &&
 					loc.terrainFeatures[v_tile] is HoeDirt hoeDirt &&
 					hoeDirt.crop != null
-				)
-				{
-					return false;
-				}
+				) return false;
 
 				return true;
 			}

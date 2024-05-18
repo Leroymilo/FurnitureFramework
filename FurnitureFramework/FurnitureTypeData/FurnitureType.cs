@@ -721,6 +721,12 @@ namespace FurnitureFramework
 					return;
 				}
 			}
+
+			if (furniture.GetAdditionalFurniturePlacementStatus(loc, (int)tile.X * 64, (int)tile.Y * 64) != 0)
+			{
+				result = false;
+				return;
+			}
 			
 			result = true;
 			return;
