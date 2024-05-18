@@ -25,6 +25,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Variants](#variants)
 	* [Animation](#animation)
 	* [Special Type](#special-type)
+	* [Placement Type](#placement-type)
 	* [Icon Rect](#icon-rect)
 	* [Seasonal](#seasonal)
 	* [Layers](#layers)
@@ -108,6 +109,8 @@ Do not use these types:
 - long table
 - table
 - dresser
+- rug
+- painting
 
 #### Price
 
