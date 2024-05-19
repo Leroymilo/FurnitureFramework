@@ -59,11 +59,11 @@
 					"Source Rect": {
 						"description": "The Source Rectangle in the sprite-sheet for the base sprite of your Furniture. Can be directional.",
 						"oneOf": [
-							{ "$ref": "/schemas/rectangle.json" },
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json" },
 							{
 								"type": "object",
 								"additionalProperties": {
-									"$ref": "/schemas/rectangle.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 								}
 							}
 						]
@@ -72,11 +72,11 @@
 					"Collisions": {
 						"description": "The Collisions of your Furniture. Can be directional.",
 						"oneOf": [
-							{ "$ref": "/schemas/collisions.json" },
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/collisions.json" },
 							{
 								"type": "object",
 								"additionalProperties": {
-									"$ref": "/schemas/collisions.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/collisions.json"
 								}
 							}
 						]
