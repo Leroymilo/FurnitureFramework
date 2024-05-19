@@ -84,13 +84,13 @@
 
 					"Force Type": { "type": "string" },
 
-					"Price": {"type": "integer", "minimum": 0},
+					"Price": { "type": "integer", "minimum": 0 },
 
-					"Placement Restriction": {"type": "integer", "enum": [0, 1, 2]},
+					"Placement Restriction": { "type": "integer", "enum": [0, 1, 2] },
 
-					"Context Tags": {"type": "array", "items": { "type": "string" }},
+					"Context Tags": { "type": "array", "items": { "type": "string" } },
 
-					"Exclude from Random Sales": {"type": "boolean"}
+					"Exclude from Random Sales": { "type": "boolean" }
 
 					
 				},
