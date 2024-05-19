@@ -1,0 +1,97 @@
+{
+	"$defs": {
+		"rectangle": {
+			"type": "object",
+			"properties": {
+				"X": {"type": "integer"},
+				"Y": {"type": "integer"},
+				"Width": {"type": "integer", "minimum": 0},
+				"Height": {"type": "integer", "minimum": 0}
+			}
+		},
+		"vector": {
+			"type": "object",
+			"properties": {
+				"X": {"type": "number"},
+				"Y": {"type": "number"}
+			}
+		},
+		"depth": {
+			"oneOf": [
+				{
+					"type": "object",
+					"properties": {
+						"Tile": {"type": "integer"},
+						"Sub": {"type": "integer", "minimum": 0, "maximum": 1000}
+					},
+					"required": [ "Tile" ]
+				},
+				{
+					"type": "integer"
+				}
+			]
+		}
+	},
+
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"title": "Furniture Pack",
+	"description":"The definition of a Content Pack for the Furniture Framework",
+	"type": "object",
+	"properties": {
+		"Format": {
+			"description": "The Format number of the Pack.",
+			"type": "integer",
+			"const": 2
+		},
+		"Furniture": {
+			"description": "A dictionary containing your custom Furniture definitions",
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"properties": {
+
+					"Display Name": {
+						"type": "string",
+						"description": "The name of your Furniture in game. Supports {{RectVariant}} and {{ImageVariant}} tokens."
+					},
+
+					"Rotations": {
+						"description": "The Rotations of your Furniture. Can be an integer or a list of strings.",
+						"oneOf": [
+							{
+								"type": "integer",
+								"enum": [1, 2, 4]
+							},
+							{
+								"type": "array",
+								"items": {"type": "string"},
+								"minItems": 1,
+								"unevaluatedItems": false,
+								"uniqueItems": true
+							}
+						]
+					},
+
+					"Source Image": {
+						"description": "The path to your sprite-sheet. Can be a string, a dictionary of strings or an array of strings",
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "object",
+								"additionalProperties": { "type": "string" }
+							},
+							{
+								"type": "array",
+								"items": { "type": "string" }
+							}
+						]
+					}
+				},
+				"required": [ "Display Name", "Rotations", "Source Image" ]
+			}
+		}
+	},
+	"required": ["Format", "Furniture"]
+}
