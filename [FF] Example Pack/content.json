@@ -1,4 +1,6 @@
 {
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+
 	"Format": 2,
 
 	"Furniture": {
