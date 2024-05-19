@@ -864,7 +864,7 @@ namespace FurnitureFramework
 		}
 
 		// used in Furniture.canBeRemoved Transpiler
-		private static bool has_held_object(Furniture furniture)
+		public static bool has_held_object(Furniture furniture)
 		{
 			StardewValley.Object held_obj = furniture.heldObject.Value;
 			if (held_obj == null) return false;

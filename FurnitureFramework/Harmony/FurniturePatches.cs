@@ -599,11 +599,6 @@ call check_held_object
 		#endregion
 	}
 
-	// TODO for beds:
-	// prefix draw						Done
-	// postfix IntersectsForCollision	Done
-	// postfix GetBedSpot
-
 	internal class BedFurniturePreFixes
 	{
 		#pragma warning disable 0414
@@ -721,6 +716,25 @@ call check_held_object
 			catch (Exception ex)
 			{
 				ModEntry.log($"Failed in {nameof(DoesTileHaveProperty)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
+
+		#region canBeRemoved
+
+		internal static bool canBeRemoved(
+			bool __result, BedFurniture __instance
+		)
+		{
+			try
+			{
+				if (FurnitureType.has_held_object(__instance)) return false;
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(canBeRemoved)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
