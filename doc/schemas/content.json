@@ -90,9 +90,55 @@
 
 					"Context Tags": { "type": "array", "items": { "type": "string" } },
 
-					"Exclude from Random Sales": { "type": "boolean" }
+					"Exclude from Random Sales": { "type": "boolean" },
 
-					
+					"Shows in Shops": { "type": "array", "items": { "type": "string" } },
+
+					"Shop Id": { "type": "string" },
+
+					"Source Rect Offsets": {
+						"oneOf": [
+							{
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+							},
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+								}
+							},
+							{
+								"type": "array",
+								"items": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+								}
+							}
+						]
+					},
+
+					"Frame Count": { "type": "integer" },
+
+					"Frame Duration": { "type": "integer" },
+
+					"Animation Offset": { "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json" },
+
+					"Special Type": {
+						"type": "string",
+						"enum": [ "None", "Dresser", "TV", "Bed" ]
+					},
+
+					"Placement Type": {
+						"type": "string",
+						"enum": [ "Normal", "Rug", "Mural" ]
+					},
+
+					"Icon Rect": {
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+					},
+
+					"Seasonal": { "type": "boolean" }
+
+					// Complex Fields TODO
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ]
 			}
