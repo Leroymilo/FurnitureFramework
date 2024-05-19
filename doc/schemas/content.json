@@ -1,39 +1,6 @@
 {
-	"$defs": {
-		"rectangle": {
-			"type": "object",
-			"properties": {
-				"X": {"type": "integer"},
-				"Y": {"type": "integer"},
-				"Width": {"type": "integer", "minimum": 0},
-				"Height": {"type": "integer", "minimum": 0}
-			}
-		},
-		"vector": {
-			"type": "object",
-			"properties": {
-				"X": {"type": "number"},
-				"Y": {"type": "number"}
-			}
-		},
-		"depth": {
-			"oneOf": [
-				{
-					"type": "object",
-					"properties": {
-						"Tile": {"type": "integer"},
-						"Sub": {"type": "integer", "minimum": 0, "maximum": 1000}
-					},
-					"required": [ "Tile" ]
-				},
-				{
-					"type": "integer"
-				}
-			]
-		}
-	},
-
 	"$schema": "https://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
 	"title": "Furniture Pack",
 	"description":"The definition of a Content Pack for the Furniture Framework",
 	"type": "object",
@@ -87,9 +54,47 @@
 								"items": { "type": "string" }
 							}
 						]
-					}
+					},
+					
+					"Source Rect": {
+						"description": "The Source Rectangle in the sprite-sheet for the base sprite of your Furniture. Can be directional.",
+						"oneOf": [
+							{ "$ref": "/schemas/rectangle.json" },
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/schemas/rectangle.json"
+								}
+							}
+						]
+					},
+
+					"Collisions": {
+						"description": "The Collisions of your Furniture. Can be directional.",
+						"oneOf": [
+							{ "$ref": "/schemas/collisions.json" },
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/schemas/collisions.json"
+								}
+							}
+						]
+					},
+
+					"Force Type": { "type": "string" },
+
+					"Price": {"type": "integer", "minimum": 0},
+
+					"Placement Restriction": {"type": "integer", "enum": [0, 1, 2]},
+
+					"Context Tags": {"type": "array", "items": { "type": "string" }},
+
+					"Exclude from Random Sales": {"type": "boolean"}
+
+					
 				},
-				"required": [ "Display Name", "Rotations", "Source Image" ]
+				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ]
 			}
 		}
 	},

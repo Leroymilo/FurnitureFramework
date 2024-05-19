@@ -1,0 +1,17 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/depth.json",
+	"oneOf": [
+		{
+			"type": "object",
+			"properties": {
+				"Tile": {"type": "integer"},
+				"Sub": {"type": "integer", "minimum": 0, "maximum": 1000}
+			},
+			"required": [ "Tile" ]
+		},
+		{
+			"type": "integer"
+		}
+	]
+}
