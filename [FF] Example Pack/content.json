@@ -804,7 +804,7 @@
 			"Layers": [
 				{
 					"Source Rect": {"X": 0, "Y": 64, "Width": 80, "Height": 64},
-					"Depth": {"Tile": 2, "Sub": 1000}
+					"Depth": 2
 				}
 			],
 
