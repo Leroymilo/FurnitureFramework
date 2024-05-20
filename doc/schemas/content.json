@@ -256,7 +256,7 @@
 								"Emit When Off": { "type": "boolean" },
 								"Burst": { "type": "boolean" }
 							},
-							"required": [ "Source Image", "Emission Interval", "Spawn Area" ]
+							"required": [ "Source Image", "Emission Interval", "Spawn Rect" ]
 						}
 					}
 				},
