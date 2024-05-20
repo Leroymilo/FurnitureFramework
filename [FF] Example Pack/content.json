@@ -380,7 +380,7 @@
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.
 			},
 
-			"Shows in Shops": ["{{ModID}}.custom_catalogue"],
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
 		"{{ModID}}.living_room": {
