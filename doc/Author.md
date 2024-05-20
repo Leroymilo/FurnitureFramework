@@ -45,6 +45,8 @@ This is the file where you define all your custom Furniture. Please keep in mind
 
 :warning: <span style="color:red">**WARNING**</span>: Unlike a CP Content Pack, names in this field are <span style="color:red">**CASE SENSITIVE**</span>, make sure you don't forget capital letters when writting field names or ids.
 
+It is highly recommended to use the Json Schema made for Furniture Packs (see at the very top of the content.json of the Example Pack), to setup your json validator with this Schema, you can start [here](https://json-schema.org/learn/getting-started-step-by-step#validate), but it mostly depends on what IDE/text editor you're using.
+
 The `content.json` file is a model with only 2 fields:
 
 ### Format
