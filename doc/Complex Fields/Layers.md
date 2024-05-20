@@ -31,7 +31,7 @@ Defaults to `{"Tile": 0, "Sub": 1000}` (so the bottom of the top-most tile of th
 
 Here's an example on how to use layers with the down-facing `living_room` Furniture of the Example Pack. This is basically as complicated as it gets, I'd recommend checking some other Furniture from the Example Pack or the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Templates.md) for simpler layers fitting your needs.
 
-In this example, we will go through the layers from back to front, so from the highest depth to the lowest. In this case, the highest depth is the base sprite (at depth = Collisions.Height = 3).
+In this example, we will go through the layers from back to front. In this case, the lowest depth is the base sprite (at `"Depth": {"Tile": 0, "Sub": 0}`).
 
 This gif shows how the layers are drawn from back to front, with a Farmer to show how it would be drawn in-between the layers:
 

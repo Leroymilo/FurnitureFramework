@@ -5,7 +5,7 @@ If you need an example, the `Custom Cauldron` Furniture in the Example Pack has 
 
 ## Source Image
 
-Like the Source Image of a Furniture, a Particle can have it's own .png (or be stored in the same spritesheet as the Furniture). This field is required.
+Like the Source Image of a Furniture, a Particle can have its own .png (or be stored in the same spritesheet as the Furniture). This field is required.
 
 ## Source Rect
 

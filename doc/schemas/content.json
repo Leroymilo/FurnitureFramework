@@ -2,7 +2,7 @@
 	"$schema": "https://json-schema.org/draft-07/schema",
 	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
 	"title": "Furniture Pack",
-	"description":"The definition of a Content Pack for the Furniture Framework",
+	"description": "The definition of a Content Pack for the Furniture Framework",
 	"type": "object",
 	"properties": {
 		"Format": {
@@ -47,11 +47,14 @@
 							},
 							{
 								"type": "object",
-								"additionalProperties": { "type": "string" }
+								"additionalProperties": { "type": "string" },
+								"minProperties": 1
 							},
 							{
 								"type": "array",
-								"items": { "type": "string" }
+								"items": { "type": "string" },
+								"minItems": 1,
+								"uniqueItems": true
 							}
 						]
 					},
@@ -105,13 +108,16 @@
 								"type": "object",
 								"additionalProperties": {
 									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
-								}
+								},
+								"minProperties": 1
 							},
 							{
 								"type": "array",
 								"items": {
 									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
-								}
+								},
+								"minItems": 1,
+								"uniqueItems": true
 							}
 						]
 					},
@@ -136,9 +142,123 @@
 						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},
 
-					"Seasonal": { "type": "boolean" }
+					"Seasonal": { "type": "boolean" },
 
-					// Complex Fields TODO
+					"Layers": {
+						"oneOf": [
+							{
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layers.json"
+							},
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layers.json"
+								}
+							}
+						]
+					},
+					
+					"Seats": {
+						"oneOf": [
+							{
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seats.json"
+							},
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seats.json"
+								}
+							}
+						]
+					},
+
+					"Slots": {
+						"oneOf": [
+							{
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slots.json"
+							},
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slots.json"
+								}
+							}
+						]
+					},
+
+					"Toggle": {
+						"type": "boolean"
+					},
+
+					"Sounds": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"Mode": {
+									"type": "string",
+									"enum": [ "on_turn_on", "on_turn_off", "on_click" ]
+								},
+
+								"Name": {
+									"type": "string",
+									"description": "The name of the sound in the game. See here for a list of valid sounds: https://www.stardewvalleywiki.com/Modding:Audio#Sound."
+								}
+							}
+						}
+					},
+
+					"Particles": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"Source Image": {
+									"type": "string"
+								},
+								"Source Rect": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+								},
+								"Emission Interval": { "type": "integer", "minimum": 1 },
+								"Spawn Rect": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+								},
+
+								"Depths": {
+									"type": "array",
+									"items": { "type": "number" }
+								},
+								"Speed": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+								},
+								"Rotations": {
+									"type": "array",
+									"items": { "type": "number" }
+								},
+								"Rotation Speeds": {
+									"type": "array",
+									"items": { "type": "number" }
+								},
+
+								"Scale": { "type": "number", "exclusiveMinimum": 0 },
+								"Scale Change": { "type": "number" },
+								"Color": { "type": "string" },
+								"Alpha": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+								"Alpha Fade": { "type": "number" },
+
+								"Frame Count": { "type": "integer", "minimum": 0 },
+								"Frame Duration": { "type": "integer", "minimum": 1 },
+								"Loop Count": { "type": "integer", "minimum": 1 },
+								"Hold Last Frame": { "type": "boolean" },
+								"Flicker": { "type": "boolean" },
+
+								"Emit When On": { "type": "boolean" },
+								"Emit When Off": { "type": "boolean" },
+								"Burst": { "type": "boolean" }
+							},
+							"required": [ "Source Image", "Emission Interval", "Spawn Area" ]
+						}
+					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ]
 			}
