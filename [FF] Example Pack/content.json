@@ -358,18 +358,22 @@
 			"Slots": {
 				"Horizontal": [
 					{
-						"Area": {"X": 0, "Y": 11, "Width": 16, "Height": 13}
+						"Area": {"X": 0, "Y": 11, "Width": 16, "Height": 13},
+						"Debug Color": "Blue"
 					},
 					{
-						"Area": {"X": 16, "Y": 11, "Width": 16, "Height": 13}
+						"Area": {"X": 16, "Y": 11, "Width": 16, "Height": 13},
+						"Debug Color": "Green"
 					}
 				],
 				"Vertical": [
 					{
-						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16}
+						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
+						"Debug Color": "Blue"
 					},
 					{
 						"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16},
+						"Debug Color": "Green",
 						"Depth": 1
 					}
 				]

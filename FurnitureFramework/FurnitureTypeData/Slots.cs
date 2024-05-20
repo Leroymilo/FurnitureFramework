@@ -9,6 +9,7 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework
 {
+	using SDColor = System.Drawing.Color;
 
 	class Slots
 	{
@@ -25,6 +26,15 @@ namespace FurnitureFramework
 			Vector2 offset = Vector2.Zero;
 			bool draw_shadow = true;
 			Vector2 shadow_offset = Vector2.Zero;
+
+			Color debug_color = ModEntry.get_config().slot_debug_default_color;
+			static Texture2D debug_texture;
+
+			static SlotData()
+			{
+				debug_texture = new(Game1.graphics.GraphicsDevice, 1, 1);
+				debug_texture.SetData(new[] { Color.White });
+			}
 
 			#region SlotData Parsing
 
@@ -49,6 +59,14 @@ namespace FurnitureFramework
 				
 				// Parsing optional shadow offset
 				JsonParser.try_parse(slot_obj.GetValue("Shadow Offset"), ref shadow_offset);
+
+				// Parsing optional debug color
+				string color_name = "";
+				if (JsonParser.try_parse(slot_obj.GetValue("Debug Color"), ref color_name))
+				{
+					SDColor c_color = SDColor.FromName(color_name);
+					debug_color = new(c_color.R, c_color.G, c_color.B);
+				}
 
 				is_valid = true;
 			}
@@ -129,6 +147,23 @@ namespace FurnitureFramework
 						draw_depth
 					);
 				}
+			}
+
+			public void draw_debug(
+				SpriteBatch sprite_batch,
+				Vector2 pos
+			)
+			{
+				Vector2 draw_pos = pos + area.Location.ToVector2() * 4f;
+				sprite_batch.Draw(
+					debug_texture,
+					draw_pos,
+					area,
+					debug_color * ModEntry.get_config().slot_debug_alpha,
+					0f, Vector2.Zero, 4f,
+					SpriteEffects.None,
+					float.MaxValue
+				);
 			}
 
 			#endregion
@@ -239,6 +274,9 @@ namespace FurnitureFramework
 		{
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
+				if (ModEntry.get_config().enable_slot_debug)
+					slots[rot][i].draw_debug(sprite_batch, pos);
+
 				if (item is not StardewValley.Object obj) continue;
 
 				slots[rot][i].draw_obj(sprite_batch, obj, pos, top, alpha);

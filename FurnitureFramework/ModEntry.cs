@@ -18,7 +18,7 @@ namespace FurnitureFramework
 
 		static IMonitor? monitor;
 		static IModHelper? helper;
-		static ModConfig config;
+		static ModConfig? config;
 
 		public static bool print_debug = false;
 
@@ -29,6 +29,12 @@ namespace FurnitureFramework
 		{
 			if (helper == null) throw new NullReferenceException("Helper was not set.");
 			return helper;
+		}
+
+		static public ModConfig get_config()
+		{
+			if (config == null) throw new NullReferenceException("Config was not set.");
+			return config;
 		}
 
 		static public void log(string message, LogLevel log_level = LogLevel.Debug)
@@ -68,7 +74,7 @@ namespace FurnitureFramework
 
 			if (
 				Helper.ModRegistry.IsLoaded("PeacefulEnd.AlternativeTextures")
-				&& !config.disable_AT_warning
+				&& !get_config().disable_AT_warning
 			)
 			{
 				log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
@@ -78,6 +84,8 @@ namespace FurnitureFramework
 
 		private void register_config()
 		{
+			if (config == null) throw new NullReferenceException("Config was not set.");
+
 			// get Generic Mod Config Menu's API (if it's installed)
 			var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
 			if (configMenu is null)
@@ -114,7 +122,35 @@ namespace FurnitureFramework
 				setValue: value => config.disable_AT_warning = value
 			);
 
+			configMenu.AddPageLink(
+				mod: ModManifest,
+				pageId: $"{ModManifest.UniqueID}.slots",
+				text: () => "Slots Debug Options",
+				tooltip: () => "Options to draw slots areas for debugging purposes."
+			);
 
+			configMenu.AddPage(
+				mod: ModManifest,
+				pageId: $"{ModManifest.UniqueID}.slots",
+				pageTitle: () => "Slots Debug Options"
+			);
+
+			configMenu.AddBoolOption(
+				mod: ModManifest,
+				name: () => "Enable slots debug",
+				tooltip: () => "Check this to draw a colored rectangle over the areas of Furniture slots.",
+				getValue: () => config.enable_slot_debug,
+				setValue: value => config.enable_slot_debug = value
+			);
+
+			configMenu.AddNumberOption(
+				mod: ModManifest,
+				getValue: () => config.slot_debug_alpha,
+				setValue: value => config.slot_debug_alpha = Math.Clamp(value, 0f, 1f),
+				name: () => "Slot Debug Opacity",
+				tooltip: () => "The opacity of rectangles drawn over the areas of Furniture slots.",
+				min: 0f, max: 1f, interval: 0.05f
+			);
 		}
 
 		#region Commands
@@ -307,7 +343,7 @@ namespace FurnitureFramework
 			
 			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
 
-			if (e.Button == config.slot_place_key)
+			if (e.Button == get_config().slot_place_key)
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
@@ -316,14 +352,14 @@ namespace FurnitureFramework
 
 					if (type.place_in_slot(item, pos, Game1.player))
 					{
-						Helper.Input.Suppress(config.slot_place_key);
+						Helper.Input.Suppress(get_config().slot_place_key);
 						placed = true;
 						break;
 					}
 				}
 			}
 
-			if (e.Button == config.slot_take_key && !placed)
+			if (e.Button == get_config().slot_take_key && !placed)
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
@@ -333,7 +369,7 @@ namespace FurnitureFramework
 
 					if (type.remove_from_slot(item, pos, Game1.player))
 					{
-						Helper.Input.Suppress(config.slot_take_key);
+						Helper.Input.Suppress(get_config().slot_take_key);
 						break;
 					}
 				}
