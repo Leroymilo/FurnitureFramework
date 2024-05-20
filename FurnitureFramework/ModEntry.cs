@@ -1,4 +1,5 @@
 ﻿using GenericModConfigMenu;
+using GMCMOptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
@@ -150,6 +151,21 @@ namespace FurnitureFramework
 				name: () => "Slot Debug Opacity",
 				tooltip: () => "The opacity of rectangles drawn over the areas of Furniture slots.",
 				min: 0f, max: 1f, interval: 0.05f
+			);
+
+			// get GMCM Options' API (if it's installed)
+			var configMenuExt = Helper.ModRegistry.GetApi<IGMCMOptionsAPI>("jltaylor-us.GMCMOptions");
+			if (configMenuExt is null)
+				return;
+
+			configMenuExt.AddColorOption(
+				mod: ModManifest,
+				getValue: () => config.slot_debug_default_color,
+				setValue: value => config.slot_debug_default_color = value,
+				name: () => "Default Slot Debug Color",
+				tooltip: () => "The default color of the rectangles drawn over the areas of Furniture slots. It will only update on Pack reload or restart.",
+				showAlpha: false,
+				colorPickerStyle: (uint)IGMCMOptionsAPI.ColorPickerStyle.HSLColorWheel
 			);
 		}
 

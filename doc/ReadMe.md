@@ -60,4 +60,5 @@ What parts of Furniture I plan to add customization to in this Framework:
 
 # Known Issues
 
-- None for now!
+- Reloading a Furniture Pack with placed Particle emitters will cause errors.
+- Default Slots Debug Color does not apply until Pack reload or restart.
