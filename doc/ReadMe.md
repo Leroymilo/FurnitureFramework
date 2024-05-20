@@ -54,9 +54,11 @@ Huge thanks to:
 
 What parts of Furniture I plan to add customization to in this Framework:
 - Custom light sources
+- Add better titles and descriptions for the json schema
+
+What I don't plan on adding, but I can work on if someone asks for it:
 - Support for other special Furniture (Fish Tank, Randomized Plant (?))
-- Add directionality to some fields of Particles
-- Add Particle list of scales and list of scale_changes
+- More customization for Particles (make some fields directionality, list of scales and list of scale changes)
 
 # Known Issues
 
