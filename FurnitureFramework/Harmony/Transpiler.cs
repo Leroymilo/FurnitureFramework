@@ -24,7 +24,11 @@ namespace FurnitureFramework
 				}
 			}
 
-			if (a.opcode == OpCodes.Ldloca || a.opcode == OpCodes.Ldloca_S)
+			// do not check operands for these OpCodes
+			if (
+				a.opcode == OpCodes.Beq_S || a.opcode == OpCodes.Br_S ||
+				a.opcode == OpCodes.Ldloca || a.opcode == OpCodes.Ldloca_S
+			)
 			{
 				return true;
 			}

@@ -817,7 +817,6 @@ namespace FurnitureFramework
 				if (size.X > 1 || size.Y > 1)
 					return false;
 				// cannot place furniture larger than 1x1
-				furn.rotate();	// to compensate for the game's random "-1"
 			}
 
 			obj_inst.Location = furniture.Location;

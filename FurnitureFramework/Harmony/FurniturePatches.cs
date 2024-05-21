@@ -214,6 +214,79 @@ call check_held_object
 		}
 
 		#endregion
+
+		#region GetOneCopyFrom
+/* 	Replace :
+
+ldarg.0
+ldfld class Netcode.NetInt StardewValley.Objects.Furniture::rotations
+callvirt instance !0 class Netcode.NetFieldBase`2<int32, class Netcode.NetInt>::get_Value()
+ldc.i4.4
+beq.s IL_009a
+ldc.i4.2
+br.s IL_009b
+ldc.i4.1
+sub
+callvirt instance void class Netcode.NetFieldBase`2<int32, class Netcode.NetInt>::set_Value(!0)
+ldarg.0
+callvirt instance void StardewValley.Objects.Furniture::rotate()
+
+	With :
+
+callvirt instance void class Netcode.NetFieldBase`2<int32, class Netcode.NetInt>::set_Value(!0)
+ldarg.0
+callvirt instance void StardewValley.Objects.Furniture::updateRotation()
+
+*/
+
+		static IEnumerable<CodeInstruction> GetOneCopyFrom(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldarg_0),
+				new(OpCodes.Ldfld, AccessTools.Field(
+					typeof(Furniture),
+					"rotations"
+				)),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetFieldBase<int, Netcode.NetInt>),
+					"get_Value"
+				)),
+				new(OpCodes.Ldc_I4_4),
+				new(OpCodes.Beq_S),
+				new(OpCodes.Ldc_I4_2),
+				new(OpCodes.Br_S),
+				new(OpCodes.Ldc_I4_1),
+				new(OpCodes.Sub),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetFieldBase<int, Netcode.NetInt>),
+					"set_Value"
+				)),
+				new(OpCodes.Ldarg_0),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Furniture),
+					"rotate"
+				)),
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetFieldBase<int, Netcode.NetInt>),
+					"set_Value"
+				)),
+				new(OpCodes.Ldarg_0),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Furniture),
+					"updateRotation"
+				)),
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 1);
+		}
+
+		#endregion
 	}
 
 	internal class FurniturePostfixes
