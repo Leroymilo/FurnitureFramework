@@ -796,8 +796,8 @@ namespace FurnitureFramework
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
-			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
+			Point this_pos = furniture.boundingBox.Value.Location;
+			this_pos.Y += furniture.boundingBox.Value.Height;
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
@@ -817,6 +817,7 @@ namespace FurnitureFramework
 				if (size.X > 1 || size.Y > 1)
 					return false;
 				// cannot place furniture larger than 1x1
+				furn.rotate();	// to compensate for the game's random "-1"
 			}
 
 			obj_inst.Location = furniture.Location;
@@ -838,8 +839,8 @@ namespace FurnitureFramework
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			Point this_pos = (furniture.TileLocation * 64f).ToPoint();
-			this_pos.Y += collisions.get_bounding_box(this_pos, rot).Height;
+			Point this_pos = furniture.boundingBox.Value.Location;
+			this_pos.Y += furniture.boundingBox.Value.Height;
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
