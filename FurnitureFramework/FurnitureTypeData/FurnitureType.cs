@@ -784,6 +784,18 @@ namespace FurnitureFramework
 			}
 		}
 
+		private int get_slot(Furniture furniture, Point pos)
+		{
+			int rot = furniture.currentRotation.Value;
+
+			Point this_pos = furniture.boundingBox.Value.Location;
+			this_pos.Y += furniture.boundingBox.Value.Height;
+			this_pos.Y -= source_rects[rot].Height * 4;
+			Point rel_pos = (pos - this_pos) / new Point(4);
+
+			return slots.get_slot(rel_pos, rot);
+		}
+
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
 		{
 			int rot = furniture.currentRotation.Value;
@@ -796,13 +808,7 @@ namespace FurnitureFramework
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			Point this_pos = furniture.boundingBox.Value.Location;
-			this_pos.Y += furniture.boundingBox.Value.Height;
-			this_pos.Y -= source_rects[rot].Height * 4;
-			Point rel_pos = (pos - this_pos) / new Point(4);
-
-			int slot_index = slots.get_slot(rel_pos, rot);
-
+			int slot_index = get_slot(furniture, pos);
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
 
@@ -838,13 +844,7 @@ namespace FurnitureFramework
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			Point this_pos = furniture.boundingBox.Value.Location;
-			this_pos.Y += furniture.boundingBox.Value.Height;
-			this_pos.Y -= source_rects[rot].Height * 4;
-			Point rel_pos = (pos - this_pos) / new Point(4);
-
-			int slot_index = slots.get_slot(rel_pos, rot);
-
+			int slot_index = get_slot(furniture, pos);
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
 

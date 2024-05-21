@@ -9,6 +9,8 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Patches
 {
+	#region Furniture
+
 	internal class FurniturePrefixes
 	{
 		#pragma warning disable 0414
@@ -585,6 +587,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		#endregion
 	}
 
+	#endregion
+
 	// Other Fixes for Special Furniture
 
 	internal class StorageFurniturePostFixes
@@ -593,6 +597,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		static readonly PatchType patch_type = PatchType.Postfix;
 		static readonly Type base_type = typeof(StorageFurniture);
 		#pragma warning restore 0414
+
+		#region updateWhenCurrentLocation
 
 		internal static void updateWhenCurrentLocation(
 			StorageFurniture __instance
@@ -612,6 +618,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
 			}
 		}
+
+		#endregion
 	}
 
 	internal class TVPostFixes
@@ -671,6 +679,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 		#endregion
 	}
+
+	#region BedFurniture
 
 	internal class BedFurniturePreFixes
 	{
@@ -814,4 +824,6 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 		#endregion
 	}
+
+	#endregion
 }

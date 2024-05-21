@@ -114,7 +114,7 @@ namespace FurnitureFramework
 				getValue: () => config.slot_take_key,
 				setValue: value => config.slot_take_key = value
 			);
-
+			
 			configMenu.AddBoolOption(
 				mod: ModManifest,
 				name: () => "Disable AT Warning",
@@ -150,7 +150,7 @@ namespace FurnitureFramework
 				setValue: value => config.slot_debug_alpha = Math.Clamp(value, 0f, 1f),
 				name: () => "Slot Debug Opacity",
 				tooltip: () => "The opacity of rectangles drawn over the areas of Furniture slots.",
-				min: 0f, max: 1f, interval: 0.05f
+				min: 0f, max: 1f, interval: 0.01f
 			);
 
 			// get GMCM Options' API (if it's installed)
@@ -355,7 +355,7 @@ namespace FurnitureFramework
 
 			if (!Game1.player.CanMove) return;
 
-			bool placed = false;
+			bool clicked_slot = false;
 			
 			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
 
@@ -369,13 +369,13 @@ namespace FurnitureFramework
 					if (type.place_in_slot(item, pos, Game1.player))
 					{
 						Helper.Input.Suppress(get_config().slot_place_key);
-						placed = true;
+						clicked_slot = true;
 						break;
 					}
 				}
 			}
 
-			if (e.Button == get_config().slot_take_key && !placed)
+			if (e.Button == get_config().slot_take_key && !clicked_slot)
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
