@@ -53,13 +53,14 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
+- Custom Fish Tanks
 - Custom light sources
 - Custom Description
 - Add better titles and descriptions for the json schema
 - Support for i18n translations (I have no idea how to do this)
 
 What I don't plan on adding, but I can work on if someone asks for it:
-- Support for other special Furniture (Fish Tank, Randomized Plant (?))
+- Custom Randomized Plant
 - More customization for Particles (make some fields directionality, list of scales and list of scale changes)
 
 # Known Issues
