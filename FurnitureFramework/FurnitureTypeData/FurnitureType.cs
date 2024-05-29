@@ -76,6 +76,8 @@ namespace FurnitureFramework
 		float screen_scale = 4;
 		Point bed_spot = new(1);
 
+		public readonly string? description;
+
 		#endregion
 
 		#region Parsing
@@ -352,6 +354,8 @@ namespace FurnitureFramework
 
 			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
 
+			#region Placement Type
+
 			p_type = Enum.Parse<PlacementType>(JsonParser.parse(data.GetValue("Placement Type"), "Normal"));
 			if (!Enum.IsDefined(p_type)) {
 				p_type = PlacementType.Normal;
@@ -360,6 +364,8 @@ namespace FurnitureFramework
 
 			if (p_type == PlacementType.Rug) type = "rug";
 			if (p_type == PlacementType.Mural) type = "painting";
+
+			#endregion
 
 			#region Special Furniture
 
@@ -375,6 +381,13 @@ namespace FurnitureFramework
 			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
 
 			#endregion
+		
+			description = JsonParser.parse<string?>(data.GetValue("Description"), null);
+			if (description is not null)
+			{
+				description = description.Replace("{{ImageVariant}}", image_var, true, null);
+				description = description.Replace("{{RectVariant}}", rect_var, true, null);
+			}
 		}
 
 		public List<string> parse_rotations(JToken? token)
@@ -1052,7 +1065,7 @@ namespace FurnitureFramework
 		public void on_placed(Furniture furniture)
 		{
 			particles.burst(furniture);
-			
+
 			int rot = furniture.currentRotation.Value;
 			initialize_slots(furniture, rot);
 		}

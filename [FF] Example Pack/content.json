@@ -775,7 +775,7 @@
 		"{{ModID}}.cat_statue": {
 			// Sprite by SonreirAngel for Seasonal Japanese Buildings
 			"Display Name": "{{RectVariant}} Cat Statue",
-			"Description": "A painting to test Animations and Variants. Sprites by SonreirAngel",
+			"Description": "A statue to test Animations and Variants. Sprites by SonreirAngel",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},

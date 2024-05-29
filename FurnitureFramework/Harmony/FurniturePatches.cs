@@ -528,6 +528,29 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		}
 
 		#endregion
+
+		#region loadDescription
+
+		internal static string loadDescription(
+			string __result, Furniture __instance
+		)
+		{
+			try
+			{
+				if (
+					FurniturePack.try_get_type(__instance, out FurnitureType? type)
+					&& type.description is not null
+				) return type.description;
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(isPassable)}:\n{ex}", LogLevel.Error);
+			}
+
+			return __result;
+		}
+
+		#endregion
 	}
 
 	#endregion
