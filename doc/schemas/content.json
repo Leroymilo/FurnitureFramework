@@ -22,6 +22,11 @@
 						"description": "The name of your Furniture in game. Supports {{RectVariant}} and {{ImageVariant}} tokens."
 					},
 
+					"Description": {
+						"type": "string",
+						"description": "The description of your Furniture. Supports {{RectVariant}} and {{ImageVariant}} tokens."
+					},
+
 					"Rotations": {
 						"description": "The Rotations of your Furniture. Can be an integer or a list of strings.",
 						"oneOf": [
@@ -260,7 +265,8 @@
 						}
 					}
 				},
-				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ]
+				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ],
+				"additionalProperties": false
 			}
 		}
 	},

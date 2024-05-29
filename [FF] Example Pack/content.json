@@ -7,6 +7,7 @@
 		// your mod's id will automatically be added to the furniture id
 		"{{ModID}}.simple_test": {
 			"Display Name": "Simple Test",
+			"Description": "A simple Custom Furniture example",
 
 			"Rotations": 1,
 			"Collisions": {
@@ -24,6 +25,7 @@
 
 		"{{ModID}}.custom_catalogue": {
 			"Display Name": "Custom Catalogue",
+			"Description": "An example for a Custom Catalogue",
 
 			"Rotations": 1,
 			"Collisions": {
@@ -44,6 +46,7 @@
 
 		"{{ModID}}.seasonal_bush_test": {
 			"Display Name": "Bush Test",
+			"Description": "An example of seasonal Furniture.",
 
 			"Rotations": 1,
 			"Collisions": {
@@ -386,6 +389,7 @@
 		"{{ModID}}.living_room": {
 
 			"Display Name": "Living Room",
+			"Description": "A complex Furniture to test Layers and Collision Maps.",
 
 			"Rotations": 4,
 			// "Rotations": ["Down", "Right", "Up", "Left"],
@@ -698,6 +702,7 @@
 
 		"{{ModID}}.cauldron_test": {
 			"Display Name": "Custom Cauldron",
+			"Description": "A Cauldron to test toggleability, sounds and particles",
 
 			"Rotations": 1,
 			"Collisions": {
@@ -770,6 +775,7 @@
 		"{{ModID}}.cat_statue": {
 			// Sprite by SonreirAngel for Seasonal Japanese Buildings
 			"Display Name": "{{RectVariant}} Cat Statue",
+			"Description": "A painting to test Animations and Variants. Sprites by SonreirAngel",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
@@ -792,6 +798,7 @@
 
 		"{{ModID}}.large_bed": {
 			"Display Name": "Large Bed",
+			"Description": "A bed to test Custom Beds",
 
 			"Rotations": 1,
 			"Collisions": {
@@ -820,6 +827,7 @@
 
 		"{{ModID}}.rug_test": {
 			"Display Name": "Rug Test",
+			"Description": "A rug to test Custom Rugs",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 4, "Height": 3},
@@ -835,6 +843,7 @@
 
 		"{{ModID}}.painting_test": {
 			"Display Name": "Painting Test",
+			"Description": "A painting to test Mural Custom Furniture",
 
 			"Rotations": 1,
 			"Collisions": {"Width": 3, "Height": 2},
@@ -844,30 +853,6 @@
 
 			"Source Image": "assets/painting.png",
 			"Source Rect": {"X": 0, "Y": 0, "Width": 48, "Height": 32},	// in pixels
-
-			// "Slots": [
-			// 	{
-			// 		"Area": {"X": 0, "Y": 0, "Width": 16, "Height": 16}
-			// 	},
-			// 	{
-			// 		"Area": {"X": 0, "Y": 16, "Width": 16, "Height": 16},
-			// 		"Depth": 1
-			// 	},
-			// 	{
-			// 		"Area": {"X": 16, "Y": 0, "Width": 16, "Height": 16}
-			// 	},
-			// 	{
-			// 		"Area": {"X": 16, "Y": 16, "Width": 16, "Height": 16},
-			// 		"Depth": 1
-			// 	},
-			// 	{
-			// 		"Area": {"X": 32, "Y": 0, "Width": 16, "Height": 16}
-			// 	},
-			// 	{
-			// 		"Area": {"X": 32, "Y": 16, "Width": 16, "Height": 16},
-			// 		"Depth": 1
-			// 	}
-			// ],
 
 			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		}
