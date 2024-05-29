@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
@@ -46,8 +47,6 @@ namespace FurnitureFramework
 			bool emit_when_on = false;
 			bool emit_when_off = false;
 			bool does_burst = true;
-
-			List<long> particle_timers = new() {-1};
 
 			#region ParticleData Parsing
 
@@ -147,37 +146,17 @@ namespace FurnitureFramework
 
 			#region ParticleData Methods
 
-			public void free_timer(int index)
-			{
-				particle_timers[index] = -1;
-			}
-
-			public int initialize_timer()
-			{
-				for (int i = 1; i < particle_timers.Count; i++)
-				{
-					if (particle_timers[i] == -1)
-					{
-						// if timer was reset, use it
-						return i;
-					}
-				}
-
-				particle_timers.Add(0);
-				return particle_timers.Count - 1;
-			}
-
-			public void update_timer(Furniture furniture, int timer_id, long time_ms)
+			public void update_timer(Furniture furniture, List<long> timers, int index, long time_ms)
 			{
 				if (
 					(!emit_when_on || !furniture.IsOn) &&
 					(!emit_when_off || furniture.IsOn)
 				) return;
 
-				if (time_ms - particle_timers[timer_id] > emit_interval)
+				if (time_ms - timers[index] > emit_interval)
 				{
 					make(furniture);
-					particle_timers[timer_id] = time_ms;
+					timers[index] = time_ms;
 				}
 			}
 
@@ -284,33 +263,74 @@ namespace FurnitureFramework
 
 		#region Particles Method
 
-		public void update_timer(Furniture furniture, long time_ms)
+		private List<long> parse_timers(Furniture furniture)
 		{
-			int timer_id = furniture.lastNoteBlockSoundTime;
-			if (timer_id == 0)
-			{
-				foreach (ParticleData particle in particle_list)
-				{
-					timer_id = particle.initialize_timer();
-					// they should all return the same value
-				}
-				furniture.lastNoteBlockSoundTime = timer_id;
-			}
-			// Furniture.lastNoteBlockSoundTime is used to store an id instead of the timer itself.
+			List<long> timers = new();
+			bool valid_mod_data = true;
 
-			foreach (ParticleData particle in particle_list)
+			if (furniture.modData.TryGetValue("FF.particle_timers", out string? timers_string))
 			{
-				particle.update_timer(furniture, timer_id, time_ms);
+				JArray timers_array = new();
+
+				try { timers_array = JArray.Parse(timers_string); }
+				catch (JsonReaderException)
+				{
+					ModEntry.log("Invalid FF.particle_timer modData.", LogLevel.Trace);
+					valid_mod_data = false;
+				}
+
+				if (timers_array.Count == particle_list.Count)
+				{
+					foreach (JToken timer_token in timers_array)
+					{
+						if (timer_token.Type != JTokenType.Integer)
+						{
+							ModEntry.log("Invalid timer in FF.particle_timer modData.", LogLevel.Trace);
+							valid_mod_data = false;
+							break;
+						}
+
+						timers.Add((long)timer_token);
+					}
+				}
+				
+				else
+				{
+					valid_mod_data = false;
+				}
+
 			}
+			else { valid_mod_data = false; }
+
+			if (!valid_mod_data)
+			{
+				timers.AddRange(Enumerable.Repeat(0L, particle_list.Count - timers.Count));
+			}
+
+			return timers;
 		}
 
-		public void free_timers(Furniture furniture)
+		private void save_timers(Furniture furniture, List<long> timers)
 		{
-			int index = furniture.lastNoteBlockSoundTime;
-			foreach (ParticleData particle in particle_list)
+			JArray timers_array = new();
+			foreach (int timer in timers)
 			{
-				particle.free_timer(index);
+				timers_array.Add(new JValue(timer));
 			}
+
+			furniture.modData["FF.particle_timers"] = timers_array.ToString();
+		}
+
+		public void update_timer(Furniture furniture, long time_ms)
+		{
+			List<long> timers = parse_timers(furniture);
+
+			foreach ((ParticleData particle, int index) in particle_list.Select((value, index) => (value, index)))
+			{
+				particle.update_timer(furniture, timers, index, time_ms);
+			}
+
+			save_timers(furniture, timers);
 		}
 
 		public void burst(Furniture furniture)

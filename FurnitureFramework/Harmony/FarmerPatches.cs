@@ -22,12 +22,8 @@ namespace FurnitureFramework.Patches
 
 			try
 			{
-				ModEntry.f_cache.TryGetValue(
-					furniture.ItemId,
-					out FurnitureType? furniture_type
-				);
-
-				furniture_type?.GetSittingDepth(furniture, __instance, ref __result);
+				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
 			{

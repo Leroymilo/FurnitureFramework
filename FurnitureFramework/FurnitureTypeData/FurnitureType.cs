@@ -117,7 +117,7 @@ namespace FurnitureFramework
 				}
 
 				if (!has_valid)
-					throw new InvalidDataException("Source Rect Offsets dictionary has no valid path.");
+					throw new InvalidDataException("Source Rect Offsets dictionary has no valid value.");
 			}
 
 			#endregion
@@ -150,7 +150,7 @@ namespace FurnitureFramework
 				}
 
 				if (!has_valid)
-					throw new InvalidDataException("Source Rect Offsets list has no valid path.");
+					throw new InvalidDataException("Source Rect Offsets list has no valid value.");
 			}
 
 			#endregion
@@ -609,8 +609,6 @@ namespace FurnitureFramework
 				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
-
-			// ModEntry.print_debug = false;
 		}
 
 		#endregion
@@ -945,8 +943,8 @@ namespace FurnitureFramework
 			Point size = collisions.get_size(rot);
 			if (size.X < 3 || size.Y < 3) return;
 
-			if (!furniture.modData.ContainsKey("checked_bed_tile"))
-				furniture.modData["checked_bed_tile"] = "false";
+			if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
+				furniture.modData["FF.checked_bed_tile"] = "false";
 
 			if (
 				tile_x > tile_pos.X && tile_y > tile_pos.Y &&
@@ -954,16 +952,16 @@ namespace FurnitureFramework
 				tile_y < tile_pos.Y + size.Y - 1
 			)
 			{
-				if (furniture.modData["checked_bed_tile"] != "true")
+				if (furniture.modData["FF.checked_bed_tile"] != "true")
 				{
-					furniture.modData["checked_bed_tile"] = "true";
+					furniture.modData["FF.checked_bed_tile"] = "true";
 					property_value = "Sleep";
 					result = true;
 				}
 			}
 			else
 			{
-				furniture.modData["checked_bed_tile"] = "false";
+				furniture.modData["FF.checked_bed_tile"] = "false";
 				result = false;
 			}
 		}
@@ -974,32 +972,29 @@ namespace FurnitureFramework
 
 		private static Rectangle get_icon_source_rect(Furniture furniture)
 		{
-			ModEntry.f_cache.TryGetValue(
-				furniture.ItemId,
-				out FurnitureType? furniture_type
-			);
-
-			if (furniture_type != null) return furniture_type.icon_rect;
+			if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+			{
+				return type.icon_rect;
+			}
 
 			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
 		}
 
 		public static bool is_clicked(Furniture furniture, int x, int y)
 		{
-			ModEntry.f_cache.TryGetValue(
-				furniture.ItemId,
-				out FurnitureType? furniture_type
-			);
-
-			if (furniture_type is null || furniture_type.p_type == PlacementType.Rug)
+			if (
+				!FurniturePack.try_get_type(furniture, out FurnitureType? type)
+				|| type.p_type == PlacementType.Rug
+			)
 			{
 				return furniture.boundingBox.Value.Contains(x, y);
 			}
+			
 			else
 			{
 				Rectangle rect = new(x, y, 1, 1);
 				bool clicks = false;
-				furniture_type.IntersectsForCollision(furniture, rect, ref clicks);
+				type.IntersectsForCollision(furniture, rect, ref clicks);
 				return clicks;
 			}
 		}
@@ -1051,17 +1046,14 @@ namespace FurnitureFramework
 
 		public void on_removed(Furniture furniture)
 		{
-			particles.free_timers(furniture);
-			furniture.lastNoteBlockSoundTime = 0;
-
 			furniture.heldObject.Value = null;
 		}
 
 		public void on_placed(Furniture furniture)
 		{
 			particles.burst(furniture);
+			
 			int rot = furniture.currentRotation.Value;
-
 			initialize_slots(furniture, rot);
 		}
 	}

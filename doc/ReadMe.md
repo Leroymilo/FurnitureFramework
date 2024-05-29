@@ -53,11 +53,14 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
+- Custom Description
+- Support "includes"			@nova
+- Config-Conditional includes	@nova
 - Custom Fish Tanks
 - Custom light sources
-- Custom Description
 - Add better titles and descriptions for the json schema
 - Support for i18n translations (I have no idea how to do this)
+- Customize StorageFurniture allowed item types.	@B
 
 What I don't plan on adding, but I can work on if someone asks for it:
 - Custom Randomized Plant

@@ -238,8 +238,7 @@ namespace FurnitureFramework
 
 				foreach (Furniture item in loc.furniture)
 				{
-					ModEntry.f_cache.TryGetValue(item.ItemId, out FurnitureType? f_type);
-					if (f_type == null)
+					if (!FurniturePack.try_get_type(item, out FurnitureType? _))
 					{
 						// vanilla furniture
 						if (
