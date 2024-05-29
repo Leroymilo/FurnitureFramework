@@ -68,5 +68,4 @@ What I don't plan on adding, but I can work on if someone asks for it:
 
 # Known Issues
 
-- Reloading a Furniture Pack with placed Particle emitters will cause errors.
 - Default Slots Debug Color does not apply until Pack reload or restart.

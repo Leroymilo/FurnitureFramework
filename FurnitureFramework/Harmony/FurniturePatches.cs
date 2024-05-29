@@ -309,7 +309,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 						case SpecialType.TV:
 							return new TV(itemId, position.Value);
 						case SpecialType.Bed:
-							return new BedFurniture(itemId, position.Value);
+							return new BedFurniture(itemId, position.Value)
+							{ bedType = BedFurniture.BedType.Double };
 					}
 				}
 			}
