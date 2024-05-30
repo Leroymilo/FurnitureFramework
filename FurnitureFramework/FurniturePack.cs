@@ -169,8 +169,6 @@ namespace FurnitureFramework
 
 		private void load(string path = DEFAULT_PATH)
 		{
-			ModEntry.log($"Loading Furniture Pack {UID}...");
-
 			JObject data;
 			try
 			{
@@ -270,11 +268,10 @@ namespace FurnitureFramework
 
 			#region Includes
 
-			included_packs.Clear();
-
 			JToken? includes_token = data.GetValue("Included");
 			if (includes_token is JObject includes_obj)
 			{
+				included_packs.Clear();
 				foreach (JProperty property in includes_obj.Properties())
 				{
 					if (property.Value is not JObject include_obj)
@@ -329,6 +326,7 @@ namespace FurnitureFramework
 				return;
 			}
 
+			ModEntry.log($"Loading Furniture Pack {UID}...");
 			FurniturePack new_pack = new(pack);
 			if (!new_pack.is_valid) return;
 			packs[new_pack.UID] = new_pack;

@@ -53,70 +53,6 @@
 			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
 		},
 
-		"{{ModID}}.armchair_test": {
-
-			"Display Name": "{{ImageVariant}} Armchair Test",
-
-			"Rotations": 4,
-			// "Rotations": ["Down", "Right", "Up", "Left"],
-			// keys used in all other directional values
-			"Collisions": {"Width": 2, "Height": 1},
-
-			"Placement Restriction": 2,
-
-			"Source Image": {
-				"Brown": "assets/seats/armchair.png",
-				"Yellow": "assets/seats/armchair_yellow.png",
-				"Blue": "assets/seats/armchair_blue.png"
-			},
-			"Source Rect": {
-				"Down":		{"X": 0,  "Y": 0, "Width": 32, "Height": 32},
-				"Right":	{"X": 32, "Y": 0, "Width": 32, "Height": 32},
-				"Up":		{"X": 64, "Y": 0, "Width": 32, "Height": 32},
-				"Left":		{"X": 96, "Y": 0, "Width": 32, "Height": 32}
-				// must have all directions
-			},
-
-			"Layers": [
-				{
-					"Source Rect": {
-						// Layer for up is transparent, can be omitted
-						"Right":	{"X": 32, "Y": 32, "Width": 32, "Height": 32},
-						"Up":		{"X": 64, "Y": 32, "Width": 32, "Height": 32},
-						"Left":		{"X": 96, "Y": 32, "Width": 32, "Height": 32}
-					}
-				}
-			],
-
-			"Seats": [
-				// positions are from the top left of the Bounding Box (not the texture!)
-				{
-					"Position": {"X": 0.5, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Up": 0,
-						"Down": 2
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Right": 1
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				},
-				{
-					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
-					"Player Direction": {
-						"Left": 3
-					}	// structure is : {<furniture rotation> : <player direction>}
-					// player direction : Up->0, Right->1, Down->2, Left->3
-				}
-			],
-
-			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
-		},
-
 		"{{ModID}}.bench_test": {
 
 			"Display Name": "Bench Test",
@@ -588,6 +524,13 @@
 			},
 
 			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
+		}
+	},
+
+	"Included": {
+		"Armchair": {
+			"Path": "assets/seats/armchairs/armchairs.json",
+			"Description": "Sittable Test Furniture"
 		}
 	}
 }
