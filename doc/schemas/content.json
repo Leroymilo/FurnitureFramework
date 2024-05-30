@@ -5,6 +5,9 @@
 	"description": "The definition of a Content Pack for the Furniture Framework",
 	"type": "object",
 	"properties": {
+		"$schema": {
+			"type": "string"
+		},
 		"Format": {
 			"description": "The Format number of the Pack.",
 			"type": "integer",
