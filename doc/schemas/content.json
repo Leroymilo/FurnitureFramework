@@ -263,12 +263,37 @@
 							},
 							"required": [ "Source Image", "Emission Interval", "Spawn Rect" ]
 						}
+					},
+
+					"Bed Spot": {
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
 					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ],
 				"additionalProperties": false
 			}
+		},
+		"Included": {
+			"description": "Additional Furniture included from other json files",
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"properties": {
+					"Path": {
+						"description": "The path (relative to the mod folder) of the json file where the included Furniture is defined.",
+						"type": "string"
+					},
+					"Description": { "type": "string" },
+					"Enabled": {
+						"description": "If the Furniture included in this file are enabled by default.",
+						"type": "boolean"
+					}
+				},
+				"required": [ "Path" ],
+				"additionalProperties": false
+			}
 		}
 	},
-	"required": ["Format", "Furniture"]
+	"required": ["Format", "Furniture"],
+	"additionalProperties": false
 }
