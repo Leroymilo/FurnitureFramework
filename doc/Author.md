@@ -78,6 +78,28 @@ The next part of the tutorial, with details about the Furniture definition is [h
 
 You can also check the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Templates.md) to make relatively simple Furniture.
 
+### Included
+
+This is a dictionary where you can give the path of other json files that should be included in this Furniture Pack. Here's the structure to define an Included file:
+```json
+"Included": {
+	"Name": {
+		"Path": "my/included/file/path.json",
+		"Description": "A Part of the Furniture Pack",
+		"Enabled": true
+	}
+}
+```
+
+Each entry in the "Included" dictionary will create a config options to enable/disable this part of the Furniture Pack that will be shown in the Generic Mod Config Menu.  
+An included file has the same structure as the [content.json file](#content), but the `Format` field will be ignored.  
+You can include files in included files, this will make config options nested in the Generic Mod Config Menu.
+
+The "Name" can be anything you want, it will be used as the config option name in the Generic Mod Config Menu.  
+The `Path` is the path of the included file, **relative to the mod folder**.  
+The `Description` is also up to you (and optional), it will show in the tooltip of the config option.  
+`Enabled` defines if this file is included by default. It is optional and its default value is `true`.
+
 ## Commands
 
 Here's details about console commands:

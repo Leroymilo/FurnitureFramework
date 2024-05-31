@@ -19,6 +19,7 @@ If you came here to update your Furniture Pack to the latest format version, che
 
 What parts of Furniture are customizable with this Framework:
 - Display Name (translation not supported yet)
+- Custom Description
 - Default Price
 - Custom Rotations
 - Custom Bounding Box Size
@@ -42,20 +43,18 @@ What parts of Furniture are customizable with this Framework:
 - Animated base Sprite and Layers
 - Support for some special Furniture (Dresser, TV, Bed)
 - Support for Rugs and Wall-mounted Furniture
+- Support for configurable includes
 
 # Thanks
 
 Huge thanks to:
-- @LynnNexus for testing, feedback and bug report
-- @atravita for the initial idea to implement multiple slots per Furniture
 - The Stardew Valley modding community for all their help and support
+- @LynnNexus for testing, feedback and bug report
+- @atravita for the initial idea on how to implement multiple slots per Furniture
 
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Custom Description
-- Support "includes"			@nova
-- Config-Conditional includes	@nova
 - Custom Fish Tanks
 - Custom light sources
 - Add better titles and descriptions for the json schema

@@ -23,6 +23,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 		* [Shows in Shops](#shows-in-shops)
 		* [Shop Id](#shop-id)
 	* [Variants](#variants)
+	* [Description](#description)
 	* [Animation](#animation)
 	* [Special Type](#special-type)
 	* [Placement Type](#placement-type)
@@ -203,6 +204,10 @@ These Offsets are **integer** [Vectors](https://github.com/Leroymilo/FurnitureFr
 Note: this will create as many separate Furniture as offsets are given, but all their properties will be identical, including their Display Name. However, you can use the `{{RectVariant}}` token in the Display Name field so that it will be replaced with the variant key (see the `cat_statue` Furniture in the Example Pack).  
 
 Note 2: you can also use a list of Source Rect Offsets instead of a dictionary but the `{{RectVariant}}` token will be empty.
+
+### Description
+
+The description of the Furniture that will be displayed in the game. If this is not set, the game will use one of the default descriptions that depends on the [placement restriction](#placement-restriction) of the Furniture (like vanilla Furniture have).
 
 ### Animation
 
