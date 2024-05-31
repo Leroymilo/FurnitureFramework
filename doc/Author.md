@@ -12,6 +12,7 @@ This tutorial and documentation uses the [Example Pack](https://github.com/Leroy
 * [Content](#content)
 	* [Format](#format)
 	* [Furniture](#furniture)
+	* [Included](#included)
 * [Commands](#commands)
 * [Mixed Content Pack](#mixed-content-pack)
 
