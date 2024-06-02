@@ -138,7 +138,7 @@
 
 					"Special Type": {
 						"type": "string",
-						"enum": [ "None", "Dresser", "TV", "Bed" ]
+						"enum": [ "None", "Dresser", "TV", "Bed", "FishTank" ]
 					},
 
 					"Placement Type": {
@@ -266,6 +266,14 @@
 							},
 							"required": [ "Source Image", "Emission Interval", "Spawn Rect" ]
 						}
+					},
+
+					"Screen Position": {
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+					},
+
+					"Screen Scale": {
+						"type": "number"
 					},
 
 					"Bed Spot": {
