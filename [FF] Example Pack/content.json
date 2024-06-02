@@ -269,6 +269,31 @@
 			"Source Rect": {"X": 0, "Y": 0, "Width": 48, "Height": 32},	// in pixels
 
 			"Shows in Shops": ["{{ModID}}.custom_catalogue"]
+		},
+
+		"{{ModID}}.fishtank_test": {
+			"Display Name": "Fish-Tank Test",
+			"Description": "A Fish tank to test Custom Fish tanks",
+
+			"Rotations": 1,
+			"Collisions": {"Width": 4, "Height": 1},
+
+			"Placement Restriction": 2,
+
+			"Source Image": "assets/fish_tank.png",
+			"Source Rect": {"X": 0, "Y": 0, "Width": 64, "Height": 48},
+
+			"Layers": [
+				{
+					"Source Rect": {"X": 64, "Y": 0, "Width": 64, "Height": 48},
+					"Depth": {"Tile": 0, "Sub": 1000}
+				}
+			],
+
+			"Shows in Shops": ["{{ModID}}.custom_catalogue"],
+
+			"Special Type": "FishTank",
+			"Fish Area": {"X": 1, "Y": 16, "Width": 62, "Height": 25}
 		}
 	},
 

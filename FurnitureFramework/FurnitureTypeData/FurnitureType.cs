@@ -384,8 +384,8 @@ namespace FurnitureFramework
 			if(JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
 			{
 				fish_area = new Rectangle(
-					read_fish_area.Size * new Point(4),
-					read_fish_area.Location * new Point(4)
+					read_fish_area.Location * new Point(4),
+					read_fish_area.Size * new Point(4)
 				);
 			}
 
@@ -526,37 +526,10 @@ namespace FurnitureFramework
 			);
 		}
 
-		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
-		{
-			int rot = furniture.currentRotation.Value;
-			Rectangle bounding_box = furniture.boundingBox.Value;
-			Rectangle source_rect = source_rects[rot].Clone();
-
-			Point position = new(
-				bounding_box.X,
-				bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height)
-			);
-			Point size = source_rect.Size * new Point(4);
-
-			if (fish_area is null)
-			{
-				result = new Rectangle(
-					position + new Point(4, 64),
-					size - new Point(8, 92)
-				);
-			}
-
-			else
-			{
-				result = fish_area.Value.Clone();
-				result.Location += position;
-			}
-		}
-
 		private void draw_fish_tank(FishTankFurniture furniture, SpriteBatch sprite_batch, float alpha)
 		{
 			// Code copied from FishTankFurniture.draw
-			
+
 			for (int i = 0; i < furniture.tankFish.Count; i++)
 			{
 				TankFish tankFish = furniture.tankFish[i];
@@ -1081,6 +1054,35 @@ namespace FurnitureFramework
 			{
 				furniture.modData["FF.checked_bed_tile"] = "false";
 				result = false;
+			}
+		}
+
+		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
+		{
+			int rot = furniture.currentRotation.Value;
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			Rectangle source_rect = source_rects[rot].Clone();
+
+			Point position = new(
+				bounding_box.X,
+				bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height)
+			);
+			Point size = source_rect.Size * new Point(4);
+
+			if (fish_area is null)
+			{
+				result = new Rectangle(
+					position + new Point(4, 64),
+					size - new Point(8, 92)
+				);
+			}
+
+			else
+			{
+				result = new Rectangle(
+					position + fish_area.Value.Location,
+					fish_area.Value.Size
+				);
 			}
 		}
 
