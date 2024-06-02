@@ -41,7 +41,7 @@ What parts of Furniture are customizable with this Framework:
 - Custom Sound Effects
 - Custom Particles
 - Animated base Sprite and Layers
-- Support for some special Furniture (Dresser, TV, Bed)
+- Support for special Furniture (Dresser, TV, Bed, FishTank)
 - Support for Rugs and Wall-mounted Furniture
 - Support for configurable includes
 
@@ -55,7 +55,6 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Custom Fish Tanks
 - Custom light sources
 - Add better titles and descriptions for the json schema
 - Support for i18n translations (I have no idea how to do this)

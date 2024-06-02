@@ -236,12 +236,9 @@ This kind of replace the "Type" field in the vanilla Furniture data. It's a stri
 - Dresser
 - [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/TV.md)
 - [Bed](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/Bed.md)
+- [FishTank](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/FishTank.md)
 
 Some Special Types have their own documentation linked in this list for extra info.
-
-Other types that I need to add:
-- FishTank
-- RandomPlant
 
 ### Placement Type
 
