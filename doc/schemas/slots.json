@@ -31,7 +31,8 @@
 				"type": "string",
 				"description": "See here for a list of valid colors https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties."
 			}
-		}
-	},
-	"required": [ "Area" ]
+		},
+		"required": [ "Area" ],
+		"additionalProperties": false
+	}
 }
