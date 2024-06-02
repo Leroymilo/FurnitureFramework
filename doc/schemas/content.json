@@ -270,6 +270,10 @@
 
 					"Bed Spot": {
 						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+					},
+
+					"Fish Area": {
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ],

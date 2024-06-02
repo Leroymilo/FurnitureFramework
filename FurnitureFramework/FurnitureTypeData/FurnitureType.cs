@@ -16,7 +16,7 @@ namespace FurnitureFramework
 		Dresser,
 		TV,
 		Bed,
-		// FishTank,
+		FishTank,
 		// RandomizedPlant
 	}
 
@@ -75,6 +75,7 @@ namespace FurnitureFramework
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
 		Point bed_spot = new(1);
+		Rectangle? fish_area = null;
 
 		public readonly string? description;
 
@@ -380,6 +381,14 @@ namespace FurnitureFramework
 
 			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
 
+			if(JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
+			{
+				fish_area = new Rectangle(
+					read_fish_area.Size * new Point(4),
+					read_fish_area.Location * new Point(4)
+				);
+			}
+
 			#endregion
 		
 			description = JsonParser.parse<string?>(data.GetValue("Description"), null);
@@ -517,11 +526,107 @@ namespace FurnitureFramework
 			);
 		}
 
+		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
+		{
+			int rot = furniture.currentRotation.Value;
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			Rectangle source_rect = source_rects[rot].Clone();
+
+			Point position = new(
+				bounding_box.X,
+				bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height)
+			);
+			Point size = source_rect.Size * new Point(4);
+
+			if (fish_area is null)
+			{
+				result = new Rectangle(
+					position + new Point(4, 64),
+					size - new Point(8, 92)
+				);
+			}
+
+			else
+			{
+				result = fish_area.Value.Clone();
+				result.Location += position;
+			}
+		}
+
+		private void draw_fish_tank(FishTankFurniture furniture, SpriteBatch sprite_batch, float alpha)
+		{
+			// Code copied from FishTankFurniture.draw
+			
+			for (int i = 0; i < furniture.tankFish.Count; i++)
+			{
+				TankFish tankFish = furniture.tankFish[i];
+				float num = Utility.Lerp(
+					furniture.GetFishSortRegion().Y,
+					furniture.GetFishSortRegion().X,
+					tankFish.zPosition / 20f
+				);
+				num += 1E-07f * i;
+				tankFish.Draw(sprite_batch, alpha, num);
+			}
+
+			for (int j = 0; j < furniture.floorDecorations.Count; j++)
+			{
+				KeyValuePair<Rectangle, Vector2>? pair = furniture.floorDecorations[j];
+				if (pair is not null)
+				{
+					Vector2 pos = pair.Value.Value;
+					Rectangle key = pair.Value.Key;
+					float layerDepth = Utility.Lerp(
+						furniture.GetFishSortRegion().Y,
+						furniture.GetFishSortRegion().X,
+						pos.Y / 20f
+					) - 1E-06f;
+					sprite_batch.Draw(
+						furniture.GetAquariumTexture(),
+						Game1.GlobalToLocal(
+							new Vector2(
+								furniture.GetTankBounds().Left + pos.X * 4f,
+								furniture.GetTankBounds().Bottom - 4 - pos.Y * 4f
+							)
+						),
+						key, Color.White * alpha, 0f,
+						new Vector2(key.Width / 2, key.Height - 4),
+						4f, SpriteEffects.None, layerDepth
+					);
+				}
+			}
+
+			foreach (Vector4 bubble in furniture.bubbles)
+			{
+				float layerDepth2 = Utility.Lerp(
+					furniture.GetFishSortRegion().Y,
+					furniture.GetFishSortRegion().X,
+					bubble.Z / 20f
+				) - 1E-06f;
+				sprite_batch.Draw(
+					furniture.GetAquariumTexture(),
+					Game1.GlobalToLocal(
+						new Vector2(
+							furniture.GetTankBounds().Left + bubble.X,
+							furniture.GetTankBounds().Bottom - 4 - bubble.Y - bubble.Z * 4f
+						)
+					),
+					new Rectangle(0, 240, 16, 16),
+					Color.White * alpha,
+					0f, new Vector2(8f, 8f), 4f * bubble.W,
+					SpriteEffects.None, layerDepth2
+				);
+			}
+		}
+
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
 			int rot = furniture.currentRotation.Value;
 
 			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
+
+			if (furniture is FishTankFurniture fish_tank)
+				draw_fish_tank(fish_tank, sprite_batch, alpha);
 
 			SpriteEffects effects = SpriteEffects.None;
 			Color color = Color.White * alpha;
