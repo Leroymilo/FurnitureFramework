@@ -287,7 +287,7 @@ namespace FurnitureFramework
 			shops.Clear();
 			foreach (FurnitureType type in read_types)
 			{
-				if (type_ids.ContainsKey(type.id))
+				if (type_ids.ContainsKey(type.id) && type_ids[type.id] != UID)
 				{
 					ModEntry.log($"Duplicate Furniture: {type.id}, skipping Furniture.", LogLevel.Warn);
 					continue;
@@ -423,13 +423,17 @@ namespace FurnitureFramework
 		{
 			bool found = false;
 
-			found |= types.TryGetValue(f_id, out type);
-
+			// prioritize included files to overload definition
 			foreach (IncludedPack sub_pack in included_packs)
 			{
-				if (found) break;
 				if (!sub_pack.enabled) continue;
 				found |= sub_pack.pack.try_get_type_pack(f_id, ref type);
+				if (found) break;
+			}
+
+			if (!found)
+			{
+				found |= types.TryGetValue(f_id, out type);
 			}
 
 			return found;
