@@ -200,12 +200,63 @@ namespace FurnitureFramework
 			#region Furniture
 
 			JToken? fs_token = data.GetValue("Furniture");
-			if (fs_token is not JObject fs_object)
+			if (fs_token is JObject fs_object)
 			{
-				ModEntry.log("Missing or invalid \"Furniture\" field in content.json, skipping Furniture Pack.", LogLevel.Error);
+				read_furniture(fs_object);
+			}
+
+			#endregion
+
+			#region Includes
+
+			JToken? includes_token = data.GetValue("Included");
+			if (includes_token is JObject includes_obj)
+			{
+				included_packs.Clear();
+				foreach (JProperty property in includes_obj.Properties())
+				{
+					if (property.Value is not JObject include_obj)
+						continue;
+					
+					IncludedPack included_pack = new(content_pack, property.Name, include_obj);
+					if (included_pack.is_valid)
+						included_packs.Add(included_pack);
+				}
+			}
+
+			#endregion
+
+			if (types.Count == 0 && included_packs.Count == 0)
+			{
+				ModEntry.log("This Furniture Pack is empty!", LogLevel.Warn);
 				return;
 			}
 
+			#region Config
+
+			if (path == DEFAULT_PATH)
+			{
+				JObject? config_data = null;
+				try
+				{
+					config_data = content_pack.ModContent.Load<JObject>(CONFIG_PATH);
+				}
+				catch (ContentLoadException)
+				{
+					save_config();
+				}
+
+				if (config_data is not null)
+					read_config(config_data);
+			}
+
+			#endregion
+
+			is_valid = true;
+		}
+
+		private void read_furniture(JObject fs_object)
+		{
 			List<FurnitureType> read_types = new();
 			foreach((string key, JToken? f_data) in fs_object)
 			{
@@ -236,7 +287,7 @@ namespace FurnitureFramework
 			shops.Clear();
 			foreach (FurnitureType type in read_types)
 			{
-				if (type_ids.ContainsKey(type.id))
+				if (type_ids.ContainsKey(type.id) && type_ids[type.id] != UID)
 				{
 					ModEntry.log($"Duplicate Furniture: {type.id}, skipping Furniture.", LogLevel.Warn);
 					continue;
@@ -263,49 +314,6 @@ namespace FurnitureFramework
 					shops[shop_id].Add(type.id);
 				}
 			}
-
-			#endregion
-
-			#region Includes
-
-			JToken? includes_token = data.GetValue("Included");
-			if (includes_token is JObject includes_obj)
-			{
-				included_packs.Clear();
-				foreach (JProperty property in includes_obj.Properties())
-				{
-					if (property.Value is not JObject include_obj)
-						continue;
-					
-					IncludedPack included_pack = new(content_pack, property.Name, include_obj);
-					if (included_pack.is_valid)
-						included_packs.Add(included_pack);
-				}
-			}
-
-			#endregion
-
-			#region Config
-
-			if (path == DEFAULT_PATH)
-			{
-				JObject? config_data = null;
-				try
-				{
-					config_data = content_pack.ModContent.Load<JObject>(CONFIG_PATH);
-				}
-				catch (ContentLoadException)
-				{
-					save_config();
-				}
-
-				if (config_data is not null)
-					read_config(config_data);
-			}
-
-			#endregion
-
-			is_valid = true;
 		}
 
 		private FurniturePack(IContentPack pack, string path = DEFAULT_PATH)
@@ -415,13 +423,17 @@ namespace FurnitureFramework
 		{
 			bool found = false;
 
-			found |= types.TryGetValue(f_id, out type);
-
+			// prioritize included files to overload definition
 			foreach (IncludedPack sub_pack in included_packs)
 			{
-				if (found) break;
 				if (!sub_pack.enabled) continue;
 				found |= sub_pack.pack.try_get_type_pack(f_id, ref type);
+				if (found) break;
+			}
+
+			if (!found)
+			{
+				found |= types.TryGetValue(f_id, out type);
 			}
 
 			return found;
