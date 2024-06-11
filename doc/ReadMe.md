@@ -67,3 +67,5 @@ What I don't plan on adding, but I can work on if someone asks for it:
 # Known Issues
 
 - Default Slots Debug Color does not apply until Pack reload or restart.
+- Custom beds are forced into the "large bed" type so they cannot be placed in the un-upgraded farmhouse (will fix by adding a "Bed Type" field).
+- Rugs with rotations will skip the 3rd rotation (fixed in next update)
