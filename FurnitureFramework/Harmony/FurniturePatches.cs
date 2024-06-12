@@ -89,6 +89,27 @@ namespace FurnitureFramework.Patches
 
 		#endregion
 
+		#region updateRotation
+
+		internal static bool updateRotation(Furniture __instance)
+		{
+			try
+			{
+				if (!FurniturePack.try_get_type(__instance, out FurnitureType? type))
+					return true; // run original logic
+
+				type.updateRotation(__instance);
+				return false; // don't run original logic
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(updateRotation)}:\n{ex}", LogLevel.Error);
+				return true; // run original logic
+			}
+		}
+
+		#endregion
+
 		#region clicked
 
 		internal static bool clicked(
@@ -312,7 +333,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 							break;
 						case SpecialType.Bed:
 							__result = new BedFurniture(itemId, position.Value)
-								{ bedType = BedFurniture.BedType.Double };
+								{ bedType = type.bed_type };
 							break;
 						case SpecialType.FishTank:
 							__result = new FishTankFurniture(itemId, position.Value);
@@ -328,23 +349,6 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 
 			return __result;
-		}
-
-		#endregion
-
-		#region updateRotation
-
-		internal static void updateRotation(Furniture __instance)
-		{
-			try
-			{
-				if (FurniturePack.try_get_type(__instance, out FurnitureType? type))
-					type.updateRotation(__instance);
-			}
-			catch (Exception ex)
-			{
-				ModEntry.log($"Failed in {nameof(updateRotation)}:\n{ex}", LogLevel.Error);
-			}
 		}
 
 		#endregion

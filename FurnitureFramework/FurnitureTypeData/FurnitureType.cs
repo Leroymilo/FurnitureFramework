@@ -11,6 +11,8 @@ using StardewValley.Objects;
 namespace FurnitureFramework
 {
 
+	using BedType = BedFurniture.BedType;
+
 	enum SpecialType {
 		None,
 		Dresser,
@@ -75,6 +77,7 @@ namespace FurnitureFramework
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
 		Point bed_spot = new(1);
+		public readonly BedType bed_type = BedType.Double;
 		Rectangle? fish_area = null;
 
 		public readonly string? description;
@@ -280,6 +283,17 @@ namespace FurnitureFramework
 
 			List<string> rot_names = parse_rotations(data.GetValue("Rotations"));
 
+
+			if (mod_id == "cranie")
+			{
+				ModEntry.log($"{rotations} rotations");
+				ModEntry.log($"{rot_names.Count} rotation names:");
+				foreach (string name in rot_names)
+				{
+					ModEntry.log($"\t{name}");
+				}
+			}
+
 			#endregion
 
 			#region textures & source rects
@@ -291,9 +305,9 @@ namespace FurnitureFramework
 			token = data.GetValue("Source Rect");
 			List<Rectangle?> n_source_rects = new();
 			if (!JsonParser.try_parse(token, rot_names, ref n_source_rects))
-				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {id}.");
+				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {this.id}.");
 			if (!JsonParser.try_rm_null(n_source_rects, ref source_rects))
-				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {id}.");
+				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {this.id}.");
 			
 			for (int i = 0; i < source_rects.Count; i++)
 			{
@@ -389,6 +403,12 @@ namespace FurnitureFramework
 				);
 			}
 
+			bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
+			if (!Enum.IsDefined(bed_type)) {
+				bed_type = BedType.Double;
+				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
+			}
+
 			#endregion
 		
 			description = JsonParser.parse<string?>(data.GetValue("Description"), null);
@@ -447,9 +467,9 @@ namespace FurnitureFramework
 		{
 			string result = display_name;
 			result += $"/{type}";
-			result += $"/{source_rects[0].Width/16} {source_rects[0].Height/16}";
+			result += $"/{icon_rect.Width/16} {icon_rect.Height/16}";
 			result += $"/-1";	// overwritten by updateRotation
-			result += $"/-1";	// overwritten by updateRotation
+			result += $"/4";	// overwritten by updateRotation
 			result += $"/{price}";
 			result += $"/{placement_rules}";
 			result += $"/{display_name}";
@@ -467,9 +487,16 @@ namespace FurnitureFramework
 		public void rotate(Furniture furniture)
 		{
 			int rot = furniture.currentRotation.Value;
+
+			if (mod_id == "cranie")
+				ModEntry.log($"previous rotation: {rot}");
+			
 			rot = (rot + 1) % rotations;
 
 			if (rot < 0) rot = 0;
+
+			if (mod_id == "cranie")
+				ModEntry.log($"new rotation: {rot}");
 
 			furniture.currentRotation.Value = rot;
 			furniture.updateRotation();
@@ -496,6 +523,11 @@ namespace FurnitureFramework
 
 		#region Drawing
 
+		public Point get_source_rect_size(int rot)
+		{
+			return source_rects[rot].Size;
+		}
+
 		public void drawAtNonTileSpot(
 			Furniture furniture, SpriteBatch sprite_batch,
 			Vector2 position, float depth, float alpha = 1f
@@ -503,7 +535,7 @@ namespace FurnitureFramework
 		{
 			int rot = furniture.currentRotation.Value;
 
-			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
+			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what this property is
 
 			SpriteEffects effects = SpriteEffects.None;
 			Color color = Color.White * alpha;
@@ -596,7 +628,7 @@ namespace FurnitureFramework
 		{
 			int rot = furniture.currentRotation.Value;
 
-			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what's this property
+			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what this property is
 
 			if (furniture is FishTankFurniture fish_tank)
 				draw_fish_tank(fish_tank, sprite_batch, alpha);
@@ -620,7 +652,7 @@ namespace FurnitureFramework
 				source_rect.Location += c_anim_offset;
 			}
 
-			// computing common depth :
+			// computing common depth
 			if (p_type == PlacementType.Rug) depth = 2E-09f + furniture.TileLocation.Y;
 			else
 			{
@@ -908,10 +940,11 @@ namespace FurnitureFramework
 
 			if (obj_inst is Furniture furn)
 			{
+				Point max_size = slots.get_max_size(rot, slot_index);
 				Point size = furn.boundingBox.Value.Size / new Point(64);
-				if (size.X > 1 || size.Y > 1)
+				if (size.X > max_size.X || size.Y > max_size.Y)
 					return false;
-				// cannot place furniture larger than 1x1
+				// cannot place furniture larger than max_size
 			}
 
 			obj_inst.Location = furniture.Location;

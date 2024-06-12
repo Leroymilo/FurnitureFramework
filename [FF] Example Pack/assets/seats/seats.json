@@ -499,25 +499,29 @@
 				"Down": [
 					{
 						"Area": {"X": 48, "Y": 43, "Width": 32, "Height": 13},
-						"Depth": 2
+						"Depth": 2,
+						"Max Size": {"X": 2, "Y": 1}
 					}
 				],
 				"Right": [
 					{
 						"Area": {"X": 64, "Y": 41, "Width": 16, "Height": 31},
-						"Depth": 2
+						"Depth": 2,
+						"Max Size": {"X": 1, "Y": 2}
 					}
 				],
 				"Up": [
 					{
 						"Area": {"X": 48, "Y": 11, "Width": 32, "Height": 13},
-						"Depth": 0
+						"Depth": 0,
+						"Max Size": {"X": 2, "Y": 1}
 					}
 				],
 				"Left": [
 					{
 						"Area": {"X": 0, "Y": 25, "Width": 16, "Height": 31},
-						"Depth": 1
+						"Depth": 1,
+						"Max Size": {"X": 1, "Y": 2}
 					}
 				]
 				// The Area rectangle is in pixels, and is relative to the sprite for each rotation.

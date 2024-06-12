@@ -13,7 +13,7 @@ Here's a list of published mods using this Framework that you can use as example
 
 If you are a C# mod author and need an API for this mod, you can either make it and ask for a pull request, or ping me on the SV discord server, I should be able to make it for you.
 
-If you came here to update your Furniture Pack to the latest format version, check the [Format changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Format%20changelogs.md).
+[CHANGELOGS](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Changelogs.md)
 
 # Features
 
