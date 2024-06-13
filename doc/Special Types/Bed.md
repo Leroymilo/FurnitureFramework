@@ -9,7 +9,7 @@ The Bed Spot determines where the player will appear when waking up. It is an in
 
 ## Bed Type
 
-The bed type can be "Double" or "Simple", a simple bed can be placed in the un-upgraded Farmhouse but will not work correctly with spouses in the upgraded Farmhouse, while a double bed cannot be placed in the un-upgraded Farmhouse.  
+The bed type can be "Double" or "Single", a simple bed can be placed in the un-upgraded Farmhouse but will not work correctly with spouses in the upgraded Farmhouse, while a double bed cannot be placed in the un-upgraded Farmhouse.  
 You can also use the the bed type "Child" to make a bed that children can sleep into.
 
 ## Other Info
