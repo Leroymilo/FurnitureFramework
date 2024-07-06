@@ -200,6 +200,10 @@
 						"type": "boolean"
 					},
 
+					"Time Based": {
+						"type": "boolean"
+					},
+
 					"Sounds": {
 						"type": "array",
 						"items": {
