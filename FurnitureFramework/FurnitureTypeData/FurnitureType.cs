@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
+using StardewValley.GameData.HomeRenovations;
 using StardewValley.Locations;
 using StardewValley.Objects;
 
@@ -42,7 +43,7 @@ namespace FurnitureFramework
 		int placement_rules;
 		int rotations;
 		bool can_be_toggled = false;
-
+		bool time_based = false;
 		
 		SeasonalTexture texture;
 		List<Rectangle> source_rects = new();
@@ -62,7 +63,7 @@ namespace FurnitureFramework
 		public readonly bool is_table = false;
 		Sounds sounds;
 		Particles particles;
-
+		LightSources light_sources;
 
 		PlacementType p_type = PlacementType.Normal;
 
@@ -78,7 +79,9 @@ namespace FurnitureFramework
 		float screen_scale = 4;
 		Point bed_spot = new(1);
 		public readonly BedType bed_type = BedType.Double;
+		Rectangle bed_area;
 		Rectangle? fish_area = null;
+		public readonly bool disable_fishtank_light = false;
 
 		public readonly string? description;
 
@@ -283,17 +286,6 @@ namespace FurnitureFramework
 
 			List<string> rot_names = parse_rotations(data.GetValue("Rotations"));
 
-
-			if (mod_id == "cranie")
-			{
-				ModEntry.log($"{rotations} rotations");
-				ModEntry.log($"{rot_names.Count} rotation names:");
-				foreach (string name in rot_names)
-				{
-					ModEntry.log($"\t{name}");
-				}
-			}
-
 			#endregion
 
 			#region textures & source rects
@@ -349,6 +341,8 @@ namespace FurnitureFramework
 			slots = Slots.make_slots(data.GetValue("Slots"), rot_names);
 			is_table = slots.has_slots;
 
+			light_sources = new(pack, data.GetValue("Light Sources"), rot_names);
+
 			sounds = new(data.GetValue("Sounds"));
 
 			particles = new(pack, data.GetValue("Particles"));
@@ -368,6 +362,7 @@ namespace FurnitureFramework
 			#endregion
 
 			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
+			time_based = JsonParser.parse(data.GetValue("Time Based"), false);
 
 			#region Placement Type
 
@@ -395,19 +390,28 @@ namespace FurnitureFramework
 
 			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
 
-			if(JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
+			bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
+			if (!Enum.IsDefined(bed_type)) {
+				bed_type = BedType.Double;
+				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
+			}
+			if (!JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
+			{
+				bed_area = new Rectangle(
+					new Point(16, 16),
+					collisions.get_size(0) * new Point(16) - new Point(16*2)
+				);
+			}
+
+			if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
 			{
 				fish_area = new Rectangle(
 					read_fish_area.Location * new Point(4),
 					read_fish_area.Size * new Point(4)
 				);
 			}
+			disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
 
-			bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
-			if (!Enum.IsDefined(bed_type)) {
-				bed_type = BedType.Double;
-				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
-			}
 
 			#endregion
 		
@@ -487,16 +491,8 @@ namespace FurnitureFramework
 		public void rotate(Furniture furniture)
 		{
 			int rot = furniture.currentRotation.Value;
-
-			if (mod_id == "cranie")
-				ModEntry.log($"previous rotation: {rot}");
-			
 			rot = (rot + 1) % rotations;
-
 			if (rot < 0) rot = 0;
-
-			if (mod_id == "cranie")
-				ModEntry.log($"new rotation: {rot}");
 
 			furniture.currentRotation.Value = rot;
 			furniture.updateRotation();
@@ -543,6 +539,9 @@ namespace FurnitureFramework
 
 			if (furniture.IsOn)
 				source_rect.X += source_rect.Width;
+
+			if (furniture.timeToTurnOnLights() && time_based)
+				source_rect.Y += source_rect.Height;
 
 			if (is_animated)
 			{
@@ -643,6 +642,9 @@ namespace FurnitureFramework
 			if (furniture.IsOn)
 				source_rect.X += source_rect.Width;
 
+			if (furniture.timeToTurnOnLights() && time_based)
+				source_rect.Y += source_rect.Height;
+
 			Point c_anim_offset = Point.Zero;
 			if (is_animated)
 			{
@@ -696,7 +698,15 @@ namespace FurnitureFramework
 				layers.draw(
 					sprite_batch, color,
 					position, bounding_box.Top,
-					rot, furniture.IsOn, c_anim_offset
+					rot, furniture.IsOn,
+					furniture.timeToTurnOnLights() && time_based,
+					c_anim_offset
+				);
+
+				light_sources.draw_glows(
+					sprite_batch,
+					furniture.boundingBox.Value.Location.ToVector2(),
+					rot, furniture.IsOn, furniture.timeToTurnOnLights()
 				);
 			}
 
@@ -732,6 +742,16 @@ namespace FurnitureFramework
 				Vector2 draw_pos = new(bounding_box.X, bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height));
 				sprite_batch.DrawString(Game1.smallFont, furniture.QualifiedItemId, Game1.GlobalToLocal(Game1.viewport, draw_pos), Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 			}
+		}
+
+		private void draw_lighting(Furniture furniture, SpriteBatch sprite_batch)
+		{
+			light_sources.draw_lights(
+				sprite_batch,
+				furniture.boundingBox.Value.Location.ToVector2(),
+				furniture.currentRotation.Value,
+				furniture.IsOn, furniture.timeToTurnOnLights()
+			);
 		}
 
 		#endregion
@@ -1061,20 +1081,19 @@ namespace FurnitureFramework
 			if (layer_name != "Back" || property_name != "TouchAction")
 				return;
 
-			int rot = furniture.currentRotation.Value;
-
-			Point tile_pos = furniture.TileLocation.ToPoint();
-			Point size = collisions.get_size(rot);
-			if (size.X < 3 || size.Y < 3) return;
 
 			if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
 				furniture.modData["FF.checked_bed_tile"] = "false";
 
-			if (
-				tile_x > tile_pos.X && tile_y > tile_pos.Y &&
-				tile_x < tile_pos.X + size.X - 1 &&
-				tile_y < tile_pos.Y + size.Y - 1
-			)
+			Rectangle tile_col = new Rectangle(
+				tile_x, tile_y, 1, 1
+			);
+			Rectangle bed_col = new Rectangle(
+				furniture.TileLocation.ToPoint() + bed_area.Location,
+				bed_area.Size
+			);
+
+			if (tile_col.Intersects(bed_col))
 			{
 				if (furniture.modData["FF.checked_bed_tile"] != "true")
 				{
@@ -1082,6 +1101,7 @@ namespace FurnitureFramework
 					property_value = "Sleep";
 					result = true;
 				}
+				else result = false;
 			}
 			else
 			{
@@ -1157,6 +1177,17 @@ namespace FurnitureFramework
 			return is_clicked(furniture, pos.X, pos.Y);
 		}
 
+		public static void draw_lighting(SpriteBatch sprite_batch)
+		{
+			foreach (Furniture furniture in Game1.currentLocation.furniture)
+			{
+				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				{
+					type.draw_lighting(furniture, sprite_batch);
+				}
+			}
+		}
+
 		#endregion
 
 		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
@@ -1199,6 +1230,7 @@ namespace FurnitureFramework
 
 		public void on_removed(Furniture furniture)
 		{
+			furniture.modData["FF.particle_timers"] = "[]";
 			furniture.heldObject.Value = null;
 		}
 

@@ -51,3 +51,8 @@ Added "Bed Type" field ("Double" or "Simple") because double beds can't be place
 **Work In Progress**
 
 Custom Light Sources.
+
+Added an option to disable the light of Custom Fishtanks
+Added an option to define the area of the bed where the player get prompted to sleep.
+
+transpile any new instance of screen in TV to correct the depth (-8 instead of -1).

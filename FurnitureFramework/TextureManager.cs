@@ -7,26 +7,26 @@ namespace FurnitureFramework
 	{
 		public static readonly Dictionary<string, Texture2D> textures = new();
 
-		public static Texture2D load(IModContentHelper content_helper, string path)
+		public static Texture2D load(IModContentHelper pack_helper, string path)
 		{
+			if (textures.ContainsKey(path)) return textures[path];
+			
+			Texture2D result;
 
-			string true_path;
-			if (path.StartsWith("FF."))
+			if (path.StartsWith("FF/"))
 			{
-				content_helper = ModEntry.get_helper().ModContent;
-				true_path = path[3..];
+				result = ModEntry.get_helper().ModContent.Load<Texture2D>(path[3..]);
 			}
-			else
+			else if (path.StartsWith("Content/"))
 			{
-				true_path = path;
+				string fixed_path = Path.ChangeExtension(path[8..], null);
+				result = ModEntry.get_helper().GameContent.Load<Texture2D>(fixed_path);
 			}
+			else result = pack_helper.Load<Texture2D>(path);
 
-			if (!textures.ContainsKey(path))
-			{
-				textures[path] = content_helper.Load<Texture2D>(true_path);
-				ModEntry.log($"loading texture at {true_path}", LogLevel.Trace);
-			}
-			return textures[path];
+			ModEntry.log($"loaded texture at {path}", LogLevel.Trace);
+			textures[path] = result;
+			return result;
 		}
 	}
 }

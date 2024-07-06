@@ -291,6 +291,10 @@
 						"enum": [ "Single", "Double", "Child" ]
 					},
 
+					"Bed Area": {
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+					},
+
 					"Fish Area": {
 						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},

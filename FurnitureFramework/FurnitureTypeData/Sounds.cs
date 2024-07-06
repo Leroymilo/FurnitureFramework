@@ -1,5 +1,7 @@
+using Microsoft.Xna.Framework.Audio;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
 
 namespace FurnitureFramework
@@ -95,6 +97,7 @@ namespace FurnitureFramework
 				)
 				{
 					location.playSound(sound.cue_name);
+					// ICue cue = Game1.soundBank.GetCue(sound.cue_name);
 				}
 			}
 		}

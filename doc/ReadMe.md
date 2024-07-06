@@ -64,6 +64,9 @@ What I don't plan on adding, but I can work on if someone asks for it:
 - Custom Randomized Plant
 - More customization for Particles (make some fields directionality, list of scales and list of scale changes)
 
+What can be added but I don't have the knowledge/courage to do it any-time soon:
+- Music (sound) stop when Furniture turned off/on
+
 # Known Issues
 
 - Default Slots Debug Color does not apply until Pack reload or restart.

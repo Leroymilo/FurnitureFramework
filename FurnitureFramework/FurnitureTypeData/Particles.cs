@@ -8,8 +8,6 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework
 {
-	using SDColor = System.Drawing.Color;
-
 	class Particles
 	{
 		#region ParticleData
@@ -123,9 +121,7 @@ namespace FurnitureFramework
 				scale = JsonParser.parse(particle_obj.GetValue("Scale"), 1f);
 				scale_change = JsonParser.parse(particle_obj.GetValue("Scale Change"), 0f);
 
-				string color_name = JsonParser.parse(particle_obj.GetValue("Color"), "White");
-				SDColor c_color = SDColor.FromName(color_name);
-				color = new(c_color.R, c_color.G, c_color.B);
+				color = JsonParser.parse_color(particle_obj.GetValue("Color"), "White");
 				alpha = JsonParser.parse(particle_obj.GetValue("Alpha"), 1f);
 				alpha_fade = JsonParser.parse(particle_obj.GetValue("Alpha Fade"), 0f);
 

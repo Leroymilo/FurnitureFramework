@@ -284,6 +284,8 @@ namespace FurnitureFramework
 				{
 					type.on_placed(furniture);
 				}
+
+				log($"{furniture.Name} added at {furniture.TileLocation}");
 			}
 			
 			foreach (Furniture furniture in e.Removed)

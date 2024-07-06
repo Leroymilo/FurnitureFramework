@@ -3,6 +3,8 @@ using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework
 {
+	using SDColor = System.Drawing.Color;
+
 	static class JsonParser
 	{
 		public static bool try_parse<T>(JToken? token, ref T result)
@@ -171,6 +173,14 @@ namespace FurnitureFramework
 				result.Add(val.Value);
 			}
 			return true;
+		}
+		
+
+		public static Color parse_color(JToken? token, string default_name)
+		{
+			string color_name = parse(token, default_name);
+			SDColor c_color = SDColor.FromName(color_name);
+			return new(c_color.R, c_color.G, c_color.B);
 		}
 	}
 }
