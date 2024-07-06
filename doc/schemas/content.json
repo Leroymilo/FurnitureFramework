@@ -289,6 +289,39 @@
 
 					"Fish Area": {
 						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+					},
+
+					"Disable Fishtank Light": { "type": "boolean" },
+
+					"Light Sources": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"Position": {
+									"oneOf": [
+										{
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+										},
+										{
+											"type": "object",
+											"additionalProperties": {
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
+											}
+										}
+									]
+								},
+								"Source Image": { "type": "string" },
+								"Mode": {
+									"type": "string",
+									"enum": [ "always_on", "when_on", "when_off", "when_dark_out", "when_bright_out" ]
+								},
+								"Radius": { "type": "number" },
+								"Is Glow": { "type": "boolean" }
+							},
+							"required": [ "Position", "Source Image" ],
+							"additionalProperties": false
+						}
 					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions" ],
