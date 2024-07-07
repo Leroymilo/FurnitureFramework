@@ -197,7 +197,8 @@
 					},
 
 					"Toggle": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "Makes your Furniture toggleable (see [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle))"
 					},
 
 					"Time Based": {
