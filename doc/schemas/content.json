@@ -198,7 +198,7 @@
 
 					"Toggle": {
 						"type": "boolean",
-						"description": "Makes your Furniture toggleable (see the <a href=\"https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle\">documentation</a>)"
+						"description": "Makes your Furniture toggleable (see the <href=https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle>documentation</href>)"
 					},
 
 					"Time Based": {
