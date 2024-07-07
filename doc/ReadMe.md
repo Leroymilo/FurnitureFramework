@@ -44,6 +44,7 @@ What parts of Furniture are customizable with this Framework:
 - Support for special Furniture (Dresser, TV, Bed, FishTank)
 - Support for Rugs and Wall-mounted Furniture
 - Support for configurable includes
+- Custom Light Sources and Glows (lamps and windows)
 
 # Thanks
 
@@ -55,7 +56,6 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Custom light sources
 - Add better titles and descriptions for the json schema
 - Support for i18n translations (I have no idea how to do this)
 - Customize StorageFurniture allowed item types.	@B
@@ -70,5 +70,3 @@ What can be added but I don't have the knowledge/courage to do it any-time soon:
 # Known Issues
 
 - Default Slots Debug Color does not apply until Pack reload or restart.
-- Custom beds are forced into the "large bed" type so they cannot be placed in the un-upgraded farmhouse (will fix by adding a "Bed Type" field).
-- Rugs with rotations will skip the 3rd rotation (fixed in next update)

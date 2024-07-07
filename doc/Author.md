@@ -46,13 +46,13 @@ This is the file where you define all your custom Furniture. Please keep in mind
 
 :warning: <span style="color:red">**WARNING**</span>: Unlike a CP Content Pack, names in this field are <span style="color:red">**CASE SENSITIVE**</span>, make sure you don't forget capital letters when writting field names or ids.
 
-It is highly recommended to use the Json Schema made for Furniture Packs (see at the very top of the content.json of the Example Pack), to setup your json validator with this Schema, you can start [here](https://json-schema.org/learn/getting-started-step-by-step#validate), but it mostly depends on what IDE/text editor you're using.
+It is highly recommended to use the Json Schema made for Furniture Packs (see at the very top of the content.json of the Example Pack), to setup your json validator with this Schema, you can start [here](https://json-schema.org/learn/getting-started-step-by-step#validate), but it mostly depends on what IDE or text editor you're using.
 
 The `content.json` file is a model with only 2 fields:
 
 ### Format
 
-The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Format changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Format%20changelogs.md). The current Format is 2.
+The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Changelogs.md). The current Format is 2.
 
 ### Furniture
 

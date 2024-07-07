@@ -34,6 +34,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Slots](#slots)
 	* [Toggle](#toggle)
 	* [Sounds](#sounds)
+	* [Light Sources](#light-sources)
 
 ## Required Fields
 
@@ -79,6 +80,8 @@ You'll just have to remember to use these names as keys when defining directiona
 
 This is the path, **relative to your mod's directory**, to the sprite-sheet to use for this Furniture. All sprites used in drawing your Furniture in the game (all rotations and layers) have to be in the same sprite-sheet. It is possible to use the same sprite-sheet for multiple Furniture.  
 <span style="color:red">It is **strongly** recommended to align all sprites on a 16x16 pixel grid</span>, because every game tile is 16x16 pixels large, not doing so will cause a lot of issues down the line.
+
+Note: In this field and any other image path, you can access files from the games assets by starting the path with "Content/", or assets from the Furniture Framework by starting with "FF/".
 
 ### Source Rect
 
@@ -281,10 +284,17 @@ Slots are where you can place items or other Furniture on a table-like Furniture
 ### Toggle
 
 This field is boolean (true or false) and will make a Furniture toggleable. "Toggleable" means that it can be turned on and off with right-click.  
-When a Furniture can be toggled, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the origin of the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
+When a Furniture can be toggled, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
 
 A good example of this is the `Custom Cauldron` Furniture in the Example Pack: you can see in its sprite-sheet that it has its base sprite in the top left corner, and a Layer in the bottom left corner, while the "On" variants of these sprites are on the right of the sprite-sheet.  
 ![Custom Cauldron sprite-sheet](https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/%5BFF%5D%20Example%20Pack/assets/cauldron.png)
+
+### Time Based
+
+This field is boolean (true or false) and will make your Furniture change when it's dark outside (whether with night or rainy weather), like windows and lamps will in the Vanilla game.  
+When a Furniture is Time Based, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (for the [base sprite](#source-rect) or for [Layers](#layers)), the Height of the Rectangle will be added to its horizontal position when it's dark outside, this way, your Furniture can change how it looks.
+
+You can see this field used in the Custom Window
 
 ### Sounds
 
@@ -293,3 +303,7 @@ With sounds, you can make your Furniture play custom sound effects when you clic
 ### Particles
 
 Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Particles.md).
+
+### Light Sources
+
+You can place Light Sources on your Furniture with this field, see the [Custom Light Sources Doc](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Light%20Sources.md).

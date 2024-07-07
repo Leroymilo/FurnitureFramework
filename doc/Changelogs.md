@@ -1,7 +1,9 @@
 
-[Go to bottom](#232)
+[Go to bottom](#24)
 
 # 2.0
+
+**Format Update**
 
 Big internal rework, changes to the Furniture definition Format:
 
@@ -48,11 +50,9 @@ Added "Bed Type" field ("Double" or "Simple") because double beds can't be place
 
 ## 2.4
 
-**Work In Progress**
-
 Custom Light Sources.
 
 Added an option to disable the light of Custom Fishtanks
 Added an option to define the area of the bed where the player get prompted to sleep.
 
-transpile any new instance of screen in TV to correct the depth (-8 instead of -1).
+It is now possible to access assets from the game files or from the Furniture Framework files by adding "Content/" or "FF/" to a Source Image path.

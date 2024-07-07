@@ -398,8 +398,8 @@ namespace FurnitureFramework
 			if (!JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
 			{
 				bed_area = new Rectangle(
-					new Point(16, 16),
-					collisions.get_size(0) * new Point(16) - new Point(16*2)
+					new Point(1),
+					collisions.get_size(0) - new Point(2)
 				);
 			}
 
