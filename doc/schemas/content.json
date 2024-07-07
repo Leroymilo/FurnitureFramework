@@ -198,11 +198,12 @@
 
 					"Toggle": {
 						"type": "boolean",
-						"description": "Makes your Furniture toggleable [doc test](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle))"
+						"description": "Makes your Furniture toggleable, see https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle"
 					},
 
 					"Time Based": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "Makes your Furniture depend on the time of the day and the weather, see https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Time-Based"
 					},
 
 					"Sounds": {
