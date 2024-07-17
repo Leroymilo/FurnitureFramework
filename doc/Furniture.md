@@ -33,6 +33,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Seats](#seats)
 	* [Slots](#slots)
 	* [Toggle](#toggle)
+ 	* [Time Based](#time-based)
 	* [Sounds](#sounds)
 	* [Light Sources](#light-sources)
 
