@@ -47,6 +47,22 @@ This is an **integer** [vector](https://github.com/Leroymilo/FurnitureFramework/
 
 This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted).
 
+## Allowed Items
+
+The Allowed Items field allows you to specify which items can be placed in a slot. This can be particularly useful for creating more specific interactions with furniture in the game. You can use either item IDs or item names in this field.
+```
+        "Allowed Items": [
+            "Copper Ore",
+            "Iron Ore",
+            "Gold Ore",
+            "Iridium Ore",
+            "334",
+            "335",
+            "336",
+            "337"
+        ]
+```
+
 # Example
 
 Here is an example of a table slot in a bigger Furniture (taken from the `living_room` Furniture of the Example Pack). I uses the Depth field.
