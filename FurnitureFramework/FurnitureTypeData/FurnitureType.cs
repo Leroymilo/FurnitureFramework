@@ -61,7 +61,8 @@ namespace FurnitureFramework
 		Seats seats;
 		Slots slots;
 		public readonly bool is_table = false;
-		Sounds sounds;
+        public readonly List<string> AllowedItems = new();
+        Sounds sounds;
 		Particles particles;
 		LightSources light_sources;
 
@@ -340,8 +341,9 @@ namespace FurnitureFramework
 
 			slots = Slots.make_slots(data.GetValue("Slots"), rot_names);
 			is_table = slots.has_slots;
+            JsonParser.try_parse(data.GetValue("Allowed Items"), ref AllowedItems);
 
-			light_sources = new(pack, data.GetValue("Light Sources"), rot_names);
+            light_sources = new(pack, data.GetValue("Light Sources"), rot_names);
 
 			sounds = new(data.GetValue("Sounds"));
 
@@ -937,28 +939,34 @@ namespace FurnitureFramework
 			return slots.get_slot(rel_pos, rot);
 		}
 
-		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
-		{
-			int rot = furniture.currentRotation.Value;
-			
-			initialize_slots(furniture, rot);
+        public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
+        {
+            int rot = furniture.currentRotation.Value;
 
-			if (who.ActiveItem is not StardewValley.Object) return false;
-			// player is not holding an object
-			
-			if (furniture.heldObject.Value is not Chest chest) return false;
-			// Furniture is not a proper initialized table
+            initialize_slots(furniture, rot);
 
-			int slot_index = get_slot(furniture, pos);
-			if (slot_index < 0) return false;
-			// No slot found at this pixel
+            if (who.ActiveItem is not StardewValley.Object objToPlace) return false;
+            // player is not holding an object
 
-			if (chest.Items[slot_index] is not null) return false;
-			// Slot already occupied
+            if (furniture.heldObject.Value is not Chest chest) return false;
+            // Furniture is not a proper initialized table
 
-			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
+            int slot_index = get_slot(furniture, pos);
+            if (slot_index < 0) return false;
+            // No slot found at this pixel
 
-			if (obj_inst is Furniture furn)
+            if (chest.Items[slot_index] is not null) return false;
+            // Slot already occupied
+
+            if (!IsItemAllowed(objToPlace))
+            {
+                Game1.showRedMessage("This item cannot be placed here.");
+                return false;
+            }
+
+            StardewValley.Object obj_inst = (StardewValley.Object)objToPlace.getOne();
+
+            if (obj_inst is Furniture furn)
 			{
 				Point max_size = slots.get_max_size(rot, slot_index);
 				Point size = furn.boundingBox.Value.Size / new Point(64);
@@ -1023,12 +1031,19 @@ namespace FurnitureFramework
 
 			return true;
 		}
+        public bool IsItemAllowed(Item item)
+        {
+            if (AllowedItems.Count == 0)
+                return true; // If no restrictions, all items are allowed
 
-		#endregion
+            return AllowedItems.Contains(item.Name) || AllowedItems.Contains(item.ParentSheetIndex.ToString());
+        }
 
-		#region Methods for Particles
+        #endregion
 
-		public void updateWhenCurrentLocation(Furniture furniture)
+        #region Methods for Particles
+
+        public void updateWhenCurrentLocation(Furniture furniture)
 		{
 			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
 			particles.update_timer(furniture, ms_time);
