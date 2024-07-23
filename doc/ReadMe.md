@@ -56,8 +56,10 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Add better titles and descriptions for the json schema
-- Support for i18n translations (I have no idea how to do this)
+- Add a way for 2 tiles wide beds to behave vanilla-like.
+- Ensure particles on save load and location change.
+- Add better titles and descriptions for the json schema.
+- Support for i18n translations.
 - Customize StorageFurniture allowed item types.	@B
 
 What I don't plan on adding, but I can work on if someone asks for it:

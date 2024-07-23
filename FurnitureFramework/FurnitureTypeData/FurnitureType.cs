@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
-using StardewValley.GameData.HomeRenovations;
 using StardewValley.Locations;
 using StardewValley.Objects;
 
@@ -77,9 +76,12 @@ namespace FurnitureFramework
 
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
+
 		Point bed_spot = new(1);
 		public readonly BedType bed_type = BedType.Double;
 		Rectangle bed_area;
+		bool mirror_bed_area;
+
 		Rectangle? fish_area = null;
 		public readonly bool disable_fishtank_light = false;
 
@@ -402,6 +404,7 @@ namespace FurnitureFramework
 					collisions.get_size(0) - new Point(2)
 				);
 			}
+			mirror_bed_area = JsonParser.parse(data.GetValue("Mirror Bed Area"), false);
 
 			if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
 			{
@@ -956,6 +959,9 @@ namespace FurnitureFramework
 			if (chest.Items[slot_index] is not null) return false;
 			// Slot already occupied
 
+			if (!slots.check_tags(rot, slot_index, who.ActiveItem)) return false;
+			// held item doesn't have valid context tags
+
 			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
 
 			if (obj_inst is Furniture furn)
@@ -1088,10 +1094,16 @@ namespace FurnitureFramework
 			Rectangle tile_col = new Rectangle(
 				tile_x, tile_y, 1, 1
 			);
+
 			Rectangle bed_col = new Rectangle(
 				furniture.TileLocation.ToPoint() + bed_area.Location,
 				bed_area.Size
 			);
+
+			if (mirror_bed_area && furniture.bedTileOffset == 0)
+			{
+				bed_col.X = furniture.boundingBox.Right / 64 - bed_area.Right;
+			}
 
 			if (tile_col.Intersects(bed_col))
 			{

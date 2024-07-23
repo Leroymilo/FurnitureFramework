@@ -56,3 +56,9 @@ Added an option to disable the light of Custom Fishtanks
 Added an option to define the area of the bed where the player get prompted to sleep.
 
 It is now possible to access assets from the game files or from the Furniture Framework files by adding "Content/" or "FF/" to a Source Image path.
+
+### 2.4.1
+
+Added the "Mirror Bed Area" option to have the bed area flip depending on the player's position.
+
+Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.

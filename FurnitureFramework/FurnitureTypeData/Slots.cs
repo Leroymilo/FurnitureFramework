@@ -32,6 +32,8 @@ namespace FurnitureFramework
 			Color debug_color = ModEntry.get_config().slot_debug_default_color;
 			static Texture2D debug_texture;
 
+			string? item_query = null;
+
 			static SlotData()
 			{
 				debug_texture = new(Game1.graphics.GraphicsDevice, 1, 1);
@@ -72,6 +74,12 @@ namespace FurnitureFramework
 
 				// Parsing optional max size
 				JsonParser.try_parse(slot_obj.GetValue("Max Size"), ref max_size);
+
+				JToken? token = slot_obj.GetValue("Condition");
+				if (token is not null && token.Type == JTokenType.String)
+				{
+					item_query = token.ToString();
+				}
 
 				is_valid = true;
 			}
@@ -176,6 +184,12 @@ namespace FurnitureFramework
 					SpriteEffects.None,
 					float.MaxValue
 				);
+			}
+
+			public bool check_tags(Item item)
+			{
+				if (item_query is null) return true;
+				return GameStateQuery.CheckConditions(item_query, targetItem: item);
 			}
 
 			#endregion
@@ -298,6 +312,11 @@ namespace FurnitureFramework
 
 				slots[rot][i].draw_obj(sprite_batch, obj, pos, top, alpha);
 			}
+		}
+
+		public bool check_tags(int rot, int slot_index, Item item)
+		{
+			return slots[rot][slot_index].check_tags(item);
 		}
 
 		#endregion

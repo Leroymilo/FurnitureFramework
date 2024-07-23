@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using GenericModConfigMenu;
 using Microsoft.Xna.Framework.Content;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley.GameData.Shops;
