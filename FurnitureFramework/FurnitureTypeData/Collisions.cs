@@ -18,8 +18,8 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
-			public readonly Point size = new();
-			Point game_size;
+			Point size = new();
+			public readonly Point game_size;
 
 			bool has_tiles = false;
 			HashSet<Point> tiles = new();
@@ -327,7 +327,8 @@ namespace FurnitureFramework
 
 		public Point get_size(int rot)
 		{
-			return collisions[rot].size;
+			// gives the size of the collision box in game coordinates
+			return collisions[rot].game_size;
 		}
 
 		#endregion

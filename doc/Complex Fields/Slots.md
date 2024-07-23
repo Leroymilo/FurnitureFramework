@@ -47,9 +47,18 @@ This is an **integer** [vector](https://github.com/Leroymilo/FurnitureFramework/
 
 This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted).
 
+## Condition
+
+This is a string of text that you can use to restrict who/when/where/what can be placed in the slot using a [Game State Query](https://stardewvalleywiki.com/Modding:Game_state_queries).  
+The most common use is to restrict what items can be placed in the slot using the query `ITEM_CONTEXT_TAG Input <context tag>`, and replacing `<context tag>` with any context tag shared between items that you want to be able to place in this slot.
+
+Note: the `Target` item is the Furniture itself and the `Input` item is the item held by the player when an item is being placed in the slot.
+
+Note 2: if there's an error in the Game State Query, the game will give you an error report in the console with details. I can't really help to fix issues with it because I used the built-in function to read them, so I don't know much about it.
+
 # Example
 
-Here is an example of a table slot in a bigger Furniture (taken from the `living_room` Furniture of the Example Pack). I uses the Depth field.
+Here is an example of a table slot in a bigger Furniture (taken from the `living_room` Furniture of the Example Pack). It uses the Depth field to make sure the item placed in the slot displays above the correct layers.
 
 This is where the slots are in the spritesheet (I removed some stuff for clarity):  
 ![slots example](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/images/slots_example.png)

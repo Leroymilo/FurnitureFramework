@@ -91,7 +91,7 @@
 					{
 						"Area": {"X": 0, "Y": 11, "Width": 16, "Height": 13},
 						"Debug Color": "Blue",
-						// "Condition": "ITEM_CONTEXT_TAG Target food_salad"
+						// "Condition": "ITEM_CONTEXT_TAG Input food_salad"
 					},
 					{
 						"Area": {"X": 16, "Y": 11, "Width": 16, "Height": 13},
@@ -102,7 +102,7 @@
 					{
 						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
 						"Debug Color": "Blue",
-						// "Condition": "ITEM_CONTEXT_TAG Target food_salad"
+						// "Condition": "ITEM_CONTEXT_TAG Input food_salad"
 					},
 					{
 						"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16},
@@ -239,7 +239,7 @@
 
 			"Special Type": "Bed",
 			"Bed Spot": {"X": 2, "Y": 1},
-			"Bed Area": {"X": 1, "Y": 1, "Width": 3, "Height": 1}
+			// "Bed Area": {"X": 1, "Y": 1, "Width": 3, "Height": 1}
 		},
 
 		"{{ModID}}.simple_bed": {
@@ -270,8 +270,8 @@
 			"Special Type": "Bed",
 			"Bed Type": "Single",
 			"Bed Spot": {"X": 1, "Y": 1},
-			"Bed Area": {"X": 1, "Y": 1, "Width": 1, "Height": 1},
-			"Mirror Bed Area": true
+			// "Bed Area": {"X": 1, "Y": 1, "Width": 1, "Height": 1},
+			// "Mirror Bed Area": true
 		},
 
 		"{{ModID}}.rug_test": {
@@ -397,26 +397,3 @@
 		}
 	}
 }
-
-// FUTURE FIELDS :
-
-// "LightSources": [
-// 	{
-// 		"Position": {"X": 8, "Y": 8},	// in pixels
-// 		"Texture": null,
-// 		"SourceRect": {"X": 0, "Y": 0, "Width": 48, "Height": 96},	// in pixels
-// 		"Color": null,
-// 		"Is Window": false,
-// 		"For Rotations": 0
-// 	}
-// ],
-// "Is Lamp": false,
-// "Is Fireplace": false,
-// "Torch Fire": [
-// 	{
-// 		"Position": {"X": 8, "Y": 8},	// in pixels
-// 		"For Rotations": 0
-// 	}
-// ],
-// "Is Rug": false,
-// "Is Mural": false

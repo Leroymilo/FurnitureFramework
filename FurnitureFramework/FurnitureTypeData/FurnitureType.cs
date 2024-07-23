@@ -397,11 +397,23 @@ namespace FurnitureFramework
 				bed_type = BedType.Double;
 				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
 			}
-			if (!JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
+			if (JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
 			{
 				bed_area = new Rectangle(
-					new Point(1),
-					collisions.get_size(0) - new Point(2)
+					bed_area.Location * new Point(64),
+					bed_area.Size * new Point(64)
+				);
+			}
+			else
+			{
+				Point bed_size = collisions.get_size(0);
+				Point area_size = new Point(
+					Math.Max(64, bed_size.X - 64*2),
+					Math.Max(64, bed_size.Y - 64*2)
+				);
+				bed_area = new Rectangle(
+					(bed_size - area_size) / new Point(2),
+					area_size
 				);
 			}
 			mirror_bed_area = JsonParser.parse(data.GetValue("Mirror Bed Area"), false);
@@ -959,7 +971,11 @@ namespace FurnitureFramework
 			if (chest.Items[slot_index] is not null) return false;
 			// Slot already occupied
 
-			if (!slots.check_tags(rot, slot_index, who.ActiveItem)) return false;
+			if (!slots.check_tags(rot, slot_index, furniture, who))
+			{
+				Game1.showRedMessage("This item cannot be placed here.");
+				return false;
+			}
 			// held item doesn't have valid context tags
 
 			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
@@ -1032,15 +1048,47 @@ namespace FurnitureFramework
 
 		#endregion
 
-		#region Methods for Particles
-
 		public void updateWhenCurrentLocation(Furniture furniture)
 		{
+
+			// Updating particles
 			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
 			particles.update_timer(furniture, ms_time);
-		}
 
-		#endregion
+			// Checking bed intersection
+			if (s_type == SpecialType.Bed)
+			{
+				Rectangle bed_col = bed_area.Clone();
+				bed_col.Location += furniture.boundingBox.Value.Location;
+				GameLocation location = furniture.Location;
+				bool contains = bed_col.Contains(Game1.player.GetBoundingBox());
+
+				if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
+				{
+					furniture.modData["FF.checked_bed_tile"] = contains.ToString().ToLower();
+				}
+
+				if (contains)
+				{
+					if (furniture.modData["FF.checked_bed_tile"] != "true" &&
+						!Game1.newDay && Game1.shouldTimePass() &&
+						Game1.player.hasMoved && !Game1.player.passedOut
+					)
+					{
+						furniture.modData["FF.checked_bed_tile"] = "true";
+						location.createQuestionDialogue(
+							Game1.content.LoadString("Strings\\Locations:FarmHouse_Bed_GoToSleep"),
+							location.createYesNoResponses(), "Sleep", null
+						);
+						// Game1.drawObjectQuestionDialogue
+					}
+				}
+				else
+				{
+					furniture.modData["FF.checked_bed_tile"] = "false";
+				}
+			}
+		}
 
 		#region Methods for Placement Type
 
@@ -1084,42 +1132,12 @@ namespace FurnitureFramework
 			ref bool result
 		)
 		{
+
 			if (layer_name != "Back" || property_name != "TouchAction")
 				return;
 
-
-			if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
-				furniture.modData["FF.checked_bed_tile"] = "false";
-
-			Rectangle tile_col = new Rectangle(
-				tile_x, tile_y, 1, 1
-			);
-
-			Rectangle bed_col = new Rectangle(
-				furniture.TileLocation.ToPoint() + bed_area.Location,
-				bed_area.Size
-			);
-
-			if (mirror_bed_area && furniture.bedTileOffset == 0)
-			{
-				bed_col.X = furniture.boundingBox.Right / 64 - bed_area.Right;
-			}
-
-			if (tile_col.Intersects(bed_col))
-			{
-				if (furniture.modData["FF.checked_bed_tile"] != "true")
-				{
-					furniture.modData["FF.checked_bed_tile"] = "true";
-					property_value = "Sleep";
-					result = true;
-				}
-				else result = false;
-			}
-			else
-			{
-				furniture.modData["FF.checked_bed_tile"] = "false";
-				result = false;
-			}
+			result = false;
+			return;
 		}
 
 		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)

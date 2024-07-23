@@ -186,10 +186,16 @@ namespace FurnitureFramework
 				);
 			}
 
-			public bool check_tags(Item item)
+			public bool check_tags(Furniture furniture, Farmer who)
 			{
 				if (item_query is null) return true;
-				return GameStateQuery.CheckConditions(item_query, targetItem: item);
+				return GameStateQuery.CheckConditions(
+					item_query,
+					location: furniture.Location,
+					player: who,
+					targetItem: furniture,
+					inputItem: who.ActiveItem
+				);
 			}
 
 			#endregion
@@ -314,9 +320,9 @@ namespace FurnitureFramework
 			}
 		}
 
-		public bool check_tags(int rot, int slot_index, Item item)
+		public bool check_tags(int rot, int slot_index, Furniture furniture, Farmer who)
 		{
-			return slots[rot][slot_index].check_tags(item);
+			return slots[rot][slot_index].check_tags(furniture, who);
 		}
 
 		#endregion
