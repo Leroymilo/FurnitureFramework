@@ -59,6 +59,7 @@ It is now possible to access assets from the game files or from the Furniture Fr
 
 ### 2.4.1
 
-Added the "Mirror Bed Area" option to have the bed area flip depending on the player's position.
+Reworked beds to work around vanilla restrictions, added the "Bed Area Pixel" to be used for more precision than the "Bed Area" without breaking backwards compatibility.  
+The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in the next Format Update.
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
