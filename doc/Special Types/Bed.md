@@ -14,10 +14,19 @@ You can also use the the bed type "Child" to make a bed that children can sleep 
 
 ## Bed Area
 
+<span style="color:red">**DEPRECATED** The data in this field will be used as `Bed Area Pixel` in the next Format version</span>
+
 This is the area of the bed **in tiles** where the player will be asked to sleep, it is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md).  
-It is not possible to give a better precision than tiles because of how the sleep condition is checked in the game: the player position is rounded to the nearest tile.
+The player will be asked to sleep when its hitbox is fully in this rectangle.
 
 By default, this area is the rectangle inside the bed, one tile removed from the actual bounding box. For example, a 6x4 Bed will have a 4x2 centered area where the game will ask if you want to sleep.
+
+## Bed Area Pixel
+
+<span style="color:red">This will be moved to `Bed Area` in the next Format version</span>
+
+This is the area of the bed **in pixels** where the player will be asked to sleep, it is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md).  
+The player will be asked to sleep when its hitbox is fully in this rectangle.
 
 ## Other Info
 

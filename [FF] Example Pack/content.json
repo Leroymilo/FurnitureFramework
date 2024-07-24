@@ -90,8 +90,7 @@
 				"Horizontal": [
 					{
 						"Area": {"X": 0, "Y": 11, "Width": 16, "Height": 13},
-						"Debug Color": "Blue",
-						// "Condition": "ITEM_CONTEXT_TAG Input food_salad"
+						"Debug Color": "Blue"
 					},
 					{
 						"Area": {"X": 16, "Y": 11, "Width": 16, "Height": 13},
@@ -101,8 +100,7 @@
 				"Vertical": [
 					{
 						"Area": {"X": 0, "Y": 8, "Width": 16, "Height": 16},
-						"Debug Color": "Blue",
-						// "Condition": "ITEM_CONTEXT_TAG Input food_salad"
+						"Debug Color": "Blue"
 					},
 					{
 						"Area": {"X": 0, "Y": 24, "Width": 16, "Height": 16},
@@ -239,7 +237,7 @@
 
 			"Special Type": "Bed",
 			"Bed Spot": {"X": 2, "Y": 1},
-			// "Bed Area": {"X": 1, "Y": 1, "Width": 3, "Height": 1}
+			"Bed Area Pixel": {"X": 16, "Y": 16, "Width": 48, "Height": 16}
 		},
 
 		"{{ModID}}.simple_bed": {
@@ -269,9 +267,7 @@
 
 			"Special Type": "Bed",
 			"Bed Type": "Single",
-			"Bed Spot": {"X": 1, "Y": 1},
-			// "Bed Area": {"X": 1, "Y": 1, "Width": 1, "Height": 1},
-			// "Mirror Bed Area": true
+			"Bed Spot": {"X": 1, "Y": 1}
 		},
 
 		"{{ModID}}.rug_test": {
