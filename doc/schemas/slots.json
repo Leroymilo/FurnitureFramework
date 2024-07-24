@@ -35,6 +35,11 @@
 			"Debug Color": {
 				"type": "string",
 				"description": "See here for a list of valid colors https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties."
+			},
+
+			"Condition": {
+				"type": "string",
+				"description": "A way to restrict who/when/where/what can be placed in this spot with a Game State Query"
 			}
 		},
 		"required": [ "Area" ],

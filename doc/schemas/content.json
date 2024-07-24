@@ -294,6 +294,12 @@
 					},
 
 					"Bed Area": {
+						"description": "This Field is DEPRECATED, please use \"Bed Area Pixel\" instead.",
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+					},
+
+					"Bed Area Pixel": {
+						"description": "Defines the rectangle (in pixels) where the player will be asked to sleep.",
 						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},
 
