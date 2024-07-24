@@ -155,7 +155,7 @@
 					"Emission Interval": 500,
 
 					"Spawn Rect": {"X": 12, "Y": 15, "Width": 8, "Height": 4},
-					"Depths": [0.1, 0.3, 0.5, 0.7, 0.9],
+					"Depths": [0.3, 0.5, 0.7, 0.9],
 					"Speed": {"X": 0, "Y": -0.5},
 
 					"Rotations": [],

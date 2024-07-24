@@ -49,7 +49,9 @@ namespace FurnitureFramework
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
+			helper.Events.Player.Warped += on_player_warped;
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
+			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
 			
 			HarmonyPatcher.patch();
         }
@@ -294,5 +296,34 @@ namespace FurnitureFramework
 				}
 			}
 		}
+
+        /// <inheritdoc cref="IPlayerEvents.Warped"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_player_warped(object? sender, WarpedEventArgs e)
+		{
+			foreach (Furniture furniture in e.NewLocation.furniture)
+			{
+				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				{
+					furniture.modData["FF.particle_timers"] = "[]";
+				}
+			}
+		}
+
+        /// <inheritdoc cref="IGameLoopEvents.SaveLoaded"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_save_loaded(object? sender, SaveLoadedEventArgs e)
+		{
+			foreach (Furniture furniture in Game1.currentLocation.furniture)
+			{
+				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				{
+					furniture.modData["FF.particle_timers"] = "[]";
+				}
+			}
+		}
+		
     }
 }

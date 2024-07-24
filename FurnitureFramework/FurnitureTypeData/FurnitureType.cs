@@ -1058,48 +1058,6 @@ namespace FurnitureFramework
 
 		#endregion
 
-		public void updateWhenCurrentLocation(Furniture furniture)
-		{
-
-			// Updating particles
-			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
-			particles.update_timer(furniture, ms_time);
-
-			// Checking bed intersection
-			if (s_type == SpecialType.Bed)
-			{
-				Rectangle bed_col = bed_area.Clone();
-				bed_col.Location += furniture.boundingBox.Value.Location;
-				GameLocation location = furniture.Location;
-				bool contains = bed_col.Contains(Game1.player.GetBoundingBox());
-
-				if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
-				{
-					furniture.modData["FF.checked_bed_tile"] = contains.ToString().ToLower();
-				}
-
-				if (contains)
-				{
-					if (furniture.modData["FF.checked_bed_tile"] != "true" &&
-						!Game1.newDay && Game1.shouldTimePass() &&
-						Game1.player.hasMoved && !Game1.player.passedOut
-					)
-					{
-						furniture.modData["FF.checked_bed_tile"] = "true";
-						location.createQuestionDialogue(
-							Game1.content.LoadString("Strings\\Locations:FarmHouse_Bed_GoToSleep"),
-							location.createYesNoResponses(), "Sleep", null
-						);
-						// Game1.drawObjectQuestionDialogue
-					}
-				}
-				else
-				{
-					furniture.modData["FF.checked_bed_tile"] = "false";
-				}
-			}
-		}
-
 		#region Methods for Placement Type
 
 		public void isGroundFurniture(ref bool is_ground_f)
@@ -1229,6 +1187,48 @@ namespace FurnitureFramework
 		}
 
 		#endregion
+
+		public void updateWhenCurrentLocation(Furniture furniture)
+		{
+
+			// Updating particles
+			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+			particles.update_timer(furniture, ms_time);
+
+			// Checking bed intersection
+			if (s_type == SpecialType.Bed)
+			{
+				Rectangle bed_col = bed_area.Clone();
+				bed_col.Location += furniture.boundingBox.Value.Location;
+				GameLocation location = furniture.Location;
+				bool contains = bed_col.Contains(Game1.player.GetBoundingBox());
+
+				if (!furniture.modData.ContainsKey("FF.checked_bed_tile"))
+				{
+					furniture.modData["FF.checked_bed_tile"] = contains.ToString().ToLower();
+				}
+
+				if (contains)
+				{
+					if (furniture.modData["FF.checked_bed_tile"] != "true" &&
+						!Game1.newDay && Game1.shouldTimePass() &&
+						Game1.player.hasMoved && !Game1.player.passedOut
+					)
+					{
+						furniture.modData["FF.checked_bed_tile"] = "true";
+						location.createQuestionDialogue(
+							Game1.content.LoadString("Strings\\Locations:FarmHouse_Bed_GoToSleep"),
+							location.createYesNoResponses(), "Sleep", null
+						);
+						// Game1.drawObjectQuestionDialogue
+					}
+				}
+				else
+				{
+					furniture.modData["FF.checked_bed_tile"] = "false";
+				}
+			}
+		}
 
 		public void checkForAction(Furniture furniture, Farmer who, bool justCheckingForActivity, ref bool had_action)
 		{

@@ -63,3 +63,7 @@ Reworked beds to work around vanilla restrictions, added the "Bed Area Pixel" to
 The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in the next Format Update.
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
+
+### 2.4.2
+
+Fixed an issue with Particles that would not reset their timers when restarting the game.
