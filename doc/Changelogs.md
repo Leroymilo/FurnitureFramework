@@ -67,3 +67,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 ### 2.4.2
 
 Fixed an issue with Particles that would not reset their timers when restarting the game.
+
+**Work in Progress** Fixed lights sources and glows of Furniture in slots.
+
+**TODO** Cache invalidation through CP?

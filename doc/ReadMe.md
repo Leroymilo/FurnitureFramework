@@ -56,11 +56,11 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Add a way for 2 tiles wide beds to behave vanilla-like.
-- Ensure particles on save load and location change.
+- CP compatibility to edit loaded sprites & data.
 - Add better titles and descriptions for the json schema.
 - Support for i18n translations.
 - Customize StorageFurniture allowed item types.	@B
+- Weather dependant textures
 
 What I don't plan on adding, but I can work on if someone asks for it:
 - Custom Randomized Plant

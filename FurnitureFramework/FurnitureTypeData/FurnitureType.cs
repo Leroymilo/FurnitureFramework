@@ -777,6 +777,21 @@ namespace FurnitureFramework
 				furniture.currentRotation.Value,
 				furniture.IsOn, furniture.timeToTurnOnLights()
 			);
+
+			// items in slots
+			if (furniture.heldObject.Value is Chest chest)
+			{
+				foreach (Item item in chest.Items)
+				{
+					if (
+						item is Furniture furn_item &&
+						FurniturePack.try_get_type(furn_item, out FurnitureType? type)
+					)
+					{
+						type.draw_lighting(furn_item, sprite_batch);
+					}
+				}
+			}
 		}
 
 		#endregion
