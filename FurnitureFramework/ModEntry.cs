@@ -279,15 +279,10 @@ namespace FurnitureFramework
 
 			if (FurniturePack.try_get_pack_from_resource(name, out FurniturePack? f_pack))
 			{
-				log($"asset requested: {name}");
-				log($"pack key: {f_pack.UID}");
-
 				// removing the Mod's UID and the separating character from the resource name
 				string path = name[
 					(f_pack.UID.Length + 1)..
 				];
-
-				log($"path: {path}");
 
 				e.LoadFrom(
 					() => {return TextureManager.base_load(f_pack.content_pack.ModContent, path);},
