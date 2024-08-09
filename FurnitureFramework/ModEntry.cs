@@ -1,6 +1,7 @@
 ﻿using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -263,15 +264,35 @@ namespace FurnitureFramework
         /// <param name="e">The event data.</param>
 		private void on_asset_requested(object? sender, AssetRequestedEventArgs e)
 		{
-			if (e.NameWithoutLocale.StartsWith("Data/Furniture"))
+			string name = e.NameWithoutLocale.Name;
+
+			if (name.StartsWith("Data/Furniture"))
 				e.Edit(FurniturePack.edit_data_furniture);
 
-			if (e.NameWithoutLocale.StartsWith("Data/Shops"))
+			if (name.StartsWith("Data/Shops"))
 				e.Edit(FurniturePack.edit_data_shop);
 
-			if (FurniturePack.try_get_type(e.Name.Name, out FurnitureType? type))
+			if (FurniturePack.try_get_type(name, out FurnitureType? type))
 			{
-				e.LoadFrom(type.get_icon_texture, AssetLoadPriority.Medium);
+				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
+			}
+
+			if (FurniturePack.try_get_pack_from_resource(name, out FurniturePack? f_pack))
+			{
+				log($"asset requested: {name}");
+				log($"pack key: {f_pack.UID}");
+
+				// removing the Mod's UID and the separating character from the resource name
+				string path = name[
+					(f_pack.UID.Length + 1)..
+				];
+
+				log($"path: {path}");
+
+				e.LoadFrom(
+					() => {return TextureManager.base_load(f_pack.content_pack.ModContent, path);},
+					AssetLoadPriority.Medium
+				);
 			}
 		}
 

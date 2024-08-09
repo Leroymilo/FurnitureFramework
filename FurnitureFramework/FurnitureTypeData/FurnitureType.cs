@@ -32,7 +32,7 @@ namespace FurnitureFramework
 	{
 		#region Fields
 
-		string mod_id;
+		public readonly string mod_id;
 		public readonly string id;
 		string display_name;
 		string type;
@@ -44,7 +44,8 @@ namespace FurnitureFramework
 		bool can_be_toggled = false;
 		bool time_based = false;
 		
-		SeasonalTexture texture;
+		// SeasonalTexture texture;
+		DynaTexture texture;
 		List<Rectangle> source_rects = new();
 		public readonly Rectangle icon_rect = Rectangle.Empty;
 		Layers layers;
@@ -291,9 +292,13 @@ namespace FurnitureFramework
 
 			#region textures & source rects
 
-			bool is_seasonal = JsonParser.parse(data.GetValue("Seasonal"), false);
+			texture = new(
+				this, texture_path,
+				JsonParser.parse(data.GetValue("Seasonal"), false),
+				JsonParser.parse(data.GetValue("Weather Based"), false)
+			);
 
-			texture = new(pack, texture_path, is_seasonal);
+			// texture = new(pack, texture_path, seasonal);
 
 			token = data.GetValue("Source Rect");
 			List<Rectangle?> n_source_rects = new();
@@ -342,11 +347,11 @@ namespace FurnitureFramework
 			slots = Slots.make_slots(data.GetValue("Slots"), rot_names);
 			is_table = slots.has_slots;
 
-			light_sources = new(pack, data.GetValue("Light Sources"), rot_names);
+			light_sources = new(this, data.GetValue("Light Sources"), rot_names);
 
 			sounds = new(data.GetValue("Sounds"));
 
-			particles = new(pack, data.GetValue("Particles"));
+			particles = new(this, data.GetValue("Particles"));
 
 			#endregion
 
@@ -503,7 +508,7 @@ namespace FurnitureFramework
 			result += $"/{placement_rules}";
 			result += $"/{display_name}";
 			result += $"/0";
-			result += $"/{id}";	// texture path
+			result += $"/{id}";
 			result += $"/{exclude_from_random_sales}";
 			if (context_tags.Count > 0)
 				result += $"/" + context_tags.Join(delimiter: " ");
@@ -533,20 +538,27 @@ namespace FurnitureFramework
 
 		#endregion
 
-		#region Texture
-
-		public Texture2D get_icon_texture()
-		{
-			return texture.get_texture();
-		}
-
-		#endregion
-
 		#region Drawing
 
 		public Point get_source_rect_size(int rot)
 		{
 			return source_rects[rot].Size;
+		}
+
+		// for drawInMenu transpiler
+		private static Rectangle get_icon_source_rect(Furniture furniture)
+		{
+			if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+			{
+				return type.icon_rect;
+			}
+
+			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
+		}
+
+		public Texture2D get_texture()
+		{
+			return texture.get();
 		}
 
 		public void drawAtNonTileSpot(
@@ -577,7 +589,7 @@ namespace FurnitureFramework
 			}
 
 			sprite_batch.Draw(
-				texture.get_texture(), position, source_rect,
+				texture.get(), position, source_rect,
 				color, 0f, Vector2.Zero, 4f, effects, depth
 			);
 		}
@@ -714,7 +726,7 @@ namespace FurnitureFramework
 			position = Game1.GlobalToLocal(Game1.viewport, position);
 
 			sprite_batch.Draw(
-				texture.get_texture(), position, source_rect,
+				texture.get(), position, source_rect,
 				color, 0f, Vector2.Zero, 4f, effects, depth
 			);
 
@@ -1155,16 +1167,6 @@ namespace FurnitureFramework
 		#endregion
 
 		#region Methods for Transpilers
-
-		private static Rectangle get_icon_source_rect(Furniture furniture)
-		{
-			if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
-			{
-				return type.icon_rect;
-			}
-
-			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
-		}
 
 		public static bool is_clicked(Furniture furniture, int x, int y)
 		{

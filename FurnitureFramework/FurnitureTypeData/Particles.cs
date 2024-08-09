@@ -18,7 +18,7 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
-			Texture2D texture;
+			DynaTexture texture;
 			Rectangle source_rect;
 			int emit_interval;
 
@@ -48,7 +48,7 @@ namespace FurnitureFramework
 
 			#region ParticleData Parsing
 
-			public ParticleData(IContentPack pack, JObject particle_obj)
+			public ParticleData(FurnitureType type, JObject particle_obj)
 			{
 				error_msg = "Missing or Invalid Source Image path.";
 				JToken? texture_token = particle_obj.GetValue("Source Image");
@@ -57,15 +57,14 @@ namespace FurnitureFramework
 					string? texture_path = (string?)texture_token;
 					if (texture_path is not null)
 					{
-						texture = TextureManager.load(pack.ModContent, texture_path);
+						texture = new(type, texture_path, false, false);
 					}
 				}
 				if (texture == null) return;
 
-				source_rect = texture.Bounds;
 				JToken? rect_token = particle_obj.GetValue("Source Rect");
 				if (!JsonParser.try_parse(rect_token, ref source_rect))
-					source_rect = texture.Bounds;
+					source_rect = Rectangle.Empty;
 
 				emit_interval = JsonParser.parse(particle_obj.GetValue("Emission Interval"), 500);
 
@@ -173,6 +172,9 @@ namespace FurnitureFramework
 
 			public void make(Furniture furniture, Vector2? speed_ = null)
 			{
+				if (source_rect == Rectangle.Empty)
+					source_rect = texture.get().Bounds;
+
 				Vector2 speed;
 				if (speed_ is null) speed = base_speed;
 				else speed = speed_.Value;
@@ -205,7 +207,7 @@ namespace FurnitureFramework
 				furniture.Location.temporarySprites.Add(
 				new TemporaryAnimatedSprite()
 				{
-					texture = texture,
+					texture = texture.get(),
 					sourceRect = source_rect,
 					position = position.ToVector2(),
 					alpha = alpha,
@@ -236,14 +238,14 @@ namespace FurnitureFramework
 
 		#region Particles Parsing
 
-		public Particles(IContentPack pack, JToken? parts_token)
+		public Particles(FurnitureType type, JToken? parts_token)
 		{
 			if (parts_token is not JArray parts_arr) return;
 
 			foreach (JToken part_token in parts_arr)
 			{
 				if (part_token is not JObject part_obj) continue;
-				ParticleData new_part = new(pack, part_obj);
+				ParticleData new_part = new(type, part_obj);
 				if (!new_part.is_valid)
 				{
 					ModEntry.log($"Invalid Particle Data at {part_token.Path}:", LogLevel.Warn);

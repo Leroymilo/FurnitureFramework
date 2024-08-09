@@ -26,7 +26,7 @@ namespace FurnitureFramework
 			public readonly bool is_valid = false;
 			public readonly string error_msg = "";
 
-			Texture2D texture;
+			DynaTexture texture;
 			Rectangle source_rect;
 			List<Point?> positions = new();
 			float radius = 2f;
@@ -38,7 +38,7 @@ namespace FurnitureFramework
 
 			#region LightSourceData Parsing
 
-			public LightSourceData(IContentPack pack, JObject light_obj, List<string> rot_names)
+			public LightSourceData(FurnitureType type, JObject light_obj, List<string> rot_names)
 			{
 				JToken? token = light_obj.GetValue("Position");
 				Point single_pos = new();
@@ -86,11 +86,11 @@ namespace FurnitureFramework
 
 				token = light_obj.GetValue("Source Image");
 				string image_path = JsonParser.parse(token, "FF/light_glows/window.png");
-				texture = TextureManager.load(pack.ModContent, image_path);
+				texture = new(type, image_path, false, false);
 
 				token = light_obj.GetValue("Source Rect");
 				if (token is not JObject || !JsonParser.try_parse(token, ref source_rect))
-					source_rect = texture.Bounds;
+					source_rect = Rectangle.Empty;
 
 				color = JsonParser.parse_color(light_obj.GetValue("Color"), "White");
 
@@ -181,8 +181,11 @@ namespace FurnitureFramework
 					scale = 2f * radius / quality;
 				}
 
+				if (source_rect == Rectangle.Empty)
+					source_rect = texture.get().Bounds;
+
 				sprite_batch.Draw(
-					texture, pos, source_rect,
+					texture.get(), pos, source_rect,
 					color, 0f, source_rect.Size.ToVector2() / 2f, scale,
 					SpriteEffects.None, depth
 				);
@@ -198,7 +201,7 @@ namespace FurnitureFramework
 
 		#region LightSources Parsing
 
-		public LightSources(IContentPack pack, JToken? token, List<string> rot_names)
+		public LightSources(FurnitureType type, JToken? token, List<string> rot_names)
 		{
 			if (token is not JArray light_arr) 
 			{
@@ -212,7 +215,7 @@ namespace FurnitureFramework
 				if (light_token is not JObject light_obj)
 					continue;
 
-				LightSourceData light = new(pack, light_obj, rot_names);
+				LightSourceData light = new(type, light_obj, rot_names);
 
 				if (!light.is_valid)
 				{

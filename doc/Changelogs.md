@@ -70,4 +70,6 @@ Fixed an issue with Particles that would not reset their timers when restarting 
 
 **Work in Progress** Fixed lights sources and glows of Furniture in slots.
 
-**TODO** Cache invalidation through CP?
+**Work in Progress** Cache invalidation through CP?
+
+**Work in Progress** Weather dependant Furniture?

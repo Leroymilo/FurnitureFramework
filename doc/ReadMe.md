@@ -56,7 +56,7 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- CP compatibility to edit loaded sprites & data.
+- CP compatibility to edit loaded sprites & data.	@hualianlian
 - Add better titles and descriptions for the json schema.
 - Support for i18n translations.
 - Customize StorageFurniture allowed item types.	@B

@@ -139,8 +139,8 @@ namespace FurnitureFramework
 		static Dictionary<string, string> type_ids = new();
 
 
-		string UID;
-		IContentPack content_pack;
+		public readonly string UID;
+		public readonly IContentPack content_pack;
 		Dictionary<string, FurnitureType> types = new();
 		Dictionary<string, List<string>> shops = new();
 		List<IncludedPack> included_packs = new();
@@ -417,6 +417,24 @@ namespace FurnitureFramework
 		#endregion
 
 		#region Getters
+
+		public static bool try_get_pack_from_resource(string resource_name, [MaybeNullWhen(false)] out FurniturePack pack)
+		{
+			pack = null;
+			int max_key_l = 0;
+
+			// searching the first pack for which the UID is the start of the resource name
+			foreach (string key in packs.Keys)
+			{
+				if (resource_name.StartsWith(key) && key.Length > max_key_l)
+				{
+					pack = packs[key];
+					max_key_l = key.Length;
+				}
+			}
+
+			return pack is not null;
+		}
 
 		private bool try_get_type_pack(string f_id, [MaybeNullWhen(false)] ref FurnitureType? type)
 		{
