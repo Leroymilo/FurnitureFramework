@@ -556,7 +556,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(isPassable)}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Failed in {nameof(loadDescription)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -904,7 +904,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Failed in {nameof(GetTankBounds)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;

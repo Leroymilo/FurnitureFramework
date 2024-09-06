@@ -844,11 +844,18 @@ namespace FurnitureFramework
 
 		public void IntersectsForCollision(Furniture furniture, Rectangle rect, ref bool collides)
 		{
+			if (!collides)
+			{
+				// not even in bounding box, or collision canceled
+				return;
+			}
+
 			if (p_type == PlacementType.Rug)
 			{
 				collides = false;
 				return;
 			}
+			
 			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.boundingBox.Value.Location;
 			collides = collisions.is_colliding(rect, pos, rot);
@@ -1143,7 +1150,7 @@ namespace FurnitureFramework
 
 			Point position = new(
 				bounding_box.X,
-				bounding_box.Y - (source_rect.Height * 4 - bounding_box.Height)
+				bounding_box.Y + bounding_box.Height - source_rect.Height * 4
 			);
 			Point size = source_rect.Size * new Point(4);
 
@@ -1181,7 +1188,7 @@ namespace FurnitureFramework
 			else
 			{
 				Rectangle rect = new(x, y, 1, 1);
-				bool clicks = false;
+				bool clicks = furniture.boundingBox.Value.Intersects(rect);
 				type.IntersectsForCollision(furniture, rect, ref clicks);
 				return clicks;
 			}

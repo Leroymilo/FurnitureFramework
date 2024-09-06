@@ -182,7 +182,7 @@ namespace FurnitureFramework
 
 		#endregion
 
-		#region Furniture Pack Parsing
+		#region Pack Parsing
 
 		private void parse_furniture_packs()
 		{
