@@ -52,8 +52,8 @@ Added "Bed Type" field ("Double" or "Simple") because double beds can't be place
 
 Custom Light Sources.
 
-Added an option to disable the light of Custom Fishtanks
-Added an option to define the area of the bed where the player get prompted to sleep.
+Added an option to disable the light of Custom Fishtanks.  
+Added an option to define the area of the bed where the player get prompted to sleep.  
 
 It is now possible to access assets from the game files or from the Furniture Framework files by adding "Content/" or "FF/" to a Source Image path.
 
@@ -64,12 +64,20 @@ The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in t
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
 
-### 2.4.2
+# 3.0
 
-Fixed an issue with Particles that would not reset their timers when restarting the game.
+**Format Update**:
+- **Work in Progress** `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
+- **Work in Progress** `Seasonal` was removed. (You should now use a mixed Content Pack)
 
+Fixed an issue with Particles that would not reset their timers when restarting the game.  
 **Work in Progress** Fixed lights sources and glows of Furniture in slots.
 
-**Work in Progress** Cache invalidation through CP?
+Fixed compatibility with Precise Furniture pass-through feature.
 
-**Work in Progress** Weather dependant Furniture?
+Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
+
+Optimizations:
+- **Work in Progress** Furniture Packs are only loaded when the game need them.
+- **Work in Progress** Invalidating an included pack will only cause this included pack and its children to reload, not its ancestors.
+- **Work in Progress** Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).

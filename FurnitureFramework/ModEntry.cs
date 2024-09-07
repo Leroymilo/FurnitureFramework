@@ -2,6 +2,7 @@
 using GMCMOptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -50,6 +51,7 @@ namespace FurnitureFramework
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
+			helper.Events.Content.AssetsInvalidated += on_assets_invalidated;
 			helper.Events.Player.Warped += on_player_warped;
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
@@ -79,6 +81,8 @@ namespace FurnitureFramework
 				log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
 			}
 		}
+
+		#region Config
 
 		private void register_config()
 		{
@@ -168,6 +172,8 @@ namespace FurnitureFramework
 
 			FurniturePack.register_config(config_menu);
 		}
+
+		#endregion
 
 		#region Commands
 
@@ -274,20 +280,48 @@ namespace FurnitureFramework
 
 			if (FurniturePack.try_get_type(name, out FurnitureType? type))
 			{
+				// Loading texture for menu icon
 				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
 			}
 
 			if (FurniturePack.try_get_pack_from_resource(name, out FurniturePack? f_pack))
 			{
 				// removing the Mod's UID and the separating character from the resource name
-				string path = name[
-					(f_pack.UID.Length + 1)..
-				];
+				string path = name[(f_pack.UID.Length + 1)..];
 
-				e.LoadFrom(
-					() => {return TextureManager.base_load(f_pack.content_pack.ModContent, path);},
-					AssetLoadPriority.Medium
-				);
+				if (e.DataType == typeof(JObject))
+				{
+					// Loading any data for this Furniture Pack
+					e.LoadFrom(
+						() => {return f_pack.content_pack.ModContent.Load<JObject>(path);},
+						AssetLoadPriority.Low
+					);
+				}
+				else if (e.DataType == typeof(Texture2D))
+				{
+					// Loading any texture for this Furniture Pack
+					e.LoadFrom(
+						() => {return TextureManager.base_load(f_pack.content_pack.ModContent, path);},
+						AssetLoadPriority.Low
+					);
+				}
+				else
+				{
+					// Shouldn't happen in this mod
+					log($"Unknown asset type to load for {name} : {e.DataType}.", LogLevel.Warn);
+				}
+			}
+		}
+
+        /// <inheritdoc cref="IContentEvents.AssetsInvalidated"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void on_assets_invalidated(object? sender, AssetsInvalidatedEventArgs e)
+		{
+			log($"invalidated assets:");
+			foreach (IAssetName name in e.Names)
+			{
+				log($"\t{name}");
 			}
 		}
 

@@ -33,7 +33,7 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 	* [Seats](#seats)
 	* [Slots](#slots)
 	* [Toggle](#toggle)
- 	* [Time Based](#time-based)
+	* [Time Based](#time-based)
 	* [Sounds](#sounds)
 	* [Light Sources](#light-sources)
 
@@ -235,7 +235,7 @@ Note 2: If using both [Source Rect Offsets](#rect-variants) and Animation, the o
 
 ### Special Type
 
-This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one if these values:
+This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one of these values:
 - None (no special type)
 - Dresser
 - [TV](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Special%20Types/TV.md)

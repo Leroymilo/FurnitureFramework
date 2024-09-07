@@ -44,7 +44,6 @@ namespace FurnitureFramework
 		bool can_be_toggled = false;
 		bool time_based = false;
 		
-		// SeasonalTexture texture;
 		DynaTexture texture;
 		List<Rectangle> source_rects = new();
 		public readonly Rectangle icon_rect = Rectangle.Empty;

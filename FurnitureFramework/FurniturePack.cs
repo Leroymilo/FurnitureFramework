@@ -171,7 +171,7 @@ namespace FurnitureFramework
 			JObject data;
 			try
 			{
-				data = content_pack.ModContent.Load<JObject>(path);
+				data = ModEntry.get_helper().GameContent.Load<JObject>(path);
 			}
 			catch (ContentLoadException ex)
 			{
@@ -357,6 +357,26 @@ namespace FurnitureFramework
 			}
 		}
 
+		public void reload()
+		{
+			clear_types();
+			load();
+
+			if (is_valid)
+			{
+				ModEntry.log($"Pack {UID} successfully loaded!");
+			}
+			else
+			{
+				ModEntry.log($"Error while reloading pack {UID}, it will be removed to avoid errors.", LogLevel.Warn);
+				packs.Remove(UID);
+			}
+			
+			IGameContentHelper helper = ModEntry.get_helper().GameContent;
+			helper.InvalidateCache("Data/Furniture");
+			helper.InvalidateCache("Data/Shops");
+		}
+
 		public static void reload_pack(string command, string[] args)
 		{
 			if (args.Count() == 0)
@@ -418,12 +438,25 @@ namespace FurnitureFramework
 
 		#region Getters
 
+		public static bool try_get_type_from_data_file(string data_file_name, [MaybeNullWhen(false)] out FurniturePack pack)
+		{
+			pack = null;
+
+			foreach (FurniturePack f_pack in packs.Values)
+			{
+				// f_pack.
+			}
+
+			return false;
+		}
+
 		public static bool try_get_pack_from_resource(string resource_name, [MaybeNullWhen(false)] out FurniturePack pack)
 		{
 			pack = null;
 			int max_key_l = 0;
 
-			// searching the first pack for which the UID is the start of the resource name
+			// searching packs for which the UID is the start of the resource name
+			// taking only the one with the longer matching UID in case of substring UIDs (bad)
 			foreach (string key in packs.Keys)
 			{
 				if (resource_name.StartsWith(key) && key.Length > max_key_l)
