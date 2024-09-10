@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
 using GenericModConfigMenu;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
@@ -9,6 +10,7 @@ using StardewValley.Objects;
 namespace FurnitureFramework
 {
 
+	[RequiresPreviewFeatures]
 	class FurniturePack
 	{
 		const int FORMAT = 2;
@@ -141,7 +143,7 @@ namespace FurnitureFramework
 
 		public readonly string UID;
 		public readonly IContentPack content_pack;
-		Dictionary<string, FurnitureType> types = new();
+		Dictionary<string, Type.FurnitureType> types = new();
 		Dictionary<string, List<string>> shops = new();
 		List<IncludedPack> included_packs = new();
 		bool is_valid = false;
@@ -256,7 +258,7 @@ namespace FurnitureFramework
 
 		private void read_furniture(JObject fs_object)
 		{
-			List<FurnitureType> read_types = new();
+			List<Type.FurnitureType> read_types = new();
 			foreach((string key, JToken? f_data) in fs_object)
 			{
 
@@ -268,7 +270,7 @@ namespace FurnitureFramework
 
 				try
 				{
-					FurnitureType.make_furniture(
+					Type.FurnitureType.make_furniture(
 						content_pack, key,
 						f_obj,
 						read_types
@@ -284,16 +286,16 @@ namespace FurnitureFramework
 
 			types.Clear();
 			shops.Clear();
-			foreach (FurnitureType type in read_types)
+			foreach (Type.FurnitureType type in read_types)
 			{
-				if (type_ids.ContainsKey(type.id) && type_ids[type.id] != UID)
+				if (type_ids.ContainsKey(type.info.id) && type_ids[type.info.id] != UID)
 				{
-					ModEntry.log($"Duplicate Furniture: {type.id}, skipping Furniture.", LogLevel.Warn);
+					ModEntry.log($"Duplicate Furniture: {type.info.id}, skipping Furniture.", LogLevel.Warn);
 					continue;
 				}
 
-				types[type.id] = type;
-				type_ids[type.id] = UID;
+				types[type.info.id] = type;
+				type_ids[type.info.id] = UID;
 
 				if (type.shop_id != null)
 				{
@@ -310,7 +312,7 @@ namespace FurnitureFramework
 						shops[shop_id] = new();
 					}
 
-					shops[shop_id].Add(type.id);
+					shops[shop_id].Add(type.info.id);
 				}
 			}
 		}
@@ -469,7 +471,7 @@ namespace FurnitureFramework
 			return pack is not null;
 		}
 
-		private bool try_get_type_pack(string f_id, [MaybeNullWhen(false)] ref FurnitureType? type)
+		private bool try_get_type_pack(string f_id, [MaybeNullWhen(false)] ref Type.FurnitureType? type)
 		{
 			bool found = false;
 
@@ -489,7 +491,7 @@ namespace FurnitureFramework
 			return found;
 		}
 
-		public static bool try_get_type(string f_id, [MaybeNullWhen(false)] out FurnitureType type)
+		public static bool try_get_type(string f_id, [MaybeNullWhen(false)] out Type.FurnitureType type)
 		{
 			type = null;
 
@@ -499,7 +501,7 @@ namespace FurnitureFramework
 			return packs[UID].try_get_type_pack(f_id, ref type);
 		}
 
-		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out FurnitureType type)
+		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out Type.FurnitureType type)
 		{
 			return try_get_type(furniture.ItemId, out type);
 		}
@@ -510,7 +512,7 @@ namespace FurnitureFramework
 
 		private void add_data_furniture(IDictionary<string, string> editor)
 		{
-			foreach ((string id, FurnitureType f) in types)
+			foreach ((string id, Type.FurnitureType f) in types)
 			{
 				editor[id] = f.get_string_data();
 			}
