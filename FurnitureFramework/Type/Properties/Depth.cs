@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Type.Properties
 {
 	class Depth
 	{
@@ -56,6 +56,12 @@ namespace FurnitureFramework
 			float result = min + (max - min) * (sub_tile / 1000f);
 			
 			return result / 10000f;
+		}
+
+		public void debug_print(int indent_count)
+		{
+			string indent = new('\t', indent_count);
+			ModEntry.log($"{indent}Depth: Tile: {tile}, Sub: {sub_tile}", StardewModdingAPI.LogLevel.Debug);
 		}
 
 		#endregion

@@ -46,6 +46,7 @@ namespace FurnitureFramework
 				token.Type == JTokenType.Integer;
 		}
 
+		// Parse 2D Vector (float)
 		public static bool try_parse(JToken? token, ref Vector2 result)
 		{
 			if (token is not JObject obj) return false;
@@ -61,6 +62,7 @@ namespace FurnitureFramework
 			return true;
 		}
 
+		// Parse 2D Vector (integer)
 		public static bool try_parse(JToken? token, ref Point result)
 		{
 			if (token is not JObject obj) return false;
@@ -76,6 +78,7 @@ namespace FurnitureFramework
 			return true;
 		}
 
+		// Parse rectangle
 		public static bool try_parse(JToken? token, out Rectangle result)
 		{
 			result = Rectangle.Empty;
@@ -100,6 +103,7 @@ namespace FurnitureFramework
 			return true;
 		}
 
+		// Parse list of strings
 		public static bool try_parse(JToken? token, ref List<string> list)
 		{
 			if (token is JArray array)
@@ -116,6 +120,7 @@ namespace FurnitureFramework
 			return false;
 		}
 
+		// Parse directional rectangles
 		public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle?> result)
 		{
 			result.Clear();
@@ -139,6 +144,7 @@ namespace FurnitureFramework
 			return false;
 		}
 
+		// Parse directional integers
 		public static bool try_parse(JToken? token, List<string> rot_names, ref List<int?> result)
 		{
 			result.Clear();

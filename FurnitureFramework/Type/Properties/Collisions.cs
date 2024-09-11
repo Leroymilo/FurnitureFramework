@@ -13,17 +13,6 @@ namespace FurnitureFramework.Type.Properties
 	{
 		public static readonly Point tile_game_size = new(64);
 
-		public readonly bool is_valid = false;
-		public readonly string? error_msg;
-
-		Point size = new();
-		public readonly Point game_size;
-
-		bool has_tiles = false;
-		HashSet<Point> tiles = new();
-		HashSet<Point> game_tiles = new();
-		// in game coordinates (tile coordinates * 64)
-
 		#region Collisions Parsing
 
 		private static Collisions make_default()
@@ -70,6 +59,17 @@ namespace FurnitureFramework.Type.Properties
 
 			return result;
 		}
+
+		public readonly bool is_valid = false;
+		public readonly string? error_msg;
+
+		Point size = new();
+		public readonly Point game_size;
+
+		bool has_tiles = false;
+		HashSet<Point> tiles = new();
+		HashSet<Point> game_tiles = new();
+		// in game coordinates (tile coordinates * 64)
 		
 		private Collisions(JObject data)
 		{
