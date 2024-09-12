@@ -46,6 +46,17 @@ namespace FurnitureFramework
 				token.Type == JTokenType.Integer;
 		}
 
+		// Parse Enum
+		public static bool try_parse_enum<TEnum>(JToken? token, ref TEnum result) where TEnum: struct, Enum
+		{
+			if (token is JValue && token.Type == JTokenType.String)
+			{
+				result = Enum.Parse<TEnum>(token.ToString());
+				return Enum.IsDefined(result);
+			}
+			return false;
+		}
+
 		// Parse 2D Vector (float)
 		public static bool try_parse(JToken? token, ref Vector2 result)
 		{
