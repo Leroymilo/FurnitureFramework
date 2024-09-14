@@ -8,16 +8,16 @@ namespace FurnitureFramework.Type
 {
 	struct DrawData
 	{
-		SpriteBatch sprite_batch;
-		public Texture2D? texture;
-		public Vector2? position;
-		public Rectangle? source_rect;
+		public readonly SpriteBatch sprite_batch;
+		public Texture2D texture;
+		public Vector2 position;
+		public Rectangle source_rect;
 		public Color color = Color.White;
 		public float rotation = 0f;
 		public Vector2 origin = Vector2.Zero;
 		public float scale = 4f;
 		public SpriteEffects effects = SpriteEffects.None;
-		public float? depth;
+		public float depth;
 		
 		bool is_on = false;
 		bool is_dark = false;
@@ -27,10 +27,7 @@ namespace FurnitureFramework.Type
 
 		public void draw()
 		{
-			if (texture == null || position == null || source_rect == null || depth == null)
-				throw new NullReferenceException("Draw data is missing data.");
-
-			Rectangle rect = source_rect.Value.Clone();
+			Rectangle rect = source_rect.Clone();
 			if (is_on)
 				rect.X += rect.Width;
 			if (is_dark)
@@ -38,9 +35,9 @@ namespace FurnitureFramework.Type
 			rect.Location += rect_offset;
 
 			sprite_batch.Draw(
-				texture, (Vector2)position, rect,
+				texture, position, rect,
 				color, rotation, origin, scale,
-				effects, (float)depth
+				effects, depth
 			);
 		}
 	}
@@ -235,7 +232,7 @@ namespace FurnitureFramework.Type
 			// draw held object
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				slots.draw(sprite_batch, chest.Items, rot, position, bounding_box.Top, alpha);
+				slots[rot].draw(draw_data, bounding_box.Top, chest.Items);
 				// draw depending on heldObject own stored bounding box
 			}
 

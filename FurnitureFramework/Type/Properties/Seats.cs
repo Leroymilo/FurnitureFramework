@@ -9,8 +9,7 @@ namespace FurnitureFramework.Type.Properties
 	[RequiresPreviewFeatures]
 	class SeatList: IProperty<SeatList>
 	{
-		private enum SeatDir
-		{ Up, Right, Down, Left }
+		private enum SeatDir { Up, Right, Down, Left }
 
 		#region Seat Subclass
 
@@ -155,8 +154,8 @@ namespace FurnitureFramework.Type.Properties
 		List<Seat> list = new();
 		public readonly bool is_valid = false;
 		public readonly string? error_msg;
-
-		private bool has_seats {get {return list.Count > 0;}}
+		
+		public bool has_seats {get => list.Count > 0;}
 
 		private SeatList(Seat seat)
 		{
@@ -223,6 +222,7 @@ namespace FurnitureFramework.Type.Properties
 			{
 				ModEntry.log($"{indent}Seat {index}:", LogLevel.Debug);
 				seat.debug_print(indent_count + 1);
+				index ++;
 			}
 		}
 

@@ -82,10 +82,9 @@ namespace FurnitureFramework.Type
 
 
 		DirectionalStructure<Collisions> collisions;
-		Seats seats;
-		Slots slots;
-		public readonly bool is_table = false;
-		Sounds sounds;
+		DirectionalStructure<SeatList> seats;
+		DirectionalStructure<SlotList> slots;
+		SoundList sounds;
 		Particles particles;
 		LightSources light_sources;
 
@@ -166,10 +165,10 @@ namespace FurnitureFramework.Type
 		{
 			// This is a postfix, it keeps the original seat positions.
 
-			int cur_rot = furniture.currentRotation.Value;
+			int rot = furniture.currentRotation.Value;
 			Vector2 tile_pos = furniture.boundingBox.Value.Location.ToVector2() / 64f;
 			
-			seats.get_seat_positions(cur_rot, tile_pos, list);
+			seats[rot].get_seat_positions(tile_pos, list);
 		}
 
 		public void GetSittingDirection(Furniture furniture, Farmer who, ref int sit_dir)
@@ -177,7 +176,7 @@ namespace FurnitureFramework.Type
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
 			int rot = furniture.currentRotation.Value;
 
-			int new_sit_dir = seats.get_sitting_direction(rot, seat_index);
+			int new_sit_dir = seats[rot].get_sitting_direction(seat_index);
 			if (new_sit_dir >= 0) sit_dir = new_sit_dir;
 		}
 
@@ -186,7 +185,7 @@ namespace FurnitureFramework.Type
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
 			int rot = furniture.currentRotation.Value;
 
-			float new_sit_depth = seats.get_sitting_depth(rot, seat_index, furniture.boundingBox.Top);
+			float new_sit_depth = seats[rot].get_sitting_depth(seat_index, furniture.boundingBox.Top);
 			if (new_sit_depth >= 0) depth = new_sit_depth;
 		}
 
@@ -296,35 +295,26 @@ namespace FurnitureFramework.Type
 
 		private void initialize_slots(Furniture furniture, int rot)
 		{
-			if (!is_table)
-			{
-				furniture.heldObject.Value = null;
-				return;
-			}
+			int slots_count = slots[rot].count;
 
-			int slots_count = slots.get_count(rot);
-
-			if (furniture.heldObject.Value is Chest chest)
-			{
-				while (chest.Items.Count > slots_count)
-				{
-					Item item = chest.Items[slots_count];
-					chest.Items.RemoveAt(slots_count);
-					if (item is null) continue;
-					Game1.createItemDebris(
-						item,
-						furniture.boundingBox.Center.ToVector2(),
-						0
-					);
-				}
-			}
-
-			else
+			if (furniture.heldObject.Value is not Chest chest)
 			{
 				StardewValley.Object held = furniture.heldObject.Value;
 				chest = new();
 				chest.Items.Add(held);
 				furniture.heldObject.Value = chest;
+			}
+
+			while (chest.Items.Count > slots_count)
+			{
+				Item item = chest.Items[slots_count];
+				chest.Items.RemoveAt(slots_count);
+				if (item is null) continue;
+				Game1.createItemDebris(
+					item,
+					furniture.boundingBox.Center.ToVector2(),
+					0
+				);
 			}
 
 			if (chest.Items.Count < slots_count)
@@ -346,7 +336,7 @@ namespace FurnitureFramework.Type
 			this_pos.Y -= source_rects[rot].Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
-			return slots.get_slot(rel_pos, rot);
+			return slots[rot].get_slot(rel_pos);
 		}
 
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
@@ -355,7 +345,8 @@ namespace FurnitureFramework.Type
 			
 			initialize_slots(furniture, rot);
 
-			if (who.ActiveItem is not StardewValley.Object) return false;
+			Item item = who.ActiveItem.getOne();
+			if (item is not StardewValley.Object obj_inst) return false;
 			// player is not holding an object
 			
 			if (furniture.heldObject.Value is not Chest chest) return false;
@@ -368,28 +359,16 @@ namespace FurnitureFramework.Type
 			if (chest.Items[slot_index] is not null) return false;
 			// Slot already occupied
 
-			if (!slots.check_tags(rot, slot_index, furniture, who))
+			if (!slots[rot].can_hold(slot_index, obj_inst, furniture, who))
 			{
 				Game1.showRedMessage("This item cannot be placed here.");
 				return false;
 			}
 			// held item doesn't have valid context tags
-
-			StardewValley.Object obj_inst = (StardewValley.Object)who.ActiveItem.getOne();
-
-			if (obj_inst is Furniture furn)
-			{
-				Point max_size = slots.get_max_size(rot, slot_index);
-				Point size = furn.boundingBox.Value.Size / new Point(64);
-				if (size.X > max_size.X || size.Y > max_size.Y)
-					return false;
-				// cannot place furniture larger than max_size
-			}
+			// or held furniture is too big
 
 			obj_inst.Location = furniture.Location;
-
 			chest.Items[slot_index] = obj_inst;
-
 			who.reduceActiveItemByOne();
 			Game1.currentLocation.playSound("woodyStep");
 
@@ -612,6 +591,8 @@ namespace FurnitureFramework.Type
 			if (justCheckingForActivity) return;
 			// had_action is already true from original method
 
+			int rot = furniture.currentRotation.Value;
+
 			// Shop
 			if (shop_id != null)
 			{
@@ -634,7 +615,7 @@ namespace FurnitureFramework.Type
 			}
 
 			// Seats
-			if (seats.has_seats && !had_action)
+			if (seats[rot].has_seats && !had_action)
 			{
 				int sit_count = furniture.GetSittingFarmerCount();
 				who.BeginSitting(furniture);

@@ -1,12 +1,10 @@
-using Microsoft.Xna.Framework.Audio;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Type.Properties
 {
-	class Sounds
+	class SoundList
 	{
 		private enum SoundMode {
 			on_turn_on,
@@ -14,9 +12,9 @@ namespace FurnitureFramework
 			on_click
 		}
 
-		#region SoundData
+		#region Sound Subclass
 
-		private struct SoundData
+		private struct Sound
 		{
 			public readonly bool is_valid = false;
 			public readonly string error_msg = "No error";
@@ -24,7 +22,7 @@ namespace FurnitureFramework
 			public readonly SoundMode mode;
 			public readonly string cue_name = "";
 
-			public SoundData(JObject sound_obj)
+			public Sound(JObject sound_obj)
 			{
 				string mode_name = JsonParser.parse(sound_obj.GetValue("Mode"), "on_click");
 				mode = Enum.Parse<SoundMode>(mode_name);
@@ -47,17 +45,17 @@ namespace FurnitureFramework
 
 		#endregion
 
-		List<SoundData> sound_list = new();
+		List<Sound> list = new();
 
-		#region Sounds Parsing
+		#region SoundList Parsing
 
-		public Sounds(JToken? sounds_token)
+		public SoundList(JToken? sounds_token)
 		{
 			if (sounds_token is null || sounds_token.Type == JTokenType.Null) return;
 			if (sounds_token is not JArray sounds_arr)
 			{
 				ModEntry.log(
-					$"Sounds at {sounds_token.Path} is invalid, must be a list of sounds.",
+					$"Sounds at {sounds_token.Path} is invalid, must be a list of SoundList.",
 					LogLevel.Warn
 				);
 				return;
@@ -67,7 +65,7 @@ namespace FurnitureFramework
 			{
 				if (sound_token is JObject sound_obj)
 				{
-					SoundData new_sound = new(sound_obj);
+					Sound new_sound = new(sound_obj);
 					if (!new_sound.is_valid)
 					{
 						ModEntry.log($"Invalid Sound at {sound_obj.Path}:", LogLevel.Warn);
@@ -75,20 +73,20 @@ namespace FurnitureFramework
 						ModEntry.log("Skipping sound.", LogLevel.Warn);
 						continue;
 					}
-					sound_list.Add(new_sound);
+					list.Add(new_sound);
 				}
 			}
 		}
 
 		#endregion
 
-		#region Sounds Methods
+		#region SoundList Methods
 
 		public void play(GameLocation location, bool? state = null)
 		{
 			bool turn_on = state.HasValue && state.Value;
 			bool turn_off = state.HasValue && !state.Value;
-			foreach (SoundData sound in sound_list)
+			foreach (Sound sound in list)
 			{
 				if (
 					sound.mode == SoundMode.on_click ||
@@ -99,6 +97,19 @@ namespace FurnitureFramework
 					location.playSound(sound.cue_name);
 					// ICue cue = Game1.soundBank.GetCue(sound.cue_name);
 				}
+			}
+		}
+
+		public void debug_print(int indent_count)
+		{
+			string indent = new('\t', indent_count);
+			int index = 0;
+			foreach (Sound sound in list)
+			{
+				ModEntry.log($"{indent}Sound {index}:", LogLevel.Debug);
+				ModEntry.log($"{indent}\tMode: {sound.mode}", LogLevel.Debug);
+				ModEntry.log($"{indent}\tCue: {sound.cue_name}", LogLevel.Debug);
+				index ++;
 			}
 		}
 

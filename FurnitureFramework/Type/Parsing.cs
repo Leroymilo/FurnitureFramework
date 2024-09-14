@@ -1,9 +1,13 @@
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewValley.Objects;
 
 namespace FurnitureFramework.Type
 {
+	using BedType = BedFurniture.BedType;
+
 	partial class FurnitureType
 	{
 		#region Makers
@@ -241,10 +245,9 @@ namespace FurnitureFramework.Type
 
 			collisions = new(info, data.GetValue("Collisions"), rot_names);
 
-			seats = Seats.make_seats(data.GetValue("Seats"), rot_names);
+			seats = new(info, data.GetValue("Seats"), rot_names);
 
-			slots = Slots.make_slots(data.GetValue("Slots"), rot_names);
-			is_table = slots.has_slots;
+			slots = new(info, data.GetValue("Slots"), rot_names);
 
 			light_sources = new(this, data.GetValue("Light Sources"), rot_names);
 

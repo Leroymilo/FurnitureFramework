@@ -26,7 +26,7 @@ namespace FurnitureFramework.Type.Properties
 
 			public Layer(JObject data, string rot_name)
 			{
-				// Parsing Source Rectangle
+				// Parsing Required Source Rectangle
 				JToken? rect_token = data.GetValue("Source Rect");
 				if (!JsonParser.try_parse(rect_token, out source_rect))
 				{
@@ -126,7 +126,7 @@ namespace FurnitureFramework.Type.Properties
 
 				else
 				{
-					// single layer was is invalid
+					// single layer was invalid
 					ModEntry.log($"Could not parse a layer in {info.mod_id} at {data.Path}:", LogLevel.Warn);
 					ModEntry.log($"\t{layer.error_msg}", LogLevel.Warn);
 					ModEntry.log("Skipping Layer.", LogLevel.Warn);
@@ -135,7 +135,7 @@ namespace FurnitureFramework.Type.Properties
 
 			else if (data is JArray arr)
 			{
-				// layers
+				// list of layers
 				return new(info, arr, rot_name);
 			}
 
@@ -150,6 +150,7 @@ namespace FurnitureFramework.Type.Properties
 		private LayerList(Layer layer)
 		{
 			list.Add(layer);
+			is_valid = true;
 		}
 
 		private LayerList(TypeInfo info, JArray array, string rot_name)
@@ -194,6 +195,7 @@ namespace FurnitureFramework.Type.Properties
 			{
 				ModEntry.log($"{indent}Layer {index}:", LogLevel.Debug);
 				layer.debug_print(indent_count + 1);
+				index ++;
 			}
 		}
 

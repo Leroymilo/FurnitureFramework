@@ -193,11 +193,15 @@ namespace FurnitureFramework
 		}
 		
 
-		public static Color parse_color(JToken? token, string default_name)
+		public static Color parse_color(JToken? token, Color def)
 		{
-			string color_name = parse(token, default_name);
-			SDColor c_color = SDColor.FromName(color_name);
-			return new(c_color.R, c_color.G, c_color.B);
+			string color_name = "";
+			if (try_parse(token, ref color_name))
+			{
+				SDColor c_color = SDColor.FromName(color_name);
+				return new(c_color.R, c_color.G, c_color.B);
+			}
+			return def;
 		}
 	}
 }
