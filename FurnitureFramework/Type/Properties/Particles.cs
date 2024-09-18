@@ -1,19 +1,22 @@
+using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Type.Properties
 {
-	class Particles
+	[RequiresPreviewFeatures]
+	class ParticlesList
 	{
-		#region ParticleData
+		#region Particles Subclass
 
-		private class ParticleData
+		private class Particles
 		{
+
+			#region Fields
 
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
@@ -46,9 +49,11 @@ namespace FurnitureFramework
 			bool emit_when_off = false;
 			bool does_burst = true;
 
-			#region ParticleData Parsing
+			#endregion
 
-			public ParticleData(FurnitureType type, JObject particle_obj)
+			#region Particles Parsing
+
+			public Particles(TypeInfo info, JObject particle_obj, string rot_name)
 			{
 				error_msg = "Missing or Invalid Source Image path.";
 				JToken? texture_token = particle_obj.GetValue("Source Image");
@@ -57,7 +62,7 @@ namespace FurnitureFramework
 					string? texture_path = (string?)texture_token;
 					if (texture_path is not null)
 					{
-						texture = new(type, texture_path, false, false);
+						texture = new(info, texture_path);
 					}
 				}
 				if (texture == null) return;
@@ -120,7 +125,7 @@ namespace FurnitureFramework
 				scale = JsonParser.parse(particle_obj.GetValue("Scale"), 1f);
 				scale_change = JsonParser.parse(particle_obj.GetValue("Scale Change"), 0f);
 
-				color = JsonParser.parse_color(particle_obj.GetValue("Color"), "White");
+				color = JsonParser.parse_color(particle_obj.GetValue("Color"), Color.White);
 				alpha = JsonParser.parse(particle_obj.GetValue("Alpha"), 1f);
 				alpha_fade = JsonParser.parse(particle_obj.GetValue("Alpha Fade"), 0f);
 
@@ -139,7 +144,7 @@ namespace FurnitureFramework
 
 			#endregion
 
-			#region ParticleData Methods
+			#region Particles Methods
 
 			public void update_timer(Furniture furniture, List<long> timers, int index, long time_ms)
 			{
@@ -228,38 +233,113 @@ namespace FurnitureFramework
 				});
 			}
 
+			public void debug_print(int indent_count)
+			{
+				string indent = new('\t', indent_count);
+				ModEntry.log($"{indent}TODO");
+			}
+
 			#endregion
 
 		}
 
 		#endregion
 
-		List<ParticleData> particle_list = new();
-
 		#region Particles Parsing
 
-		public Particles(FurnitureType type, JToken? parts_token)
+		public static ParticlesList make_default(TypeInfo info, string rot_name)
 		{
-			if (parts_token is not JArray parts_arr) return;
+			return new(info, new JArray() /*empty array -> no particless*/, rot_name);
+		}
 
-			foreach (JToken part_token in parts_arr)
+		public static ParticlesList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
+		{
+			error_msg = null;
+			
+			if (data is JObject obj)
 			{
-				if (part_token is not JObject part_obj) continue;
-				ParticleData new_part = new(type, part_obj);
-				if (!new_part.is_valid)
+				// single particles?
+				Particles particles = new(info, obj, rot_name);
+				if (particles.is_valid)
+					return new(particles);
+
+				// directional?
+				JToken? dir_token = obj.GetValue(rot_name);
+				if (dir_token is JObject dir_obj)
 				{
-					ModEntry.log($"Invalid Particle Data at {part_token.Path}:", LogLevel.Warn);
-					ModEntry.log($"\t{new_part.error_msg}", LogLevel.Warn);
-					ModEntry.log("Skipping particle data", LogLevel.Warn);
-					continue;
+					// directional single particles?
+					Particles dir_particles = new(info, dir_obj, rot_name);
+					if (dir_particles.is_valid)
+						return new(dir_particles);
+					
+					// single particles was invalid
+					ModEntry.log($"Could not parse a particles in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+					ModEntry.log($"\t{particles.error_msg}", LogLevel.Warn);
+					ModEntry.log("Skipping Particles.", LogLevel.Warn);
 				}
-				particle_list.Add(new_part);
+
+				else if (dir_token is JArray dir_arr)
+				{
+					// directional particless
+					return new(info, dir_arr, rot_name);
+				}
+
+				else
+				{
+					// single particles was invalid
+					ModEntry.log($"Could not parse a particles in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+					ModEntry.log($"\t{particles.error_msg}", LogLevel.Warn);
+					ModEntry.log("Skipping Particles.", LogLevel.Warn);
+				}
+			}
+
+			else if (data is JArray arr)
+			{
+				// list of particless
+				return new(info, arr, rot_name);
+			}
+
+			// for all invalid cases
+			return make_default(info, rot_name);
+		}
+
+		List<Particles> list = new();
+		public readonly bool is_valid = false;
+		public readonly string? error_msg;
+
+		private ParticlesList(Particles particles)
+		{
+			list.Add(particles);
+			is_valid = true;
+		}
+
+		private ParticlesList(TypeInfo info, JArray array, string rot_name)
+		{
+			foreach (JToken token in array)
+			{
+				if (token is not JObject obj2) continue;	// skips comments
+				add_particles(info, obj2, rot_name);
+			}
+
+			is_valid = true;
+		}
+
+		private void add_particles(TypeInfo info, JObject data, string rot_name)
+		{
+			Particles particles = new(info, data, rot_name);
+			if (particles.is_valid)
+				list.Add(particles);
+			else
+			{
+				ModEntry.log($"Invalid Particles in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+				ModEntry.log($"\t{particles.error_msg}", LogLevel.Warn);
+				ModEntry.log($"Skipping Particles.");
 			}
 		}
 
 		#endregion
 
-		#region Particles Method
+		#region ParticlesList Methods
 
 		private List<long> parse_timers(Furniture furniture)
 		{
@@ -277,7 +357,7 @@ namespace FurnitureFramework
 					valid_mod_data = false;
 				}
 
-				if (timers_array.Count == particle_list.Count)
+				if (timers_array.Count == list.Count)
 				{
 					foreach (JToken timer_token in timers_array)
 					{
@@ -302,7 +382,7 @@ namespace FurnitureFramework
 
 			if (!valid_mod_data)
 			{
-				timers.AddRange(Enumerable.Repeat(0L, particle_list.Count - timers.Count));
+				timers.AddRange(Enumerable.Repeat(0L, list.Count - timers.Count));
 			}
 
 			return timers;
@@ -323,7 +403,7 @@ namespace FurnitureFramework
 		{
 			List<long> timers = parse_timers(furniture);
 
-			foreach ((ParticleData particle, int index) in particle_list.Select((value, index) => (value, index)))
+			foreach ((Particles particle, int index) in list.Select((value, index) => (value, index)))
 			{
 				particle.update_timer(furniture, timers, index, time_ms);
 			}
@@ -333,9 +413,21 @@ namespace FurnitureFramework
 
 		public void burst(Furniture furniture)
 		{
-			foreach (ParticleData particle in particle_list)
+			foreach (Particles particle in list)
 			{
 				particle.burst(furniture);
+			}
+		}
+
+		public void debug_print(int indent_count)
+		{
+			string indent = new('\t', indent_count);
+			int index = 0;
+			foreach (Particles particles in list)
+			{
+				ModEntry.log($"{indent}Particles {index}:", LogLevel.Debug);
+				particles.debug_print(indent_count + 1);
+				index ++;
 			}
 		}
 
