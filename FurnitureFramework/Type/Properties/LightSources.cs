@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -6,8 +7,185 @@ using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Objects;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Type.Properties
 {
+	// [RequiresPreviewFeatures]
+	// class LightList: IProperty<LightList>
+	// {
+
+	// 	#region Light Subclass
+
+	// 	private enum LightType { Source, Glow }
+
+	// 	private class Light
+	// 	{
+	// 		public readonly bool is_valid = false;
+	// 		public readonly string? error_msg;
+	// 		public readonly LightType light_type;
+	// 		Rectangle source_rect;	// directional
+
+	// 		bool can_be_toggled;
+	// 		bool time_based;
+	// 		Point position;		// directional
+	// 		float radius = 2f;	// directional
+	// 		Color color;		// directional
+	// 		DynaTexture? texture = null;
+
+	// 		public readonly bool is_glow = false;
+
+	// 		#region Light Parsing
+
+	// 		public Light(JObject data, string rot_name)
+	// 		{
+	// 			// Parsing Source Rectangle
+	// 			JToken? rect_token = data.GetValue("Source Rect");
+	// 			if (!JsonParser.try_parse(rect_token, out source_rect))
+	// 			{
+	// 				error_msg = "Missing or Invalid Source Rectangle";
+
+	// 				// Directional?
+	// 				if (rect_token is not JObject rect_obj) return;
+
+	// 				JToken? dir_rect_token = rect_obj.GetValue(rot_name);
+	// 				if (!JsonParser.try_parse(dir_rect_token, out source_rect))
+	// 					return;
+	// 			}
+
+	// 			is_valid = true;
+
+	// 			parse_optional(data);
+	// 		}
+
+	// 		private void parse_optional(JObject obj)
+	// 		{
+	// 			can_be_toggled = JsonParser.parse(obj.GetValue("Toggle"), false);
+	// 			time_based = JsonParser.parse(obj.GetValue("Time Based"), false);
+
+	// 		}
+
+	// 		#endregion
+
+	// 		#region Light Methods
+
+	// 		#endregion
+	// 	}
+
+	// 	#endregion
+
+	// 	#region LightList Parsing
+
+	// 	public static LightList make_default(TypeInfo info, string rot_name)
+	// 	{
+	// 		return new(info, new JArray() /*empty array -> no lights*/, rot_name);
+	// 	}
+
+	// 	public static LightList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
+	// 	{
+	// 		error_msg = null;
+			
+	// 		if (data is JObject obj)
+	// 		{
+	// 			// single light?
+	// 			Light light = new(obj, rot_name);
+	// 			if (light.is_valid)
+	// 				return new(light);
+
+	// 			// directional?
+	// 			JToken? dir_token = obj.GetValue(rot_name);
+	// 			if (dir_token is JObject dir_obj)
+	// 			{
+	// 				// directional single light?
+	// 				Light dir_light = new(dir_obj, rot_name);
+	// 				if (dir_light.is_valid)
+	// 					return new(dir_light);
+					
+	// 				// single light was invalid
+	// 				ModEntry.log($"Could not parse a light in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+	// 				ModEntry.log($"\t{light.error_msg}", LogLevel.Warn);
+	// 				ModEntry.log("Skipping Light.", LogLevel.Warn);
+	// 			}
+
+	// 			else if (dir_token is JArray dir_arr)
+	// 			{
+	// 				// directional lights
+	// 				return new(info, dir_arr, rot_name);
+	// 			}
+
+	// 			else
+	// 			{
+	// 				// single light was is invalid
+	// 				ModEntry.log($"Could not parse a light in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+	// 				ModEntry.log($"\t{light.error_msg}", LogLevel.Warn);
+	// 				ModEntry.log("Skipping Light.", LogLevel.Warn);
+	// 			}
+	// 		}
+
+	// 		else if (data is JArray arr)
+	// 		{
+	// 			// lights
+	// 			return new(info, arr, rot_name);
+	// 		}
+
+	// 		// for all invalid cases
+	// 		return make_default(info, rot_name);
+	// 	}
+
+	// 	List<Light> sources = new();
+	// 	List<Light> glows = new();
+	// 	public readonly bool is_valid = false;
+	// 	public readonly string? error_msg;
+
+	// 	private LightList(Light light)
+	// 	{
+	// 		add_light(light);
+	// 		is_valid = true;
+	// 	}
+
+	// 	private LightList(TypeInfo info, JArray array, string rot_name)
+	// 	{
+	// 		foreach (JToken token in array)
+	// 		{
+	// 			if (token is not JObject obj2) continue;	// skips comments
+	// 			add_light(info, obj2, rot_name);
+	// 		}
+
+	// 		is_valid = true;
+	// 	}
+
+	// 	private void add_light(TypeInfo info, JObject data, string rot_name)
+	// 	{
+	// 		Light light = new(data, rot_name);
+	// 		if (light.is_valid)
+	// 			add_light(light);
+	// 		else
+	// 		{
+	// 			ModEntry.log($"Invalid Light in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+	// 			ModEntry.log($"\t{light.error_msg}", LogLevel.Warn);
+	// 			ModEntry.log($"Skipping Light.");
+	// 		}
+	// 	}
+
+	// 	private void add_light(Light light)
+	// 	{
+	// 		switch (light.light_type)
+	// 		{
+	// 			case LightType.Source:
+	// 				sources.Add(light);
+	// 				break;
+	// 			case LightType.Glow:
+	// 				glows.Add(light);
+	// 				break;
+	// 		}
+	// 	}
+
+	// 	#endregion
+	
+	// 	#region LightList Methods
+
+	// 	#endregion
+	// }
+
+	[RequiresPreviewFeatures]
 	class LightSources
 	{
 
@@ -35,10 +213,9 @@ namespace FurnitureFramework
 
 			public readonly bool is_glow = false;
 
-
 			#region LightSourceData Parsing
 
-			public LightSourceData(FurnitureType type, JObject light_obj, List<string> rot_names)
+			public LightSourceData(TypeInfo info, JObject light_obj, List<string> rot_names)
 			{
 				JToken? token = light_obj.GetValue("Position");
 				Point single_pos = new();
@@ -86,13 +263,13 @@ namespace FurnitureFramework
 
 				token = light_obj.GetValue("Source Image");
 				string image_path = JsonParser.parse(token, "FF/light_glows/window.png");
-				texture = new(type, image_path, false, false);
+				texture = new(info, image_path);
 
 				token = light_obj.GetValue("Source Rect");
 				if (token is not JObject || !JsonParser.try_parse(token, ref source_rect))
 					source_rect = Rectangle.Empty;
 
-				color = JsonParser.parse_color(light_obj.GetValue("Color"), "White");
+				color = JsonParser.parse_color(light_obj.GetValue("Color"), Color.White);
 
 				token = light_obj.GetValue("Mode");
 				if (token is JValue && token.Type == JTokenType.String)
@@ -201,7 +378,7 @@ namespace FurnitureFramework
 
 		#region LightSources Parsing
 
-		public LightSources(FurnitureType type, JToken? token, List<string> rot_names)
+		public LightSources(TypeInfo info, JToken? token, List<string> rot_names)
 		{
 			if (token is not JArray light_arr) 
 			{
@@ -215,7 +392,7 @@ namespace FurnitureFramework
 				if (light_token is not JObject light_obj)
 					continue;
 
-				LightSourceData light = new(type, light_obj, rot_names);
+				LightSourceData light = new(info, light_obj, rot_names);
 
 				if (!light.is_valid)
 				{

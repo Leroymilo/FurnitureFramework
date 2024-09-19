@@ -249,11 +249,11 @@ namespace FurnitureFramework.Type
 
 			slots = new(info, data.GetValue("Slots"), rot_names);
 
-			light_sources = new(this, data.GetValue("Light Sources"), rot_names);
+			light_sources = new(info, data.GetValue("Light Sources"), rot_names);
 
 			sounds = new(data.GetValue("Sounds"));
 
-			particles = new(this, data.GetValue("Particles"));
+			particles = new(info, data.GetValue("Particles"), rot_names);
 
 			#endregion
 

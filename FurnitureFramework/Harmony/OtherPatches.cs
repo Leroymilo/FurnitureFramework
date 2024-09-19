@@ -1,4 +1,5 @@
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -7,11 +8,12 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Patches
 {
+	[RequiresPreviewFeatures]
 	internal class FarmerPostfixes
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Postfix;
-		static readonly Type base_type = typeof(Farmer);
+		static readonly System.Type base_type = typeof(Farmer);
 		#pragma warning restore 0414
 
 		internal static float getDrawLayer(
@@ -24,7 +26,7 @@ namespace FurnitureFramework.Patches
 
 			try
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
@@ -36,11 +38,12 @@ namespace FurnitureFramework.Patches
 		}
 	}
 
+	[RequiresPreviewFeatures]
 	internal class Game1Transpiler
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Transpiler;
-		static readonly Type base_type = typeof(Game1);
+		static readonly System.Type base_type = typeof(Game1);
 		#pragma warning restore 0414
 
 		#region DrawLighting
@@ -49,7 +52,7 @@ namespace FurnitureFramework.Patches
 Insert :
 
 ldsfld class Microsoft.Xna.Framework.Graphics.SpriteBatch StardewValley.Game1::spriteBatch
-call void FurnitureType.draw_lighting(Microsoft.Xna.Framework.Graphics.SpriteBatch)
+call void Type.FurnitureType.draw_lighting(Microsoft.Xna.Framework.Graphics.SpriteBatch)
 
 Before :
 
@@ -75,7 +78,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 					AccessTools.DeclaredMethod(
 						typeof(SpriteBatch),
 						"End",
-						new Type[] {}
+						new System.Type[] {}
 					)
 				)
 			};
@@ -91,9 +94,9 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.DeclaredMethod(
-						typeof(FurnitureType),
+						typeof(Type.FurnitureType),
 						"draw_lighting",
-						new Type[] {typeof(SpriteBatch)}
+						new System.Type[] {typeof(SpriteBatch) }
 					)
 				),
 				new CodeInstruction(
@@ -108,7 +111,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 					AccessTools.DeclaredMethod(
 						typeof(SpriteBatch),
 						"End",
-						Array.Empty<Type>()
+						Array.Empty<System.Type>()
 					)
 				)
 			};

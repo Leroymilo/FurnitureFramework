@@ -85,7 +85,7 @@ namespace FurnitureFramework.Type
 		DirectionalStructure<SeatList> seats;
 		DirectionalStructure<SlotList> slots;
 		SoundList sounds;
-		Particles particles;
+		DirectionalStructure<ParticlesList> particles;
 		LightSources light_sources;
 
 		PlacementType p_type = PlacementType.Normal;
@@ -546,10 +546,11 @@ namespace FurnitureFramework.Type
 
 		public void updateWhenCurrentLocation(Furniture furniture)
 		{
+			int rot = furniture.currentRotation.Value;
 
 			// Updating particles
 			long ms_time = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
-			particles.update_timer(furniture, ms_time);
+			particles[rot].update_timer(furniture, ms_time);
 
 			// Checking bed intersection
 			if (s_type == SpecialType.Bed)
@@ -607,7 +608,7 @@ namespace FurnitureFramework.Type
 
 				sounds.play(furniture.Location, furniture.IsOn);
 
-				particles.burst(furniture);
+				particles[rot].burst(furniture);
 			}
 			else
 			{
@@ -634,9 +635,8 @@ namespace FurnitureFramework.Type
 
 		public void on_placed(Furniture furniture)
 		{
-			particles.burst(furniture);
-
 			int rot = furniture.currentRotation.Value;
+			particles[rot].burst(furniture);
 			initialize_slots(furniture, rot);
 		}
 	}

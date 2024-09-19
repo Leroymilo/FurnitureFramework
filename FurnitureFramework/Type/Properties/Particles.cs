@@ -9,7 +9,7 @@ using StardewValley.Objects;
 namespace FurnitureFramework.Type.Properties
 {
 	[RequiresPreviewFeatures]
-	class ParticlesList
+	class ParticlesList: IProperty<ParticlesList>
 	{
 		#region Particles Subclass
 

@@ -1,4 +1,5 @@
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -8,11 +9,12 @@ using StardewValley.Objects;
 namespace FurnitureFramework.Patches
 {
 
+	[RequiresPreviewFeatures]
 	internal class LocationPostfixes
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Postfix;
-		static readonly Type base_type = typeof(GameLocation);
+		static readonly System.Type base_type = typeof(GameLocation);
 		#pragma warning restore 0414
 
 		#region getObjectAt
@@ -26,7 +28,7 @@ namespace FurnitureFramework.Patches
 				return __result;
 			// no hit or hit non-furniture object
 			
-			if (FurnitureType.is_clicked(furniture, x, y))
+			if (Type.FurnitureType.is_clicked(furniture, x, y))
 				return furniture;
 			// the custom furniture found is correct
 			
@@ -34,7 +36,7 @@ namespace FurnitureFramework.Patches
 			{
 				foreach (Furniture item in __instance.furniture)
 				{
-					if (!(ignorePassables && item.isPassable()) && FurnitureType.is_clicked(item, x, y))
+					if (!(ignorePassables && item.isPassable()) && Type.FurnitureType.is_clicked(item, x, y))
 					{
 						return item;
 					}
@@ -70,7 +72,7 @@ namespace FurnitureFramework.Patches
 			{
 				foreach (Furniture furniture in __instance.furniture)
 				{
-					if (FurnitureType.is_clicked(furniture, x, y))
+					if (Type.FurnitureType.is_clicked(furniture, x, y))
 					{
 						return true;
 					}
@@ -87,11 +89,12 @@ namespace FurnitureFramework.Patches
 		#endregion
 	}
 
+	[RequiresPreviewFeatures]
 	class LocationTranspilers
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Transpiler;
-		static readonly Type base_type = typeof(GameLocation);
+		static readonly System.Type base_type = typeof(GameLocation);
 		#pragma warning restore 0414
 
 		#region LowPriorityLeftClick
@@ -111,7 +114,7 @@ call instance bool Microsoft.Xna.Framework.Rectangle::Contains(int32, int32)  0A
 ldloc.2
 ldarg.1
 ldarg.2
-call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, int, int)
+call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furniture, int, int)
 
 */
 
@@ -139,7 +142,7 @@ call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, 
 					AccessTools.Method(
 						typeof(Rectangle),
 						"Contains",
-						new Type[] {typeof(int), typeof(int)}
+						new System.Type[] {typeof(int), typeof(int)}
 					)
 				)
 			};
@@ -151,9 +154,9 @@ call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, 
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.Method(
-						typeof(FurnitureType),
+						typeof(Type.FurnitureType),
 						"is_clicked",
-						new Type[] {typeof(Furniture), typeof(int), typeof(int)}
+						new System.Type[] {typeof(Furniture), typeof(int), typeof(int)}
 					)
 				)
 			};
@@ -190,7 +193,7 @@ call valuetype Microsoft.Xna.Framework.Vector2 Microsoft.Xna.Framework.Vector2::
 stloc.s 20
 ldloca.s 20
 call instance valuetype Microsoft.Xna.Framework.Point Microsoft.Xna.Framework.Vector2::ToPoint()
-call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, Microsoft.Xna.Framework.Point)
+call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furniture, Microsoft.Xna.Framework.Point)
 
 */
 
@@ -231,7 +234,7 @@ call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, 
 					AccessTools.Method(
 						typeof(Rectangle),
 						"Contains",
-						new Type[] {typeof(int), typeof(int)}
+						new System.Type[] {typeof(int), typeof(int)}
 					)
 				)
 			};
@@ -244,7 +247,7 @@ call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, 
 					AccessTools.Method(
 						typeof(Vector2),
 						"op_Multiply",
-						new Type[] {typeof(Vector2), typeof(float)}
+						new System.Type[] {typeof(Vector2), typeof(float)}
 					)
 				),
 				new CodeInstruction(OpCodes.Stloc_S, 20),
@@ -256,9 +259,9 @@ call bool FurnitureFramework.FurnitureType::is_clicked(StardewValley.Furniture, 
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.Method(
-						typeof(FurnitureType),
+						typeof(Type.FurnitureType),
 						"is_clicked",
-						new Type[] {typeof(Furniture), typeof(Point)}
+						new System.Type[] {typeof(Furniture), typeof(Point) }
 					)
 				)
 			};

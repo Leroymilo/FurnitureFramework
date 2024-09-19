@@ -27,7 +27,7 @@ namespace FurnitureFramework
 					!t.IsEnum
 				);
 
-			foreach (Type type in types)
+			foreach (System.Type type in types)
 			{
 				#region Get Identification Fields
 
@@ -54,7 +54,7 @@ namespace FurnitureFramework
 					ModEntry.log($"No base_type in {type}", LogLevel.Trace);
 					continue;
 				}
-				Type? base_type = (Type?)prop.GetValue(null);
+				System.Type? base_type = (System.Type?)prop.GetValue(null);
 				if (base_type is null)
 				{
 					ModEntry.log($"base_type is invalid in {type}", LogLevel.Trace);
