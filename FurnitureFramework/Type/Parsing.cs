@@ -202,19 +202,9 @@ namespace FurnitureFramework.Type
 			// texture = new(pack, texture_path, seasonal);
 
 			token = data.GetValue("Source Rect");
-			List<Rectangle?> n_source_rects = new();
-			if (!JsonParser.try_parse(token, rot_names, ref n_source_rects))
+			source_rects.Clear();			
+			if (!JsonParser.try_parse(token, rot_names, ref source_rects))
 				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {info.id}.");
-			if (!JsonParser.try_rm_null(n_source_rects, ref source_rects))
-				throw new InvalidDataException($"Missing directional Source Rectangles for Furniture {info.id}.");
-			
-			for (int i = 0; i < source_rects.Count; i++)
-			{
-				source_rects[i] = new(
-					source_rects[i].Location + rect_offset,
-					source_rects[i].Size
-				);
-			}
 
 			this.rect_offset = rect_offset;
 

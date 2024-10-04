@@ -173,11 +173,11 @@ namespace FurnitureFramework
 			JObject data;
 			try
 			{
-				data = ModEntry.get_helper().GameContent.Load<JObject>(path);
+				data = content_pack.ModContent.Load<JObject>(path);
 			}
 			catch (ContentLoadException ex)
 			{
-				ModEntry.log($"Could not load {path} for {UID}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Could not load {UID}/{path}:\n{ex}", LogLevel.Error);
 				return;
 			}
 
@@ -321,6 +321,9 @@ namespace FurnitureFramework
 		{
 			UID = pack.Manifest.UniqueID;
 			content_pack = pack;
+
+			packs[UID] = this;
+			// Need to be added before trying to load the content.json
 
 			load(path);
 		}

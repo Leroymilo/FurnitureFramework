@@ -1,9 +1,11 @@
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 using HarmonyLib;
 
 namespace FurnitureFramework
 {
+	[RequiresPreviewFeatures]
 	static class Transpiler
 	{
 

@@ -40,10 +40,10 @@
 				{
 					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Up": 0,
-						"Right": 1,
-						"Down": 2,
-						"Left": 3
+						"Up": "Up",
+						"Right": "Right",
+						"Down": "Down",
+						"Left": "Left"
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 					// omitting a furniture rotation will remove this seat when the furniture is in this direction
@@ -92,26 +92,26 @@
 				{
 					"Position": {"X": 0, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Up": 0,
-						"Right": 1,
-						"Down": 2,
-						"Left": 3
+						"Up": "Up",
+						"Right": "Right",
+						"Down": "Down",
+						"Left": "Left"
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
 					"Position": {"X": 1, "Y": 0},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Up": 0,
-						"Down": 2
+						"Up": "Up",
+						"Down": "Down"
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				},
 				{
 					"Position": {"X": 0, "Y": 1},		// in tiles, can be decimal to sit between 2 tiles
 					"Player Direction": {
-						"Right": 1,
-						"Left": 3
+						"Right": "Right",
+						"Left": "Left"
 					}	// structure is : {<furniture rotation> : <player direction>}
 					// player direction : Up->0, Right->1, Down->2, Left->3
 				}
@@ -170,41 +170,41 @@
 				"Up": [
 					{
 						"Position": {"X": 0.5, "Y": 0},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					},
 					{
 						"Position": {"X": 1.5, "Y": 0},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					}
 				],
 				"Right": [
 					{
 						"Position": {"X": 1, "Y": 0},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						"Position": {"X": 1, "Y": 1},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					}
 				],
 				"Down": [
 					{
 						"Position": {"X": 0.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						"Position": {"X": 1.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					}
 				],
 				"Left": [
 					{
 						"Position": {"X": 0, "Y": 0},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						"Position": {"X": 0, "Y": 1},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					}
 				]
 			},
@@ -369,128 +369,128 @@
 					{
 						// Left seat of Long Couch
 						"Position": {"X": 2.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Center seat of Long Couch
 						"Position": {"X": 3.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Right seat of Long Couch
 						"Position": {"X": 4.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Seat of Armchair
 						"Position": {"X": 1, "Y": 1},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Top seat of Couch
 						"Position": {"X": 6, "Y": 1},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						// Bottom seat of Couch
 						"Position": {"X": 6, "Y": 2},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					}
 				],
 				"Right": [
 					{
 						// Left seat of Couch
 						"Position": {"X": 2.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Right seat of Couch
 						"Position": {"X": 3.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Top seat of Long Couch
 						"Position": {"X": 1, "Y": 1},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Center seat of Long Couch
 						"Position": {"X": 1, "Y": 2},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Bottom seat of Long Couch
 						"Position": {"X": 1, "Y": 3},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Seat of Armchair
 						"Position": {"X": 2.5, "Y": 4},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					}
 				],
 				"Up": [
 					{
 						// Top seat of Couch
 						"Position": {"X": 1, "Y": 0},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Bottom seat of Couch
 						"Position": {"X": 1, "Y": 1},
-						"Player Direction": 1
+						"Player Direction": "Right"
 					},
 					{
 						// Seat of Armchair
 						"Position": {"X": 6, "Y": 1},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						// Left seat of Long Couch
 						"Position": {"X": 2.5, "Y": 2},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					},
 					{
 						// Center seat of Long Couch
 						"Position": {"X": 3.5, "Y": 2},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					},
 					{
 						// Right seat of Long Couch
 						"Position": {"X": 4.5, "Y": 2},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					}
 				],
 				"Left": [
 					{
 						// Seat of Armchair
 						"Position": {"X": 1.5, "Y": 0},
-						"Player Direction": 2
+						"Player Direction": "Down"
 					},
 					{
 						// Top seat of Long Couch
 						"Position": {"X": 3, "Y": 1},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						// Center seat of Long Couch
 						"Position": {"X": 3, "Y": 2},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						// Bottom seat of Long Couch
 						"Position": {"X": 3, "Y": 3},
-						"Player Direction": 3
+						"Player Direction": "Left"
 					},
 					{
 						// Left seat of Couch
 						"Position": {"X": 0.5, "Y": 4},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					},
 					{
 						// Right seat of Couch
 						"Position": {"X": 1.5, "Y": 4},
-						"Player Direction": 0
+						"Player Direction": "Up"
 					}
 				]
 			},

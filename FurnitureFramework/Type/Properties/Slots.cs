@@ -228,6 +228,9 @@ namespace FurnitureFramework.Type.Properties
 		public static SlotList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
 		{
 			error_msg = null;
+
+			if (data == null || data.Type == JTokenType.None)
+				return make_default(info, rot_name);
 			
 			if (data is JObject obj)
 			{
@@ -273,19 +276,17 @@ namespace FurnitureFramework.Type.Properties
 			}
 
 			// for all invalid cases
+			error_msg = "Invalid Slot List definition, fallback to no Slots.";
 			return make_default(info, rot_name);
 		}
 
 		List<Slot> list = new();
-		public readonly bool is_valid = false;
-		public readonly string? error_msg;
 
 		public int count {get => list.Count;}
 
 		private SlotList(Slot slot)
 		{
 			list.Add(slot);
-			is_valid = true;
 		}
 
 		private SlotList(TypeInfo info, JArray array, string rot_name)
@@ -295,8 +296,6 @@ namespace FurnitureFramework.Type.Properties
 				if (token is not JObject obj2) continue;	// skips comments
 				add_slot(info, obj2, rot_name);
 			}
-
-			is_valid = true;
 		}
 
 		private void add_slot(TypeInfo info, JObject data, string rot_name)

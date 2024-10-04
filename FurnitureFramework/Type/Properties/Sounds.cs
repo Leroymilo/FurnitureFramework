@@ -1,9 +1,11 @@
+using System.Runtime.Versioning;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 
 namespace FurnitureFramework.Type.Properties
 {
+	[RequiresPreviewFeatures]
 	class SoundList
 	{
 		private enum SoundMode {

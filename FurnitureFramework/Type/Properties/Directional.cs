@@ -18,14 +18,14 @@ namespace FurnitureFramework.Type.Properties
 		List<string> rot_names;
 		JToken? data;
 		TypeInfo info;
-		List<T?> values = new();
+		List<T?> values;
 
 		public DirectionalStructure(TypeInfo info, JToken? data, List<string> rot_names)
 		{
 			this.info = info;
 			this.data = data;
 			this.rot_names = rot_names;
-			values.Capacity = rot_names.Count;
+			values = Enumerable.Repeat<T?>(default, rot_names.Count).ToList();
 		}
 
 		public T this[int i]

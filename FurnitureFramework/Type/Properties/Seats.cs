@@ -103,6 +103,9 @@ namespace FurnitureFramework.Type.Properties
 		public static SeatList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
 		{
 			error_msg = null;
+
+			if (data == null || data.Type == JTokenType.None)
+				return make_default(info, rot_name);
 			
 			if (data is JObject obj)
 			{
@@ -148,19 +151,17 @@ namespace FurnitureFramework.Type.Properties
 			}
 
 			// for all invalid cases
+			error_msg = "Invalid Seat List definition, fallback to no Seats.";
 			return make_default(info, rot_name);
 		}
 
 		List<Seat> list = new();
-		public readonly bool is_valid = false;
-		public readonly string? error_msg;
 		
 		public bool has_seats {get => list.Count > 0;}
 
 		private SeatList(Seat seat)
 		{
 			list.Add(seat);
-			is_valid = true;
 		}
 
 		private SeatList(TypeInfo info, JArray array, string rot_name)
@@ -170,8 +171,6 @@ namespace FurnitureFramework.Type.Properties
 				if (token is not JObject obj2) continue;	// skips comments
 				add_seat(info, obj2, rot_name);
 			}
-
-			is_valid = true;
 		}
 
 		private void add_seat(TypeInfo info, JObject data, string rot_name)

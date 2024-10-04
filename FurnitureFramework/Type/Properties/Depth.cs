@@ -1,7 +1,9 @@
+using System.Runtime.Versioning;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Type.Properties
 {
+	[RequiresPreviewFeatures]
 	class Depth
 	{
 		int tile;

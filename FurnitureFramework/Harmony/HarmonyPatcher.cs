@@ -1,6 +1,7 @@
 using HarmonyLib;
 using StardewModdingAPI;
 using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace FurnitureFramework
 {
@@ -10,6 +11,7 @@ namespace FurnitureFramework
 		Transpiler
 	}
 
+	[RequiresPreviewFeatures]
 	class HarmonyPatcher
 	{
 		public static Harmony? harmony;

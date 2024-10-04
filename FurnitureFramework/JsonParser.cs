@@ -132,13 +132,12 @@ namespace FurnitureFramework
 		}
 
 		// Parse directional rectangles
-		public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle?> result)
+		public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle> result)
 		{
 			result.Clear();
-			if (rot_names.Count == 0)
+			if (try_parse(token, out Rectangle rect))
 			{
-				if(!try_parse(token, out Rectangle rect)) return false;
-				result.Add(rect);
+				result = Enumerable.Repeat(rect, rot_names.Count).ToList();
 				return true;
 			}
 			else if (token is JObject rect_dict)
@@ -146,9 +145,9 @@ namespace FurnitureFramework
 				foreach (string key in rot_names)
 				{
 					JToken? rect_token = rect_dict.GetValue(key);
-					if (try_parse(rect_token, out Rectangle rect))
-						result.Add(rect);
-					else result.Add(null);
+					if (try_parse(rect_token, out Rectangle dir_rect))
+						result.Add(dir_rect);
+					else return false;
 				}
 				return true;
 			}
@@ -179,19 +178,7 @@ namespace FurnitureFramework
 				return true;
 			}
 			return false;
-		}
-
-		public static bool try_rm_null<T>(List<T?> list, ref List<T> result) where T: struct
-		{
-			result.Clear();
-			foreach (T? val in list)
-			{
-				if (val is null) return false;
-				result.Add(val.Value);
-			}
-			return true;
-		}
-		
+		}		
 
 		public static Color parse_color(JToken? token, Color def)
 		{

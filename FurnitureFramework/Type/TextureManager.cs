@@ -4,6 +4,7 @@ using StardewModdingAPI;
 
 namespace FurnitureFramework.Type
 {
+	[RequiresPreviewFeatures]
 	class DynaTexture
 	{
 		string path;
@@ -27,6 +28,7 @@ namespace FurnitureFramework.Type
 		}
 	}
 
+	[RequiresPreviewFeatures]
 	static class TextureManager
 	{
 

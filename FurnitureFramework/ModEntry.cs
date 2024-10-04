@@ -1,4 +1,5 @@
-﻿using GenericModConfigMenu;
+﻿using System.Runtime.Versioning;
+using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +13,7 @@ using StardewValley.Objects;
 namespace FurnitureFramework
 {
     /// <summary>The mod entry point.</summary>
+	[RequiresPreviewFeatures]
     internal sealed class ModEntry : Mod
     {
 		static IMonitor? monitor;
@@ -229,14 +231,16 @@ namespace FurnitureFramework
 			
 			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
 
-			if (e.Button == get_config().slot_place_key)
+			Item? held_item = Game1.player.ActiveItem?.getOne();
+
+			if (e.Button == get_config().slot_place_key && held_item is StardewValley.Object obj)
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					FurniturePack.try_get_type(item, out FurnitureType? type);
-					if (type == null || !type.is_table) continue;
+					FurniturePack.try_get_type(item, out Type.FurnitureType? type);
+					if (type == null) continue;
 
-					if (type.place_in_slot(item, pos, Game1.player))
+					if (type.place_in_slot(item, obj, pos, Game1.player))
 					{
 						Helper.Input.Suppress(get_config().slot_place_key);
 						clicked_slot = true;
@@ -249,9 +253,8 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					FurniturePack.try_get_type(item, out FurnitureType? type);
+					FurniturePack.try_get_type(item, out Type.FurnitureType? type);
 					if (type == null) continue;
-					if (!type.is_table) continue;
 
 					if (type.remove_from_slot(item, pos, Game1.player))
 					{
@@ -278,7 +281,7 @@ namespace FurnitureFramework
 			if (name.StartsWith("Data/Shops"))
 				e.Edit(FurniturePack.edit_data_shop);
 
-			if (FurniturePack.try_get_type(name, out FurnitureType? type))
+			if (FurniturePack.try_get_type(name, out Type.FurnitureType? type))
 			{
 				// Loading texture for menu icon
 				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
@@ -301,7 +304,7 @@ namespace FurnitureFramework
 				{
 					// Loading any texture for this Furniture Pack
 					e.LoadFrom(
-						() => {return TextureManager.base_load(f_pack.content_pack.ModContent, path);},
+						() => {return Type.TextureManager.base_load(f_pack.content_pack.ModContent, path);},
 						AssetLoadPriority.Low
 					);
 				}
@@ -332,7 +335,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					type.on_placed(furniture);
 				}
@@ -340,7 +343,7 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					type.on_removed(furniture);
 				}
@@ -354,7 +357,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}
@@ -368,7 +371,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}

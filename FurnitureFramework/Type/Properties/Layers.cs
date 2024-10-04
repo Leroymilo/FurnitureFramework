@@ -6,6 +6,8 @@ using System.Runtime.Versioning;
 
 namespace FurnitureFramework.Type.Properties
 {
+	#pragma warning disable 0649
+
 	[RequiresPreviewFeatures]
 	class LayerList: IProperty<LayerList>
 	{
@@ -95,6 +97,9 @@ namespace FurnitureFramework.Type.Properties
 		public static LayerList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
 		{
 			error_msg = null;
+
+			if (data == null || data.Type == JTokenType.None)
+				return make_default(info, rot_name);
 			
 			if (data is JObject obj)
 			{
@@ -140,17 +145,15 @@ namespace FurnitureFramework.Type.Properties
 			}
 
 			// for all invalid cases
+			error_msg = "Invalid Layer List definition, fallback to no Layers.";
 			return make_default(info, rot_name);
 		}
 
 		List<Layer> list = new();
-		public readonly bool is_valid = false;
-		public readonly string? error_msg;
 
 		private LayerList(Layer layer)
 		{
 			list.Add(layer);
-			is_valid = true;
 		}
 
 		private LayerList(TypeInfo info, JArray array, string rot_name)
@@ -160,8 +163,6 @@ namespace FurnitureFramework.Type.Properties
 				if (token is not JObject obj2) continue;	// skips comments
 				add_layer(info, obj2, rot_name);
 			}
-
-			is_valid = true;
 		}
 
 		private void add_layer(TypeInfo info, JObject data, string rot_name)

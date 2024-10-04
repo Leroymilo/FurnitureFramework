@@ -255,6 +255,9 @@ namespace FurnitureFramework.Type.Properties
 		public static ParticlesList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
 		{
 			error_msg = null;
+
+			if (data == null || data.Type == JTokenType.None)
+				return make_default(info, rot_name);
 			
 			if (data is JObject obj)
 			{
@@ -300,17 +303,16 @@ namespace FurnitureFramework.Type.Properties
 			}
 
 			// for all invalid cases
+
+			error_msg = "Invalid Particle List definition, fallback to no Particles.";
 			return make_default(info, rot_name);
 		}
 
 		List<Particles> list = new();
-		public readonly bool is_valid = false;
-		public readonly string? error_msg;
 
 		private ParticlesList(Particles particles)
 		{
 			list.Add(particles);
-			is_valid = true;
 		}
 
 		private ParticlesList(TypeInfo info, JArray array, string rot_name)
@@ -320,8 +322,6 @@ namespace FurnitureFramework.Type.Properties
 				if (token is not JObject obj2) continue;	// skips comments
 				add_particles(info, obj2, rot_name);
 			}
-
-			is_valid = true;
 		}
 
 		private void add_particles(TypeInfo info, JObject data, string rot_name)

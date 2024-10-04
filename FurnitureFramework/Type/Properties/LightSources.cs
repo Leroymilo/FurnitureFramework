@@ -82,6 +82,9 @@ namespace FurnitureFramework.Type.Properties
 	// 	public static LightList make(TypeInfo info, JToken? data, string rot_name, out string? error_msg)
 	// 	{
 	// 		error_msg = null;
+
+			// if (data == null || data.Type == JTokenType.None)
+			// 	return make_default(info, rot_name);
 			
 	// 		if (data is JObject obj)
 	// 		{
@@ -127,6 +130,7 @@ namespace FurnitureFramework.Type.Properties
 	// 		}
 
 	// 		// for all invalid cases
+			// error_msg = "Invalid Light List definition, fallback to no Lights.";
 	// 		return make_default(info, rot_name);
 	// 	}
 

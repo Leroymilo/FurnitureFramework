@@ -108,8 +108,6 @@ namespace FurnitureFramework.Type
 		Rectangle? fish_area = null;
 		public readonly bool disable_fishtank_light = false;
 
-		public readonly string? description;
-
 		#endregion
 
 		#region Rotation
@@ -339,15 +337,11 @@ namespace FurnitureFramework.Type
 			return slots[rot].get_slot(rel_pos);
 		}
 
-		public bool place_in_slot(Furniture furniture, Point pos, Farmer who)
+		public bool place_in_slot(Furniture furniture, StardewValley.Object obj, Point pos, Farmer who)
 		{
 			int rot = furniture.currentRotation.Value;
 			
 			initialize_slots(furniture, rot);
-
-			Item item = who.ActiveItem.getOne();
-			if (item is not StardewValley.Object obj_inst) return false;
-			// player is not holding an object
 			
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
@@ -359,7 +353,7 @@ namespace FurnitureFramework.Type
 			if (chest.Items[slot_index] is not null) return false;
 			// Slot already occupied
 
-			if (!slots[rot].can_hold(slot_index, obj_inst, furniture, who))
+			if (!slots[rot].can_hold(slot_index, obj, furniture, who))
 			{
 				Game1.showRedMessage("This item cannot be placed here.");
 				return false;
@@ -367,8 +361,8 @@ namespace FurnitureFramework.Type
 			// held item doesn't have valid context tags
 			// or held furniture is too big
 
-			obj_inst.Location = furniture.Location;
-			chest.Items[slot_index] = obj_inst;
+			obj.Location = furniture.Location;
+			chest.Items[slot_index] = obj;
 			who.reduceActiveItemByOne();
 			Game1.currentLocation.playSound("woodyStep");
 

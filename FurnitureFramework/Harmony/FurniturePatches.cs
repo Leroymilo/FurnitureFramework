@@ -555,8 +555,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			{
 				if (
 					FurniturePack.try_get_type(__instance, out Type.FurnitureType? type)
-					&& type.description is not null
-				) return type.description;
+					&& type.info.description is not null
+				) return type.info.description;
 			}
 			catch (Exception ex)
 			{
