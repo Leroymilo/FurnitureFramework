@@ -237,7 +237,7 @@
 
 			"Special Type": "Bed",
 			"Bed Spot": {"X": 2, "Y": 1},
-			"Bed Area Pixel": {"X": 16, "Y": 16, "Width": 48, "Height": 16}
+			"Bed Area": {"X": 16, "Y": 16, "Width": 48, "Height": 16}
 		},
 
 		"{{ModID}}.simple_bed": {

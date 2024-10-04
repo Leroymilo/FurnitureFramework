@@ -286,23 +286,15 @@ namespace FurnitureFramework.Type
 			JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
 			screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
 
-			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
-
 			bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
 			if (!Enum.IsDefined(bed_type)) {
 				bed_type = BedType.Double;
 				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
 			}
 
+			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
+
 			if (JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
-			{
-				ModEntry.log("The \"Bed Area\" field is deprecated, it will be used as \"Bed Area Pixel\" in the next Format version", LogLevel.Warn);
-				bed_area = new Rectangle(
-					bed_area.Location * new Point(64),
-					bed_area.Size * new Point(64)
-				);
-			}
-			else if (JsonParser.try_parse(data.GetValue("Bed Area Pixel"), out bed_area))
 			{
 				bed_area = new Rectangle(
 					bed_area.Location * new Point(4),
@@ -321,9 +313,6 @@ namespace FurnitureFramework.Type
 					area_size
 				);
 			}
-			// mirror_bed_area = JsonParser.parse(data.GetValue("Mirror Bed Area"), false);
-
-			// TODO: replace "Bed Area" with "Bed Area Pixel" for simplification
 
 			if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
 			{

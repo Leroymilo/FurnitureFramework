@@ -67,7 +67,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 # 3.0
 
 **Format Update**:
-- **Work in Progress** `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
+- `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
 - **Work in Progress** `Seasonal` was removed. (You should now use a mixed Content Pack)
 
 Fixed an issue with Particles that would not reset their timers when restarting the game.  
