@@ -142,7 +142,7 @@ namespace FurnitureFramework.Type
 		// for drawInMenu transpiler
 		private static Rectangle get_icon_source_rect(Furniture furniture)
 		{
-			if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+			if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
 			{
 				return type.icon_rect;
 			}
@@ -504,7 +504,7 @@ namespace FurnitureFramework.Type
 		public static bool is_clicked(Furniture furniture, int x, int y)
 		{
 			if (
-				!FurniturePack.try_get_type(furniture, out FurnitureType? type)
+				!Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type)
 				|| type.p_type == PlacementType.Rug
 			)
 			{
@@ -529,7 +529,7 @@ namespace FurnitureFramework.Type
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (FurniturePack.try_get_type(furniture, out FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
 				{
 					type.draw_lighting(furniture, sprite_batch);
 				}

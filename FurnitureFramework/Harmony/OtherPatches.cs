@@ -26,7 +26,7 @@ namespace FurnitureFramework.Patches
 
 			try
 			{
-				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)

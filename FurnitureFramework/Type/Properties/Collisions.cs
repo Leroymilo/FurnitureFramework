@@ -284,7 +284,7 @@ namespace FurnitureFramework.Type.Properties
 
 			foreach (Furniture item in loc.furniture)
 			{
-				if (!FurniturePack.try_get_type(item, out FurnitureType? _))
+				if (!Pack.FurniturePack.try_get_type(item, out FurnitureType? _))
 				{
 					// vanilla furniture
 					if (

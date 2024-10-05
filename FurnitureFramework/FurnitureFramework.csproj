@@ -16,8 +16,8 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="rm -rf '$(GameModsPath)/[FF] Example Pack'" />
-		<Exec Command="cp -r '../[FF] Example Pack' '$(GameModsPath)/[FF] Example Pack'" />
+		<Exec Command="rm -rf '$(GameModsPath)/Example Pack'" />
+		<Exec Command="cp -r '../Example Pack' '$(GameModsPath)/Example Pack'" />
 	</Target>
 
 </Project>

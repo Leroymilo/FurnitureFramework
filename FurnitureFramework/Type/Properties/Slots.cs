@@ -133,7 +133,7 @@ namespace FurnitureFramework.Type.Properties
 				if (obj is Furniture furn)
 				{
 					Point source_rect_size;
-					if (FurniturePack.try_get_type(furn, out FurnitureType? type))
+					if (Pack.FurniturePack.try_get_type(furn, out FurnitureType? type))
 						source_rect_size = type.get_source_rect_size(furn.currentRotation.Value);
 					else source_rect_size = furn.sourceRect.Value.Size;
 					

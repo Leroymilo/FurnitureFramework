@@ -7,7 +7,7 @@ using StardewModdingAPI;
 using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.Pack
 {
 
 	[RequiresPreviewFeatures]
@@ -17,6 +17,7 @@ namespace FurnitureFramework
 		const string DEFAULT_PATH = "content.json";
 		const string CONFIG_PATH = "config.json";
 
+		#region IncludedPack
 
 		private class IncludedPack
 		{
@@ -136,9 +137,11 @@ namespace FurnitureFramework
 			#endregion
 		}
 
+		#endregion
 
 		static Dictionary<string, FurniturePack> packs = new();
 		static Dictionary<string, string> type_ids = new();
+		static HashSet<string> to_load = new();
 
 
 		public readonly string UID;
@@ -162,7 +165,7 @@ namespace FurnitureFramework
 					ModEntry.log($"Format {format} is outdated, skipping Furniture Pack.", LogLevel.Error);
 					ModEntry.log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
 					ModEntry.log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
-					ModEntry.log("If you are the author, check the Format changeModEntry.logs in the documentation to update your Pack.", LogLevel.Info);
+					ModEntry.log("If you are the author, check the Changelogs in the documentation to update your Pack.", LogLevel.Info);
 					return false;
 				case FORMAT: return true;
 			}
@@ -188,11 +191,15 @@ namespace FurnitureFramework
 				JToken? format_token = data.GetValue("Format");
 				if (format_token is null || format_token.Type != JTokenType.Integer)
 				{
+				}
+
+				int format = -1;
+				if (!JsonParser.try_parse(data.GetValue("Format"), ref format))
+				{
 					ModEntry.log("Missing or invalid Format, skipping Furniture Pack.", LogLevel.Error);
 					return;
 				}
-				
-				int format = (int)format_token;
+
 				if(!check_format(format)) return;
 			}
 
@@ -220,8 +227,7 @@ namespace FurnitureFramework
 						continue;
 					
 					IncludedPack included_pack = new(content_pack, property.Name, include_obj);
-					if (included_pack.is_valid)
-						included_packs.Add(included_pack);
+					if (included_pack.is_valid) included_packs.Add(included_pack);
 				}
 			}
 
@@ -261,7 +267,6 @@ namespace FurnitureFramework
 			List<Type.FurnitureType> read_types = new();
 			foreach((string key, JToken? f_data) in fs_object)
 			{
-
 				if (f_data is not JObject f_obj)
 				{
 					ModEntry.log($"No data for Furniture \"{key}\", skipping entry.", LogLevel.Warn);
@@ -288,12 +293,6 @@ namespace FurnitureFramework
 			shops.Clear();
 			foreach (Type.FurnitureType type in read_types)
 			{
-				if (type_ids.ContainsKey(type.info.id) && type_ids[type.info.id] != UID)
-				{
-					ModEntry.log($"Duplicate Furniture: {type.info.id}, skipping Furniture.", LogLevel.Warn);
-					continue;
-				}
-
 				types[type.info.id] = type;
 				type_ids[type.info.id] = UID;
 
@@ -321,9 +320,6 @@ namespace FurnitureFramework
 		{
 			UID = pack.Manifest.UniqueID;
 			content_pack = pack;
-
-			packs[UID] = this;
-			// Need to be added before trying to load the content.json
 
 			load(path);
 		}

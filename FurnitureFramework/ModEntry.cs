@@ -172,7 +172,7 @@ namespace FurnitureFramework
 				colorPickerStyle: (uint)IGMCMOptionsAPI.ColorPickerStyle.HSLColorWheel
 			);
 
-			FurniturePack.register_config(config_menu);
+			Pack.FurniturePack.register_config(config_menu);
 		}
 
 		#endregion
@@ -184,7 +184,7 @@ namespace FurnitureFramework
 			Helper.ConsoleCommands.Add(
 				"reload_furniture_pack",
 				"Reloads a Furniture Pack.\n\nUsage: reload_furniture_pack <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.",
-				FurniturePack.reload_pack
+				Pack.FurniturePack.reload_pack
 			);
 		}
 
@@ -196,7 +196,7 @@ namespace FurnitureFramework
 		{
 			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
 			{
-				FurniturePack.load_pack(pack);
+				Pack.FurniturePack.load_pack(pack);
 			}
 
 			log("Finished loading Furniture Types.");
@@ -237,7 +237,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					FurniturePack.try_get_type(item, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(item, out Type.FurnitureType? type);
 					if (type == null) continue;
 
 					if (type.place_in_slot(item, obj, pos, Game1.player))
@@ -253,7 +253,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture item in Game1.currentLocation.furniture)
 				{
-					FurniturePack.try_get_type(item, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(item, out Type.FurnitureType? type);
 					if (type == null) continue;
 
 					if (type.remove_from_slot(item, pos, Game1.player))
@@ -276,18 +276,18 @@ namespace FurnitureFramework
 			string name = e.NameWithoutLocale.Name;
 
 			if (name.StartsWith("Data/Furniture"))
-				e.Edit(FurniturePack.edit_data_furniture);
+				e.Edit(Pack.FurniturePack.edit_data_furniture);
 
 			if (name.StartsWith("Data/Shops"))
-				e.Edit(FurniturePack.edit_data_shop);
+				e.Edit(Pack.FurniturePack.edit_data_shop);
 
-			if (FurniturePack.try_get_type(name, out Type.FurnitureType? type))
+			if (Pack.FurniturePack.try_get_type(name, out Type.FurnitureType? type))
 			{
 				// Loading texture for menu icon
 				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
 			}
 
-			if (FurniturePack.try_get_pack_from_resource(name, out FurniturePack? f_pack))
+			if (Pack.FurniturePack.try_get_pack_from_resource(name, out Pack.FurniturePack? f_pack))
 			{
 				// removing the Mod's UID and the separating character from the resource name
 				string path = name[(f_pack.UID.Length + 1)..];
@@ -335,7 +335,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					type.on_placed(furniture);
 				}
@@ -343,7 +343,7 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					type.on_removed(furniture);
 				}
@@ -357,7 +357,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
-				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}
@@ -371,7 +371,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}

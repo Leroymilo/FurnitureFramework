@@ -257,7 +257,7 @@ namespace FurnitureFramework.Type
 				{
 					if (
 						item is Furniture furn_item &&
-						FurniturePack.try_get_type(furn_item, out FurnitureType? type)
+						Pack.FurniturePack.try_get_type(furn_item, out FurnitureType? type)
 					)
 					{
 						type.draw_lighting(furn_item, sprite_batch);
