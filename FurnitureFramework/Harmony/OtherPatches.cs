@@ -6,7 +6,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Patches
+namespace FurnitureFramework.FFHarmony.Patches
 {
 	[RequiresPreviewFeatures]
 	internal class FarmerPostfixes

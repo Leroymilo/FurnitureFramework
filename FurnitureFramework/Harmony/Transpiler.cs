@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 using System.Runtime.Versioning;
 using HarmonyLib;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.FFHarmony
 {
 	[RequiresPreviewFeatures]
 	static class Transpiler

@@ -11,6 +11,8 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Type.Properties
 {
+	using SVObject = StardewValley.Object;
+
 	[RequiresPreviewFeatures]
 	class SlotList: IProperty<SlotList>
 	{
@@ -96,7 +98,7 @@ namespace FurnitureFramework.Type.Properties
 
 			#region Slot Methods
 
-			public bool can_hold(StardewValley.Object held_obj, Furniture furniture, Farmer who)
+			public bool can_hold(SVObject held_obj, Furniture furniture, Farmer who)
 			{
 				bool result = true;
 
@@ -120,7 +122,7 @@ namespace FurnitureFramework.Type.Properties
 				return result;
 			}
 
-			public void draw_obj(DrawData draw_data, float top, StardewValley.Object obj)
+			public void draw_obj(DrawData draw_data, float top, SVObject obj)
 			{
 				draw_data.position.X += area.Center.X * 4;	// Horizontally centered
 				draw_data.position.Y += area.Bottom * 4;	// Vertically bottom aligned
@@ -152,7 +154,10 @@ namespace FurnitureFramework.Type.Properties
 				
 				if (draw_shadow)
 				{
-					DrawData shadow_data = draw_data.DeepClone();
+
+					ModEntry.log("Drawing Shadow");
+
+					DrawData shadow_data = draw_data;	// should clone value fields like position
 					shadow_data.texture = Game1.shadowTexture;
 					shadow_data.source_rect = Game1.shadowTexture.Bounds;
 					shadow_data.position += shadow_offset * 4;
@@ -172,6 +177,9 @@ namespace FurnitureFramework.Type.Properties
 
 				if (obj is ColoredObject)
 				{
+
+					ModEntry.log("Drawing Colored Object");
+
 					obj.drawInMenu(
 						draw_data.sprite_batch,
 						draw_data.position, 1f, 1f,
@@ -181,6 +189,9 @@ namespace FurnitureFramework.Type.Properties
 				}
 				else
 				{
+
+					ModEntry.log("Drawing Object");
+
 					ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
 					draw_data.texture = dataOrErrorItem.GetTexture();
 					draw_data.source_rect = dataOrErrorItem.GetSourceRect();
@@ -326,7 +337,7 @@ namespace FurnitureFramework.Type.Properties
 			return -1;
 		}
 
-		public bool can_hold(int index, StardewValley.Object obj, Furniture furniture, Farmer who)
+		public bool can_hold(int index, SVObject obj, Furniture furniture, Farmer who)
 		{
 			return list[index].can_hold(obj, furniture, who);
 		}
@@ -341,7 +352,7 @@ namespace FurnitureFramework.Type.Properties
 				if (ModEntry.get_config().enable_slot_debug)
 					list[i].draw_debug(draw_data);
 
-				if (item is not StardewValley.Object obj) continue;
+				if (item is not SVObject obj) continue;
 				list[i].draw_obj(draw_data, top, obj);
 			}
 		}

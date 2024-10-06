@@ -12,6 +12,8 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework
 {
+	using SVObject = StardewValley.Object;
+
     /// <summary>The mod entry point.</summary>
 	[RequiresPreviewFeatures]
     internal sealed class ModEntry : Mod
@@ -49,7 +51,7 @@ namespace FurnitureFramework
 			monitor = Monitor;
 			ModEntry.helper = Helper;
 			config = helper.ReadConfig<ModConfig>();
-			HarmonyPatcher.harmony = new(ModManifest.UniqueID);
+			FFHarmony.HarmonyPatcher.harmony = new(ModManifest.UniqueID);
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
@@ -58,7 +60,8 @@ namespace FurnitureFramework
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
 			
-			HarmonyPatcher.patch();
+			log("Calling HarmonyPatcher.patch");
+			FFHarmony.HarmonyPatcher.patch();
         }
 
 		#region On Game Launched
@@ -106,7 +109,7 @@ namespace FurnitureFramework
 			config_menu.AddKeybind(
 				mod: ModManifest,
 				name: () => "Slot Place Keybind",
-				tooltip: () => "The key to press to place an item in a slot.",
+				tooltip: () => "The key to press to place an furniture in a slot.",
 				getValue: () => config.slot_place_key,
 				setValue: value => config.slot_place_key = value
 			);
@@ -114,7 +117,7 @@ namespace FurnitureFramework
 			config_menu.AddKeybind(
 				mod: ModManifest,
 				name: () => "Slot Take Keybind",
-				tooltip: () => "The key to press to take an item from a slot.",
+				tooltip: () => "The key to press to take an furniture from a slot.",
 				getValue: () => config.slot_take_key,
 				setValue: value => config.slot_take_key = value
 			);
@@ -226,40 +229,36 @@ namespace FurnitureFramework
 			#region Slot Interactions
 
 			if (!Game1.player.CanMove) return;
-
-			bool clicked_slot = false;
 			
 			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
 
-			Item? held_item = Game1.player.ActiveItem?.getOne();
-
-			if (e.Button == get_config().slot_place_key && held_item is StardewValley.Object obj)
+			Item? item = Game1.player.ActiveItem?.getOne();
+			if (e.Button == get_config().slot_place_key && item is SVObject obj)
 			{
-				foreach (Furniture item in Game1.currentLocation.furniture)
+				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(item, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
 					if (type == null) continue;
 
-					if (type.place_in_slot(item, obj, pos, Game1.player))
+					if (type.place_in_slot(furniture, obj, pos, Game1.player))
 					{
 						Helper.Input.Suppress(get_config().slot_place_key);
-						clicked_slot = true;
-						break;
+						return;
 					}
 				}
 			}
 
-			if (e.Button == get_config().slot_take_key && !clicked_slot)
+			if (e.Button == get_config().slot_take_key)
 			{
-				foreach (Furniture item in Game1.currentLocation.furniture)
+				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(item, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
 					if (type == null) continue;
 
-					if (type.remove_from_slot(item, pos, Game1.player))
+					if (type.remove_from_slot(furniture, pos, Game1.player))
 					{
 						Helper.Input.Suppress(get_config().slot_take_key);
-						break;
+						return;
 					}
 				}
 			}
@@ -267,6 +266,7 @@ namespace FurnitureFramework
 			#endregion
         }
 
+		#region Asset handling
 
         /// <inheritdoc cref="IContentEvents.AssetRequested"/>
         /// <param name="sender">The event sender.</param>
@@ -328,6 +328,10 @@ namespace FurnitureFramework
 			}
 		}
 
+		#endregion
+
+		#region Placed Furniture Updates
+
         /// <inheritdoc cref="IWorldEvents.FurnitureListChanged"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
@@ -378,5 +382,6 @@ namespace FurnitureFramework
 			}
 		}
 		
+		#endregion
     }
 }

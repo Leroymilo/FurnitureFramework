@@ -8,7 +8,7 @@ using StardewValley;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Patches
+namespace FurnitureFramework.FFHarmony.Patches
 {
 	#region Furniture
 

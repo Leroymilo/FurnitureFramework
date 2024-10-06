@@ -12,7 +12,7 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Type
 {
-
+	using SVObject = StardewValley.Object;
 	using BedType = BedFurniture.BedType;
 
 	enum SpecialType {
@@ -294,18 +294,18 @@ namespace FurnitureFramework.Type
 		private void initialize_slots(Furniture furniture, int rot)
 		{
 			int slots_count = slots[rot].count;
-
+			
 			if (furniture.heldObject.Value is not Chest chest)
 			{
-				StardewValley.Object held = furniture.heldObject.Value;
+				SVObject held = furniture.heldObject.Value;
 				chest = new();
 				chest.Items.Add(held);
 				furniture.heldObject.Value = chest;
 			}
-
+			
 			while (chest.Items.Count > slots_count)
 			{
-				Item item = chest.Items[slots_count];
+				Item? item = chest.Items[slots_count];
 				chest.Items.RemoveAt(slots_count);
 				if (item is null) continue;
 				Game1.createItemDebris(
@@ -337,11 +337,11 @@ namespace FurnitureFramework.Type
 			return slots[rot].get_slot(rel_pos);
 		}
 
-		public bool place_in_slot(Furniture furniture, StardewValley.Object obj, Point pos, Farmer who)
+		public bool place_in_slot(Furniture furniture, SVObject obj, Point pos, Farmer who)
 		{
 			int rot = furniture.currentRotation.Value;
 			
-			initialize_slots(furniture, rot);
+			// initialize_slots(furniture, rot);
 			
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
@@ -373,7 +373,7 @@ namespace FurnitureFramework.Type
 		{
 			int rot = furniture.currentRotation.Value;
 			
-			initialize_slots(furniture, rot);
+			// initialize_slots(furniture, rot);
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
@@ -382,8 +382,7 @@ namespace FurnitureFramework.Type
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
 
-			Item item = chest.Items[slot_index];
-			if (item is not StardewValley.Object obj) return false;
+			if (chest.Items[slot_index] is not SVObject obj) return false;
 			// No Object in slot
 
 			if (who.addItemToInventoryBool(obj))
@@ -400,7 +399,7 @@ namespace FurnitureFramework.Type
 		// used in Furniture.canBeRemoved Transpiler
 		public static bool has_held_object(Furniture furniture)
 		{
-			StardewValley.Object held_obj = furniture.heldObject.Value;
+			SVObject held_obj = furniture.heldObject.Value;
 			if (held_obj == null) return false;
 
 			if (held_obj is Chest chest)

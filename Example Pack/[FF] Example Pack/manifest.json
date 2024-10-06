@@ -8,7 +8,7 @@
 	"UniqueID": "leroymilo.FurnitureExample.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
-		"MinimumVersion": "2.0.0"
+		"MinimumVersion": "3.0.0"
 	},
 	"UpdateKeys": [ "Nexus:23458" ]
 }

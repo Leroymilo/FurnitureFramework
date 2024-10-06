@@ -223,14 +223,13 @@ namespace FurnitureFramework.Type
 				// TO CHANGE
 			}
 
-			initialize_slots(furniture, rot);
-
-			// draw held object
+			// draw items in slots
 			if (furniture.heldObject.Value is Chest chest)
 			{
 				slots[rot].draw(draw_data, bounding_box.Top, chest.Items);
 				// draw depending on heldObject own stored bounding box
 			}
+			else initialize_slots(furniture, rot);
 
 			// to keep :
 
@@ -253,7 +252,7 @@ namespace FurnitureFramework.Type
 			// items in slots
 			if (furniture.heldObject.Value is Chest chest)
 			{
-				foreach (Item item in chest.Items)
+				foreach (Item? item in chest.Items)
 				{
 					if (
 						item is Furniture furn_item &&

@@ -3,12 +3,16 @@ using StardewModdingAPI;
 using System.Reflection;
 using System.Runtime.Versioning;
 
-namespace FurnitureFramework
+namespace FurnitureFramework.FFHarmony
 {
-	enum PatchType {
-		Prefix,
-		Postfix,
-		Transpiler
+
+	namespace Patches
+	{
+		enum PatchType {
+			Prefix,
+			Postfix,
+			Transpiler
+		}
 	}
 
 	[RequiresPreviewFeatures]
@@ -18,6 +22,8 @@ namespace FurnitureFramework
 
 		public static void patch()
 		{
+			ModEntry.log("Patching?");
+
 			if (harmony == null)
 				throw new NullReferenceException("Harmony was not set");
 			
@@ -25,7 +31,7 @@ namespace FurnitureFramework
 				.GetTypes()
 				.Where(
 					t => t.Namespace is not null &&
-					t.Namespace.StartsWith("FurnitureFramework.Patches") &&
+					t.Namespace.StartsWith("FurnitureFramework.FFHarmony.Patches") &&
 					!t.IsEnum
 				);
 
@@ -41,7 +47,7 @@ namespace FurnitureFramework
 					ModEntry.log($"No patch_type in {type}", LogLevel.Trace);
 					continue;
 				}
-				PatchType? patch_type = (PatchType?)prop.GetValue(null);
+				Patches.PatchType? patch_type = (Patches.PatchType?)prop.GetValue(null);
 				if (patch_type is null)
 				{
 					ModEntry.log($"patch_type is invalid {type}", LogLevel.Trace);
@@ -82,13 +88,13 @@ namespace FurnitureFramework
 
 					switch (patch_type)
 					{
-						case PatchType.Prefix:
+						case Patches.PatchType.Prefix:
 							prefix = new(method, Priority.High);
 							break;
-						case PatchType.Transpiler:
+						case Patches.PatchType.Transpiler:
 							transpiler = new(method);
 							break;
-						case PatchType.Postfix:
+						case Patches.PatchType.Postfix:
 							postfix = new(method);
 							break;
 					}
