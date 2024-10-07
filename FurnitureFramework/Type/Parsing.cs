@@ -214,6 +214,8 @@ namespace FurnitureFramework.Type
 
 			if (icon_rect.IsEmpty)
 				icon_rect = source_rects[0];
+			
+			icon_rect.Location += rect_offset;
 
 			layers = new(info, data.GetValue("Layers"), rot_names);
 
