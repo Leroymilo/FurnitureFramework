@@ -69,13 +69,14 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
 - **Work in Progress** `Seasonal` was removed. (You should now use a mixed Content Pack)
+- **Work in Progress** The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
 
 Fixed an issue with Particles that would not reset their timers when restarting the game.  
 **Work in Progress** Fixed lights sources and glows of Furniture in slots.
 
 Fixed compatibility with Precise Furniture pass-through feature.
 
-Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
+**Work in Progress** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 
 Optimizations:
 - **Work in Progress** Furniture Packs are only loaded when the game need them.
