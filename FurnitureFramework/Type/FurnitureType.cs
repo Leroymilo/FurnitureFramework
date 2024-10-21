@@ -459,11 +459,9 @@ namespace FurnitureFramework.Type
 			ref bool result
 		)
 		{
+			if (layer_name == "Back" && property_name == "TouchAction")
+				result = false;
 
-			if (layer_name != "Back" || property_name != "TouchAction")
-				return;
-
-			result = false;
 			return;
 		}
 

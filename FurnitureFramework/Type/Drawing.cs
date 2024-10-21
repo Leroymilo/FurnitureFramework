@@ -221,15 +221,15 @@ namespace FurnitureFramework.Type
 					rot, furniture.IsOn, furniture.timeToTurnOnLights()
 				);
 				// TO CHANGE
-			}
 
-			// draw items in slots
-			if (furniture.heldObject.Value is Chest chest)
-			{
-				slots[rot].draw(draw_data, bounding_box.Top, chest.Items);
-				// draw depending on heldObject own stored bounding box
+				// draw items in slots
+				if (furniture.heldObject.Value is Chest chest)
+				{
+					slots[rot].draw(draw_data, bounding_box.Top, chest.Items);
+					// draw depending on heldObject own stored bounding box
+				}
+				else initialize_slots(furniture, rot);
 			}
-			else initialize_slots(furniture, rot);
 
 			// to keep :
 

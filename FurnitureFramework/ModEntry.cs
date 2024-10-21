@@ -1,8 +1,10 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -71,9 +73,12 @@ namespace FurnitureFramework
         /// <param name="e">The event data.</param>
 		private void on_game_launched(object? sender, GameLaunchedEventArgs e)
 		{
-			parse_furniture_packs();
+			Pack.FurniturePack.pre_load(get_helper());
 
 			register_config();
+
+			if (get_config().load_packs_on_start)
+				Pack.FurniturePack.load_all();
 
 			register_commands();
 
@@ -120,6 +125,14 @@ namespace FurnitureFramework
 				tooltip: () => "The key to press to take an furniture from a slot.",
 				getValue: () => config.slot_take_key,
 				setValue: value => config.slot_take_key = value
+			);
+
+			config_menu.AddBoolOption(
+				mod: ModManifest,
+				name: () => "Load all Furniture Packs on game start",
+				tooltip: () => "If this is not checked, the game will load packs only when it needs the data.",
+				getValue: () => config.load_packs_on_start,
+				setValue: value => config.load_packs_on_start = value
 			);
 			
 			config_menu.AddBoolOption(
@@ -184,27 +197,14 @@ namespace FurnitureFramework
 
 		private void register_commands()
 		{
-			Helper.ConsoleCommands.Add(
-				"reload_furniture_pack",
-				"Reloads a Furniture Pack.\n\nUsage: reload_furniture_pack <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.",
-				Pack.FurniturePack.reload_pack
-			);
-		}
 
-		#endregion
+			string desc = "Reloads a Furniture Pack, or all Packs if no id is given.\n\n";
+			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.";
+			Helper.ConsoleCommands.Add("ff_reload", desc, Pack.FurniturePack.reload_pack);
 
-		#region Pack Parsing
-
-		private void parse_furniture_packs()
-		{
-			foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
-			{
-				Pack.FurniturePack.load_pack(pack);
-			}
-
-			log("Finished loading Furniture Types.");
-			Helper.GameContent.InvalidateCache("Data/Furniture");
-			Helper.GameContent.InvalidateCache("Data/Shops");
+			desc = "Dumps all the data from a Furniture Pack, or all Packs if no id is given.\n\n";
+			desc += "Usage: ff_debug_print <ModID>\n- ModID: the UniqueID of the Furniture Pack to debug print.";
+			Helper.ConsoleCommands.Add("ff_debug_print", desc, Pack.FurniturePack.debug_print);
 		}
 
 		#endregion

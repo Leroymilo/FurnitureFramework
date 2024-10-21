@@ -64,21 +64,31 @@ The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in t
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
 
-# 3.0
+# 3.0 (**Work in Progress**)
 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
-- **Work in Progress** `Seasonal` was removed. (You should now use a mixed Content Pack)
+- **Work in Progress** `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
 - **Work in Progress** The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
+- **Work in Progress** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
 
-Fixed an issue with Particles that would not reset their timers when restarting the game.  
-**Work in Progress** Fixed lights sources and glows of Furniture in slots.
+**New Features**:
+- **Work in Progress** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
+- **Work in Progress** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
+- **Work in Progress** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
+- **Work in Progress** Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 
-Fixed compatibility with Precise Furniture pass-through feature.
+**Fixes**:
+- Fixed an issue with Particles that would not reset their timers when restarting the game.  
+- **Work in Progress** Fixed lights sources and glows of Furniture in slots.
+- Fixed compatibility with Precise Furniture pass-through feature.
+- Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.
 
-**Work in Progress** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
-
-Optimizations:
+**Optimizations**:
 - **Work in Progress** Furniture Packs are only loaded when the game need them.
 - **Work in Progress** Invalidating an included pack will only cause this included pack and its children to reload, not its ancestors.
 - **Work in Progress** Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).
+
+## 3.1 (**Work in Progress**)
+
+**Work in Progress** API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.

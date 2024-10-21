@@ -23,6 +23,8 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 		* [Shows in Shops](#shows-in-shops)
 		* [Shop Id](#shop-id)
 	* [Variants](#variants)
+		* [Image Variants](#image-variants)
+		* [Rect Variants](#rect-variants)
 	* [Description](#description)
 	* [Animation](#animation)
 	* [Special Type](#special-type)
@@ -208,6 +210,10 @@ These Offsets are **integer** [Vectors](https://github.com/Leroymilo/FurnitureFr
 Note: this will create as many separate Furniture as offsets are given, but all their properties will be identical, including their Display Name. However, you can use the `{{RectVariant}}` token in the Display Name field so that it will be replaced with the variant key (see the `cat_statue` Furniture in the Example Pack).  
 
 Note 2: you can also use a list of Source Rect Offsets instead of a dictionary but the `{{RectVariant}}` token will be empty.
+
+### Draw Offset
+
+This is an **integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) **in Pixels** to offset where the game draws the base layer defined through the Source Image and its Source Rectangle (including variants).
 
 ### Description
 
