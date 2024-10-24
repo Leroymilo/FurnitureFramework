@@ -21,14 +21,16 @@ namespace FurnitureFramework.Pack
 
 		// Static Collections 
 
-		static PriorityQueue<string, int> to_load = new();
-		// PriorityQueue of data_UIDs of packs to load.
+		static HashSet<string> to_load = new();
+		// HashSet of data_UIDs of packs to load.
 		static Dictionary<string, FurniturePack> packs = new();
 		// maps data_UID (UID/json_path) to pack.
 		static Dictionary<string, HashSet<string>> data_UIDs = new();
 		// maps UID to data_UIDs of base and included packs of this UID.
-		static Dictionary<string, string> type_ids = new();
-		// maps Furniture ID to data_UID.
+		static Dictionary<string, string> static_types = new();
+		// maps Furniture ID to the data_UID it's from.
+		static Dictionary<string, HashSet<string>> conflicts = new();
+		// maps type_id to HashSet of all data_UID trying to patch it.
 
 		// Pack Properties
 
@@ -37,104 +39,9 @@ namespace FurnitureFramework.Pack
 		string path;
 		string data_UID { get => $"{UID}/{path}"; }
 		Dictionary<string, Type.FurnitureType> types = new();
-		Dictionary<string, List<string>> shops = new();
-		List<IncludedPack> included_packs = new();
+		Dictionary<string, IncludedPack> included_packs = new();
 		bool is_included = false;
 
-		#region Reloading
-
-		private void clear_types()
-		{
-			foreach (string type_id in types.Keys)
-			{
-				if (type_ids[type_id] == UID)
-					type_ids.Remove(type_id);
-			}
-
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.pack.clear_types();
-			}
-		}
-
-		public void reload()
-		{
-			clear_types();
-			load();
-
-			if (is_valid)
-			{
-				ModEntry.log($"Pack {UID} successfully loaded!");
-			}
-			else
-			{
-				ModEntry.log($"Error while reloading pack {UID}, it will be removed to avoid errors.", LogLevel.Warn);
-				packs.Remove(UID);
-			}
-			
-			IGameContentHelper helper = ModEntry.get_helper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
-		}
-
-		public static void reload_pack(string command, string[] args)
-		{
-			if (args.Count() == 0)
-			{
-				ModEntry.log("No ModID given.", LogLevel.Warn);
-				return;
-			}
-			string UID = args[0];
-		
-			bool found = false;
-
-			if (packs.TryGetValue(UID, out FurniturePack? pack))
-			{
-				found = true;
-
-				pack.clear_types();
-				pack.load();
-			}
-
-			else
-			{
-				ModEntry.log($"{UID} was not found in loaded packs, checking for unloaded packs...");
-
-				foreach (IContentPack content_pack in ModEntry.get_helper().ContentPacks.GetOwned())
-				{
-					if (content_pack.Manifest.UniqueID == UID)
-					{
-						pack = new(content_pack);
-						packs[UID] = pack;
-						found = true;
-						break;
-					}
-				}
-			}
-
-			if (!found)
-			{
-				ModEntry.log($"Could not find Furniture Pack {UID}.", LogLevel.Warn);
-				return;
-			}
-
-
-			if (pack is not null && pack.is_valid)
-			{
-				ModEntry.log($"Pack {UID} successfully loaded!");
-			}
-			else
-			{
-				ModEntry.log($"Error while reloading pack {UID}, it will be removed to avoid errors.", LogLevel.Warn);
-				packs.Remove(UID);
-			}
-			
-			IGameContentHelper helper = ModEntry.get_helper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
-		}
-
-		#endregion
 
 		#region Getters
 
@@ -193,7 +100,7 @@ namespace FurnitureFramework.Pack
 		{
 			type = null;
 
-			if (!type_ids.TryGetValue(f_id, out string? UID))
+			if (!static_types.TryGetValue(f_id, out string? UID))
 				return false;
 
 			return packs[UID].try_get_type_pack(f_id, ref type);

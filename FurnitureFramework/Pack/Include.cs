@@ -9,12 +9,13 @@ namespace FurnitureFramework.Pack
 
 		private class IncludedPack
 		{
-			public string name;
-			public string? description = null;
-			public readonly bool default_enabled = true;
+			public readonly string name;
+			string? description = null;
+			bool default_enabled = true;
 
-			private readonly FurniturePack pack;
-			private bool enabled = true;
+			readonly FurniturePack pack;
+			public string data_UID {get => pack.data_UID;}
+			bool enabled = true;
 
 			public readonly bool is_valid = false;
 			public readonly string error_msg = "";
@@ -39,15 +40,10 @@ namespace FurnitureFramework.Pack
 					error_msg = "Invalid or missing Path.";
 					return;
 				}
-
-				int priority = 1000;
-				JsonParser.try_parse(obj.GetValue("Priority"), ref priority);
-
-				is_valid = true;
 				
 				pack = new(c_pack, path);
-				to_load.Enqueue(pack.data_UID, priority);
-				packs[pack.data_UID] = pack;
+
+				is_valid = true;
 
 				description = JsonParser.parse<string?>(obj.GetValue("Description"), null);
 				default_enabled = JsonParser.parse(obj.GetValue("Enabled"), true);
@@ -57,7 +53,20 @@ namespace FurnitureFramework.Pack
 				page_id = $"{c_pack.Manifest}.{name}";
 			}
 
+			public void add_pack()
+			{
+				to_load.Add(pack.data_UID);
+				packs[pack.data_UID] = pack;
+			}
+
 			#endregion
+
+			public void clear(bool cascade = true)
+			{
+				packs.Remove(data_UID);
+				data_UIDs[pack.UID].Remove(data_UID);
+				pack.clear(cascade);
+			}
 
 			#region Config
 

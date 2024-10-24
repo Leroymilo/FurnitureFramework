@@ -1,3 +1,4 @@
+using HarmonyLib;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -15,27 +16,8 @@ namespace FurnitureFramework.Pack
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned())
 			{
 				string data_UID = $"{c_pack.Manifest.UniqueID}/{DEFAULT_PATH}";
-				to_load.Enqueue(
-					data_UID,
-					get_priority(c_pack.Manifest)
-				);
+				to_load.Add(data_UID);
 				packs[data_UID] = new(c_pack);
-			}
-		}
-
-		private static int get_priority(IManifest manifest)
-		{
-			manifest.ExtraFields.TryGetValue("Priority", out object? prio_obj);
-			if (prio_obj == null) return DEFAULT_PRIO;	// no need to log error if no priority
-
-			if (prio_obj is int prio_int)
-			{
-				return prio_int;
-			}
-			else
-			{
-				ModEntry.log($"Invalid value for Priority in manifest of {manifest.UniqueID}, defaulting to {DEFAULT_PRIO}.", LogLevel.Warn);
-				return DEFAULT_PRIO;
 			}
 		}
 
@@ -43,8 +25,9 @@ namespace FurnitureFramework.Pack
 		{
 			while (to_load.Count > 0)
 			{
-				FurniturePack pack = packs[to_load.Dequeue()];
-				pack.load();
+				string data_UID = to_load.First();
+				to_load.Remove(data_UID);
+				packs[data_UID].load();
 			}
 			
 			ModEntry.log("Finished loading Furniture Types.");
@@ -73,7 +56,7 @@ namespace FurnitureFramework.Pack
 			}
 			catch (ContentLoadException ex)
 			{
-				ModEntry.log($"Could not load {data_UID}:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Could not load {data_UID}, skipping Furniture Pack:\n{ex}", LogLevel.Error);
 				return;
 			}
 
@@ -113,7 +96,7 @@ namespace FurnitureFramework.Pack
 
 			#endregion
 
-			// Adding the valid Pack to the map of data_UID (can't remember why)
+			// Adding the valid Pack to the map of data_UID for reloading purposes
 			if (!data_UIDs.ContainsKey(UID))
 				data_UIDs.Add(UID, new());
 			data_UIDs[UID].Add(data_UID);
@@ -156,7 +139,7 @@ namespace FurnitureFramework.Pack
 		{
 			if (data.GetValue("Furniture") is not JObject furn_obj) return;
 
-			List<Type.FurnitureType> read_types = new();
+			List<Type.FurnitureType> new_types = new();
 			foreach (JProperty f_prop in furn_obj.Properties())
 			{
 				if (f_prop.Value is not JObject f_obj)
@@ -170,7 +153,7 @@ namespace FurnitureFramework.Pack
 					Type.FurnitureType.make_furniture(
 						content_pack, f_prop.Name,
 						f_obj,
-						read_types
+						new_types
 					);
 				}
 				catch (Exception ex)
@@ -181,53 +164,123 @@ namespace FurnitureFramework.Pack
 				}
 			}
 
-			types.Clear();
-			shops.Clear();
-			foreach (Type.FurnitureType type in read_types)
+			foreach (Type.FurnitureType type in new_types)
 			{
-				types[type.info.id] = type;
-				type_ids[type.info.id] = data_UID;
+				string type_id = type.info.id;
+				types[type_id] = type;
 
-				if (type.shop_id != null)
+				int prev_prio = get_current_priority(type_id);
+				if (prev_prio > type.info.priority)
+					continue;
+				else if (prev_prio == type.info.priority)
 				{
-					if (!shops.ContainsKey(type.shop_id))
-						shops[type.shop_id] = new();
+					if (!conflicts.ContainsKey(type_id))
+						conflicts[type_id] = new() {static_types[type_id]};
+					conflicts[type_id].Add(data_UID);
+					continue;
+				}
+				else // prev_prio < type.info.priority
+				{
+					conflicts.Remove(type_id);
+					static_types[type_id] = data_UID;
 				}
 
-				foreach (string shop_id in type.shops)
-				{
-					if (!shops.ContainsKey(shop_id))
-						shops[shop_id] = new();
-					shops[shop_id].Add(type.info.id);
-				}
 			}
 		}
 
 		private void load_included(JObject data)
 		{
 			if (data.GetValue("Included") is not JObject includes_obj) return;
-			
-			included_packs.Clear();
+
+			HashSet<string> added_i_packs = new();
 
 			foreach (JProperty property in includes_obj.Properties())
 			{
-				IncludedPack included_pack = new(content_pack, property);
-				if (included_pack.is_valid) included_packs.Add(included_pack);
+				IncludedPack i_pack = new(content_pack, property);
+				string i_data_UID = i_pack.data_UID;
+
+				if (i_pack.is_valid)
+				{
+					added_i_packs.Add(i_data_UID);
+					if (included_packs.ContainsKey(i_data_UID))
+						continue;
+					
+					included_packs.Add(i_data_UID, i_pack);
+					i_pack.add_pack();	// Queue pack loading
+				}
 				else
 				{
-					ModEntry.log($"Issue parsing included pack {included_pack.name} in {data_UID}:", LogLevel.Warn);
-					ModEntry.log($"\t{included_pack.error_msg}", LogLevel.Warn);
+					ModEntry.log($"Issue parsing included pack {i_pack.name} in {data_UID}:", LogLevel.Warn);
+					ModEntry.log($"\t{i_pack.error_msg}", LogLevel.Warn);
 				}
 			}
+
+			foreach (string i_data_UID in included_packs.Keys)
+			{
+				if (added_i_packs.Contains(i_data_UID)) continue;
+				included_packs[i_data_UID].clear();
+				included_packs.Remove(i_data_UID);
+			}
 		}
+	
+		#endregion
+
+		#region Reload
+
+		public static void reload_pack(string command, string[] args)
+		{
+			if (args.Count() == 0) reload_all();
+			else reload_single(args[0]);
+			
+			IGameContentHelper helper = ModEntry.get_helper().GameContent;
+			helper.InvalidateCache("Data/Furniture");
+			helper.InvalidateCache("Data/Shops");
+		}
+
+		private static void reload_all()
+		{
+			foreach (string UID in data_UIDs.Keys)
+				reload_single(UID);
+		}
+
+		private static void reload_single(string UID)
+		{
+			packs[$"{UID}/{DEFAULT_PATH}"].reload(true);
+		}
+
+		private void reload(bool cascade = false)
+		{
+			clear(cascade);
+
+			to_load.Add(data_UID);
+			load_all();
+		}
+
+		private void clear(bool cascade = false)
+		{
+			foreach (string type_id in types.Keys)
+			{
+				if (static_types[type_id] == data_UID)
+					static_types.Remove(type_id);
+				
+				if (conflicts.ContainsKey(type_id))
+				{
+					conflicts[type_id].Remove(data_UID);
+					if (conflicts[type_id].Count == 0)
+						conflicts.Remove(type_id);
+				}
+			}
+
+			types.Clear();
+
+			if (cascade)
+			{
+				foreach (IncludedPack i_pack in included_packs.Values)
+					i_pack.clear();
+			}
+		}
+
+		#endregion
+
 	}
-
-	#endregion
-
-	#region Re-Load
-
-	// TO DO
-
-	#endregion
-
 }

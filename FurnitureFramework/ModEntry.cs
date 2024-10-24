@@ -1,10 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -26,6 +24,8 @@ namespace FurnitureFramework
 
 		public static bool print_debug = false;
 
+		#region getters
+
 		static public IModHelper get_helper()
 		{
 			if (helper == null) throw new NullReferenceException("Helper was not set.");
@@ -44,16 +44,18 @@ namespace FurnitureFramework
 			monitor.Log(message, log_level);
 		}
 
+		#endregion
+
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
-        public override void Entry(IModHelper helper)
+        public override void Entry(IModHelper _)
         {
 			// Harmony.DEBUG = true;
 
 			monitor = Monitor;
-			ModEntry.helper = Helper;
+			helper = Helper;
 			config = helper.ReadConfig<ModConfig>();
-			FFHarmony.HarmonyPatcher.harmony = new(ModManifest.UniqueID);
+
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
 			helper.Events.Content.AssetRequested += on_asset_requested;
@@ -62,7 +64,7 @@ namespace FurnitureFramework
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
 			
-			log("Calling HarmonyPatcher.patch");
+			FFHarmony.HarmonyPatcher.harmony = new(ModManifest.UniqueID);
 			FFHarmony.HarmonyPatcher.patch();
         }
 
@@ -92,8 +94,6 @@ namespace FurnitureFramework
 			}
 		}
 
-		#region Config
-
 		private void register_config()
 		{
 			if (config == null) throw new NullReferenceException("Config was not set.");
@@ -103,6 +103,8 @@ namespace FurnitureFramework
 				Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
 			if (config_menu is null)
 				return;
+
+			#region FF Config
 
 			// register mod
 			config_menu.Register(
@@ -188,26 +190,22 @@ namespace FurnitureFramework
 				colorPickerStyle: (uint)IGMCMOptionsAPI.ColorPickerStyle.HSLColorWheel
 			);
 
+			#endregion
+
 			Pack.FurniturePack.register_config(config_menu);
 		}
 
-		#endregion
-
-		#region Commands
-
 		private void register_commands()
 		{
-
 			string desc = "Reloads a Furniture Pack, or all Packs if no id is given.\n\n";
-			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.";
+			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.\n\n";
+			desc += "/!\\ Warning: reloading a Pack might overwrite Furniture from Pack with higher priority.";
 			Helper.ConsoleCommands.Add("ff_reload", desc, Pack.FurniturePack.reload_pack);
 
 			desc = "Dumps all the data from a Furniture Pack, or all Packs if no id is given.\n\n";
 			desc += "Usage: ff_debug_print <ModID>\n- ModID: the UniqueID of the Furniture Pack to debug print.";
 			Helper.ConsoleCommands.Add("ff_debug_print", desc, Pack.FurniturePack.debug_print);
 		}
-
-		#endregion
 
 		#endregion
 

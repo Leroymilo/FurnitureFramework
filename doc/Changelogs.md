@@ -75,6 +75,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **New Features**:
 - **Work in Progress** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - **Work in Progress** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
+- **Work in Progress** Added `Priority` to ensure your Furniture is loaded before/after other. Also added a config option to let player solve conflicts (same Furniture ID patched by multiple packs with same priority).
 - **Work in Progress** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - **Work in Progress** Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 

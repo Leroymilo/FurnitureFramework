@@ -36,6 +36,7 @@ namespace FurnitureFramework.Type
 		public readonly string id;
 		public readonly string display_name;
 		public readonly string? description;
+		public readonly int priority;
 
 		public TypeInfo(IContentPack pack, string id, JObject data, string rect_var = "", string image_var = "")
 		{
@@ -50,6 +51,8 @@ namespace FurnitureFramework.Type
 				description = description.Replace("{{ImageVariant}}", image_var, true, null);
 				description = description.Replace("{{RectVariant}}", rect_var, true, null);
 			}
+			priority = JsonParser.parse(data.GetValue("Priority"), 1000);
+			priority = Math.Max(priority, 0); // rounded up to 0
 		}
 	}
 
