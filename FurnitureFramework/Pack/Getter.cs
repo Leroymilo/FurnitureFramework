@@ -4,14 +4,31 @@ namespace FurnitureFramework.Pack
 {
 	partial class FurniturePack
 	{
-		public static Dictionary<string, string> get_default_conflict_config()
+		public static void update_conflict_config()
 		{
-			Dictionary<string, string> result = new();
+			Dictionary<string, string> config_choices = ModEntry.get_config().conflicts_choices;
+			HashSet<string> added_choices = new();
 
 			foreach (string type_id in conflicts.Keys)
-				result.Add(type_id, static_types[type_id]);
+			{
+				added_choices.Add(type_id);
+				if (config_choices.ContainsKey(type_id))
+				{
+					// apply config choices
+					static_types[type_id] = config_choices[type_id];
+				}
+				else
+				{
+					// register default config choice
+					config_choices[type_id] = static_types[type_id];
+				}
+			}
 
-			return result;
+			foreach (string type_id in config_choices.Keys)
+			{
+				if (!added_choices.Contains(type_id))
+					config_choices.Remove(type_id);
+			}
 		}
 
 		private static int get_current_priority(string type_id)

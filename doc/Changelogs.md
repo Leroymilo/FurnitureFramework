@@ -75,13 +75,14 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **New Features**:
 - **Work in Progress** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - **Work in Progress** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
-- **Work in Progress** Added `Priority` to ensure your Furniture is loaded before/after other. Also added a config option to let player solve conflicts (same Furniture ID patched by multiple packs with same priority).
+- **Work in Progress** Added `Priority` to ensure your Furniture is loaded before/after other. Also added a FF config option to let player solve conflicts (same Furniture ID patched by multiple packs with same priority).
 - **Work in Progress** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
-- **Work in Progress** Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
+- Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 
 **Fixes**:
-- Fixed an issue with Particles that would not reset their timers when restarting the game.  
-- **Work in Progress** Fixed lights sources and glows of Furniture in slots.
+- Fixed animation not working in some cases where Animation Offset had negative coordinates. 
+- Fixed Particles not reseting their timers when restarting the game.  
+- **Work in Progress** Fixed lights sources and glows of Furniture not appearing in slots.
 - Fixed compatibility with Precise Furniture pass-through feature.
 - Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.
 

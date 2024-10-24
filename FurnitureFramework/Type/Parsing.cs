@@ -229,7 +229,7 @@ namespace FurnitureFramework.Type
 			if (token != null && !JsonParser.try_parse(token, ref anim_offset))
 				ModEntry.log($"Invalid Animation Offset, ignoring animation");
 			is_animated = frame_count > 0 && frame_length > 0;
-			is_animated &= anim_offset.X + anim_offset.Y > 0;
+			is_animated &= anim_offset.ToVector2().Length() > 0;
 
 			#endregion
 
