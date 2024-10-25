@@ -38,6 +38,11 @@ namespace FurnitureFramework
 			return config;
 		}
 
+		static public IManifest get_manifest()
+		{
+			return 
+		}
+
 		static public void log(string message, LogLevel log_level = LogLevel.Debug)
 		{
 			if (monitor == null) throw new NullReferenceException("Monitor was not set.");
@@ -101,98 +106,13 @@ namespace FurnitureFramework
 			// get Generic Mod Config Menu's API (if it's installed)
 			IGenericModConfigMenuApi? config_menu =
 				Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-			if (config_menu is null)
-				return;
-
-			#region FF Config
-
-			// register mod
-			config_menu.Register(
-				mod: ModManifest,
-				reset: () => config = new ModConfig(),
-				save: () => Helper.WriteConfig(config)
-			);
-
-			config_menu.AddKeybind(
-				mod: ModManifest,
-				name: () => "Slot Place Keybind",
-				tooltip: () => "The key to press to place an furniture in a slot.",
-				getValue: () => config.slot_place_key,
-				setValue: value => config.slot_place_key = value
-			);
-
-			config_menu.AddKeybind(
-				mod: ModManifest,
-				name: () => "Slot Take Keybind",
-				tooltip: () => "The key to press to take an furniture from a slot.",
-				getValue: () => config.slot_take_key,
-				setValue: value => config.slot_take_key = value
-			);
-
-			config_menu.AddBoolOption(
-				mod: ModManifest,
-				name: () => "Load all Furniture Packs on game start",
-				tooltip: () => "If this is not checked, the game will load packs only when it needs the data.",
-				getValue: () => config.load_packs_on_start,
-				setValue: value => config.load_packs_on_start = value
-			);
-			
-			config_menu.AddBoolOption(
-				mod: ModManifest,
-				name: () => "Disable AT Warning",
-				tooltip: () => "Check this to disable the warning about Alternative Textures.",
-				getValue: () => config.disable_AT_warning,
-				setValue: value => config.disable_AT_warning = value
-			);
-
-			config_menu.AddPageLink(
-				mod: ModManifest,
-				pageId: $"{ModManifest.UniqueID}.slots",
-				text: () => "Slots Debug Options",
-				tooltip: () => "Options to draw slots areas for debugging purposes."
-			);
-
-			config_menu.AddPage(
-				mod: ModManifest,
-				pageId: $"{ModManifest.UniqueID}.slots",
-				pageTitle: () => "Slots Debug Options"
-			);
-
-			config_menu.AddBoolOption(
-				mod: ModManifest,
-				name: () => "Enable slots debug",
-				tooltip: () => "Check this to draw a colored rectangle over the areas of Furniture slots.",
-				getValue: () => config.enable_slot_debug,
-				setValue: value => config.enable_slot_debug = value
-			);
-
-			config_menu.AddNumberOption(
-				mod: ModManifest,
-				getValue: () => config.slot_debug_alpha,
-				setValue: value => config.slot_debug_alpha = Math.Clamp(value, 0f, 1f),
-				name: () => "Slot Debug Opacity",
-				tooltip: () => "The opacity of rectangles drawn over the areas of Furniture slots.",
-				min: 0f, max: 1f, interval: 0.01f
-			);
+			Pack.FurniturePack.config_menu_api = config_menu;
 
 			// get GMCM Options' API (if it's installed)
-			var configMenuExt = Helper.ModRegistry.GetApi<IGMCMOptionsAPI>("jltaylor-us.GMCMOptions");
-			if (configMenuExt is null)
-				return;
-
-			configMenuExt.AddColorOption(
-				mod: ModManifest,
-				getValue: () => config.slot_debug_default_color,
-				setValue: value => config.slot_debug_default_color = value,
-				name: () => "Default Slot Debug Color",
-				tooltip: () => "The default color of the rectangles drawn over the areas of Furniture slots. It will only update on Pack reload or restart.",
-				showAlpha: false,
-				colorPickerStyle: (uint)IGMCMOptionsAPI.ColorPickerStyle.HSLColorWheel
-			);
-
-			#endregion
-
-			Pack.FurniturePack.register_config(config_menu);
+			IGMCMOptionsAPI? config_options = Helper.ModRegistry.GetApi<IGMCMOptionsAPI>("jltaylor-us.GMCMOptions");
+			Pack.FurniturePack.config_options_api = config_options;
+			
+			Pack.FurniturePack.register_FF_config(ModManifest);
 		}
 
 		private void register_commands()

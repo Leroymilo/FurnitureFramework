@@ -1,7 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
-using GenericModConfigMenu;
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley.GameData.Shops;
 using StardewValley.Objects;
@@ -21,26 +19,43 @@ namespace FurnitureFramework.Pack
 
 		// Static Collections 
 
-		static HashSet<string> to_load = new();
-		// HashSet of data_UIDs of packs to load.
+		static Stack<string> to_load = new();
+		// Stack of data_UIDs of packs to load. It's a Stack to ensure that included packs are loaded along their root.
+		static HashSet<string> UIDs = new();
+		// UIDs of all Furniture Packs
 		static Dictionary<string, FurniturePack> packs = new();
-		// maps data_UID (UID/json_path) to pack.
-		static Dictionary<string, HashSet<string>> data_UIDs = new();
-		// maps UID to data_UIDs of base and included packs of this UID.
-		static Dictionary<string, string> static_types = new();
-		// maps Furniture ID to the data_UID it's from.
-		static Dictionary<string, HashSet<string>> conflicts = new();
-		// maps type_id to HashSet of all data_UID trying to patch it.
+		// maps data_UID to pack.
+		static Dictionary<string, MaxDict<HashSet<string>>> static_types = new();
+		// maps type_id to a (custom) Dictionary mapping priorities
+		// to the set of data_UIDs of Packs implementing this type at this priority.
+		// `static_types[type_id].Max().Value.First();` to get the data_UID for a given type_id.
+		// sorry
+		static bool update_game_data = false;
+		// if it's necessary to refresh game data,
+		// must be set to true after any operation that will change Data/Furniture or Data/Shops
+		// must be set to false after invalidating game data
 
 		// Pack Properties
 
-		IContentPack content_pack;
-		string UID;
-		string path;
+		readonly IContentPack content_pack;
+		string path = DEFAULT_PATH;
+		string UID { get => content_pack.Manifest.UniqueID; }
 		string data_UID { get => $"{UID}/{path}"; }
+		FurniturePack? root = null;
+		bool is_included { get => root != null; }
+		bool update_config = false;
 		Dictionary<string, Type.FurnitureType> types = new();
 		Dictionary<string, IncludedPack> included_packs = new();
-		bool is_included = false;
+
+		private static void invalidate_game_data()
+		{
+			if (!update_game_data) return;
+
+			IGameContentHelper helper = ModEntry.get_helper().GameContent;
+			helper.InvalidateCache("Data/Furniture");
+			helper.InvalidateCache("Data/Shops");
+			update_game_data = false;
+		}
 
 
 		#region Getters
@@ -192,95 +207,6 @@ namespace FurnitureFramework.Pack
 
 			foreach (FurniturePack pack in packs.Values)
 				pack.add_data_shop(editor);
-		}
-
-		#endregion
-	
-		#region Config
-
-		private bool has_config()
-		{
-			return included_packs.Count > 0;
-		}
-
-		private void reset_config()
-		{
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.enabled = sub_pack.default_enabled;
-				sub_pack.pack.reset_config();
-			}
-		}
-
-		private void read_config(JObject config_data, string? prefix = null)
-		{
-			prefix ??= "";
-
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.read_config(config_data, prefix);
-			}
-		}
-
-		private void save_config()
-		{
-			JObject data = new();
-
-			save_config(data, "");
-
-			string path = Path.Combine(content_pack.DirectoryPath, CONFIG_PATH);
-			File.WriteAllText(path, data.ToString());
-		}
-
-		private void save_config(JObject data, string prefix)
-		{
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.save_config(data, prefix);
-			}
-		}
-
-		private void register_pack_config(IGenericModConfigMenuApi config_menu)
-		{
-			if (!has_config()) return;
-
-			config_menu.Register(
-				mod: content_pack.Manifest,
-				reset: reset_config,
-				save: () => save_config()
-			);
-
-			add_config(config_menu);
-		}
-
-		private void add_config(IGenericModConfigMenuApi config_menu)
-		{
-			if (!has_config()) return;
-
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.add_config(config_menu);
-			}
-
-			foreach (IncludedPack sub_pack in included_packs)
-			{
-				sub_pack.add_config_page(config_menu);
-			}
-		}
-
-		public static void register_config(IGenericModConfigMenuApi config_menu)
-		{
-			foreach (FurniturePack pack in packs.Values)
-			{
-				pack.register_pack_config(config_menu);
-			}
-		}
-
-		private static void update_after_config_change()
-		{
-			IGameContentHelper helper = ModEntry.get_helper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
 		}
 
 		#endregion

@@ -1,4 +1,3 @@
-using HarmonyLib;
 using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -15,34 +14,35 @@ namespace FurnitureFramework.Pack
 		{
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned())
 			{
-				string data_UID = $"{c_pack.Manifest.UniqueID}/{DEFAULT_PATH}";
-				to_load.Add(data_UID);
-				packs[data_UID] = new(c_pack);
+				FurniturePack pack = new(c_pack);
+				to_load.Append(pack.data_UID);
+				packs[pack.data_UID] = pack;
 			}
 		}
 
 		public static void load_all()
 		{
+			if (to_load.Count == 0) return;
+			
 			while (to_load.Count > 0)
 			{
-				string data_UID = to_load.First();
-				to_load.Remove(data_UID);
+				string data_UID = to_load.Pop();
 				packs[data_UID].load();
 			}
 			
-			ModEntry.log("Finished loading Furniture Types.");
-			IGameContentHelper helper = ModEntry.get_helper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
+			invalidate_game_data();
 		}
 
-		private FurniturePack(IContentPack c_pack, string path = DEFAULT_PATH)
+		private FurniturePack(IContentPack c_pack)
 		{
 			content_pack = c_pack;
-			UID = content_pack.Manifest.UniqueID;
-			this.path = path;
+		}
 
-			is_included = path != DEFAULT_PATH;
+		private FurniturePack(IContentPack c_pack, string data_path, FurniturePack root)
+		{
+			content_pack = c_pack;
+			path = data_path;
+			this.root = root;
 		}
 
 		private void load()
@@ -60,47 +60,24 @@ namespace FurnitureFramework.Pack
 				return;
 			}
 
-			#region Read Content
-
-			if (!is_included) { if (!check_format(data)) return; }
+			if (!is_included)
+				if (!check_format(data)) return;
 
 			load_furniture(data);
 
 			load_included(data);
-
-			#endregion
 
 			if (types.Count == 0 && included_packs.Count == 0)
 			{
 				ModEntry.log("This Furniture Pack is empty!", LogLevel.Warn);
 				return;
 			}
-
-			#region Config
-
-			if (!is_included)
-			{
-				JObject? config_data = null;
-				try
-				{
-					config_data = content_pack.ModContent.Load<JObject>(CONFIG_PATH);
-				}
-				catch (ContentLoadException)
-				{
-					save_config();
-				}
-
-				if (config_data is not null)
-					read_config(config_data);
-			}
-
-			#endregion
-
-			// Adding the valid Pack to the map of data_UID for reloading purposes
-			if (!data_UIDs.ContainsKey(UID))
-				data_UIDs.Add(UID, new());
-			data_UIDs[UID].Add(data_UID);
 			
+			if (update_config)
+			{
+				config_menu_api?.Unregister(content_pack.Manifest);
+				register_config();
+			}
 		}
 
 		private bool check_format(JObject data)
@@ -164,27 +141,40 @@ namespace FurnitureFramework.Pack
 				}
 			}
 
+			HashSet<string> added_types = new();
+
 			foreach (Type.FurnitureType type in new_types)
 			{
 				string type_id = type.info.id;
-				types[type_id] = type;
 
-				int prev_prio = get_current_priority(type_id);
-				if (prev_prio > type.info.priority)
-					continue;
-				else if (prev_prio == type.info.priority)
+				if (types.ContainsKey(type_id))
 				{
-					if (!conflicts.ContainsKey(type_id))
-						conflicts[type_id] = new() {static_types[type_id]};
-					conflicts[type_id].Add(data_UID);
-					continue;
+					int prev_prio = types[type_id].info.priority;
+					if (prev_prio != type.info.priority)
+					{
+						// move this pack's data_UID in static_types
+						remove_conflict(type_id, prev_prio, data_UID);
+					}
 				}
-				else // prev_prio < type.info.priority
+				else
 				{
-					conflicts.Remove(type_id);
-					static_types[type_id] = data_UID;
+					config.add_type(type_id, type.info.display_name);
+					update_config = true;
 				}
 
+				added_types.Add(type_id);
+				types[type_id] = type;	// replace old type anyway
+				add_conflict(type_id, type.info.priority, data_UID);
+			}
+
+			foreach (string type_id in types.Keys)
+			{
+				if (added_types.Contains(type_id)) continue;
+				types.Remove(type_id);
+				remove_conflict(type_id, types[type_id].info.priority, data_UID);
+				
+				config.remove_type(type_id);
+				update_config = true;
 			}
 		}
 
@@ -196,7 +186,7 @@ namespace FurnitureFramework.Pack
 
 			foreach (JProperty property in includes_obj.Properties())
 			{
-				IncludedPack i_pack = new(content_pack, property);
+				IncludedPack i_pack = new(content_pack, property, root ?? this);
 				string i_data_UID = i_pack.data_UID;
 
 				if (i_pack.is_valid)
@@ -207,6 +197,9 @@ namespace FurnitureFramework.Pack
 					
 					included_packs.Add(i_data_UID, i_pack);
 					i_pack.add_pack();	// Queue pack loading
+					
+					config.add_i_pack(i_data_UID, i_pack.name, i_pack.default_enabled);
+					update_config = true;
 				}
 				else
 				{
@@ -220,9 +213,44 @@ namespace FurnitureFramework.Pack
 				if (added_i_packs.Contains(i_data_UID)) continue;
 				included_packs[i_data_UID].clear();
 				included_packs.Remove(i_data_UID);
+
+				config.remove_i_pack(i_data_UID);
+				update_config = true;
 			}
 		}
-	
+
+		private static void add_conflict(string type_id, int priority, string data_UID)
+		{
+			string? prev_result = get_type_source(type_id);
+
+			if (!static_types.ContainsKey(type_id))
+				static_types.Add(type_id, new());
+			
+			if (!static_types[type_id].ContainsKey(priority))
+				static_types[type_id].Add(priority, new());
+			
+			static_types[type_id][priority].Add(data_UID);
+
+			if (prev_result != get_type_source(type_id))
+				update_game_data = true;
+		}
+
+		private static void remove_conflict(string type_id, int priority, string data_UID)
+		{
+			string? prev_result = get_type_source(type_id);
+
+			static_types[type_id][priority].Remove(data_UID);
+
+			if (static_types[type_id][priority].Count == 0)
+				static_types[type_id].Remove(priority);
+			
+			if (static_types[type_id].Count == 0)
+				static_types.Remove(type_id);
+
+			if (prev_result != get_type_source(type_id))
+				update_game_data = true;
+		}
+
 		#endregion
 
 		#region Reload
@@ -232,52 +260,50 @@ namespace FurnitureFramework.Pack
 			if (args.Count() == 0) reload_all();
 			else reload_single(args[0]);
 			
-			IGameContentHelper helper = ModEntry.get_helper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
+			if (update_game_data) invalidate_game_data();
 		}
 
 		private static void reload_all()
 		{
-			foreach (string UID in data_UIDs.Keys)
+			foreach (string UID in UIDs)
 				reload_single(UID);
 		}
 
 		private static void reload_single(string UID)
 		{
-			packs[$"{UID}/{DEFAULT_PATH}"].reload(true);
+			string data_UID = $"{UID}/{DEFAULT_PATH}";
+
+			if (!packs.ContainsKey(data_UID))
+			{
+				ModEntry.log($"Pack {UID} does not exist!", LogLevel.Warn);
+				return;
+			}
+
+			packs[data_UID].reload(true);
 		}
 
 		private void reload(bool cascade = false)
 		{
-			clear(cascade);
+			if (cascade) clear();
 
-			to_load.Add(data_UID);
+			to_load.Append(data_UID);
 			load_all();
 		}
 
-		private void clear(bool cascade = false)
+		private void clear()
 		{
 			foreach (string type_id in types.Keys)
 			{
-				if (static_types[type_id] == data_UID)
-					static_types.Remove(type_id);
-				
-				if (conflicts.ContainsKey(type_id))
-				{
-					conflicts[type_id].Remove(data_UID);
-					if (conflicts[type_id].Count == 0)
-						conflicts.Remove(type_id);
-				}
+				remove_conflict(type_id, types[type_id].info.priority, data_UID);
+				config.remove_type(type_id);
 			}
 
 			types.Clear();
 
-			if (cascade)
-			{
-				foreach (IncludedPack i_pack in included_packs.Values)
-					i_pack.clear();
-			}
+			foreach (IncludedPack i_pack in included_packs.Values)
+				i_pack.clear();
+			
+			included_packs.Clear();
 		}
 
 		#endregion
