@@ -106,18 +106,32 @@ namespace FurnitureFramework.Pack
 
 		private class PackConfig
 		{
+			JObject data_f = new();
+			JObject data_p = new();
+
 			Dictionary<string, bool> types = new();
 			Dictionary<string, string> type_names = new();
 			Dictionary<string, bool> i_packs = new();
 			Dictionary<string, bool> i_pack_defaults = new();
 			Dictionary<string, string> i_pack_names = new();
 
-			#region Add/Remove
+			public void set_data(JObject data)
+			{
+				JToken? f_tok = data.GetValue("Furniture");
+				if (f_tok is JObject f_obj) data_f = f_obj;
+				else data_f = new();
+
+				JToken? p_tok = data.GetValue("Included");
+				if (p_tok is JObject p_obj) data_p = p_obj;
+				else data_p = new();
+			}
+
+			#region Add/Remove/Get
 
 			public void add_type(string type_id, string type_name)
 			{
-				types[type_id] = true;
 				type_names[type_id] = type_name;
+				types[type_id] = JsonParser.parse(data_f.GetValue(type_id), true);
 			}
 
 			public void remove_type(string type_id)
@@ -126,11 +140,16 @@ namespace FurnitureFramework.Pack
 				type_names.Remove(type_id);
 			}
 
-			public void add_i_pack(string i_pack_UID, string name, bool default_)
+			public bool is_type_enabled(string type_id)
 			{
-				i_packs[i_pack_UID] = default_;
-				i_pack_defaults[i_pack_UID] = default_;
+				return types[type_id];
+			}
+
+			public void add_i_pack(string i_pack_UID, string name, bool def)
+			{
+				i_pack_defaults[i_pack_UID] = def;
 				i_pack_names[i_pack_UID] = name;
+				i_packs[i_pack_UID] = JsonParser.parse(data_p.GetValue(i_pack_UID), def);
 			}
 
 			public void remove_i_pack(string i_pack_UID)
@@ -138,6 +157,11 @@ namespace FurnitureFramework.Pack
 				i_packs.Remove(i_pack_UID);
 				i_pack_defaults.Remove(i_pack_UID);
 				i_pack_names.Remove(i_pack_UID);
+			}
+
+			public bool is_pack_enabled(string i_pack_UID)
+			{
+				return i_packs[i_pack_UID];
 			}
 
 			#endregion

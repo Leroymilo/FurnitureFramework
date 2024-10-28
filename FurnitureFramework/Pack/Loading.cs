@@ -8,7 +8,7 @@ namespace FurnitureFramework.Pack
 	partial class FurniturePack
 	{	
 
-		#region Initial Load
+		#region Load
 
 		public static void pre_load(IModHelper helper)
 		{
@@ -45,7 +45,7 @@ namespace FurnitureFramework.Pack
 			this.root = root;
 		}
 
-		private void load()
+		private void load(bool enabled = true)
 		{
 			ModEntry.log($"Loading {data_UID}...");
 
@@ -234,6 +234,12 @@ namespace FurnitureFramework.Pack
 			if (prev_result != get_type_source(type_id))
 				update_game_data = true;
 		}
+
+		#endregion
+
+		#region Unload
+
+
 
 		private static void remove_conflict(string type_id, int priority, string data_UID)
 		{
