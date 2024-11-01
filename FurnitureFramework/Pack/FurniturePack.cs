@@ -1,6 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
+using FurnitureFramework.Type;
+using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
@@ -19,21 +23,12 @@ namespace FurnitureFramework.Pack
 
 		// Static Collections 
 
-		static Stack<string> to_load = new();
-		// Stack of data_UIDs of packs to load. It's a Stack to ensure that included packs are loaded along their root.
-		static HashSet<string> UIDs = new();
-		// UIDs of all Furniture Packs
+		static Dictionary<string, IContentPack> UIDs = new();
+		// UIDs of all Furniture Packs (for reload all).
 		static Dictionary<string, FurniturePack> packs = new();
 		// maps data_UID to pack.
-		static Dictionary<string, MaxDict<HashSet<string>>> static_types = new();
-		// maps type_id to a (custom) Dictionary mapping priorities
-		// to the set of data_UIDs of Packs implementing this type at this priority.
-		// `static_types[type_id].Max().Value.First();` to get the data_UID for a given type_id.
-		// sorry
-		static bool update_game_data = false;
-		// if it's necessary to refresh game data,
-		// must be set to true after any operation that will change Data/Furniture or Data/Shops
-		// must be set to false after invalidating game data
+		static Dictionary<string, string> static_types = new();
+		// maps type_id to the data_UID of the pack where it's defined.
 
 		// Pack Properties
 
@@ -43,82 +38,120 @@ namespace FurnitureFramework.Pack
 		string data_UID { get => $"{UID}/{path}"; }
 		FurniturePack? root = null;
 		bool is_included { get => root != null; }
-		bool update_config = false;
+		bool is_loaded = false;
 		Dictionary<string, Type.FurnitureType> types = new();
 		Dictionary<string, IncludedPack> included_packs = new();
 
 		private static void invalidate_game_data()
 		{
-			if (!update_game_data) return;
-
 			IGameContentHelper helper = ModEntry.get_helper().GameContent;
 			helper.InvalidateCache("Data/Furniture");
 			helper.InvalidateCache("Data/Shops");
-			update_game_data = false;
 		}
-
 
 		#region Getters
 
-		public static bool try_get_type_from_data_file(string data_file_name, [MaybeNullWhen(false)] out FurniturePack pack)
+		private static bool try_get_cp_from_resource(string resource_name, [MaybeNullWhen(false)] out IContentPack c_pack)
 		{
-			pack = null;
-
-			foreach (FurniturePack f_pack in packs.Values)
-			{
-				// f_pack.
-			}
-
-			return false;
-		}
-
-		public static bool try_get_pack_from_resource(string resource_name, [MaybeNullWhen(false)] out FurniturePack pack)
-		{
-			pack = null;
+			c_pack = null;
 			int max_key_l = 0;
 
-			// searching packs for which the UID is the start of the resource name
+			// searching content packs for which the UID is the start of the resource name
 			// taking only the one with the longer matching UID in case of substring UIDs (bad)
-			foreach (string key in packs.Keys)
+			foreach (string key in UIDs.Keys)
 			{
 				if (resource_name.StartsWith(key) && key.Length > max_key_l)
 				{
-					pack = packs[key];
+					c_pack = UIDs[key];
 					max_key_l = key.Length;
 				}
 			}
 
-			return pack is not null;
+			return c_pack is not null;
 		}
 
-		private bool try_get_type_pack(string f_id, [MaybeNullWhen(false)] ref Type.FurnitureType? type)
+		public static bool load_resource(AssetRequestedEventArgs e)
 		{
-			bool found = false;
+			string name = e.NameWithoutLocale.Name;
 
-			// prioritize included files to overload definition
-			foreach (IncludedPack sub_pack in included_packs)
+			// Loading texture for menu icon
+			if (try_get_type(name, out Type.FurnitureType? type))
 			{
-				if (!sub_pack.enabled) continue;
-				found |= sub_pack.pack.try_get_type_pack(f_id, ref type);
-				if (found) break;
+				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
+				return true;
 			}
 
-			if (!found)
+			if (!name.StartsWith("FF/")) return false;
+			name = name[3..];	// removing the "FF/" marker
+
+			if (!try_get_cp_from_resource(name, out IContentPack? c_pack))
 			{
-				found |= types.TryGetValue(f_id, out type);
+				ModEntry.log($"Could not find a valid pack to load asset {name}", LogLevel.Warn);
+				return false;
 			}
 
-			return found;
+			name = name[(c_pack.Manifest.UniqueID.Length+1)..];	// removing the "{UID}/" marker
+
+			if (e.DataType == typeof(JObject))
+			{
+				e.LoadFrom(
+					() => {return c_pack.ModContent.Load<JObject>(name);},
+					AssetLoadPriority.Low
+				);
+			}
+
+			if (e.DataType == typeof(Texture2D))
+			{
+				e.LoadFrom(
+					() => {return base_load(c_pack.ModContent, name);},
+					AssetLoadPriority.Low
+				);
+			}
+
+			return true;
 		}
 
-		public static bool try_get_type(string f_id, [MaybeNullWhen(false)] out Type.FurnitureType type)
+		private static Texture2D base_load(IModContentHelper pack_helper, string path)
 		{
+			Texture2D result;
+
+			if (path.StartsWith("FF/"))
+			{
+				result = ModEntry.get_helper().ModContent.Load<Texture2D>(path[3..]);
+				// Load from FF content
+			}
+
+			else if (path.StartsWith("Content/"))
+			{
+				string fixed_path = Path.ChangeExtension(path[8..], null);
+				result = ModEntry.get_helper().GameContent.Load<Texture2D>(fixed_path);
+				// Load from game content
+			}
+			
+			else result = pack_helper.Load<Texture2D>(path);
+			// Load from Pack content
+
+			ModEntry.log($"loaded texture at {path}", LogLevel.Trace);
+			return result;
+		}
+
+		private Type.FurnitureType get_type(string f_id)
+		{
+			return types[f_id];
+		}
+
+		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out Type.FurnitureType type)
+		{
+			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
+			// ensure that Furniture are loaded
+
 			type = null;
 
 			if (!static_types.TryGetValue(f_id, out string? UID))
 				return false;
 
-			return packs[UID].try_get_type_pack(f_id, ref type);
+			type = packs[UID].get_type(f_id);
+			return true;
 		}
 
 		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out Type.FurnitureType type)
@@ -132,77 +165,60 @@ namespace FurnitureFramework.Pack
 
 		private void add_data_furniture(IDictionary<string, string> editor)
 		{
-			foreach ((string id, Type.FurnitureType f) in types)
+			foreach (FurnitureType type in types.Values)
 			{
-				editor[id] = f.get_string_data();
+				if (!config.is_type_enabled(type.info.id)) continue;
+
+				if (static_types.ContainsKey(type.info.id))
+				{
+					int prev_prio = packs[static_types[type.info.id]].get_type(type.info.id).info.priority;
+					if (type.info.priority <= prev_prio) continue;
+				}
+
+				static_types[type.info.id] = data_UID;
+				editor[type.info.id] = type.get_string_data();
 			}
 
-			foreach (IncludedPack sub_pack in included_packs)
+			foreach (IncludedPack i_pack in included_packs.Values)
 			{
-				if (sub_pack.enabled) sub_pack.pack.add_data_furniture(editor);
+				if (!config.is_pack_enabled(i_pack.data_UID)) continue;
+
+				i_pack.pack.add_data_furniture(editor);
 			}
 		}
 
 		public static void edit_data_furniture(IAssetData asset)
 		{
+			load_all();
+
 			var editor = asset.AsDictionary<string, string>().Data;
 
-			foreach (FurniturePack pack in packs.Values)
-				pack.add_data_furniture(editor);
-		}
-
-		private static bool has_shop_item(ShopData shop_data, string f_id)
-		{
-			foreach (ShopItemData shop_item_data in shop_data.Items)
-			{
-				if (shop_item_data.ItemId == $"(F){f_id}")
-					return true;
-			}
-			return false;
+			foreach (string UID in UIDs.Keys)
+				packs[$"{UID}/{DEFAULT_PATH}"].add_data_furniture(editor);
 		}
 
 		private void add_data_shop(IDictionary<string, ShopData> editor)
 		{
-			foreach ((string shop_id, List<string> f_ids) in shops)
+			foreach (FurnitureType type in types.Values)
 			{
-				if (!editor.ContainsKey(shop_id))
-				{
-					ShopData catalogue_shop_data = new()
-					{
-						CustomFields = new Dictionary<string, string>() {
-							{"HappyHomeDesigner/Catalogue", "true"}
-						},
-						Owners = new List<ShopOwnerData>() { 
-							new() { Name = "AnyOrNone" }
-						}
-					};
-					editor[shop_id] = catalogue_shop_data;
-				}
+				if (!config.is_type_enabled(type.info.id)) continue;
 
-				foreach (string f_id in f_ids)
-				{
-					if (!has_shop_item(editor[shop_id], f_id))
-					{
-						ShopItemData shop_item_data = new()
-						{
-							Id = f_id,
-							ItemId = $"(F){f_id}",
-							// Price = types[f_id].price
-						};
-
-						editor[shop_id].Items.Add(shop_item_data);
-					}
-				}
+				type.add_data_shop(editor);
 			}
 
-			foreach (IncludedPack sub_pack in included_packs)
+			foreach (IncludedPack i_pack in included_packs.Values)
 			{
-				if (sub_pack.enabled) sub_pack.pack.add_data_shop(editor);
+				if (!config.is_pack_enabled(i_pack.data_UID)) continue;
+
+				i_pack.pack.add_data_shop(editor);
 			}
 		}
 
 		public static void edit_data_shop(IAssetData asset)
 		{
+			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
+			// ensure that Furniture are loaded
+
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
 			foreach (FurniturePack pack in packs.Values)
@@ -211,7 +227,7 @@ namespace FurnitureFramework.Pack
 
 		#endregion
 
-		public static void debug_print(string command, string[] args)
+		public static void debug_print(string _, string[] args)
 		{
 			if (args.Count() == 0)
 			{
@@ -219,6 +235,8 @@ namespace FurnitureFramework.Pack
 				return;
 			}
 			string UID = args[0];
+
+			// TODO
 		}
 	}
 }

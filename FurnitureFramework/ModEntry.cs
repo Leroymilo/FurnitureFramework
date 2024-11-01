@@ -38,11 +38,6 @@ namespace FurnitureFramework
 			return config;
 		}
 
-		static public IManifest get_manifest()
-		{
-			return 
-		}
-
 		static public void log(string message, LogLevel log_level = LogLevel.Debug)
 		{
 			if (monitor == null) throw new NullReferenceException("Monitor was not set.");
@@ -199,39 +194,7 @@ namespace FurnitureFramework
 			if (name.StartsWith("Data/Shops"))
 				e.Edit(Pack.FurniturePack.edit_data_shop);
 
-			if (Pack.FurniturePack.try_get_type(name, out Type.FurnitureType? type))
-			{
-				// Loading texture for menu icon
-				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
-			}
-
-			if (Pack.FurniturePack.try_get_pack_from_resource(name, out Pack.FurniturePack? f_pack))
-			{
-				// removing the Mod's UID and the separating character from the resource name
-				string path = name[(f_pack.UID.Length + 1)..];
-
-				if (e.DataType == typeof(JObject))
-				{
-					// Loading any data for this Furniture Pack
-					e.LoadFrom(
-						() => {return f_pack.content_pack.ModContent.Load<JObject>(path);},
-						AssetLoadPriority.Low
-					);
-				}
-				else if (e.DataType == typeof(Texture2D))
-				{
-					// Loading any texture for this Furniture Pack
-					e.LoadFrom(
-						() => {return Type.TextureManager.base_load(f_pack.content_pack.ModContent, path);},
-						AssetLoadPriority.Low
-					);
-				}
-				else
-				{
-					// Shouldn't happen in this mod
-					log($"Unknown asset type to load for {name} : {e.DataType}.", LogLevel.Warn);
-				}
-			}
+			Pack.FurniturePack.load_resource(e);
 		}
 
         /// <inheritdoc cref="IContentEvents.AssetsInvalidated"/>

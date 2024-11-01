@@ -7,6 +7,9 @@ namespace FurnitureFramework.Pack
 {
 	partial class FurniturePack
 	{
+
+		public static HashSet<string> to_register = new();
+
 		public static IGenericModConfigMenuApi? config_menu_api;
 		public static IGMCMOptionsAPI? config_options_api;
 
@@ -126,18 +129,10 @@ namespace FurnitureFramework.Pack
 				else data_p = new();
 			}
 
-			#region Add/Remove/Get
-
 			public void add_type(string type_id, string type_name)
 			{
 				type_names[type_id] = type_name;
 				types[type_id] = JsonParser.parse(data_f.GetValue(type_id), true);
-			}
-
-			public void remove_type(string type_id)
-			{
-				types.Remove(type_id);
-				type_names.Remove(type_id);
 			}
 
 			public bool is_type_enabled(string type_id)
@@ -145,48 +140,16 @@ namespace FurnitureFramework.Pack
 				return types[type_id];
 			}
 
-			public void add_i_pack(string i_pack_UID, string name, bool def)
+			public void add_i_pack(string i_data_UID, string name, bool def)
 			{
-				i_pack_defaults[i_pack_UID] = def;
-				i_pack_names[i_pack_UID] = name;
-				i_packs[i_pack_UID] = JsonParser.parse(data_p.GetValue(i_pack_UID), def);
+				i_pack_defaults[i_data_UID] = def;
+				i_pack_names[i_data_UID] = name;
+				i_packs[i_data_UID] = JsonParser.parse(data_p.GetValue(i_data_UID), def);
 			}
 
-			public void remove_i_pack(string i_pack_UID)
+			public bool is_pack_enabled(string i_data_UID)
 			{
-				i_packs.Remove(i_pack_UID);
-				i_pack_defaults.Remove(i_pack_UID);
-				i_pack_names.Remove(i_pack_UID);
-			}
-
-			public bool is_pack_enabled(string i_pack_UID)
-			{
-				return i_packs[i_pack_UID];
-			}
-
-			#endregion
-
-			public void load(JToken? data)
-			{
-				if (data is not JObject data_obj) return;
-
-				if (data_obj.TryGetValue("Furniture", out JToken? f_tok) && f_tok is JObject f_obj)
-				{
-					foreach (JProperty f_prop in f_obj.Properties())
-					{
-						if (types.ContainsKey(f_prop.Name) && f_prop.Value.Type == JTokenType.Boolean)
-							types[f_prop.Name] = (bool)f_prop.Value;
-					}
-				}
-
-				if (data_obj.TryGetValue("Included", out JToken? i_tok) && i_tok is JObject i_obj)
-				{
-					foreach (JProperty i_prop in i_obj.Properties())
-					{
-						if (i_packs.ContainsKey(i_prop.Name) && i_prop.Value.Type == JTokenType.Boolean)
-							i_packs[i_prop.Name] = (bool)i_prop.Value;
-					}
-				}
+				return i_packs[i_data_UID];
 			}
 
 			public JObject save()
@@ -198,6 +161,18 @@ namespace FurnitureFramework.Pack
 				};
 			}
 
+			public void clear()
+			{
+				data_f = new();
+				data_p = new();
+
+				types.Clear();
+				type_names.Clear();
+				i_packs.Clear();
+				i_pack_defaults.Clear();
+				i_pack_names.Clear();
+			}
+
 			public void reset()
 			{
 				foreach (string type_id in types.Keys)
@@ -205,9 +180,9 @@ namespace FurnitureFramework.Pack
 					types[type_id] = true;
 				}
 
-				foreach(string i_pack_UID in i_packs.Keys)
+				foreach(string i_data_UID in i_packs.Keys)
 				{
-					i_packs[i_pack_UID] = i_pack_defaults[i_pack_UID];
+					i_packs[i_data_UID] = i_pack_defaults[i_data_UID];
 				}
 			}
 
@@ -230,24 +205,25 @@ namespace FurnitureFramework.Pack
 				}
 
 				api.AddSectionTitle(manifest, () => "Included Paks", null);
-				foreach (string i_pack_UID in i_packs.Keys)
+				foreach (string i_data_UID in i_packs.Keys)
 				{
 					api.AddBoolOption(
 						manifest,
-						() => i_packs[i_pack_UID],
+						() => i_packs[i_data_UID],
 						(bool value) => {
-							i_packs[i_pack_UID] = value;
+							i_packs[i_data_UID] = value;
 							invalidate_game_data();
+							to_load.Append(i_data_UID);
 						},
-						() => i_pack_names[i_pack_UID],
-						() => i_pack_UID,
-						i_pack_UID
+						() => i_pack_names[i_data_UID],
+						() => i_data_UID,
+						i_data_UID
 					);
 
 					api.AddPageLink(
 						mod: manifest,
-						pageId: i_pack_UID,
-						text: () => $"{i_pack_names[i_pack_UID]} Config"
+						pageId: i_data_UID,
+						text: () => $"{i_pack_names[i_data_UID]} Config"
 					);
 				}
 			}
@@ -257,48 +233,14 @@ namespace FurnitureFramework.Pack
 
 		PackConfig config = new();
 
-		public static void register_pack_config()
-		{
-			foreach (string UID in UIDs)
-				packs[$"{UID}/{DEFAULT_PATH}"].register_config();
-		}
-
-		private void register_config()
-		{
-			if (config_menu_api is null) return;
-
-			IManifest manifest = content_pack.Manifest;
-
-			if (!is_included)
-			{
-				config_menu_api.Register(
-					manifest,
-					() => {reset_config(); invalidate_game_data();},
-					save_config);
-			}
-
-			config.register(config_menu_api, manifest);
-
-			foreach (IncludedPack i_pack in included_packs.Values)
-				i_pack.register_config(manifest);
-			
-			update_config = false;
-		}
-
 		private void load_config()
 		{
 			JObject? config_data = content_pack.ReadJsonFile<JObject>(CONFIG_PATH);
-			if (config_data == null) config_data = new();
+			if (config_data == null) return;
 
-			load_config(config_data);
-		}
-
-		private void load_config(JObject config_data)
-		{
-			config.load(config_data.GetValue(data_UID));
-
-			foreach (IncludedPack i_pack in included_packs.Values)
-				i_pack.pack.load_config(config_data);
+			JToken? config_token = config_data.GetValue(data_UID);
+			if (config_token is JObject config_obj)
+				config.set_data(config_obj);
 		}
 
 		private void save_config()
@@ -327,6 +269,42 @@ namespace FurnitureFramework.Pack
 			config.reset();
 			foreach (IncludedPack i_pack in included_packs.Values)
 				i_pack.pack.reset_config();
+		}
+
+		private void unregister_config()
+		{
+			if (config_menu_api is null) return;
+
+			config_menu_api.Unregister(content_pack.Manifest);
+		}
+
+		public static void register_pack_config()
+		{
+			if (config_menu_api is null) return;
+
+			foreach (string UID in to_register)
+				packs[$"{UID}/{DEFAULT_PATH}"].register_config();
+		}
+
+		private void register_config()
+		{
+			if (config_menu_api is null) return;
+
+			IManifest manifest = content_pack.Manifest;
+
+			if (!is_included)
+			{
+				config_menu_api.Register(
+					manifest,
+					() => {reset_config(); invalidate_game_data();},
+					save_config
+				);
+			}
+
+			config.register(config_menu_api, manifest);
+
+			foreach (IncludedPack i_pack in included_packs.Values)
+				i_pack.register_config(manifest);
 		}
 	}
 }

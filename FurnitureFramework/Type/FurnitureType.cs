@@ -59,6 +59,7 @@ namespace FurnitureFramework.Type
 	[RequiresPreviewFeatures]
 	partial class FurnitureType
 	{
+		
 		#region Fields
 
 		public readonly TypeInfo info;

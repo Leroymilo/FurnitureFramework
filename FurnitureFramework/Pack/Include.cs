@@ -39,24 +39,21 @@ namespace FurnitureFramework.Pack
 				
 				pack = new(c_pack, path, root);
 
+				if (packs.ContainsKey(data_UID))
+					pack = packs[data_UID];
+
 				is_valid = true;
 
 				description = JsonParser.parse<string?>(obj.GetValue("Description"), null);
 				default_enabled = JsonParser.parse(obj.GetValue("Enabled"), true);
 			}
 
-			public void add_pack()
-			{
-				to_load.Append(pack.data_UID);
-				packs[pack.data_UID] = pack;
-			}
-
 			#endregion
 
 			public void clear()
 			{
+				pack.clear(cascade : true);
 				packs.Remove(data_UID);
-				pack.clear();
 			}
 
 			#region Config

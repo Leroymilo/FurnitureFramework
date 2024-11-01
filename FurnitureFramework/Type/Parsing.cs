@@ -1,7 +1,9 @@
+using System.Resources;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
+using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
 namespace FurnitureFramework.Type
@@ -390,5 +392,57 @@ namespace FurnitureFramework.Type
 
 			return result;
 		}
+
+		#region Data/Shops request
+
+		private static bool has_shop_item(ShopData shop_data, string f_id)
+		{
+			foreach (ShopItemData shop_item_data in shop_data.Items)
+			{
+				if (shop_item_data.ItemId == $"(F){f_id}")
+					return true;
+			}
+			return false;
+		}
+
+		private static void add_shop(IDictionary<string, ShopData> editor, string s_id)
+		{
+			if (editor.ContainsKey(s_id)) return;
+
+			ShopData catalogue_shop_data = new()
+			{
+				CustomFields = new Dictionary<string, string>() {
+					{"HappyHomeDesigner/Catalogue", "true"}
+				},
+				Owners = new List<ShopOwnerData>() { 
+					new() { Name = "AnyOrNone" }
+				}
+			};
+			editor[s_id] = catalogue_shop_data;
+		}
+
+		public void add_data_shop(IDictionary<string, ShopData> editor)
+		{
+			if (shop_id != null) add_shop(editor, shop_id);
+
+			foreach (string s_id in shops)
+			{
+				add_shop(editor, s_id);
+
+				if (!has_shop_item(editor[s_id], info.id))
+				{
+					ShopItemData shop_item_data = new()
+					{
+						Id = info.id,
+						ItemId = $"(F){info.id}",
+						// Price = types[f_id].price
+					};
+
+					editor[s_id].Items.Add(shop_item_data);
+				}
+			}
+		}
+
+		#endregion
 	}
 }
