@@ -183,6 +183,15 @@ namespace FurnitureFramework.Pack
 
 		#region Invalidate
 
+		public static void invalidate(string name)
+		{
+			if (!name.StartsWith("FF/")) return;
+			name = name[3..];
+
+			if (packs.ContainsKey(name))
+				packs[name].invalidate();
+		}
+
 		private void invalidate()
 		{
 			if (!is_loaded) return;
@@ -190,6 +199,7 @@ namespace FurnitureFramework.Pack
 			clear(cascade: false);
 			unregister_config();
 
+			ModEntry.log($"Invalidated {data_UID}", LogLevel.Trace);
 			is_loaded = false;
 		}
 

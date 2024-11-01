@@ -205,7 +205,7 @@ namespace FurnitureFramework
 			log($"invalidated assets:");
 			foreach (IAssetName name in e.Names)
 			{
-				log($"\t{name}");
+				Pack.FurniturePack.invalidate(name.BaseName);
 			}
 		}
 
