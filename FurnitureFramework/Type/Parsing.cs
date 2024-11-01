@@ -220,6 +220,11 @@ namespace FurnitureFramework.Type
 			icon_rect.Location += rect_offset;
 
 			layers = new(info, data.GetValue("Layers"), rot_names);
+			for (int i = 0; i < rotations; i++)
+			{
+				if (!layers[i].has_layer)
+					throw new InvalidDataException($"Need at least one Layer for each rotation.");
+			}
 
 			#endregion
 
@@ -238,15 +243,10 @@ namespace FurnitureFramework.Type
 			#region data in classes
 
 			collisions = new(info, data.GetValue("Collisions"), rot_names);
-
 			seats = new(info, data.GetValue("Seats"), rot_names);
-
 			slots = new(info, data.GetValue("Slots"), rot_names);
-
 			light_sources = new(info, data.GetValue("Light Sources"), rot_names);
-
 			sounds = new(data.GetValue("Sounds"));
-
 			particles = new(info, data.GetValue("Particles"), rot_names);
 
 			#endregion
@@ -287,47 +287,55 @@ namespace FurnitureFramework.Type
 				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
 			}
 
-			JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
-			screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
-
-			bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
-			if (!Enum.IsDefined(bed_type)) {
-				bed_type = BedType.Double;
-				ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
-			}
-
-			JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
-
-			if (JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
+			switch (s_type)
 			{
-				bed_area = new Rectangle(
-					bed_area.Location * new Point(4),
-					bed_area.Size * new Point(4)
-				);
-			}
-			else
-			{
-				Point bed_size = collisions[0].game_size;
-				Point area_size = new Point(
-					Math.Max(64, bed_size.X - 64*2),
-					Math.Max(64, bed_size.Y - 64*2)
-				);
-				bed_area = new Rectangle(
-					(bed_size - area_size) / new Point(2),
-					area_size
-				);
-			}
+				case SpecialType.TV:
+					JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
+					screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
+					break;
+				
+				case SpecialType.Bed:
+					bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
+					if (!Enum.IsDefined(bed_type)) {
+						bed_type = BedType.Double;
+						ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
+					}
 
-			if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
-			{
-				fish_area = new Rectangle(
-					read_fish_area.Location * new Point(4),
-					read_fish_area.Size * new Point(4)
-				);
+					JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
+
+					if (JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
+					{
+						bed_area = new Rectangle(
+							bed_area.Location * new Point(4),
+							bed_area.Size * new Point(4)
+						);
+					}
+					else
+					{
+						Point bed_size = collisions[0].game_size;
+						Point area_size = new Point(
+							Math.Max(64, bed_size.X - 64*2),
+							Math.Max(64, bed_size.Y - 64*2)
+						);
+						bed_area = new Rectangle(
+							(bed_size - area_size) / new Point(2),
+							area_size
+						);
+					}
+					break;
+
+				case SpecialType.FishTank:
+					if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
+					{
+						fish_area = new Rectangle(
+							read_fish_area.Location * new Point(4),
+							read_fish_area.Size * new Point(4)
+						);
+					}
+					disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
+					break;
 			}
-			disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
-
-
+			
 			#endregion
 		}
 

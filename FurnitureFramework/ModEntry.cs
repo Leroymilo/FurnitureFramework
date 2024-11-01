@@ -194,6 +194,7 @@ namespace FurnitureFramework
 			if (name.StartsWith("Data/Shops"))
 				e.Edit(Pack.FurniturePack.edit_data_shop);
 
+			// Loading any Furniture Pack data or texture
 			Pack.FurniturePack.load_resource(e);
 		}
 
@@ -204,9 +205,7 @@ namespace FurnitureFramework
 		{
 			log($"invalidated assets:");
 			foreach (IAssetName name in e.Names)
-			{
 				Pack.FurniturePack.invalidate(name.BaseName);
-			}
 		}
 
 		#endregion

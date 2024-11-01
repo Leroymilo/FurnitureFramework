@@ -150,6 +150,7 @@ namespace FurnitureFramework.Type.Properties
 		}
 
 		List<Layer> list = new();
+		public bool has_layer { get => list.Count > 0; }
 
 		private LayerList(Layer layer)
 		{

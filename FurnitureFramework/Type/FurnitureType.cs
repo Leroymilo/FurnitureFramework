@@ -30,6 +30,7 @@ namespace FurnitureFramework.Type
 		Mural
 	}
 
+	[RequiresPreviewFeatures]
 	struct TypeInfo
 	{
 		public readonly string mod_id;
@@ -54,6 +55,14 @@ namespace FurnitureFramework.Type
 			priority = JsonParser.parse(data.GetValue("Priority"), 1000);
 			priority = Math.Max(priority, 0); // rounded up to 0
 		}
+
+		public void debug_print(string indent)
+		{
+			ModEntry.log($"{indent}ID: {id}", LogLevel.Debug);
+			ModEntry.log($"{indent}Name: {display_name}", LogLevel.Debug);
+			if (description != null) ModEntry.log($"{indent}Description: {description}", LogLevel.Debug);
+			ModEntry.log($"{indent}Priority: {priority}", LogLevel.Debug);
+		}
 	}
 
 	[RequiresPreviewFeatures]
@@ -66,16 +75,14 @@ namespace FurnitureFramework.Type
 		string type;
 		public readonly int price;
 		bool exclude_from_random_sales;
-		List<string> context_tags = new();
 		int placement_rules;
+		List<string> context_tags = new();
 		int rotations;
 		bool can_be_toggled = false;
 		bool time_based = false;
 		
 		DynaTexture texture;
-		List<Rectangle> source_rects = new();
-		Point rect_offset;
-		public readonly Rectangle icon_rect = Rectangle.Empty;
+		Rectangle icon_rect = Rectangle.Empty;
 		DirectionalStructure<LayerList> layers;
 
 
@@ -100,7 +107,6 @@ namespace FurnitureFramework.Type
 
 
 		public readonly SpecialType s_type = SpecialType.None;
-
 
 		Vector2 screen_position = Vector2.Zero;
 		float screen_scale = 4;
@@ -633,6 +639,65 @@ namespace FurnitureFramework.Type
 			int rot = furniture.currentRotation.Value;
 			particles[rot].burst(furniture);
 			initialize_slots(furniture, rot);
+		}
+
+		public void debug_print(int indent_count, bool enabled)
+		{
+			string indent = new('\t', indent_count);
+			
+			string text = $"{indent}{info.id}";
+			if (!enabled) text += " (disabled):";
+			else text += ":";
+			ModEntry.log(text, LogLevel.Debug);
+
+			indent += '\t';
+
+			info.debug_print(indent);
+
+			ModEntry.log($"{indent}type: {type}", LogLevel.Debug);
+			ModEntry.log($"{indent}price: {price}", LogLevel.Debug);
+			ModEntry.log($"{indent}exclude from random sales: {exclude_from_random_sales}", LogLevel.Debug);
+			ModEntry.log($"{indent}placement rules: {placement_rules}", LogLevel.Debug);
+			ModEntry.log($"{indent}rotations: {rotations}", LogLevel.Debug);
+			ModEntry.log($"{indent}toggleable: {can_be_toggled}", LogLevel.Debug);
+			ModEntry.log($"{indent}time based: {time_based}", LogLevel.Debug);
+			ModEntry.log($"{indent}context tags: {string.Join(", ", context_tags)}", LogLevel.Debug);
+
+			ModEntry.log($"{indent}placement type: {p_type}", LogLevel.Debug);
+
+			if (shop_id != null) ModEntry.log($"{indent}shop id: {shop_id}", LogLevel.Debug);
+			if (shops.Count > 0) ModEntry.log($"{indent}shows in shops: {string.Join(", ", shops)}", LogLevel.Debug);
+
+			ModEntry.log($"{indent}Animation Data TODO", LogLevel.Debug);
+
+			collisions.debug_print(indent_count+1);
+			seats.debug_print(indent_count+1);
+			slots.debug_print(indent_count+1);
+			sounds.debug_print(indent_count+1);
+			particles.debug_print(indent_count+1);
+			ModEntry.log($"{indent}Light Sources TODO", LogLevel.Debug);
+			// light_sources.debug_print(indent_count+1);
+			
+			ModEntry.log($"{indent}special type: {s_type}", LogLevel.Debug);
+
+			switch (s_type)
+			{
+				case SpecialType.TV:
+					ModEntry.log($"{indent}TV screen pos: {screen_position}", LogLevel.Debug);
+					ModEntry.log($"{indent}TV screen scale: {screen_scale}", LogLevel.Debug);
+					break;
+				
+				case SpecialType.Bed:
+					ModEntry.log($"{indent}Bed Spot: {bed_spot}", LogLevel.Debug);
+					ModEntry.log($"{indent}Bed Area: {bed_area}", LogLevel.Debug);
+					ModEntry.log($"{indent}Bed Type: {bed_type}", LogLevel.Debug);
+					break;
+				
+				case SpecialType.FishTank:
+					if (fish_area != null) ModEntry.log($"{indent}Fish Area: {fish_area}", LogLevel.Debug);
+					ModEntry.log($"{indent}disable Fishtank light: {disable_fishtank_light}", LogLevel.Debug);
+					break;
+			}
 		}
 	}
 }

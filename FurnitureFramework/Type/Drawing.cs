@@ -144,6 +144,11 @@ namespace FurnitureFramework.Type
 			}
 		}
 
+		public void draw_in_slot()
+		{
+			
+		}
+
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
 			DrawData draw_data = new(sprite_batch);

@@ -71,18 +71,20 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **In Testing** `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
 - **Work in Progress** The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
 - **Work in Progress** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
+- **Work in Progress** Nested all animation related fields into a `Animation` object.
 
 **New Features**:
 - **Work in Progress** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - **Work in Progress** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
+- **Work in Progress** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
 - **In Testing** Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - **In Testing** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - **Work in Progress** Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 
 **Fixes**:
-- Fixed animation not working in some cases where Animation Offset had negative coordinates. 
-- Fixed Particles not reseting their timers when restarting the game.  
+- Fixed animation not working in some cases where Animation Offset had negative coordinates.
+- Fixed Particles not reseting their timers when restarting the game.
 - **Work in Progress** Fixed lights sources and glows of Furniture not appearing in slots.
 - Fixed compatibility with Precise Furniture pass-through feature.
 - Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.

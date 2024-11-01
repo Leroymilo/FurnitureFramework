@@ -163,6 +163,18 @@ namespace FurnitureFramework.Pack
 
 		#region Asset Requests
 
+		public static void edit_data_furniture(IAssetData asset)
+		{
+			load_all();
+
+			var editor = asset.AsDictionary<string, string>().Data;
+
+			static_types.Clear();
+
+			foreach (string UID in UIDs.Keys)
+				packs[$"{UID}/{DEFAULT_PATH}"].add_data_furniture(editor);
+		}
+
 		private void add_data_furniture(IDictionary<string, string> editor)
 		{
 			foreach (FurnitureType type in types.Values)
@@ -187,14 +199,15 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		public static void edit_data_furniture(IAssetData asset)
+		public static void edit_data_shop(IAssetData asset)
 		{
-			load_all();
+			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
+			// ensure that Furniture are loaded
 
-			var editor = asset.AsDictionary<string, string>().Data;
+			var editor = asset.AsDictionary<string, ShopData>().Data;
 
-			foreach (string UID in UIDs.Keys)
-				packs[$"{UID}/{DEFAULT_PATH}"].add_data_furniture(editor);
+			foreach (FurniturePack pack in packs.Values)
+				pack.add_data_shop(editor);
 		}
 
 		private void add_data_shop(IDictionary<string, ShopData> editor)
@@ -214,29 +227,58 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		public static void edit_data_shop(IAssetData asset)
-		{
-			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
-			// ensure that Furniture are loaded
-
-			var editor = asset.AsDictionary<string, ShopData>().Data;
-
-			foreach (FurniturePack pack in packs.Values)
-				pack.add_data_shop(editor);
-		}
-
 		#endregion
+
+		#region Debug Print
 
 		public static void debug_print(string _, string[] args)
 		{
-			if (args.Count() == 0)
+			if (args.Count() == 0) reload_all();
+			else reload_single(args[0]);
+		}
+
+		private static void debut_print_all()
+		{
+			foreach (string UID in UIDs.Keys)
+				debug_print_single(UID);
+		}
+
+		private static void debug_print_single(string UID)
+		{
+			string data_UID = $"{UID}/{DEFAULT_PATH}";
+
+			if (!packs.ContainsKey(data_UID))
 			{
-				ModEntry.log("No ModID given.", LogLevel.Warn);
+				ModEntry.log($"Pack {UID} does not exist!", LogLevel.Warn);
 				return;
 			}
-			string UID = args[0];
 
-			// TODO
+			packs[data_UID].debug_print(0);
 		}
+
+		private void debug_print(int indent_count, bool enabled = true)
+		{
+			string indent = new('\t', indent_count);
+
+			string text;
+			if (is_included)
+			{
+				text = $"{indent}{data_UID}";
+				if (!enabled) text += " (disabled):";
+				else text += ":";
+			}
+			else text = $"{indent}{UID}:";
+			ModEntry.log(text, LogLevel.Debug);
+			
+			ModEntry.log($"{indent}\tFurniture:", LogLevel.Debug);
+			foreach (FurnitureType type in types.Values)
+				type.debug_print(indent_count+2, config.is_type_enabled(type.info.id));
+			
+			ModEntry.log($"{indent}\tIncluded Packs:", LogLevel.Debug);
+			foreach (IncludedPack i_pack in included_packs.Values)
+				i_pack.pack.debug_print(indent_count+2, config.is_pack_enabled(i_pack.data_UID));
+		}
+
+		#endregion
 	}
 }
