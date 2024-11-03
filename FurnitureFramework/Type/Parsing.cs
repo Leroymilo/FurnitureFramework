@@ -1,4 +1,3 @@
-using System.Resources;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
@@ -201,30 +200,20 @@ namespace FurnitureFramework.Type
 
 			texture = new(info, texture_path);
 
-			// texture = new(pack, texture_path, seasonal);
-
-			token = data.GetValue("Source Rect");
-			source_rects.Clear();			
-			if (!JsonParser.try_parse(token, rot_names, ref source_rects))
-				throw new InvalidDataException($"Missing or invalid Source Rectangles for Furniture {info.id}.");
-
-			this.rect_offset = rect_offset;
-
-			token = data.GetValue("Icon Rect");
-			if (!JsonParser.try_parse(token, ref icon_rect))
-				icon_rect = source_rects[0];
-
-			if (icon_rect.IsEmpty)
-				icon_rect = source_rects[0];
-			
-			icon_rect.Location += rect_offset;
-
 			layers = new(info, data.GetValue("Layers"), rot_names);
 			for (int i = 0; i < rotations; i++)
 			{
 				if (!layers[i].has_layer)
 					throw new InvalidDataException($"Need at least one Layer for each rotation.");
 			}
+
+			this.rect_offset = rect_offset;
+
+			token = data.GetValue("Icon Rect");
+			if (!JsonParser.try_parse(token, ref icon_rect) || icon_rect.IsEmpty)
+				icon_rect = layers[0].get_source_rect();
+			
+			icon_rect.Location += rect_offset;
 
 			#endregion
 

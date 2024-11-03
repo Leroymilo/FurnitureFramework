@@ -123,12 +123,17 @@ namespace FurnitureFramework.Type.Properties
 
 			public void draw_obj(DrawData draw_data, float top, SVObject obj)
 			{
-				draw_data.position.X += area.Center.X * 4;	// Horizontally centered
-				draw_data.position.Y += area.Bottom * 4;	// Vertically bottom aligned
-				draw_data.position += offset * 4;
+				// draw_data.position.X += area.Center.X * 4;	// Horizontally centered
+				// draw_data.position.Y += area.Bottom * 4;	// Vertically bottom aligned
+
+				draw_data.position += new Vector2(area.Center.X, area.Bottom) * 4f;
+				// Position is set to the bottom center of the slot area
+				draw_data.position.X -= obj.boundingBox.Value.Size.X / 2f;
+				// Moved to the bottom left of the object bounding box, centered in the slot
+				draw_data.position += offset * 4f;
 
 				draw_data.depth = depth.get_value(top);
-				draw_data.depth = MathF.BitIncrement((float)draw_data.depth);
+				draw_data.depth = MathF.BitIncrement(draw_data.depth);
 				// plus epsilon to make sure it's drawn over the layer at the same depth
 
 				if (obj is Furniture furn)
@@ -138,7 +143,7 @@ namespace FurnitureFramework.Type.Properties
 						source_rect_size = type.get_source_rect_size(furn.currentRotation.Value);
 					else source_rect_size = furn.sourceRect.Value.Size;
 					
-					draw_data.position -= source_rect_size.ToVector2() * new Vector2(2, 4);
+					draw_data.position.Y -= source_rect_size.Y * 4f;
 					// draw pos is on top left of Furniture Sprite
 
 					furn.drawAtNonTileSpot(
@@ -176,7 +181,6 @@ namespace FurnitureFramework.Type.Properties
 
 				if (obj is ColoredObject)
 				{
-
 					ModEntry.log("Drawing Colored Object");
 
 					obj.drawInMenu(
@@ -188,7 +192,6 @@ namespace FurnitureFramework.Type.Properties
 				}
 				else
 				{
-
 					ModEntry.log("Drawing Object");
 
 					ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
@@ -341,10 +344,7 @@ namespace FurnitureFramework.Type.Properties
 			return list[index].can_hold(obj, furniture, who);
 		}
 
-		public void draw(
-			DrawData draw_data, float top,
-			IList<Item> items
-		)
+		public void draw(DrawData draw_data, float top, IList<Item> items)
 		{
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{

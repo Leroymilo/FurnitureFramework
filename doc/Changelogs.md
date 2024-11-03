@@ -71,7 +71,8 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **In Testing** `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
 - **Work in Progress** The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
 - **Work in Progress** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
-- **Work in Progress** All positions that were relative to the top left of the base sprite are now relative to the top left of the bounding box.
+- **Work in Progress** All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
+- Layers are aligned to the bottom left corner of the bounding box by default. Use the `Draw Offset` to move them.
 - **Work in Progress** Nested all animation related fields into a `Animation` object.
 
 **New Features**:

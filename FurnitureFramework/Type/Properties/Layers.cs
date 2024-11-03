@@ -16,6 +16,8 @@ namespace FurnitureFramework.Type.Properties
 
 		private class Layer
 		{
+			bool is_base;
+
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
@@ -26,8 +28,10 @@ namespace FurnitureFramework.Type.Properties
 
 			#region Layer Parsing
 
-			public Layer(JObject data, string rot_name)
+			public Layer(JObject data, string rot_name, bool is_base)
 			{
+				this.is_base = is_base;
+
 				// Parsing Required Source Rectangle
 				JToken? rect_token = data.GetValue("Source Rect");
 				if (!JsonParser.try_parse(rect_token, out source_rect))
@@ -57,6 +61,7 @@ namespace FurnitureFramework.Type.Properties
 
 				// Parsing optional layer depth
 
+				if (is_base) depth = new(0, 0);
 				try { depth = new(data.GetValue("Depth")); }
 				catch (InvalidDataException) { }
 			}
@@ -65,10 +70,16 @@ namespace FurnitureFramework.Type.Properties
 
 			#region Layer Methods
 
+			public Rectangle get_source_rect()
+			{
+				return source_rect;
+			}
+
 			public void draw(DrawData draw_data, float top)
 			{
 				draw_data.source_rect = source_rect;
 				draw_data.position += draw_pos;
+				draw_data.position.Y -= source_rect.Height;
 				draw_data.depth = depth.get_value(top);
 
 				draw_data.draw();
@@ -104,7 +115,7 @@ namespace FurnitureFramework.Type.Properties
 			if (data is JObject obj)
 			{
 				// single layer?
-				Layer layer = new(obj, rot_name);
+				Layer layer = new(obj, rot_name, true);
 				if (layer.is_valid)
 					return new(layer);
 
@@ -113,7 +124,7 @@ namespace FurnitureFramework.Type.Properties
 				if (dir_token is JObject dir_obj)
 				{
 					// directional single layer?
-					Layer dir_layer = new(dir_obj, rot_name);
+					Layer dir_layer = new(dir_obj, rot_name, true);
 					if (dir_layer.is_valid)
 						return new(dir_layer);
 					
@@ -159,16 +170,18 @@ namespace FurnitureFramework.Type.Properties
 
 		private LayerList(TypeInfo info, JArray array, string rot_name)
 		{
+			int i = 0;
 			foreach (JToken token in array)
 			{
 				if (token is not JObject obj2) continue;	// skips comments
-				add_layer(info, obj2, rot_name);
+				add_layer(info, obj2, rot_name, i);
+				i++;
 			}
 		}
 
-		private void add_layer(TypeInfo info, JObject data, string rot_name)
+		private void add_layer(TypeInfo info, JObject data, string rot_name, int index)
 		{
-			Layer layer = new(data, rot_name);
+			Layer layer = new(data, rot_name, index == 0);
 			if (layer.is_valid)
 				list.Add(layer);
 			else
@@ -183,10 +196,20 @@ namespace FurnitureFramework.Type.Properties
 
 		#region LayerList Methods
 
-		public void draw(DrawData draw_data, float top)
+		public void draw_one(DrawData draw_data, float top)
+		{
+			list[0].draw(draw_data, top);
+		}
+
+		public void draw_all(DrawData draw_data, float top)
 		{
 			foreach (Layer layer in list)
 				layer.draw(draw_data, top);
+		}
+
+		public Rectangle get_source_rect()
+		{
+			return list[0].get_source_rect();
 		}
 
 		public void debug_print(int indent_count)

@@ -82,6 +82,7 @@ namespace FurnitureFramework.Type
 		bool time_based = false;
 		
 		DynaTexture texture;
+		Point rect_offset;
 		Rectangle icon_rect = Rectangle.Empty;
 		DirectionalStructure<LayerList> layers;
 
@@ -146,7 +147,7 @@ namespace FurnitureFramework.Type
 
 		public Point get_source_rect_size(int rot)
 		{
-			return source_rects[rot].Size;
+			return layers[rot].get_source_rect().Size;
 		}
 
 		// for drawInMenu transpiler
@@ -304,7 +305,7 @@ namespace FurnitureFramework.Type
 		private void initialize_slots(Furniture furniture, int rot)
 		{
 			int slots_count = slots[rot].count;
-			
+
 			if (furniture.heldObject.Value is not Chest chest)
 			{
 				SVObject held = furniture.heldObject.Value;
@@ -341,7 +342,7 @@ namespace FurnitureFramework.Type
 
 			Point this_pos = furniture.boundingBox.Value.Location;
 			this_pos.Y += furniture.boundingBox.Value.Height;
-			this_pos.Y -= source_rects[rot].Height * 4;
+			this_pos.Y -= layers[rot].get_source_rect().Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
 			return slots[rot].get_slot(rel_pos);
@@ -448,7 +449,7 @@ namespace FurnitureFramework.Type
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
 			position.Y += bounding_box.Height;
-			position.Y -= source_rects[furniture.currentRotation.Value].Height * 4f;
+			position.Y -= layers[furniture.currentRotation.Value].get_source_rect().Height * 4f;
 			position += screen_position * 4f;
 		}
 
@@ -479,7 +480,7 @@ namespace FurnitureFramework.Type
 		{
 			int rot = furniture.currentRotation.Value;
 			Rectangle bounding_box = furniture.boundingBox.Value;
-			Rectangle source_rect = source_rects[rot].Clone();
+			Rectangle source_rect = layers[rot].get_source_rect();
 
 			Point position = new(
 				bounding_box.X,
@@ -489,6 +490,7 @@ namespace FurnitureFramework.Type
 
 			if (fish_area is null)
 			{
+				// offsets from vanilla code
 				result = new Rectangle(
 					position + new Point(4, 64),
 					size - new Point(8, 92)
