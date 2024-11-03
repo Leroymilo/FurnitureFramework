@@ -284,6 +284,8 @@ namespace FurnitureFramework.Pack
 
 			foreach (string UID in to_register)
 				packs[$"{UID}/{DEFAULT_PATH}"].register_config();
+			
+			to_register.Clear();
 		}
 
 		private void register_config()

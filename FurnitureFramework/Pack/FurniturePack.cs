@@ -233,8 +233,8 @@ namespace FurnitureFramework.Pack
 
 		public static void debug_print(string _, string[] args)
 		{
-			if (args.Count() == 0) reload_all();
-			else reload_single(args[0]);
+			if (args.Count() == 0) debut_print_all();
+			else debug_print_single(args[0]);
 		}
 
 		private static void debut_print_all()
