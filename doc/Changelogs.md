@@ -70,9 +70,9 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
 - **In Testing** `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
 - **Work in Progress** The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
-- **Work in Progress** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
+- **In Testing** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
 - **Work in Progress** All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
-- Layers are aligned to the bottom left corner of the bounding box by default. Use the `Draw Offset` to move them.
+- **In Testing** Layers are aligned to the bottom left corner of the bounding box by default. Use the `Draw Offset` to move them.
 - **Work in Progress** Nested all animation related fields into a `Animation` object.
 
 **New Features**:
@@ -82,7 +82,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **Work in Progress** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
 - **In Testing** Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - **In Testing** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
-- **Work in Progress** Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
+- Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.
