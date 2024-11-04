@@ -75,12 +75,13 @@ namespace FurnitureFramework.Type.Properties
 				return source_rect;
 			}
 
-			public void draw(DrawData draw_data, float top)
+			public void draw(DrawData draw_data, float top, bool ignore_depth = false)
 			{
 				draw_data.source_rect = source_rect;
 				draw_data.position += draw_pos;
 				draw_data.position.Y -= source_rect.Height;
-				draw_data.depth = depth.get_value(top);
+
+				if (!ignore_depth) draw_data.depth = depth.get_value(top);
 
 				draw_data.draw();
 			}
@@ -196,9 +197,9 @@ namespace FurnitureFramework.Type.Properties
 
 		#region LayerList Methods
 
-		public void draw_one(DrawData draw_data, float top)
+		public void draw_one(DrawData draw_data, float top, bool ignore_depth = false)
 		{
-			list[0].draw(draw_data, top);
+			list[0].draw(draw_data, top, ignore_depth);
 		}
 
 		public void draw_all(DrawData draw_data, float top)

@@ -49,6 +49,7 @@ namespace FurnitureFramework.Type
 			Vector2 position, float depth, float alpha = 1f
 		)
 		{
+			// Used for FF Furniture placed in vanilla slot
 			DrawData draw_data = new(sprite_batch);
 
 			draw_data.position = position;
@@ -56,7 +57,7 @@ namespace FurnitureFramework.Type
 			draw_data.color = new Color(draw_data.color, alpha);
 			draw_data.depth = depth;
 
-			draw(furniture, draw_data);
+			draw(furniture, draw_data, draw_in_slot: true);
 		}
 
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
@@ -86,7 +87,7 @@ namespace FurnitureFramework.Type
 
 			draw(furniture, draw_data);
 
-			// to keep :
+			// to keep (?) :
 
 			if (Game1.debugMode)
 			{
@@ -164,7 +165,7 @@ namespace FurnitureFramework.Type
 			}
 		}
 
-		private void draw(Furniture furniture, DrawData draw_data)
+		public void draw(Furniture furniture, DrawData draw_data, bool draw_in_slot = true)
 		{
 			draw_data.texture = texture.get();
 
@@ -196,7 +197,9 @@ namespace FurnitureFramework.Type
 
 			if (Furniture.isDrawingLocationFurniture)
 			{
-				layers[rot].draw_all(draw_data, top);
+				if (draw_in_slot)
+					layers[rot].draw_one(draw_data, top, ignore_depth: true);
+				else layers[rot].draw_all(draw_data, top);
 
 				light_sources.draw_glows(
 					sprite_batch,
@@ -205,12 +208,13 @@ namespace FurnitureFramework.Type
 				);
 				// TO CHANGE
 
-				// draw items in slots
-				if (furniture.heldObject.Value is Chest chest)
+				if (!draw_in_slot)
 				{
-					slots[rot].draw(draw_data, top, chest.Items);
+					// draw items in slots
+					if (furniture.heldObject.Value is Chest chest)
+						slots[rot].draw(draw_data, top, chest.Items);
+					else initialize_slots(furniture, rot);
 				}
-				else initialize_slots(furniture, rot);
 			}
 
 			else

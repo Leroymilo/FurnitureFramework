@@ -123,9 +123,6 @@ namespace FurnitureFramework.Type.Properties
 
 			public void draw_obj(DrawData draw_data, float top, SVObject obj)
 			{
-				// draw_data.position.X += area.Center.X * 4;	// Horizontally centered
-				// draw_data.position.Y += area.Bottom * 4;	// Vertically bottom aligned
-
 				draw_data.position += new Vector2(area.Center.X, area.Bottom) * 4f;
 				// Position is set to the bottom center of the slot area
 				draw_data.position.X -= obj.boundingBox.Value.Size.X / 2f;
@@ -138,13 +135,14 @@ namespace FurnitureFramework.Type.Properties
 
 				if (obj is Furniture furn)
 				{
-					Point source_rect_size;
 					if (Pack.FurniturePack.try_get_type(furn, out FurnitureType? type))
-						source_rect_size = type.get_source_rect_size(furn.currentRotation.Value);
-					else source_rect_size = furn.sourceRect.Value.Size;
+					{
+						type.draw(furn, draw_data, draw_in_slot: true);
+						return;
+					}
 					
-					draw_data.position.Y -= source_rect_size.Y * 4f;
-					// draw pos is on top left of Furniture Sprite
+					draw_data.position.Y -= obj.boundingBox.Value.Size.Y;
+					// draw pos is on top left of Furniture bounding box
 
 					furn.drawAtNonTileSpot(
 						draw_data.sprite_batch,
