@@ -29,33 +29,15 @@ namespace FurnitureFramework.Type.Properties
 			{
 				// Parsing Required Position
 
-				JToken? pos_token = data.GetValue("Position");
-				if (!JsonParser.try_parse(pos_token, ref position))
-				{
-					error_msg = "Missing or Invalid Position";
-
-					// Directional?
-					if (pos_token is not JObject pos_obj) return;
-
-					JToken? dir_pos_token = pos_obj.GetValue(rot_name);
-					if (!JsonParser.try_parse(dir_pos_token, ref position))
-						return;
-				}
+				error_msg = "Missing or Invalid Position";
+				if (!JsonParser.try_parse_dir(data.GetValue("Position"), rot_name, ref position))
+					return;
 
 				// Parsing Required Player Direction
 
-				JToken? pdir_token = data.GetValue("Player Direction");
-				if (!JsonParser.try_parse_enum(pdir_token, ref player_dir))
-				{
-					error_msg = "Missing or Invalid Player Direction";
-
-					// Directional?
-					if (pdir_token is not JObject pdir_obj) return;
-
-					JToken? dir_pdir_token = pdir_obj.GetValue(rot_name);
-					if (!JsonParser.try_parse_enum(dir_pdir_token, ref player_dir))
-						return;
-				}
+				error_msg = "Missing or Invalid Player Direction";
+				if (!JsonParser.try_parse_dir(data.GetValue("Player Direction"), rot_name, ref player_dir))
+					return;
 
 				is_valid = true;
 

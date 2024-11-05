@@ -32,34 +32,24 @@ namespace FurnitureFramework.Type.Properties
 			{
 				this.is_base = is_base;
 
-				// Parsing Required Source Rectangle
-				JToken? rect_token = data.GetValue("Source Rect");
-				if (!JsonParser.try_parse(rect_token, out source_rect))
-				{
-					error_msg = "Missing or Invalid Source Rectangle";
-
-					// Directional?
-					if (rect_token is not JObject rect_obj) return;
-
-					JToken? dir_rect_token = rect_obj.GetValue(rot_name);
-					if (!JsonParser.try_parse(dir_rect_token, out source_rect))
-						return;
-				}
+				// Parsing directional Source Rectangle
+				error_msg = "Missing or Invalid Source Rectangle";
+				if (!JsonParser.try_parse_dir(data.GetValue("Source Rect"), rot_name, ref source_rect))
+					return;
 
 				is_valid = true;
 
-				parse_optional(data);
+				parse_optional(data, rot_name);
 			}
 
-			private void parse_optional(JObject data)
+			private void parse_optional(JObject data, string rot_name)
 			{
-				// Parsing optional layer draw position
+				// Parsing directional layer draw position
 
-				JToken? pos_token = data.GetValue("Draw Pos");
-				JsonParser.try_parse(pos_token, ref draw_pos);
+				JsonParser.try_parse_dir(data.GetValue("Draw Pos"), rot_name, ref draw_pos);
 				draw_pos *= 4f;	// game rendering scale
 
-				// Parsing optional layer depth
+				// Parsing layer depth
 
 				if (is_base) depth = new(0, 0);
 				try { depth = new(data.GetValue("Depth")); }

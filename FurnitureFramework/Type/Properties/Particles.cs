@@ -57,15 +57,9 @@ namespace FurnitureFramework.Type.Properties
 			{
 				error_msg = "Missing or Invalid Source Image path.";
 				JToken? texture_token = particle_obj.GetValue("Source Image");
-				if (texture_token is not null && texture_token.Type == JTokenType.String)
-				{
-					string? texture_path = (string?)texture_token;
-					if (texture_path is not null)
-					{
-						texture = new(info, texture_path);
-					}
-				}
-				if (texture == null) return;
+				if (texture_token is null || texture_token.Type != JTokenType.String)
+					return;
+				texture = new(info, texture_token.ToString());
 
 				JToken? rect_token = particle_obj.GetValue("Source Rect");
 				if (!JsonParser.try_parse(rect_token, ref source_rect))
@@ -75,7 +69,7 @@ namespace FurnitureFramework.Type.Properties
 
 				error_msg = "Missing or invalid Spawn Rect field.";
 				JToken? spawn_rect_token = particle_obj.GetValue("Spawn Rect");
-				if (!JsonParser.try_parse(spawn_rect_token, ref spawn_rect))
+				if (!JsonParser.try_parse_dir(spawn_rect_token, rot_name, ref spawn_rect))
 					return;
 
 				JToken? depths_token = particle_obj.GetValue("Depths");

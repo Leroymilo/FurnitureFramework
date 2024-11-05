@@ -98,7 +98,7 @@ namespace FurnitureFramework.Type
 		DirectionalStructure<SlotList> slots;
 		SoundList sounds;
 		DirectionalStructure<ParticlesList> particles;
-		LightSources light_sources;
+		DirectionalStructure<LightList> light_sources;
 
 		PlacementType p_type = PlacementType.Normal;
 

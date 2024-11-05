@@ -8,6 +8,7 @@ namespace FurnitureFramework.Type.Properties
 	{
 		int tile;
 		int sub_tile = 0;
+		bool is_front = false;
 
 		#region Parsing
 
@@ -41,6 +42,12 @@ namespace FurnitureFramework.Type.Properties
 			{
 				tile = (int)token;
 			}
+
+			else if (token is not null && token.ToString() == "Front")
+			{
+				is_front = true;
+				tile = 0;
+			}
 			
 			else
 				throw new InvalidDataException("Invalid depth");
@@ -52,6 +59,8 @@ namespace FurnitureFramework.Type.Properties
 		
 		public float get_value(float top)
 		{
+			if (is_front) return 1;
+			
 			float min = top + 64 * tile + 16;
 			float max = top + 64 * (tile + 1) - 2;
 

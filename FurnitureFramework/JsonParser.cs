@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 
@@ -7,17 +8,21 @@ namespace FurnitureFramework
 
 	static class JsonParser
 	{
+		public static bool try_parse_dir<T>(JToken? token, string rot_name, ref T result)
+		{
+			if (try_parse(token, ref result)) return true;
+			
+			// Directional?
+			if (token is not JObject obj) return false;
+
+			JToken? dir_token = obj.GetValue(rot_name);
+			return try_parse(dir_token, ref result);
+		}
+
 		public static bool try_parse<T>(JToken? token, ref T result)
 		{
 			if (token is null || token.Type == JTokenType.Null)
 				return false;
-
-			if (result is Rectangle)
-			{
-				try_parse(token, out Rectangle rect);
-				result = (T)(object)rect;
-				return true;
-			}
 			
 			if (token is JArray or JObject) return false;
 			
@@ -90,9 +95,8 @@ namespace FurnitureFramework
 		}
 
 		// Parse rectangle
-		public static bool try_parse(JToken? token, out Rectangle result)
+		public static bool try_parse(JToken? token, ref Rectangle result)
 		{
-			result = Rectangle.Empty;
 			if (token is not JObject obj) return false;
 			
 			JToken? X_token = obj.GetValue("X");
@@ -132,53 +136,54 @@ namespace FurnitureFramework
 		}
 
 		// Parse directional rectangles
-		public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle> result)
-		{
-			result.Clear();
-			if (try_parse(token, out Rectangle rect))
-			{
-				result = Enumerable.Repeat(rect, rot_names.Count).ToList();
-				return true;
-			}
-			else if (token is JObject rect_dict)
-			{
-				foreach (string key in rot_names)
-				{
-					JToken? rect_token = rect_dict.GetValue(key);
-					if (try_parse(rect_token, out Rectangle dir_rect))
-						result.Add(dir_rect);
-					else return false;
-				}
-				return true;
-			}
-			return false;
-		}
+		// public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle> result)
+		// {
+		// 	result.Clear();
+		// 	Rectangle rect = new();
+		// 	if (try_parse(token, ref rect))
+		// 	{
+		// 		result = Enumerable.Repeat(rect, rot_names.Count).ToList();
+		// 		return true;
+		// 	}
+		// 	else if (token is JObject rect_dict)
+		// 	{
+		// 		foreach (string key in rot_names)
+		// 		{
+		// 			JToken? rect_token = rect_dict.GetValue(key);
+		// 			if (try_parse(rect_token, ref rect))
+		// 				result.Add(rect);
+		// 			else return false;
+		// 		}
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
 
 		// Parse directional integers
-		public static bool try_parse(JToken? token, List<string> rot_names, ref List<int?> result)
-		{
-			result.Clear();
-			int i = 0;
+		// public static bool try_parse(JToken? token, List<string> rot_names, ref List<int?> result)
+		// {
+		// 	result.Clear();
+		// 	int i = 0;
 
-			if (rot_names.Count == 0)
-			{
-				if(!try_parse(token, ref i)) return false;
-				result.Add(i);
-				return true;
-			}
-			else if (token is JObject rect_dict)
-			{
-				foreach (string key in rot_names)
-				{
-					JToken? int_token = rect_dict.GetValue(key);
-					if (try_parse(int_token, ref i))
-						result.Add(i);
-					else result.Add(null);
-				}
-				return true;
-			}
-			return false;
-		}		
+		// 	if (rot_names.Count == 0)
+		// 	{
+		// 		if(!try_parse(token, ref i)) return false;
+		// 		result.Add(i);
+		// 		return true;
+		// 	}
+		// 	else if (token is JObject rect_dict)
+		// 	{
+		// 		foreach (string key in rot_names)
+		// 		{
+		// 			JToken? int_token = rect_dict.GetValue(key);
+		// 			if (try_parse(int_token, ref i))
+		// 				result.Add(i);
+		// 			else result.Add(null);
+		// 		}
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }		
 
 		public static Color parse_color(JToken? token, Color def)
 		{

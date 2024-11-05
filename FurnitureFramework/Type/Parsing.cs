@@ -292,7 +292,7 @@ namespace FurnitureFramework.Type
 
 					JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
 
-					if (JsonParser.try_parse(data.GetValue("Bed Area"), out bed_area))
+					if (JsonParser.try_parse(data.GetValue("Bed Area"), ref bed_area))
 					{
 						bed_area = new Rectangle(
 							bed_area.Location * new Point(4),
@@ -314,7 +314,8 @@ namespace FurnitureFramework.Type
 					break;
 
 				case SpecialType.FishTank:
-					if (JsonParser.try_parse(data.GetValue("Fish Area"), out Rectangle read_fish_area))
+					Rectangle read_fish_area = new();
+					if (JsonParser.try_parse(data.GetValue("Fish Area"), ref read_fish_area))
 					{
 						fish_area = new Rectangle(
 							read_fish_area.Location * new Point(4),

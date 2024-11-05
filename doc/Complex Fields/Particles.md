@@ -21,7 +21,7 @@ Setting this interval too low (less than 100) might cause issues because of the 
 
 This field is another Rectangle, but this one defines the area of the sprite where the Particles will spawn. This field is required.  
 Be carefull, the Spawn Rect of a Particle is relative to the sprite, not to the whole spritesheet.  
-This field might be changed to be directionnal in the future.
+This field is [directionnal](https://github.com/Leroymilo/FurnitureFramework/blob/f63c482fde5855e6f3b4f18037bb0b5953225579/doc/Directional%20Fields.md).
 
 ## Depths
 

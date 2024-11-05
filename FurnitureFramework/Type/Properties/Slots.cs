@@ -44,19 +44,10 @@ namespace FurnitureFramework.Type.Properties
 
 			public Slot(JObject data, string rot_name)
 			{
-				// Parsing Required Slot Area
-				JToken? area_token = data.GetValue("Area");
-				if (!JsonParser.try_parse(area_token, out area))
-				{
-					error_msg = "Missing or Invalid Area";
-
-					// Directional?
-					if (area_token is not JObject area_obj) return;
-
-					JToken? dir_area_token = area_obj.GetValue(rot_name);
-					if (!JsonParser.try_parse(dir_area_token, out area))
-						return;
-				}
+				// Parsing directional Slot Area
+				error_msg = "Missing or Invalid Area";
+				if (!JsonParser.try_parse_dir(data.GetValue("Area"), rot_name, ref area))
+					return;
 
 				is_valid = true;
 
@@ -174,8 +165,7 @@ namespace FurnitureFramework.Type.Properties
 
 				ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
 				draw_data.source_rect = dataOrErrorItem.GetSourceRect();
-				draw_data.position.X -= draw_data.source_rect.Width / 2f;
-				draw_data.position.Y -= draw_data.source_rect.Height;
+				draw_data.position -= draw_data.source_rect.Size.ToVector2() * new Vector2(2, 4);
 				// Moved to the top left of the object source rect, centered in the slot
 
 				if (obj is ColoredObject)
