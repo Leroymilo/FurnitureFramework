@@ -125,8 +125,6 @@ namespace FurnitureFramework.Type.Properties
 			{
 				draw_data.position += new Vector2(area.Center.X, area.Bottom) * 4f;
 				// Position is set to the bottom center of the slot area
-				draw_data.position.X -= obj.boundingBox.Value.Size.X / 2f;
-				// Moved to the bottom left of the object bounding box, centered in the slot
 				draw_data.position += offset * 4f;
 
 				draw_data.depth = depth.get_value(top);
@@ -135,6 +133,9 @@ namespace FurnitureFramework.Type.Properties
 
 				if (obj is Furniture furn)
 				{
+					draw_data.position.X -= obj.boundingBox.Value.Size.X / 2f;
+					// Moved to the bottom left of the object bounding box, centered in the slot
+
 					if (Pack.FurniturePack.try_get_type(furn, out FurnitureType? type))
 					{
 						type.draw(furn, draw_data, draw_in_slot: true);
@@ -156,9 +157,6 @@ namespace FurnitureFramework.Type.Properties
 				
 				if (draw_shadow)
 				{
-
-					ModEntry.log("Drawing Shadow");
-
 					DrawData shadow_data = draw_data;	// should clone value fields like position
 					shadow_data.texture = Game1.shadowTexture;
 					shadow_data.source_rect = Game1.shadowTexture.Bounds;
@@ -173,14 +171,15 @@ namespace FurnitureFramework.Type.Properties
 					draw_data.position.Y -= 4;
 					// 1 pixel higher to leave space to see the shadow under the item
 				}
-				
-				draw_data.position -= new Vector2(32, 64);
-				// draw pos is on top left of Item Sprite
+
+				ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
+				draw_data.source_rect = dataOrErrorItem.GetSourceRect();
+				draw_data.position.X -= draw_data.source_rect.Width / 2f;
+				draw_data.position.Y -= draw_data.source_rect.Height;
+				// Moved to the top left of the object source rect, centered in the slot
 
 				if (obj is ColoredObject)
 				{
-					ModEntry.log("Drawing Colored Object");
-
 					obj.drawInMenu(
 						draw_data.sprite_batch,
 						draw_data.position, 1f, 1f,
@@ -190,12 +189,7 @@ namespace FurnitureFramework.Type.Properties
 				}
 				else
 				{
-					ModEntry.log("Drawing Object");
-
-					ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
 					draw_data.texture = dataOrErrorItem.GetTexture();
-					draw_data.source_rect = dataOrErrorItem.GetSourceRect();
-
 					draw_data.draw();
 				}
 			}
