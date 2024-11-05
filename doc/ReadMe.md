@@ -17,34 +17,57 @@ If you are a C# mod author and need an API for this mod, you can either make it 
 
 # Features
 
-What parts of Furniture are customizable with this Framework:
-- Display Name (translation not supported yet)
-- Custom Description
-- Default Price
-- Custom Rotations
-- Custom Bounding Box Size
-- Custom Collision Map
-- Placement Rules
-- Source Image
-- Custom Source Rect
-- Custom Source Rect for Icon
-- Custom Layers
-- Custom Seats
-- Custom Attached Shop (Catalogue like)
-- Shop it appears in
-- Exclude from random sales
-- Context Tags
-- Custom table slots
-- Image & Source Rect Variants
-- Seasonal Textures
-- Toggleable Furniture
-- Custom Sound Effects
-- Custom Particles
-- Animated base Sprite and Layers
-- Support for special Furniture (Dresser, TV, Bed, FishTank)
-- Support for Rugs and Wall-mounted Furniture
-- Support for configurable includes
-- Custom Light Sources and Glows (lamps and windows)
+- New stuff that you can control with the Furniture Framework:
+	- Display Name
+	- Description
+	- Collisions (Bounding Box and Collision Map)
+	- Seats (chairs, armchairs, sofas, benches, ...)
+	- Table Slots (multiple slots per Furniture!)
+	- Toggleability (lamps, cauldrons, fireplaces, ...)
+	- Light Sources (lamps) and Light Glows (windows)
+	- Sound Effects (on click)
+	- Particles
+
+- Texture/Sprite customization:
+	- Rotations (as many as you want!)
+	- Source Image
+	- Source Rectangles (for each rotation)
+	- Source Rectangle for menu icon
+	- Layers (with custom depth and Source Rectangles)
+	- Variants (same data but with a different Source Image or Rectangle)
+	- Animations (base Sprite and Layers)
+	- Luminosity dependant Textures (like a vanilla window)
+
+- Shop customization:
+	- Default Price
+	- Shops where the Furniture appears
+	- Exclude from random sales
+	- Attached Shop (like a Catalogue)
+
+- Special Furniture:
+	- Rugs
+	- Wall-mounted Furniture
+	- Dressers
+	- TVs
+		- Screen position and scale
+	- Beds
+		- Bed Type (simple, double, child bed)
+		- Respawn point
+		- Sleeping Area
+	- Fish Tanks
+		- Area where fish swim
+		- Optional vanilla Light Source
+
+- Other Stuff:
+	- Placement Rules (inside/outside/both)
+	- Context Tags
+
+- Support for included content files (to split a mods into multiple files)
+- Support for Content Patcher compatibility (both image and data files patching)
+
+- Specific Compatibility :
+	- [Precise Furniture](https://www.nexusmods.com/stardewvalley/mods/23488)
+	- [Market Town](https://www.nexusmods.com/stardewvalley/mods/19309)
 
 # Thanks
 
@@ -56,15 +79,13 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- CP compatibility to edit loaded sprites & data.	@hualianlian
 - Add better titles and descriptions for the json schema.
 - Support for i18n translations.
 - Customize StorageFurniture allowed item types.	@B
-- Weather dependant textures
 
 What I don't plan on adding, but I can work on if someone asks for it:
 - Custom Randomized Plant
-- More customization for Particles (make some fields directionality, list of scales and list of scale changes)
+- More customization for Particles (make some fields directional, list of scales and list of scale changes)
 
 What can be added but I don't have the knowledge/courage to do it any-time soon:
 - Music (sound) stop when Furniture turned off/on
