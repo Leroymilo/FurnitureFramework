@@ -21,34 +21,52 @@ namespace FurnitureFramework.Type.Properties
 			public readonly string? error_msg;
 			public readonly LightType light_type;
 			Rectangle source_rect;	// directional
+			Point position;			// directional
 
+			DynaTexture? texture = null;
 			bool can_be_toggled;
 			bool time_based;
-			Point position;		// directional
-			float radius = 2f;	// directional
-			Color color;		// directional
-			DynaTexture? texture = null;
+			float radius;
+			Color color;
 
 			public readonly bool is_glow = false;
 
 			#region Light Parsing
 
-			public Light(JObject data, string rot_name)
+			public Light(TypeInfo info, JObject data, string rot_name)
 			{
+				// Parsing Light Type
+				error_msg = "Missing or Invalid Light Type";
+				if (!JsonParser.try_parse_enum(data.GetValue("Light Type"), ref light_type))
+					return;
+
 				// Parsing Source Rectangle
 				error_msg = "Missing or Invalid Source Rectangle";
 				if (!JsonParser.try_parse_dir(data.GetValue("Source Rect"), rot_name, ref source_rect))
 					return;
+				
+				// Parsing Position
+				error_msg = "Missing or Invalid Position";
+				if (!JsonParser.try_parse_dir(data.GetValue("Position"), rot_name, ref position))
+					return;
 
 				is_valid = true;
 
-				parse_optional(data);
+				parse_optional(info, data);
 			}
 
-			private void parse_optional(JObject obj)
+			private void parse_optional(TypeInfo info, JObject data)
 			{
-				can_be_toggled = JsonParser.parse(obj.GetValue("Toggle"), false);
-				time_based = JsonParser.parse(obj.GetValue("Time Based"), false);
+				// Parsing Source Image
+				string texture_path = "";
+				if (JsonParser.try_parse(data.GetValue("Source Image"), ref texture_path))
+					texture = new(info, texture_path);
+
+				can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
+				time_based = JsonParser.parse(data.GetValue("Time Based"), false);
+
+				radius = JsonParser.parse(data.GetValue("Radius"), 2f);
+				color = JsonParser.parse_color(data.GetValue("Color"), Color.White);
 			}
 
 			#endregion
@@ -112,7 +130,7 @@ namespace FurnitureFramework.Type.Properties
 			if (data is JObject obj)
 			{
 				// single light?
-				Light light = new(obj, rot_name);
+				Light light = new(info, obj, rot_name);
 				if (light.is_valid)
 					return new(light);
 
@@ -121,7 +139,7 @@ namespace FurnitureFramework.Type.Properties
 				if (dir_token is JObject dir_obj)
 				{
 					// directional single light?
-					Light dir_light = new(dir_obj, rot_name);
+					Light dir_light = new(info, dir_obj, rot_name);
 					if (dir_light.is_valid)
 						return new(dir_light);
 					
@@ -139,7 +157,7 @@ namespace FurnitureFramework.Type.Properties
 
 				else
 				{
-					// single light was is invalid
+					// single light was invalid
 					ModEntry.log($"Could not parse a light in {info.mod_id} at {data.Path}:", LogLevel.Warn);
 					ModEntry.log($"\t{light.error_msg}", LogLevel.Warn);
 					ModEntry.log("Skipping Light.", LogLevel.Warn);
@@ -181,7 +199,7 @@ namespace FurnitureFramework.Type.Properties
 
 		private void add_light(TypeInfo info, JObject data, string rot_name)
 		{
-			Light light = new(data, rot_name);
+			Light light = new(info, data, rot_name);
 			if (light.is_valid)
 				add_light(light);
 			else

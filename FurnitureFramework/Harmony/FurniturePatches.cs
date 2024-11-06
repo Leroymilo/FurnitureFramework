@@ -573,25 +573,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		internal static void addLights(Furniture __instance)
 		{
 			try
-			{	
-				// // For pre-1.6.9
-				// if (
-				// 	Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type)
-				// 	&& type.disable_fishtank_light
-				// )
-				// {
-				// 	Point pos = __instance.TileLocation.ToPoint();
-				// 	int num = pos.X * 2000 + pos.Y;
-				// 	for (int i = 0; i < __instance.getTilesWide(); i++)
-				// 	{
-				// 		__instance.Location?.removeLightSource(num);
-				// 		num += 2000;
-				// 	}
-
-				// 	__instance.lightSource = null;
-				// }
-
-				// Change for 1.6.9
+			{
 				if (
 					Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type)
 					&& type.disable_fishtank_light

@@ -1,39 +1,47 @@
 # How to define Custom Light Sources?
 
-The `Light Sources` field of a Furniture is a list of Light Sources objects.  
+The `Light Sources` field of a Furniture is a directional field containing one or multiple Light Sources and Light Glows.  
 See the Example Pack for examples.
 
-A Light Source object has up to 5 fields:
+Here are the fields of a Light Source or Light Glow:
 
-## Position
+## Light Type (required)
 
-This is the position of the center of the light source on the Furniture **in pixels**. This field can be directional.
+The light type defines if this light is a source (like a vanilla lamp) or a glow (like a vanilla window). Note that light sources will only be visible when it's dark outside (night or rain) because they remove the darkness of the screen.  
+Light Glows also have a nice feature with obstruction: place a table in front of a window, and you'll see the light glow spill over it, place a column in front of the window and the glow will be cut off (obstructed) by the column.  
+The possible values are `Source` and `Glow`.
+
+## Source Rect (required) (directional)
+
+The Source Rect is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md), it is the part of the Source Image that will be used to draw this light.
+
+## Position (required) (directional)
+
+This is the position of the center of the light source on the Furniture **in pixels**, from the bottom left corner of the bounding box.
 
 ## Source Image
 
-This is the path of the image that will be used for the light, you can provide it yourself in your assets or use one from the game.  
-For example, "Content/LooseSprites/Lighting/indoorWindowLight.png" is used for lamp lights, and "FF/assets/light_glows/window.png" is used for the window glow (it is in the Furniture Framework's assets because I extracted it from the cursors tilesheet).
+The path to the image that will be used for the light, you can provide it yourself in your assets or use one from the game.  
+For example, "Content/LooseSprites/Lighting/indoorWindowLight.png" is used for lamp lights, and "FF/assets/light_glows/window.png" is used for the window glow (it is in the Furniture Framework's assets because I extracted it from the cursors tilesheet). 
+If you omit this path, the main texture will be used.
 
-## Mode
+## Toggle
 
-This defines when the light or glow will be applied, it can be one of 5:
-- `always_on`
-- `when_on`
-- `when_off`
-- `when_dark_out`
-- `when_bright_out`
+This is a boolean value (true or false) that dictates if this light can be turned on and off by clicking on the Furniture.  
+If this is set to `true`, the Source Rect of this light will be shifted to the right (by the width of the base source rect) when the Furniture is "on".
 
-"when_on" and "when_off" refer to toggleable Furniture (see [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle)), and "when_dark_out" and "when_bright_out" will make your light turn on and or off based on the weather and time ("dark out" means night or rainy weather).
+## Time Based
+
+This is a boolean value (true or false) that dictates if this light will change its state depending on the outside light.  
+If this is set to `true`, the Source Rect of this light will be shifted down (by the height of the base source rect) when it's dark out (because of night-time or rainy weather).
 
 ## Radius
 
-This is a number defining the radius of your light source, it simply scales your light texture (this only applies to light sources, not glows).
+This is a number defining the radius of your light source, it simply scales your light texture (this only applies to light sources, not glows). The default value is `2`.
 
-## Is Glow
+## Color
 
-This is a boolean field (true or false) to deferentiate between light sources and light glows.  
-Light sources will prevent the screen to darken around them at night time or on rainy days, while glows will directly draw their texture in the world. For example, lamps use light sources while windows use light glows.  
-Light glows are mostly used for Furniture supposed to glow during the day, when there's no dark filter to cancel. They also have a nice feature with obstruction: place a table in front of a window, and you'll see the light glow spill over it, place a column in front of the window and the glow will be cut off.
+A way to give a tint to your light source, if you don't want to modify the texture itself. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted). Defaults to `White` (which will not affect the color of the texture).
 
 ## Other Info
 
