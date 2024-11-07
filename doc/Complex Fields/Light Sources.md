@@ -28,16 +28,18 @@ If you omit this path, the main texture will be used.
 ## Toggle
 
 This is a boolean value (true or false) that dictates if this light can be turned on and off by clicking on the Furniture.  
-If this is set to `true`, the Source Rect of this light will be shifted to the right (by the width of the base source rect) when the Furniture is "on".
+If this is set to `true`, the Source Rect of this light will be shifted to the right (by the width of the base source rect) when the Furniture is "on".  
+If you omit this value, the equivalent from the main Furniture will be applied.
 
 ## Time Based
 
 This is a boolean value (true or false) that dictates if this light will change its state depending on the outside light.  
-If this is set to `true`, the Source Rect of this light will be shifted down (by the height of the base source rect) when it's dark out (because of night-time or rainy weather).
+If this is set to `true`, the Source Rect of this light will be shifted down (by the height of the base source rect) when it's dark out (because of night-time or rainy weather).  
+If you omit this value, the equivalent from the main Furniture will be applied.
 
 ## Radius
 
-This is a number defining the radius of your light source, it simply scales your light texture (this only applies to light sources, not glows). The default value is `2`.
+This is a number defining the radius of your light source, it simply scales your light texture (this only applies to light sources because it looks bad on glows). The default value is `2`.
 
 ## Color
 

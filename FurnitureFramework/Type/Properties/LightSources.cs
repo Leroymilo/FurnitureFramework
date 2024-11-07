@@ -100,12 +100,41 @@ namespace FurnitureFramework.Type.Properties
 
 			public void draw(DrawData draw_data, bool is_on, bool is_dark)
 			{
-				ModEntry.log("Light draw TODO");
+				if (texture != null) draw_data.texture = texture.Value.get();
+
+				if (can_be_toggled) draw_data.is_on = is_on;
+				if (time_based) draw_data.is_dark = is_dark;
+
+				draw_data.position += position.ToVector2() * 4f;
+				draw_data.source_rect = source_rect;
+				draw_data.color = color;
+				draw_data.origin = source_rect.Size.ToVector2() / 2f;
+
+				switch (light_type)
+				{
+					case LightType.Source:
+						draw_data.depth = 0.9f;
+						int quality = Game1.options.lightingQuality;
+						draw_data.position *= 2f / quality;
+						draw_data.scale = 2f * radius / quality;
+						break;
+					case LightType.Glow:
+						Vector2 global_pos = draw_data.position;
+						global_pos += new Vector2(Game1.viewport.X, Game1.viewport.Y);
+						draw_data.depth = global_pos.Y + 64f * get_window_glow_depth(global_pos);
+						draw_data.depth /= 10000f;
+						break;
+				}
+
+				draw_data.rect_offset = Point.Zero;
+
+				draw_data.draw();
 			}
 
 			public void debug_print(int indent_count)
 			{
-				ModEntry.log("TODO");
+				string indent = new('\t', indent_count);
+				ModEntry.log($"{indent}TODO");
 			}
 
 			#endregion
@@ -227,7 +256,7 @@ namespace FurnitureFramework.Type.Properties
 	
 		#region LightList Methods
 
-		public void draw_lights(DrawData draw_data, bool is_on, bool is_dark)
+		public void draw_sources(DrawData draw_data, bool is_on, bool is_dark)
 		{
 			foreach (Light light in sources)
 			{

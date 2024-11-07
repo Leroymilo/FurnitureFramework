@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -201,12 +202,7 @@ namespace FurnitureFramework.Type
 					layers[rot].draw_one(draw_data, top, ignore_depth: true);
 				else layers[rot].draw_all(draw_data, top);
 
-				light_sources.draw_glows(
-					sprite_batch,
-					furniture.boundingBox.Value.Location.ToVector2(),
-					rot, furniture.IsOn, furniture.timeToTurnOnLights()
-				);
-				// TO CHANGE
+				light_sources[rot].draw_glows(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
 
 				if (!draw_in_slot)
 				{
@@ -225,27 +221,26 @@ namespace FurnitureFramework.Type
 
 		private void draw_lighting(Furniture furniture, SpriteBatch sprite_batch)
 		{
-			light_sources.draw_lights(
-				sprite_batch,
-				furniture.boundingBox.Value.Location.ToVector2(),
-				furniture.currentRotation.Value,
-				furniture.IsOn, furniture.timeToTurnOnLights()
-			);
+			DrawData draw_data = new(sprite_batch);
+
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			draw_data.position = new(bounding_box.X, bounding_box.Bottom);
+			draw_data.position = Game1.GlobalToLocal(Game1.viewport, draw_data.position);
+
+			int rot = furniture.currentRotation.Value;
+
+			draw_lights(draw_data, rot, furniture.IsOn, furniture.timeToTurnOnLights());
 
 			// items in slots
 			if (furniture.heldObject.Value is Chest chest)
-			{
-				foreach (Item? item in chest.Items)
-				{
-					if (
-						item is Furniture furn_item &&
-						Pack.FurniturePack.try_get_type(furn_item, out FurnitureType? type)
-					)
-					{
-						type.draw_lighting(furn_item, sprite_batch);
-					}
-				}
-			}
+				slots[rot].draw_lights(draw_data, chest.Items);
+			else initialize_slots(furniture, rot);
+		}
+
+		public void draw_lights(DrawData draw_data, int rot, bool is_on, bool is_dark)
+		{
+			draw_data.texture = texture.get();
+			light_sources[rot].draw_sources(draw_data, is_on, is_dark);
 		}
 	}
 }

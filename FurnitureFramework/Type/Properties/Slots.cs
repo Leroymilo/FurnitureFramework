@@ -124,7 +124,7 @@ namespace FurnitureFramework.Type.Properties
 
 				if (obj is Furniture furn)
 				{
-					draw_data.position.X -= obj.boundingBox.Value.Size.X / 2f;
+					draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 					// Moved to the bottom left of the object bounding box, centered in the slot
 
 					if (Pack.FurniturePack.try_get_type(furn, out FurnitureType? type))
@@ -133,7 +133,7 @@ namespace FurnitureFramework.Type.Properties
 						return;
 					}
 					
-					draw_data.position.Y -= obj.boundingBox.Value.Size.Y;
+					draw_data.position.Y -= furn.boundingBox.Value.Size.Y;
 					// draw pos is on top left of Furniture bounding box
 
 					furn.drawAtNonTileSpot(
@@ -193,6 +193,29 @@ namespace FurnitureFramework.Type.Properties
 				draw_data.depth = float.MaxValue;
 				
 				draw_data.draw();
+			}
+
+			public void draw_lights(DrawData draw_data, Furniture furn)
+			{
+				if (Pack.FurniturePack.try_get_type(furn, out FurnitureType? type))
+				{
+					// draw custom lights
+
+					draw_data.position += new Vector2(area.Center.X, area.Bottom) * 4f;
+					// Position is set to the bottom center of the slot area
+					draw_data.position += offset * 4f;
+					draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
+					// Moved to the bottom left of the object bounding box, centered in the slot
+
+					type.draw_lights(
+						draw_data, furn.currentRotation.Value,
+						furn.IsOn, furn.timeToTurnOnLights()
+					);
+				}
+				else
+				{
+					// draw vanilla lights (how?)
+				}
 			}
 
 			public void debug_print(int indent_count)
@@ -335,6 +358,15 @@ namespace FurnitureFramework.Type.Properties
 
 				if (item is not SVObject obj) continue;
 				list[i].draw_obj(draw_data, top, obj);
+			}
+		}
+
+		public void draw_lights(DrawData draw_data, IList<Item> items)
+		{
+			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
+			{
+				if (item is not Furniture furn) continue;
+				list[i].draw_lights(draw_data, furn);
 			}
 		}
 
