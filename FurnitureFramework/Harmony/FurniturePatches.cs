@@ -574,19 +574,21 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (
-					Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type)
-					&& type.disable_fishtank_light
-				)
+				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
 				{
-					// copied from Furniture.removeLights
-					string value = __instance.GenerateLightSourceId(__instance.TileLocation);
-					for (int i = 0; i < __instance.getTilesWide(); i++)
-					{
-						__instance.Location.removeLightSource($"{value}_tile{i}");
-					}
+					type.addLights(__instance);
 
-					__instance.lightSource = null;
+					if (type.disable_fishtank_light)
+					{
+						// copied from Furniture.removeLights
+						string value = __instance.GenerateLightSourceId(__instance.TileLocation);
+						for (int i = 0; i < __instance.getTilesWide(); i++)
+						{
+							__instance.Location.removeLightSource($"{value}_tile{i}");
+						}
+
+						__instance.lightSource = null;
+					}
 				}
 			}
 			catch (Exception ex)

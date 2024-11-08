@@ -219,7 +219,7 @@ namespace FurnitureFramework.Type
 			}
 		}
 
-		private void draw_lighting(Furniture furniture, SpriteBatch sprite_batch)
+		private void draw_lights(Furniture furniture, SpriteBatch sprite_batch)
 		{
 			DrawData draw_data = new(sprite_batch);
 

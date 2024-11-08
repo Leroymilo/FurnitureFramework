@@ -112,6 +112,16 @@ namespace FurnitureFramework.Type.Properties
 				return result;
 			}
 
+			public void set_box(SVObject held_obj, Point position)
+			{
+				Point size = held_obj.boundingBox.Value.Size;
+				position += new Point(area.Center.X, area.Bottom) * new Point(4);
+				position += offset.ToPoint() * new Point(4);
+				position.X -= size.X / 2;
+
+				held_obj.boundingBox.Value = new Rectangle(position, size);
+			}
+
 			public void draw_obj(DrawData draw_data, float top, SVObject obj)
 			{
 				draw_data.position += new Vector2(area.Center.X, area.Bottom) * 4f;
@@ -215,6 +225,7 @@ namespace FurnitureFramework.Type.Properties
 				else
 				{
 					// draw vanilla lights (how?)
+					// maybe call addLights? (fix bounding box before calling it)
 				}
 			}
 
@@ -347,6 +358,11 @@ namespace FurnitureFramework.Type.Properties
 		public bool can_hold(int index, SVObject obj, Furniture furniture, Farmer who)
 		{
 			return list[index].can_hold(obj, furniture, who);
+		}
+
+		public void set_box(int index, SVObject obj, Point position)
+		{
+			list[index].set_box(obj, position);
 		}
 
 		public void draw(DrawData draw_data, float top, IList<Item> items)

@@ -88,7 +88,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.
 - Fixed Particles not reseting their timers when restarting the game.
-- **Work in Progress** Fixed lights sources and glows of Furniture not appearing in slots.
+- **In Testing** Fixed lights sources and glows of Furniture not appearing in slots.
 - Fixed compatibility with Precise Furniture pass-through feature.
 - Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.
 

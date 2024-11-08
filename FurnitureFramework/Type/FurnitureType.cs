@@ -305,6 +305,10 @@ namespace FurnitureFramework.Type
 		private void initialize_slots(Furniture furniture, int rot)
 		{
 			int slots_count = slots[rot].count;
+			Point position = new Point(
+				furniture.boundingBox.Left,
+				furniture.boundingBox.Bottom
+			);
 
 			if (furniture.heldObject.Value is not Chest chest)
 			{
@@ -312,6 +316,9 @@ namespace FurnitureFramework.Type
 				chest = new();
 				chest.Items.Add(held);
 				furniture.heldObject.Value = chest;
+
+				if (slots_count > 0 && held != null)
+					slots[rot].set_box(0, held, position);
 			}
 			
 			while (chest.Items.Count > slots_count)
@@ -373,9 +380,14 @@ namespace FurnitureFramework.Type
 			// or held furniture is too big
 
 			obj.Location = furniture.Location;
+			slots[rot].set_box(slot_index, obj, new Point(
+				furniture.boundingBox.Left,
+				furniture.boundingBox.Bottom
+			));
 			chest.Items[slot_index] = obj;
 			who.reduceActiveItemByOne();
 			Game1.currentLocation.playSound("woodyStep");
+			obj.performDropDownAction(who);
 
 			return true;
 		}
@@ -540,12 +552,33 @@ namespace FurnitureFramework.Type
 			{
 				if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
 				{
-					type.draw_lighting(furniture, sprite_batch);
+					type.draw_lights(furniture, sprite_batch);
+				}
+
+				else if (
+					furniture.heldObject.Value is Furniture held_furn &&
+					Pack.FurniturePack.try_get_type(held_furn, out FurnitureType? held_type)
+				)
+				{
+					// maybe move the held furniture bounding box in the middle?
+					held_type.draw_lights(held_furn, sprite_batch);
 				}
 			}
 		}
 
 		#endregion
+
+		public void addLights(Furniture furniture)
+		{
+			if (furniture.heldObject.Value is Chest chest)
+			{
+				foreach (Item item in chest.Items)
+				{
+					if (item is Furniture held_furn)
+						held_furn.addLights();
+				}
+			}
+		}
 
 		public void updateWhenCurrentLocation(Furniture furniture)
 		{
