@@ -42,15 +42,15 @@ namespace FurnitureFramework.Type
 		public TypeInfo(IContentPack pack, string id, JObject data, string rect_var = "", string image_var = "")
 		{
 			mod_id = pack.Manifest.UniqueID;
-			this.id = id.Replace("{{ModID}}", mod_id, true, null);
+			this.id = id.Replace("[[ModID]]", mod_id, true, null);
 			display_name = JsonParser.parse(data.GetValue("Display Name"), "No Name");
-			display_name = display_name.Replace("{{ImageVariant}}", image_var, true, null);
-			display_name = display_name.Replace("{{RectVariant}}", rect_var, true, null);
+			display_name = display_name.Replace("[[ImageVariant]]", image_var, true, null);
+			display_name = display_name.Replace("[[RectVariant]]", rect_var, true, null);
 			description = JsonParser.parse<string?>(data.GetValue("Description"), null);
 			if (description is not null)
 			{
-				description = description.Replace("{{ImageVariant}}", image_var, true, null);
-				description = description.Replace("{{RectVariant}}", rect_var, true, null);
+				description = description.Replace("[[ImageVariant]]", image_var, true, null);
+				description = description.Replace("[[RectVariant]]", rect_var, true, null);
 			}
 			priority = JsonParser.parse(data.GetValue("Priority"), 1000);
 			priority = Math.Max(priority, 0); // rounded up to 0
@@ -144,11 +144,6 @@ namespace FurnitureFramework.Type
 		#endregion
 
 		#region Drawing
-
-		public Point get_source_rect_size(int rot)
-		{
-			return layers[rot].get_source_rect().Size;
-		}
 
 		// for drawInMenu transpiler
 		private static Rectangle get_icon_source_rect(Furniture furniture)
@@ -349,7 +344,6 @@ namespace FurnitureFramework.Type
 
 			Point this_pos = furniture.boundingBox.Value.Location;
 			this_pos.Y += furniture.boundingBox.Value.Height;
-			this_pos.Y -= layers[rot].get_source_rect().Height * 4;
 			Point rel_pos = (pos - this_pos) / new Point(4);
 
 			return slots[rot].get_slot(rel_pos);
@@ -461,7 +455,6 @@ namespace FurnitureFramework.Type
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
 			position.Y += bounding_box.Height;
-			position.Y -= layers[furniture.currentRotation.Value].get_source_rect().Height * 4f;
 			position += screen_position * 4f;
 		}
 
@@ -475,12 +468,7 @@ namespace FurnitureFramework.Type
 			spot = furniture.TileLocation.ToPoint() + bed_spot;
 		}
 
-		public void DoesTileHaveProperty(BedFurniture furniture,
-			int tile_x, int tile_y,
-			string property_name, string layer_name,
-			ref string property_value,
-			ref bool result
-		)
+		public void DoesTileHaveProperty(string property_name, string layer_name, ref bool result)
 		{
 			if (layer_name == "Back" && property_name == "TouchAction")
 				result = false;
@@ -496,16 +484,20 @@ namespace FurnitureFramework.Type
 
 			Point position = new(
 				bounding_box.X,
-				bounding_box.Y + bounding_box.Height - source_rect.Height * 4
-			);
+				bounding_box.Y + bounding_box.Height
+			);	// bottom left of the bounding box
 			Point size = source_rect.Size * new Point(4);
 
 			if (fish_area is null)
 			{
-				// offsets from vanilla code
+				position.Y -= source_rect.Height * 4;
+				position += layers[rot].get_draw_offset().ToPoint();
+				// top left of the base layer
+				
 				result = new Rectangle(
 					position + new Point(4, 64),
 					size - new Point(8, 92)
+					// offsets taken from vanilla code
 				);
 			}
 

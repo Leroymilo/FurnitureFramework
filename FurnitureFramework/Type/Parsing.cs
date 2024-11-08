@@ -244,11 +244,11 @@ namespace FurnitureFramework.Type
 
 			shop_id = JsonParser.parse<string?>(data.GetValue("Shop Id"), null);
 			if (shop_id is string)
-				shop_id = shop_id.Replace("{{ModID}}", info.mod_id, true, null);
+				shop_id = shop_id.Replace("[[ModID]]", info.mod_id, true, null);
 			
 			JsonParser.try_parse(data.GetValue("Shows in Shops"), ref shops);
 			for (int i = 0; i < shops.Count; i++)
-				shops[i] = shops[i].Replace("{{ModID}}", info.mod_id, true, null);
+				shops[i] = shops[i].Replace("[[ModID]]", info.mod_id, true, null);
 
 			#endregion
 

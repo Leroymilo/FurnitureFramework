@@ -780,11 +780,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
-					type.DoesTileHaveProperty(
-					__instance, tile_x, tile_y,
-					property_name, layer_name,
-					ref property_value, ref __result
-				);
+					type.DoesTileHaveProperty(property_name, layer_name, ref __result);
 			}
 			catch (Exception ex)
 			{

@@ -3,6 +3,7 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System.Runtime.Versioning;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FurnitureFramework.Type.Properties
 {
@@ -21,9 +22,9 @@ namespace FurnitureFramework.Type.Properties
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 
-			Rectangle source_rect;
+			public readonly Rectangle source_rect;
 
-			Vector2 draw_pos = Vector2.Zero;
+			public readonly Vector2 draw_pos = Vector2.Zero;
 			Depth depth = new(0, 1000);
 
 			#region Layer Parsing
@@ -39,11 +40,6 @@ namespace FurnitureFramework.Type.Properties
 
 				is_valid = true;
 
-				parse_optional(data, rot_name);
-			}
-
-			private void parse_optional(JObject data, string rot_name)
-			{
 				// Parsing directional layer draw position
 
 				JsonParser.try_parse_dir(data.GetValue("Draw Pos"), rot_name, ref draw_pos);
@@ -59,11 +55,6 @@ namespace FurnitureFramework.Type.Properties
 			#endregion
 
 			#region Layer Methods
-
-			public Rectangle get_source_rect()
-			{
-				return source_rect;
-			}
 
 			public void draw(DrawData draw_data, float top, bool ignore_depth = false)
 			{
@@ -200,7 +191,12 @@ namespace FurnitureFramework.Type.Properties
 
 		public Rectangle get_source_rect()
 		{
-			return list[0].get_source_rect();
+			return list[0].source_rect;
+		}
+
+		public Vector2 get_draw_offset()
+		{
+			return list[0].draw_pos;
 		}
 
 		public void debug_print(int indent_count)
