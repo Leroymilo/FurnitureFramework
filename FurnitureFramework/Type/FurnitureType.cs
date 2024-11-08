@@ -82,16 +82,13 @@ namespace FurnitureFramework.Type
 		bool time_based = false;
 		
 		DynaTexture texture;
+		DirectionalStructure<LayerList> layers;
+		bool placing_layers;
 		Point rect_offset;
 		Rectangle icon_rect = Rectangle.Empty;
-		DirectionalStructure<LayerList> layers;
 
-
-		int frame_count = 0;
-		int frame_length = 0;
-		Point anim_offset = Point.Zero;
-		bool is_animated = false;
-
+		Animation animation = new();
+		bool placing_animate;
 
 		DirectionalStructure<Collisions> collisions;
 		DirectionalStructure<SeatList> seats;

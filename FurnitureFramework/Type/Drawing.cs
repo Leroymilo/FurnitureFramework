@@ -181,13 +181,7 @@ namespace FurnitureFramework.Type
 			if (time_based)
 				draw_data.is_dark = furniture.timeToTurnOnLights();
 
-			draw_data.rect_offset = rect_offset;
-			if (is_animated)
-			{
-				long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
-				int frame = (int)(time_ms / frame_length) % frame_count;
-				draw_data.rect_offset += anim_offset * new Point(frame);
-			}
+			draw_data.rect_offset = rect_offset + animation.get_offset();
 
 			if (furniture.shakeTimer > 0) {
 				draw_data.position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
@@ -198,6 +192,8 @@ namespace FurnitureFramework.Type
 
 			if (Furniture.isDrawingLocationFurniture)
 			{
+				// when placed
+
 				if (draw_in_slot)
 					layers[rot].draw_one(draw_data, top, ignore_depth: true);
 				else layers[rot].draw_all(draw_data, top);
@@ -215,7 +211,13 @@ namespace FurnitureFramework.Type
 
 			else
 			{
-				layers[rot].draw_one(draw_data, top);
+				// while placing
+				
+				if (!placing_animate)
+					draw_data.rect_offset -= animation.get_offset();
+
+				if (placing_layers) layers[rot].draw_all(draw_data, top);
+				else layers[rot].draw_one(draw_data, top);
 			}
 		}
 

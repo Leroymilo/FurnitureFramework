@@ -207,6 +207,8 @@ namespace FurnitureFramework.Type
 					throw new InvalidDataException($"Need at least one Layer for each rotation.");
 			}
 
+			placing_layers = JsonParser.parse(data.GetValue("Draw Layers When Placing"), false);
+
 			this.rect_offset = rect_offset;
 
 			token = data.GetValue("Icon Rect");
@@ -217,19 +219,10 @@ namespace FurnitureFramework.Type
 
 			#endregion
 
-			#region animation
-
-			frame_count = JsonParser.parse(data.GetValue("Frame Count"), 0);
-			frame_length = JsonParser.parse(data.GetValue("Frame Duration"), 0);
-			token = data.GetValue("Animation Offset");
-			if (token != null && !JsonParser.try_parse(token, ref anim_offset))
-				ModEntry.log($"Invalid Animation Offset, ignoring animation");
-			is_animated = frame_count > 0 && frame_length > 0;
-			is_animated &= anim_offset.ToVector2().Length() > 0;
-
-			#endregion
-
 			#region data in classes
+
+			animation.parse(data.GetValue("Animation"));
+			placing_animate = JsonParser.parse(data.GetValue("Animate When Placing"), true);
 
 			collisions = new(info, data.GetValue("Collisions"), rot_names);
 			seats = new(info, data.GetValue("Seats"), rot_names);

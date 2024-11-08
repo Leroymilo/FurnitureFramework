@@ -74,13 +74,13 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **In Testing** Light sources went through a rework, see the [Light Source documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Light%20Sources.md) for more info.
 - **In Testing** All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
 - **In Testing** Layers are now aligned to the bottom left corner of the bounding box by default. Use the `Draw Offset` to move them.
-- **Work in Progress** Nested all animation related fields into a `Animation` object.
+- **In Testing** Nested all animation related fields into a `Animation` object.
 
 **New Features**:
-- **Work in Progress** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
-- **Work in Progress** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
+- **In Testing** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
+- **In Testing** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
-- **Work in Progress** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
+- **In Testing** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
 - **In Testing** Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - **In Testing** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
