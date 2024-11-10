@@ -207,7 +207,6 @@ namespace FurnitureFramework.Type.Properties
 		List<Light> sources = new();
 		List<Light> glows = new();
 		public readonly bool is_valid = false;
-		public readonly string? error_msg;
 
 		private LightList(Light light)
 		{
