@@ -4,3 +4,4 @@ test.sh
 *.zip
 FurnitureFramework/bin/
 FurnitureFramework/obj/
+*/__pycache__
