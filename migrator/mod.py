@@ -12,4 +12,9 @@ class Mod:
 		if self.content.data is None: return
 	
 	def migrate(self):
+		self.manifest.migrate()
+		self.content.migrate()
+	
+	def save(self, out: Path):
 		pass
+		# if self.content.seasonal is not empty, then create CP mod
