@@ -227,7 +227,7 @@ namespace FurnitureFramework.Type
 			collisions = new(info, data.GetValue("Collisions"), rot_names);
 			seats = new(info, data.GetValue("Seats"), rot_names);
 			slots = new(info, data.GetValue("Slots"), rot_names);
-			light_sources = new(info, data.GetValue("Light Sources"), rot_names);
+			light_sources = new(info, data.GetValue("Lights"), rot_names);
 			sounds = new(data.GetValue("Sounds"));
 			particles = new(info, data.GetValue("Particles"), rot_names);
 

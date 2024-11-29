@@ -1,6 +1,6 @@
 # How to define Custom Light Sources?
 
-The `Light Sources` field of a Furniture is a directional field containing one or multiple Light Sources and Light Glows.  
+The `Lights` field of a Furniture is a directional field containing one or multiple Light Sources and Light Glows.  
 See the Example Pack for examples.
 
 Here are the fields of a Light Source or Light Glow:

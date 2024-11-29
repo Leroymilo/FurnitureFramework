@@ -3,6 +3,7 @@ from re import sub
 
 from structs import Point, Rectangle
 from layers import Layers
+from lights import Lights
 
 class FType:
 	def __init__(self, data: dict):
@@ -29,6 +30,7 @@ class FType:
 			self.migrate(new_data, rot_name)
 		
 		new_data.pop("Source Rect", None)
+		new_data.pop("Light Sources", None)
 
 		# Bed Area change
 		if "Bed Area Pixel" in new_data:
@@ -60,3 +62,11 @@ class FType:
 		else: layers = Layers([], rot, base_layer_rect.height)
 
 		layers.add_base(base_layer_rect)
+
+		new_data["Layers"][rot] = layers.to_json()
+
+		if "Light Sources" in self.data:
+			lights = Lights(self.data["Light Sources"], rot, base_layer_rect.height)
+			if "Lights" not in new_data:
+				new_data["Lights"] = {}
+			new_data["Lights"][rot] = lights.to_json()

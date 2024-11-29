@@ -311,6 +311,6 @@ With sounds, you can make your Furniture play custom sound effects when you clic
 
 Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Particles.md).
 
-### Light Sources
+### Lights
 
 You can place Light Sources on your Furniture with this field, see the [Custom Light Sources Doc](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Complex%20Fields/Light%20Sources.md).
