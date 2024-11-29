@@ -31,6 +31,15 @@ class FType:
 		
 		new_data.pop("Source Rect", None)
 		new_data.pop("Light Sources", None)
+		
+		# Animation
+		anim = {}
+		for key in ["Frame Count", "Frame Duration", "Animation Offset"]:
+			if key in self.data:
+				anim[key] = self.data[key]
+				new_data.pop(key)
+		if len(anim) > 0:
+			new_data["Animation"] = anim
 
 		# Bed Area change
 		if "Bed Area Pixel" in new_data:
@@ -57,6 +66,8 @@ class FType:
 	def migrate(self, new_data: dict[str], rot: str):
 		base_layer_rect = Rectangle(self.data["Source Rect"], rot)
 
+		# Layers
+
 		if "Layers" in self.data:
 			layers = Layers(self.data["Layers"], rot, base_layer_rect.height)
 		else: layers = Layers([], rot, base_layer_rect.height)
@@ -64,6 +75,8 @@ class FType:
 		layers.add_base(base_layer_rect)
 
 		new_data["Layers"][rot] = layers.to_json()
+
+		# Lights
 
 		if "Light Sources" in self.data:
 			lights = Lights(self.data["Light Sources"], rot, base_layer_rect.height)

@@ -226,15 +226,18 @@ You can define animations for your Furniture, but you'll need to fill a few fiel
 - `Frame Duration` the length of every frame in milliseconds
 - `Animation Offset` the position of each frame relative to the preceding frame.
 
-The `Animation Offset` is an **Integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) field. At every new animation frame, the top left of every Source Rect (base sprite and layers) will be moved by this offset, so you can have your animations aligned however you want in your sprite-sheet.
+The `Animation Offset` is an **Integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) field. At every new animation frame, the top left of every Layer's Source Rect  will be moved by this offset, so you can have your animations aligned however you want in your sprite-sheet.  
+New: You can also use a list of offsets, which must have as many values as there are Frames, to define the specific Source Rect offset of each frame individually.
 
 Note: if any of these field is zero ((0, 0) for the Offset), the animation will be disabled.  
 
 Here's an example of the fields for a working animation taken from the `cat_statue` in the Example Pack:
 ```json
-"Frame Count": 7,
-"Frame Duration": 500,
-"Animation Offset": {"X": 16, "Y": 0}
+"Animation": {
+	"Frame Count": 7,
+	"Frame Duration": 500,
+	"Animation Offset": {"X": 16, "Y": 0}
+}
 ```
 
 Note 2: If using both [Source Rect Offsets](#rect-variants) and Animation, the offsets will be added together.
