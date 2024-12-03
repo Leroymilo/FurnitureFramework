@@ -2,7 +2,7 @@
 
 To customize your Fish-Tank, your can use these fields:
 
-## Fish Area
+## Fish Area (directional)
 
 This is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md) **in pixels** that defines which part of the sprite the fishes will be able to swim in.
 

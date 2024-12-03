@@ -192,7 +192,7 @@ namespace FurnitureFramework.Type.Properties
 
 				Point position = furniture.boundingBox.Value.Location;
 				position.Y += furniture.boundingBox.Value.Height;
-				position.Y -= furniture.sourceRect.Height * 4;
+				// position.Y -= furniture.sourceRect.Height * 4;
 				position += spawn_rect.Location * new Point(4);
 				position += new Point(
 					(int)(Game1.random.NextSingle() * spawn_rect.Size.X * 4),

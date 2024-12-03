@@ -17,3 +17,5 @@ class Rectangle:
 
 		self.data = deepcopy(data)
 		self.height = self.data["Height"]
+	
+	

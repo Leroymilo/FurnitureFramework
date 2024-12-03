@@ -85,6 +85,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **In Testing** Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - **In Testing** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
+- **In Testing** `Fish Area` and `Screen Position` are now directional.
 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.

@@ -1,3 +1,4 @@
+using System.Collections;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
@@ -272,7 +273,7 @@ namespace FurnitureFramework.Type
 			switch (s_type)
 			{
 				case SpecialType.TV:
-					JsonParser.try_parse(data.GetValue("Screen Position"), ref screen_position);
+					screen_position = JsonParser.parse_dir(data.GetValue("Screen Position"), rot_names, Vector2.Zero);
 					screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
 					break;
 				
@@ -307,14 +308,7 @@ namespace FurnitureFramework.Type
 					break;
 
 				case SpecialType.FishTank:
-					Rectangle read_fish_area = new();
-					if (JsonParser.try_parse(data.GetValue("Fish Area"), ref read_fish_area))
-					{
-						fish_area = new Rectangle(
-							read_fish_area.Location * new Point(4),
-							read_fish_area.Size * new Point(4)
-						);
-					}
+					fish_area = JsonParser.parse_dir<Rectangle?>(data.GetValue("Fish Area"), rot_names, null);
 					disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
 					break;
 			}

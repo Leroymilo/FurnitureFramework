@@ -3,25 +3,24 @@
 Custom Particles have a lot of fields, but don't be scared: most of them are not required.  
 If you need an example, the `Custom Cauldron` Furniture in the Example Pack has all its fields defined (even the optional fields for completeness).
 
-## Source Image
+## Source Image (required)
 
-Like the Source Image of a Furniture, a Particle can have its own .png (or be stored in the same spritesheet as the Furniture). This field is required.
+Like the Source Image of a Furniture, a Particle can have its own .png (or be stored in the same spritesheet as the Furniture).
 
 ## Source Rect
 
 Like the [Source Rect](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source-rect) of a Furniture, this tells the game which part of your image should be used for a single Particle. If making an animated Particle (see lower), this should be the Rectangle around the first frame.  
 If omitted, the Source Rect will be the size of the given image.
 
-## Emission Interval
+## Emission Interval (required)
 
-This field defines how much time passes between each Particle is emitted, it is mesured in whole milliseconds (no decimals). This field is required.  
+This field defines how much time passes between each Particle is emitted, it is mesured in whole milliseconds (no decimals).  
 Setting this interval too low (less than 100) might cause issues because of the number of Particles that would be created.
 
-## Spawn Rect
+## Spawn Rect (required) (directional)
 
-This field is another Rectangle, but this one defines the area of the sprite where the Particles will spawn. This field is required.  
-Be carefull, the Spawn Rect of a Particle is relative to the sprite, not to the whole spritesheet.  
-This field is [directionnal](https://github.com/Leroymilo/FurnitureFramework/blob/f63c482fde5855e6f3b4f18037bb0b5953225579/doc/Directional%20Fields.md).
+This field is another Rectangle, but this one defines the area of the sprite where the Particles will spawn.  
+Be carefull, the Spawn Rect of a Particle is relative to the bottom left of the Furniture's collision, so the Y coordinate must be negative for it to be on the Furniture itself.
 
 ## Depths
 
@@ -79,7 +78,7 @@ You can make animated Particles by using these fields:
 - The "Frame Count" is the number of frames in your animation.
 - The "Frame Duration" is how long each frame will last, measured in milliseconds.
 - The "Loop Count" is how many times your animation will loop (untested).
-- "Hold Last Frame" (true or false) will stay on the last frame of your animation one it has finished playing and looping.
+- "Hold Last Frame" (true or false) will stay on the last frame of your animation once it has finished playing and looping.
 - "Flicker" (true or false) will make your animation flicker (untested).
 
 ## Mode Options

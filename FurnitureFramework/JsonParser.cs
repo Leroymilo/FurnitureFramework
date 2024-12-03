@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 
@@ -17,6 +16,20 @@ namespace FurnitureFramework
 
 			JToken? dir_token = obj.GetValue(rot_name);
 			return try_parse(dir_token, ref result);
+		}
+
+		public static List<T> parse_dir<T>(JToken? token, List<string> rot_names, T def)
+		{
+			List<T> result = new();
+
+			foreach (string rot_name in rot_names)
+			{
+				T dir_res = def;
+				try_parse_dir(token, rot_name, ref dir_res);
+				result.Add(dir_res);
+			}
+
+			return result;
 		}
 
 		public static bool try_parse<T>(JToken? token, ref T result)

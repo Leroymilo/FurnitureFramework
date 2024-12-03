@@ -1,3 +1,4 @@
+using System.Formats.Asn1;
 using System.Runtime.Versioning;
 using FurnitureFramework.Type.Properties;
 using HarmonyLib;
@@ -106,14 +107,14 @@ namespace FurnitureFramework.Type
 
 		public readonly SpecialType s_type = SpecialType.None;
 
-		Vector2 screen_position = Vector2.Zero;
+		List<Vector2> screen_position;
 		float screen_scale = 4;
 
 		Point bed_spot = new(1);
 		public readonly BedType bed_type = BedType.Double;
 		Rectangle bed_area;
 
-		Rectangle? fish_area = null;
+		List<Rectangle?> fish_area = null;
 		public readonly bool disable_fishtank_light = false;
 
 		#endregion
@@ -449,10 +450,11 @@ namespace FurnitureFramework.Type
 
 		public void getScreenPosition(TV furniture, ref Vector2 position)
 		{
+			int rot = furniture.currentRotation.Value;
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
 			position.Y += bounding_box.Height;
-			position += screen_position * 4f;
+			position += screen_position[rot] * 4f;
 		}
 
 		public void getScreenSizeModifier(ref float scale)
@@ -485,7 +487,9 @@ namespace FurnitureFramework.Type
 			);	// bottom left of the bounding box
 			Point size = source_rect.Size * new Point(4);
 
-			if (fish_area is null)
+			Rectangle? area = fish_area[rot];
+
+			if (area is null)
 			{
 				position.Y -= source_rect.Height * 4;
 				position += layers[rot].get_draw_offset().ToPoint();
@@ -501,8 +505,8 @@ namespace FurnitureFramework.Type
 			else
 			{
 				result = new Rectangle(
-					position + fish_area.Value.Location,
-					fish_area.Value.Size
+					position + area.Value.Location * new Point(4),
+					area.Value.Size * new Point(4)
 				);
 			}
 		}

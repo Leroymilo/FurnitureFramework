@@ -25,12 +25,12 @@ class FType:
 	def migrate(self):
 
 		new_data = deepcopy(self.data)
-
-		for rot_name in self.rots:
-			self.migrate(new_data, rot_name)
 		
 		new_data.pop("Source Rect", None)
 		new_data.pop("Light Sources", None)
+
+		for rot_name in self.rots:
+			self.migrate(new_data, rot_name)
 		
 		# Animation
 		anim = {}
@@ -66,6 +66,24 @@ class FType:
 	def migrate(self, new_data: dict[str], rot: str):
 		base_layer_rect = Rectangle(self.data["Source Rect"], rot)
 
+		# Fish Area
+
+		if "Fish Area" in self.data:
+			area = deepcopy(self.data["Fish Area"])
+			area["Y"] -= base_layer_rect.height
+			if "Fish Area" not in new_data:
+				new_data["Fish Area"] = {}
+			new_data["Fish Area"][rot] = area
+
+		# Screen Position
+
+		if "Screen Position" in self.data:
+			area = deepcopy(self.data["Screen Position"])
+			area["Y"] -= base_layer_rect.height
+			if "Screen Position" not in new_data:
+				new_data["Screen Position"] = {}
+			new_data["Screen Position"][rot] = area
+
 		# Layers
 
 		if "Layers" in self.data:
@@ -74,6 +92,8 @@ class FType:
 
 		layers.add_base(base_layer_rect)
 
+		if "Layers" not in new_data:
+			new_data["Layers"] = {}
 		new_data["Layers"][rot] = layers.to_json()
 
 		# Lights
@@ -83,3 +103,7 @@ class FType:
 			if "Lights" not in new_data:
 				new_data["Lights"] = {}
 			new_data["Lights"][rot] = lights.to_json()
+	
+		# Particles (spawn area moved)
+
+		# Slots (area)
