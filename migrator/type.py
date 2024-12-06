@@ -2,8 +2,10 @@ from copy import deepcopy
 from re import sub
 
 from structs import Point, Rectangle
-from layers import Layers
-from lights import Lights
+from properties.layers import Layers
+from properties.lights import Lights
+from properties.particles import Particles
+from properties.slots import Slots
 
 class FType:
 	def __init__(self, data: dict):
@@ -106,4 +108,16 @@ class FType:
 	
 		# Particles (spawn area moved)
 
+		if "Particles" in self.data:
+			particles = Particles(self.data["Particles"], rot, base_layer_rect.height)
+			if "Particles" not in new_data:
+				new_data["Particles"] = {}
+			new_data["Particles"][rot] = particles.to_json()
+
 		# Slots (area)
+
+		if "Slots" in self.data:
+			slots = Slots(self.data["Slots"], rot, base_layer_rect.height)
+			if "Slots" not in new_data:
+				new_data["Slots"] = {}
+			new_data["Slots"][rot] = slots.to_json()

@@ -12,7 +12,6 @@ class Layer:
 		
 		h_diff = self.data["Source Rect"]["Height"] - base_height
 		if "Draw Pos" in self.data:
-			
 			self.data["Draw Pos"]["Y"] += h_diff
 		else:
 			self.data["Draw Pos"] = {"X": 0, "Y": h_diff}

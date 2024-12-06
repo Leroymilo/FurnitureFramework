@@ -14,6 +14,8 @@ Be carefull, the Area of a Slot is relative to the sprite for this rotation, not
 
 Note: It is not recommended to define overlapping areas, but if you do they will be prioritized in the order they were defined.
 
+UPDATE: defined from bottom left 
+
 ## Offset
 
 An offset, in pixels to change the default position of the item placed in this slot (it usually depends on the Area), it's a **decimal** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md).  
