@@ -39,7 +39,7 @@ namespace FurnitureFramework.Pack
 		FurniturePack? root = null;
 		bool is_included { get => root != null; }
 		bool is_loaded = false;
-		Dictionary<string, Type.FurnitureType> types = new();
+		Dictionary<string, FurnitureType> types = new();
 		Dictionary<string, IncludedPack> included_packs = new();
 
 		private static void invalidate_game_data()
@@ -75,8 +75,9 @@ namespace FurnitureFramework.Pack
 			string name = e.NameWithoutLocale.Name;
 
 			// Loading texture for menu icon
-			if (try_get_type(name, out Type.FurnitureType? type))
+			if (try_get_type(name, out FurnitureType? type))
 			{
+				ModEntry.log("Load texture for menu icon");
 				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
 				return true;
 			}
@@ -135,14 +136,14 @@ namespace FurnitureFramework.Pack
 			return result;
 		}
 
-		private Type.FurnitureType get_type(string f_id)
+		private FurnitureType get_type(string f_id)
 		{
 			return types[f_id];
 		}
 
-		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out Type.FurnitureType type)
+		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out FurnitureType type)
 		{
-			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
+			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
 			// ensure that Furniture are loaded
 
 			type = null;
@@ -154,7 +155,7 @@ namespace FurnitureFramework.Pack
 			return true;
 		}
 
-		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out Type.FurnitureType type)
+		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out FurnitureType type)
 		{
 			return try_get_type(furniture.ItemId, out type);
 		}
@@ -201,7 +202,7 @@ namespace FurnitureFramework.Pack
 
 		public static void edit_data_shop(IAssetData asset)
 		{
-			ModEntry.get_helper().GameContent.Load<JObject>("Data/Furniture");
+			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
 			// ensure that Furniture are loaded
 
 			var editor = asset.AsDictionary<string, ShopData>().Data;

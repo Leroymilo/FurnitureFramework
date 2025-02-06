@@ -2,8 +2,6 @@
 using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -189,13 +187,14 @@ namespace FurnitureFramework
 			string name = e.NameWithoutLocale.Name;
 
 			if (name.StartsWith("Data/Furniture"))
-				e.Edit(Pack.FurniturePack.edit_data_furniture);
+				e.Edit(Pack.FurniturePack.edit_data_furniture, priority: AssetEditPriority.Early);
 
-			if (name.StartsWith("Data/Shops"))
+			else if (name.StartsWith("Data/Shops"))
 				e.Edit(Pack.FurniturePack.edit_data_shop);
 
 			// Loading any Furniture Pack data or texture
-			Pack.FurniturePack.load_resource(e);
+			else
+				Pack.FurniturePack.load_resource(e);
 		}
 
         /// <inheritdoc cref="IContentEvents.AssetsInvalidated"/>
@@ -203,7 +202,6 @@ namespace FurnitureFramework
         /// <param name="e">The event data.</param>
 		private void on_assets_invalidated(object? sender, AssetsInvalidatedEventArgs e)
 		{
-			log($"invalidated assets:");
 			foreach (IAssetName name in e.Names)
 				Pack.FurniturePack.invalidate(name.BaseName);
 		}

@@ -216,6 +216,8 @@ namespace FurnitureFramework.Type
 			if (!JsonParser.try_parse(token, ref icon_rect) || icon_rect.IsEmpty)
 				icon_rect = layers[0].get_source_rect();
 			
+			ModEntry.log($"icon rect of {info.id} is {icon_rect}");
+
 			icon_rect.Location += rect_offset;
 
 			#endregion

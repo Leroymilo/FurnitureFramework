@@ -305,7 +305,7 @@ namespace FurnitureFramework.Type.Properties
 			ModEntry.log($"{indent}Height: {size.Y}", LogLevel.Debug);
 			if (has_tiles)
 			{
-				ModEntry.log($"{indent}Collision Tiles: [{string.Join(", ", tiles.Cast<string>())}]", LogLevel.Debug);
+				// ModEntry.log($"{indent}Collision Tiles: [{string.Join(", ", tiles.Cast<string>())}]", LogLevel.Debug);
 				ModEntry.log($"{indent}Collision Map:", LogLevel.Debug);
 				for (int y = 0; y < size.Y; y++)
 				{

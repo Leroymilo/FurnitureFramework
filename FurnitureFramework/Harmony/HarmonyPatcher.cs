@@ -22,8 +22,6 @@ namespace FurnitureFramework.FFHarmony
 
 		public static void patch()
 		{
-			ModEntry.log("Patching?");
-
 			if (harmony == null)
 				throw new NullReferenceException("Harmony was not set");
 			

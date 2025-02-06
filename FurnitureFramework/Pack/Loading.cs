@@ -18,7 +18,7 @@ namespace FurnitureFramework.Pack
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned())
 			{
 				FurniturePack pack = new(c_pack);
-				to_load.Append(pack.data_UID);
+				to_load.Push(pack.data_UID);
 				packs[pack.data_UID] = pack;
 				UIDs.Add(pack.UID, c_pack);
 			}
@@ -30,6 +30,8 @@ namespace FurnitureFramework.Pack
 		{
 			if (to_load.Count == 0) return;
 			
+			ModEntry.log($"Loading {to_load.Count} mods...");
+
 			while (to_load.Count > 0)
 			{
 				string data_UID = to_load.Pop();

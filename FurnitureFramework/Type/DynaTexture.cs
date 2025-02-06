@@ -16,7 +16,8 @@ namespace FurnitureFramework.Type
 
 		public Texture2D get()
 		{
-			return ModEntry.get_helper().GameContent.Load<Texture2D>(path);
+			Texture2D result = ModEntry.get_helper().GameContent.Load<Texture2D>(path);
+			return result;
 		}
 	}
 }

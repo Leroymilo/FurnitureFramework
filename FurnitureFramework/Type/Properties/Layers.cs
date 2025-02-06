@@ -1,9 +1,7 @@
-
 using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System.Runtime.Versioning;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FurnitureFramework.Type.Properties
 {
@@ -37,6 +35,8 @@ namespace FurnitureFramework.Type.Properties
 				error_msg = "Missing or Invalid Source Rectangle";
 				if (!JsonParser.try_parse_dir(data.GetValue("Source Rect"), rot_name, ref source_rect))
 					return;
+
+				ModEntry.log($"Rect of layer {data.Path} is {source_rect}");
 
 				is_valid = true;
 
