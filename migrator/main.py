@@ -13,6 +13,7 @@ def main(mod_folder: Path, output: Path):
 
 	mod = Mod(mod_folder)
 	mod.migrate()
+	mod.save(output)
 
 if __name__ == "__main__":
 	parser = ArgumentParser(description="A script to convert FF2 mods to FF3.")

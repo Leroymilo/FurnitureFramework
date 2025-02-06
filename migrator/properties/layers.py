@@ -5,12 +5,15 @@ from structs import Rectangle
 class Layer:
 	def __init__(self, data: dict, rot_name: str, base_height: int):
 		if rot_name in data:
-			self = Layer(data[rot_name], rot_name, base_height)
-			return
+			data = data[rot_name]
 		
 		self.data = deepcopy(data)
 		
-		h_diff = self.data["Source Rect"]["Height"] - base_height
+		try:
+			rect = Rectangle(self.data["Source Rect"], rot_name)
+		except KeyError: raise KeyError
+
+		h_diff = rect.height - base_height
 		if "Draw Pos" in self.data:
 			self.data["Draw Pos"]["Y"] += h_diff
 		else:
@@ -20,19 +23,16 @@ class Layer:
 class Layers:
 
 	def __init__(self, data: dict | list, rot_name: str, base_height: int):
-		self.data = []
-		if type(data) is list:
-			self.data = [Layer(data[i], rot_name, base_height) for i in range(data)]
-		
-		elif type(data) is dict:
-			if rot_name in data:
-				self = Layers(data[rot_name], rot_name, base_height)
-				return
-			
-			self.data = [Layer(data, rot_name, base_height)]
-	
-	def add_base(self, source_rect: Rectangle):
-		self.data.insert(0, {"Source Rect": source_rect.data, "Depth": 0})
+		self.data: list[Layer] = []
 
-	def to_json(self):
+		if type(data) is dict and rot_name in data:
+			data = data[rot_name]
+		if type(data) is dict: data = [data]
+		
+		for val in data:
+			try:
+				self.data.append(Layer(val, rot_name, base_height))
+			except KeyError: pass
+
+	def to_json(self) -> list[dict]:
 		return [layer.data for layer in self.data]

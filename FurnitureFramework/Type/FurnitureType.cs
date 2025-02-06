@@ -114,7 +114,7 @@ namespace FurnitureFramework.Type
 		public readonly BedType bed_type = BedType.Double;
 		Rectangle bed_area;
 
-		List<Rectangle?> fish_area = null;
+		List<Rectangle?> fish_area = new();
 		public readonly bool disable_fishtank_light = false;
 
 		#endregion
@@ -722,7 +722,7 @@ namespace FurnitureFramework.Type
 					break;
 				
 				case SpecialType.FishTank:
-					if (fish_area != null) ModEntry.log($"{indent}Fish Area: {fish_area}", LogLevel.Debug);
+					ModEntry.log($"{indent}Fish Area: {fish_area}", LogLevel.Debug);
 					ModEntry.log($"{indent}disable Fishtank light: {disable_fishtank_light}", LogLevel.Debug);
 					break;
 			}

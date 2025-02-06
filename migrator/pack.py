@@ -1,5 +1,5 @@
 from pathlib import Path
-from json import load, JSONDecodeError
+from json import load, JSONDecodeError, dumps
 
 from decoder import JSONCDecoder
 from manifest import Manifest
@@ -59,14 +59,26 @@ class FPack:
 			if ipack.pack is None: continue
 			ipack.pack.migrate()
 			self.seasonal += ipack.pack.seasonal
+		
+		self.data["Format"] = 3
+	
+	def save(self, path: Path):
+		self.data["Furniture"] = {key: furn.data for key, furn in self.furniture.items()}
+		self.data["Included"] = {key: includ.save() for key, includ in self.included.items()}
+		path.parent.mkdir(exist_ok=True, parents=True)
+		path.write_text(dumps(self.data, indent='\t'))
 
 class IPack:
 	def __init__(self, data: dict, manifest: Manifest):
 		self.data = data
 		self.pack = None
+		self.manifest = manifest
 
 		if type(data) is not dict: return
 		if "Path" not in data: return
 
-		self.pack = FPack(manifest.folder / data["Path"])
-
+		self.pack = FPack(manifest.folder / data["Path"], manifest)
+	
+	def save(self):
+		self.pack.save(self.manifest.folder/Path(self.data["Path"]))
+		return self.data

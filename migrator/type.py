@@ -12,6 +12,7 @@ class FType:
 		self.data = deepcopy(data)
 
 		self.seasonal = ("Seasonal" in self.data) and self.data["Seasonal"]
+		self.data.pop("Seasonal", None)
 
 		self.source_image = self.data["Source Image"]
 		
@@ -31,8 +32,12 @@ class FType:
 		new_data.pop("Source Rect", None)
 		new_data.pop("Light Sources", None)
 
+		new_data["Layers"] = {}
+		new_data["Lights"] = {}
+		new_data["Particles"] = {}
+		new_data["Slots"] = {}
 		for rot_name in self.rots:
-			self.migrate(new_data, rot_name)
+			self.migrate_rot(new_data, rot_name)
 		
 		# Animation
 		anim = {}
@@ -65,7 +70,7 @@ class FType:
 	def replace_token(field: str) -> str:
 		return sub("{{(.+?)}}", "[[\\1]]", field)
 
-	def migrate(self, new_data: dict[str], rot: str):
+	def migrate_rot(self, new_data: dict[str], rot: str):
 		base_layer_rect = Rectangle(self.data["Source Rect"], rot)
 
 		# Fish Area
@@ -92,32 +97,23 @@ class FType:
 			layers = Layers(self.data["Layers"], rot, base_layer_rect.height)
 		else: layers = Layers([], rot, base_layer_rect.height)
 
-		layers.add_base(base_layer_rect)
-
-		if "Layers" not in new_data:
-			new_data["Layers"] = {}
 		new_data["Layers"][rot] = layers.to_json()
+		new_data["Layers"][rot].insert(0, {"Source Rect": base_layer_rect.data, "Depth": 0})
 
 		# Lights
 
 		if "Light Sources" in self.data:
 			lights = Lights(self.data["Light Sources"], rot, base_layer_rect.height)
-			if "Lights" not in new_data:
-				new_data["Lights"] = {}
 			new_data["Lights"][rot] = lights.to_json()
 	
 		# Particles (spawn area moved)
 
 		if "Particles" in self.data:
 			particles = Particles(self.data["Particles"], rot, base_layer_rect.height)
-			if "Particles" not in new_data:
-				new_data["Particles"] = {}
 			new_data["Particles"][rot] = particles.to_json()
 
 		# Slots (area)
 
 		if "Slots" in self.data:
 			slots = Slots(self.data["Slots"], rot, base_layer_rect.height)
-			if "Slots" not in new_data:
-				new_data["Slots"] = {}
 			new_data["Slots"][rot] = slots.to_json()

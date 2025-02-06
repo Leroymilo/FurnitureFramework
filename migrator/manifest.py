@@ -1,5 +1,6 @@
 from pathlib import Path
-from json import load, JSONDecodeError
+from json import load, JSONDecodeError, dumps
+from copy import deepcopy
 
 from decoder import JSONCDecoder
 
@@ -28,3 +29,23 @@ class Manifest:
 			"UniqueID": "leroymilo.FurnitureFramework",
 			"MinimumVersion": "3.0.0"
 		}
+	
+	def save(self, path: Path):
+		self.folder = path.parent
+		path.write_text(dumps(self.data, indent='\t'))
+	
+	def save_cp(self, path: Path):
+		cp_data = deepcopy(self.data)
+
+		id: str = cp_data["UniqueID"]
+		if "FF" in id: id = id.replace("FF", "CP")
+		else: id += "CP"
+		cp_data["UniqueID"] = id
+
+		cp_data["ContentPackFor"] = {
+			"UniqueID": "Pathoschild.ContentPatcher",
+			"MinimumVersion": "2.5"
+		}
+
+		path.parent.mkdir(exist_ok=True, parents=True)
+		path.write_text(dumps(cp_data, indent='\t'))
