@@ -44,8 +44,8 @@ class Mod:
 			new_file = image_path.stem + "_{{season}}" + image_path.suffix
 			change = {
 				"LogName": f"Seasonal texture for FF/{mod_id}/{image_path}",
-				"Action": "EditImage",
-				"Target": f"FF/{mod_id}/{image_path}",
+				"Action": "Load",
+				"Target": f"FF/{mod_id}/{image_path.parent}/{image_path.stem}",
 				"FromFile": f"{image_path.parent}/{new_file}"
 			}
 			cp_data["Changes"].append(change)
@@ -55,7 +55,6 @@ class Mod:
 				(out / seasonal_path).parent.mkdir(exist_ok=True, parents=True)
 				(self.manifest.folder / seasonal_path).rename(out / seasonal_path)
 		
-		print(cp_data)
 		(out / "content.json").write_text(dumps(cp_data, indent='\t'))
 		self.manifest.save_cp(out / "manifest.json")
 

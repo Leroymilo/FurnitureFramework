@@ -26,7 +26,6 @@ if __name__ == "__main__":
 	)
 
 	args = parser.parse_args()
-	print(args)
 
 	inputs = list(map(Path, args.input))
 	outputs = list(map(Path, args.output))

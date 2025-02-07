@@ -32,6 +32,7 @@ class FType:
 		new_data.pop("Source Rect", None)
 		new_data.pop("Light Sources", None)
 
+		new_data["Fish Area"] = {}
 		new_data["Layers"] = {}
 		new_data["Lights"] = {}
 		new_data["Particles"] = {}
@@ -65,6 +66,7 @@ class FType:
 				new_data["Shows in Shops"][i] = FType.replace_token(new_data["Shows in Shops"][i])
 
 		self.data = new_data
+		self.collapse()
 	
 	@staticmethod
 	def replace_token(field: str) -> str:
@@ -98,7 +100,7 @@ class FType:
 		else: layers = Layers([], rot, base_layer_rect.height)
 
 		new_data["Layers"][rot] = layers.to_json()
-		new_data["Layers"][rot].insert(0, {"Source Rect": base_layer_rect.data, "Depth": 0})
+		new_data["Layers"][rot].insert(0, {"Source Rect": base_layer_rect.data})
 
 		# Lights
 
@@ -117,3 +119,32 @@ class FType:
 		if "Slots" in self.data:
 			slots = Slots(self.data["Slots"], rot, base_layer_rect.height)
 			new_data["Slots"][rot] = slots.to_json()
+	
+	def collapse(self):
+		
+		for field in ["Layers", "Lights", "Particles", "Slots"]:
+			value: dict[str, list[dict[str]]] = self.data[field]
+			
+			for key, val in value.items():
+				if len(val) == 0:
+					self.data[field].pop(key)
+				elif len(val) == 1:
+					self.data[field][key] = value[key][0]
+			
+			if len(value) == 0:
+				self.data.pop(field)
+			elif len(value) == 1 or all(val == value[key] for val in value.values()):
+				# single direction or same value on all directions
+				self.data[field] = value[key]
+
+		for field in ["Collisions", "Fish Area"]:
+			value: dict[str] = self.data[field]
+
+			if len(value) == 0:
+				self.data.pop(field)
+			else:
+				first_val = list(value.values())[0]
+				if len(value) == 1 or (type(first_val) is dict and all(val == first_val for val in value.values())):
+					# single direction or same value on all directions
+					print(value, first_val)
+					self.data[field] = first_val
