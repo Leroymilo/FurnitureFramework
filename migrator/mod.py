@@ -45,7 +45,7 @@ class Mod:
 			change = {
 				"LogName": f"Seasonal texture for FF/{mod_id}/{image_path}",
 				"Action": "Load",
-				"Target": f"FF/{mod_id}/{image_path.parent}/{image_path.stem}",
+				"Target": f"FF/{mod_id}/{image_path}",
 				"FromFile": f"{image_path.parent}/{new_file}"
 			}
 			cp_data["Changes"].append(change)

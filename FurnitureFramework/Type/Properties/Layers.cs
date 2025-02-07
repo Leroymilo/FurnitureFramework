@@ -36,8 +36,6 @@ namespace FurnitureFramework.Type.Properties
 				if (!JsonParser.try_parse_dir(data.GetValue("Source Rect"), rot_name, ref source_rect))
 					return;
 
-				ModEntry.log($"Rect of layer {data.Path} is {source_rect}");
-
 				is_valid = true;
 
 				// Parsing directional layer draw position
@@ -60,7 +58,7 @@ namespace FurnitureFramework.Type.Properties
 			{
 				draw_data.source_rect = source_rect;
 				draw_data.position += draw_pos;
-				draw_data.position.Y -= source_rect.Height;
+				draw_data.position.Y -= source_rect.Height * 4;
 
 				if (!ignore_depth) draw_data.depth = depth.get_value(top);
 

@@ -45,7 +45,7 @@ namespace FurnitureFramework.Pack
 
 			config_menu_api.AddBoolOption(
 				mod: manifest,
-				name: () => "Load all Furniture Packs on game start",
+				name: () => "Load all on Game Start",
 				tooltip: () => "If this is not checked, the game will load packs only when it needs the data.",
 				getValue: () => config.load_packs_on_start,
 				setValue: value => {

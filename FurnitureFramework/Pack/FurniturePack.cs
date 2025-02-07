@@ -77,8 +77,7 @@ namespace FurnitureFramework.Pack
 			// Loading texture for menu icon
 			if (try_get_type(name, out FurnitureType? type))
 			{
-				ModEntry.log("Load texture for menu icon");
-				e.LoadFrom(type.get_texture, AssetLoadPriority.Medium);
+				e.LoadFrom(type.get_texture, AssetLoadPriority.Low);
 				return true;
 			}
 

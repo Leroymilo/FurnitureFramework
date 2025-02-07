@@ -85,7 +85,7 @@ namespace FurnitureFramework.Type
 
 			draw_data.position = Game1.GlobalToLocal(Game1.viewport, draw_data.position);
 
-			draw(furniture, draw_data);
+			draw(furniture, draw_data, false);
 
 			// to keep (?) :
 
@@ -188,6 +188,13 @@ namespace FurnitureFramework.Type
 
 			float top = furniture.boundingBox.Top;
 			int rot = furniture.currentRotation.Value;
+
+			// Just in case there is a corrupted furniture.
+			if (rot >= rotations)
+			{
+				rot = 0;
+				furniture.currentRotation.Set(0);
+			}
 
 			if (Furniture.isDrawingLocationFurniture)
 			{
