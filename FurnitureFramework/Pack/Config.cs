@@ -176,14 +176,10 @@ namespace FurnitureFramework.Pack
 			public void reset()
 			{
 				foreach (string type_id in types.Keys)
-				{
 					types[type_id] = true;
-				}
 
 				foreach(string i_data_UID in i_packs.Keys)
-				{
 					i_packs[i_data_UID] = i_pack_defaults[i_data_UID];
-				}
 			}
 
 			public void register(IGenericModConfigMenuApi api, IManifest manifest)
@@ -195,8 +191,9 @@ namespace FurnitureFramework.Pack
 						manifest,
 						() => types[type_id],
 						(bool value) => {
+							if (types[type_id] != value)
+								invalidate_game_data();
 							types[type_id] = value;
-							invalidate_game_data();
 						},
 						() => type_names[type_id],
 						() => type_id,
@@ -204,16 +201,16 @@ namespace FurnitureFramework.Pack
 					);
 				}
 
-				api.AddSectionTitle(manifest, () => "Included Paks", null);
+				api.AddSectionTitle(manifest, () => "Included Packs", null);
 				foreach (string i_data_UID in i_packs.Keys)
 				{
 					api.AddBoolOption(
 						manifest,
 						() => i_packs[i_data_UID],
 						(bool value) => {
+							if (i_packs[i_data_UID] != value)
+								invalidate_game_data();
 							i_packs[i_data_UID] = value;
-							invalidate_game_data();
-							to_load.Append(i_data_UID);
 						},
 						() => i_pack_names[i_data_UID],
 						() => i_data_UID,
@@ -245,7 +242,13 @@ namespace FurnitureFramework.Pack
 
 		private void save_config()
 		{
-			if (!is_included) return;	// only the root pack should save the config.
+			if (root != null) 
+			{
+				// only the root pack should save the config.
+				root.save_config();
+				return;
+			}
+
 
 			JObject? config_data = content_pack.ReadJsonFile<JObject>(CONFIG_PATH);
 			if (config_data == null) config_data = new();
@@ -258,7 +261,7 @@ namespace FurnitureFramework.Pack
 
 		private void save_config(JObject config_data)
 		{
-			config_data.Add(data_UID, config.save());
+			config_data[data_UID] = config.save();
 
 			foreach (IncludedPack i_pack in included_packs.Values)
 				i_pack.pack.save_config(config_data);
@@ -298,9 +301,13 @@ namespace FurnitureFramework.Pack
 			{
 				config_menu_api.Register(
 					manifest,
-					() => {reset_config(); invalidate_game_data();},
+					() => {
+						reset_config();
+						invalidate_game_data();
+					},
 					save_config
 				);
+				save_config();
 			}
 
 			config.register(config_menu_api, manifest);

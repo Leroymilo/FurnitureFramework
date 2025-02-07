@@ -70,7 +70,7 @@ namespace FurnitureFramework.Pack
 
 			if (!is_included)
 				if (!check_format(data)) return;
-
+			
 			load_config();
 
 			load_furniture(data);
@@ -172,6 +172,8 @@ namespace FurnitureFramework.Pack
 					packs[i_pack.data_UID] = i_pack.pack;
 					
 					config.add_i_pack(i_data_UID, i_pack.name, i_pack.default_enabled);
+
+					to_load.Push(i_data_UID);
 				}
 				else
 				{
@@ -219,7 +221,7 @@ namespace FurnitureFramework.Pack
 			included_packs.Clear();
 			config.clear();
 
-			to_load.Append(data_UID);
+			to_load.Push(data_UID);
 
 			invalidate_game_data();
 		}
@@ -266,7 +268,7 @@ namespace FurnitureFramework.Pack
 
 			is_loaded = false;
 
-			to_load.Append(data_UID);
+			to_load.Push(data_UID);
 		}
 
 		#endregion

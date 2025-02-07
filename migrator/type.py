@@ -146,5 +146,4 @@ class FType:
 				first_val = list(value.values())[0]
 				if len(value) == 1 or (type(first_val) is dict and all(val == first_val for val in value.values())):
 					# single direction or same value on all directions
-					print(value, first_val)
 					self.data[field] = first_val

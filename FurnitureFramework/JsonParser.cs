@@ -1,4 +1,3 @@
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 
@@ -6,7 +5,6 @@ namespace FurnitureFramework
 {
 	using SDColor = System.Drawing.Color;
 
-	[RequiresPreviewFeatures]
 	static class JsonParser
 	{
 		public static bool try_parse_dir<T>(JToken? token, string rot_name, ref T result)
@@ -38,6 +36,22 @@ namespace FurnitureFramework
 		{
 			if (token is null || token.Type == JTokenType.Null)
 				return false;
+			
+			if (result is Vector2 vect_result)
+			{
+				if (!try_parse(token, ref vect_result)) return false;
+				
+				result = (T)(object)vect_result;
+				return true;
+			}
+			
+			if (result is Point point_result)
+			{
+				if (!try_parse(token, ref point_result)) return false;
+				
+				result = (T)(object)point_result;
+				return true;
+			}
 			
 			if (result is Rectangle rect_result)
 			{

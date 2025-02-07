@@ -35,6 +35,7 @@ class FPack:
 		if ("Furniture" in self.data and type(self.data["Furniture"]) is dict):
 			furn: dict = self.data["Furniture"]
 			for key, value in furn.items():
+				key = FType.replace_token(key)
 				self.furniture[key] = FType(value)
 		
 		self.included: dict[str, IPack] = {}

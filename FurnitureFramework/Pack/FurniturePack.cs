@@ -207,7 +207,10 @@ namespace FurnitureFramework.Pack
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
 			foreach (FurniturePack pack in packs.Values)
+			{
+				if (pack.is_included) continue;
 				pack.add_data_shop(editor);
+			}
 		}
 
 		private void add_data_shop(IDictionary<string, ShopData> editor)

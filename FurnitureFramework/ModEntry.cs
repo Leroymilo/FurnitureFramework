@@ -75,10 +75,10 @@ namespace FurnitureFramework
 		{
 			Pack.FurniturePack.pre_load(get_helper());
 
+			register_config();
+
 			if (get_config().load_packs_on_start)
 				Pack.FurniturePack.load_all();
-
-			register_config();
 
 			register_commands();
 
