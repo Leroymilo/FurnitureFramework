@@ -1,6 +1,7 @@
 using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using StardewModdingAPI;
 using StardewValley;
 
 namespace FurnitureFramework.Type.Properties
@@ -25,6 +26,8 @@ namespace FurnitureFramework.Type.Properties
 
 			animates = frame_count > 0 && frame_length > 0;
 			if (!animates) return;
+
+			ModEntry.log("Parsing animation offset");
 
 			offsets = new(frame_count);
 			JToken? offset_token = data.GetValue("Offset");
@@ -70,6 +73,23 @@ namespace FurnitureFramework.Type.Properties
 			long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
 			int frame = (int)(time_ms / frame_length) % frame_count;
 			return offsets[frame];
+		}
+
+		public void debug_print(int indent_count)
+		{
+			if (!animates) return;
+
+			string indent = new('\t', indent_count);
+			ModEntry.log($"{indent}Animation Data:", LogLevel.Debug);
+
+			indent += '\t';
+			ModEntry.log($"{indent}frame count: {frame_count}", LogLevel.Debug);
+			ModEntry.log($"{indent}frame length: {frame_length}", LogLevel.Debug);
+			ModEntry.log($"{indent}offsets: ");
+			
+			indent += '\t';
+			foreach (Point offset in offsets)
+				ModEntry.log($"{indent}{offset}", LogLevel.Debug);
 		}
 	}
 

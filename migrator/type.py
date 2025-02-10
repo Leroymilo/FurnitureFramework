@@ -42,10 +42,10 @@ class FType:
 		
 		# Animation
 		anim = {}
-		for key in ["Frame Count", "Frame Duration", "Animation Offset"]:
-			if key in self.data:
-				anim[key] = self.data[key]
-				new_data.pop(key)
+		for old_key, new_key in {"Frame Count": "Frame Count", "Frame Duration": "Frame Duration", "Animation Offset": "Offset"}.items():
+			if old_key in self.data:
+				anim[new_key] = self.data[old_key]
+				new_data.pop(old_key)
 		if len(anim) > 0:
 			new_data["Animation"] = anim
 

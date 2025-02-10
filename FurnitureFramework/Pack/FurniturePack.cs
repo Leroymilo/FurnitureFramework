@@ -263,15 +263,17 @@ namespace FurnitureFramework.Pack
 		{
 			string indent = new('\t', indent_count);
 
-			string text;
 			if (is_included)
 			{
-				text = $"{indent}{data_UID}";
-				if (!enabled) text += " (disabled):";
-				else text += ":";
+				string text = $"{indent}{data_UID}";
+				if (!enabled)
+				{
+					ModEntry.log(text + " (disabled)", LogLevel.Debug);
+					return;
+				}
+				ModEntry.log(text + ':', LogLevel.Debug);
 			}
-			else text = $"{indent}{UID}:";
-			ModEntry.log(text, LogLevel.Debug);
+			else ModEntry.log($"{indent}{UID}:", LogLevel.Debug);
 			
 			ModEntry.log($"{indent}\tFurniture:", LogLevel.Debug);
 			foreach (FurnitureType type in types.Values)

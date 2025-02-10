@@ -674,9 +674,12 @@ namespace FurnitureFramework.Type
 			string indent = new('\t', indent_count);
 			
 			string text = $"{indent}{info.id}";
-			if (!enabled) text += " (disabled):";
-			else text += ":";
-			ModEntry.log(text, LogLevel.Debug);
+			if (!enabled)
+			{
+				ModEntry.log(text + "(disabled)", LogLevel.Debug);
+				return;
+			}
+			ModEntry.log(text + ':', LogLevel.Debug);
 
 			indent += '\t';
 
@@ -696,8 +699,7 @@ namespace FurnitureFramework.Type
 			if (shop_id != null) ModEntry.log($"{indent}shop id: {shop_id}", LogLevel.Debug);
 			if (shops.Count > 0) ModEntry.log($"{indent}shows in shops: {string.Join(", ", shops)}", LogLevel.Debug);
 
-			ModEntry.log($"{indent}Animation Data TODO", LogLevel.Debug);
-
+			animation.debug_print(indent_count+1);
 			collisions.debug_print(indent_count+1);
 			seats.debug_print(indent_count+1);
 			slots.debug_print(indent_count+1);
