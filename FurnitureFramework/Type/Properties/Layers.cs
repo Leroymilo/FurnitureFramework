@@ -108,9 +108,9 @@ namespace FurnitureFramework.Type.Properties
 					if (dir_layer.is_valid)
 						return new(dir_layer);
 					
-					// single layer was invalid
-					ModEntry.log($"Could not parse a layer in {info.mod_id} at {data.Path}:", LogLevel.Warn);
-					ModEntry.log($"\t{layer.error_msg}", LogLevel.Warn);
+					// single directional layer was invalid
+					ModEntry.log($"Could not parse a directional layer in {info.mod_id} at {dir_obj.Path}:", LogLevel.Warn);
+					ModEntry.log($"\t{dir_layer.error_msg}", LogLevel.Warn);
 					ModEntry.log("Skipping Layer.", LogLevel.Warn);
 				}
 

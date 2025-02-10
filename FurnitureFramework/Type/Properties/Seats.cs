@@ -105,9 +105,9 @@ namespace FurnitureFramework.Type.Properties
 					if (dir_seat.is_valid)
 						return new(dir_seat);
 					
-					// single seat was invalid
-					ModEntry.log($"Could not parse a seat in {info.mod_id} at {data.Path}:", LogLevel.Warn);
-					ModEntry.log($"\t{seat.error_msg}", LogLevel.Warn);
+					// single directional seat was invalid
+					ModEntry.log($"Could not parse a  diretional seat in {info.mod_id} at {dir_obj.Path}:", LogLevel.Warn);
+					ModEntry.log($"\t{dir_seat.error_msg}", LogLevel.Warn);
 					ModEntry.log("Skipping Seat.", LogLevel.Warn);
 				}
 
@@ -119,10 +119,18 @@ namespace FurnitureFramework.Type.Properties
 
 				else
 				{
-					// single seat was invalid
-					ModEntry.log($"Could not parse a seat in {info.mod_id} at {data.Path}:", LogLevel.Warn);
-					ModEntry.log($"\t{seat.error_msg}", LogLevel.Warn);
-					ModEntry.log("Skipping Seat.", LogLevel.Warn);
+					if (obj.GetValue("Position") is JObject & obj.GetValue("Player Direction") is JObject)
+					{
+						// single seat is probably valid for another direction
+						ModEntry.log($"Seat at {obj} is invalid for direction {rot_name}, ignoring.", LogLevel.Trace);
+					}
+					else
+					{
+						// single seat was invalid
+						ModEntry.log($"Could not parse a seat in {info.mod_id} at {data.Path}:", LogLevel.Warn);
+						ModEntry.log($"\t{seat.error_msg}", LogLevel.Warn);
+						ModEntry.log("Skipping Seat.", LogLevel.Warn);
+					}
 				}
 			}
 
@@ -160,6 +168,11 @@ namespace FurnitureFramework.Type.Properties
 			Seat seat = new(data, rot_name);
 			if (seat.is_valid)
 				list.Add(seat);
+			else if (data.GetValue("Position") is JObject & data.GetValue("Player Direction") is JObject)
+			{
+				// seat is probably valid for another direction
+				ModEntry.log($"Seat at {data} is invalid for direction {rot_name}, ignoring.", LogLevel.Trace);
+			}
 			else
 			{
 				ModEntry.log($"Invalid Seat in {info.mod_id} at {data.Path}:", LogLevel.Warn);
