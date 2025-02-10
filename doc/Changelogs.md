@@ -68,24 +68,24 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
-- **In Testing** `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
+- `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
 - The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
-- **In Testing** `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
-- **In Testing** Layers are now aligned to the bottom left corner of the bounding box by default. Use the `Draw Pos` to move them.
+- `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
+- Layers are now aligned to the bottom left corner of the bounding box by default. Use the `Draw Pos` to move them.
 - **In Testing** Light sources went through a rework, see the [Light Source documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Light%20Sources.md) for more info.
 - **In Testing** All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
-- **In Testing** Nested all animation related fields into a `Animation` object.
+- Nested all animation related fields into a `Animation` object.
 - **In Testing** Renamed `Light Sources` to `Lights` since it includes both sources and glows.
 
 **New Features**:
 - **In Testing** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
-- **In Testing** Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
+- Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
-- **In Testing** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
-- **In Testing** Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
-- **In Testing** Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
+- **NOT TESTED** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
+- Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
+- Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
-- **In Testing** `Fish Area` and `Screen Position` are now directional.
+- **NOT TESTED** `Fish Area` and `Screen Position` are now directional.
 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.
@@ -95,9 +95,9 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.
 
 **Optimizations**:
-- **In Testing** Furniture Packs are only loaded when the game need them (lazy loading).
-- **In Testing** Invalidating an included pack will only cause this included pack and its new children to reload. Any included pack that was already loaded will not be loaded again if not invalidated.
-- **In Testing** Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).
+- Furniture Packs are only loaded when the game need them (lazy loading).
+- Invalidating an included pack will only cause this included pack and its new children to reload. Any included pack that was already loaded will not be loaded again if not invalidated.
+- Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).
 
 ## 3.1 (**Work in Progress**)
 
