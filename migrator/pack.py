@@ -4,6 +4,7 @@ from json import load, JSONDecodeError, dumps
 from decoder import JSONCDecoder
 from manifest import Manifest
 from type import FType
+from properties.lights import Light
 
 class FPack:
 	def __init__(self, path: Path, manifest: Manifest):
@@ -50,6 +51,8 @@ class FPack:
 	
 	def migrate(self):
 		self.seasonal = []
+
+		Light.pack_path = self.manifest.folder
 
 		for furn in self.furniture.values():
 			furn.migrate()

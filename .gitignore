@@ -5,3 +5,4 @@ test.sh
 FurnitureFramework/bin/
 FurnitureFramework/obj/
 **/__pycache__
+env/

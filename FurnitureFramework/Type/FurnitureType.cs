@@ -676,7 +676,7 @@ namespace FurnitureFramework.Type
 			string text = $"{indent}{info.id}";
 			if (!enabled)
 			{
-				ModEntry.log(text + "(disabled)", LogLevel.Debug);
+				ModEntry.log(text + " (disabled)", LogLevel.Debug);
 				return;
 			}
 			ModEntry.log(text + ':', LogLevel.Debug);
@@ -685,19 +685,20 @@ namespace FurnitureFramework.Type
 
 			info.debug_print(indent);
 
-			ModEntry.log($"{indent}type: {type}", LogLevel.Debug);
-			ModEntry.log($"{indent}price: {price}", LogLevel.Debug);
-			ModEntry.log($"{indent}exclude from random sales: {exclude_from_random_sales}", LogLevel.Debug);
-			ModEntry.log($"{indent}placement rules: {placement_rules}", LogLevel.Debug);
-			ModEntry.log($"{indent}rotations: {rotations}", LogLevel.Debug);
-			ModEntry.log($"{indent}toggleable: {can_be_toggled}", LogLevel.Debug);
-			ModEntry.log($"{indent}time based: {time_based}", LogLevel.Debug);
-			ModEntry.log($"{indent}context tags: {string.Join(", ", context_tags)}", LogLevel.Debug);
+			ModEntry.log($"{indent}Texture Path: {texture.path}", LogLevel.Debug);
+			ModEntry.log($"{indent}Type: {type}", LogLevel.Debug);
+			ModEntry.log($"{indent}Price: {price}", LogLevel.Debug);
+			ModEntry.log($"{indent}Exclude from Random Sales: {exclude_from_random_sales}", LogLevel.Debug);
+			ModEntry.log($"{indent}Placement Rules: {placement_rules}", LogLevel.Debug);
+			ModEntry.log($"{indent}Rotations: {rotations}", LogLevel.Debug);
+			ModEntry.log($"{indent}Toggleable: {can_be_toggled}", LogLevel.Debug);
+			ModEntry.log($"{indent}Time Based: {time_based}", LogLevel.Debug);
+			ModEntry.log($"{indent}Context Tags: {string.Join(", ", context_tags)}", LogLevel.Debug);
 
-			ModEntry.log($"{indent}placement type: {p_type}", LogLevel.Debug);
+			ModEntry.log($"{indent}Placement Type: {p_type}", LogLevel.Debug);
 
-			if (shop_id != null) ModEntry.log($"{indent}shop id: {shop_id}", LogLevel.Debug);
-			if (shops.Count > 0) ModEntry.log($"{indent}shows in shops: {string.Join(", ", shops)}", LogLevel.Debug);
+			if (shop_id != null) ModEntry.log($"{indent}Shop ID: {shop_id}", LogLevel.Debug);
+			if (shops.Count > 0) ModEntry.log($"{indent}Shows in Shops: {string.Join(", ", shops)}", LogLevel.Debug);
 
 			animation.debug_print(indent_count+1);
 			collisions.debug_print(indent_count+1);
@@ -705,10 +706,9 @@ namespace FurnitureFramework.Type
 			slots.debug_print(indent_count+1);
 			sounds.debug_print(indent_count+1);
 			particles.debug_print(indent_count+1);
-			ModEntry.log($"{indent}Light Sources TODO", LogLevel.Debug);
-			// light_sources.debug_print(indent_count+1);
+			light_sources.debug_print(indent_count+1);
 			
-			ModEntry.log($"{indent}special type: {s_type}", LogLevel.Debug);
+			ModEntry.log($"{indent}Special type: {s_type}", LogLevel.Debug);
 
 			switch (s_type)
 			{
@@ -725,7 +725,7 @@ namespace FurnitureFramework.Type
 				
 				case SpecialType.FishTank:
 					ModEntry.log($"{indent}Fish Area: {fish_area}", LogLevel.Debug);
-					ModEntry.log($"{indent}disable Fishtank light: {disable_fishtank_light}", LogLevel.Debug);
+					ModEntry.log($"{indent}Disable Fishtank Light: {disable_fishtank_light}", LogLevel.Debug);
 					break;
 			}
 		}

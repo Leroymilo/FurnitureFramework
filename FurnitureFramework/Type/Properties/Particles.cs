@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
@@ -230,7 +231,42 @@ namespace FurnitureFramework.Type.Properties
 			public void debug_print(int indent_count)
 			{
 				string indent = new('\t', indent_count);
-				ModEntry.log($"{indent}TODO");
+
+				ModEntry.log($"{indent}Texture Path: {texture.path}", LogLevel.Debug);	
+				ModEntry.log($"{indent}Source Recatangle: {source_rect}", LogLevel.Debug);
+				ModEntry.log($"{indent}Emition Interval: {emit_interval}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Spawn Rectangle: {spawn_rect}", LogLevel.Debug);
+				ModEntry.log($"{indent}Depths: {debug_print_list(depths)}", LogLevel.Debug);
+				ModEntry.log($"{indent}Base Speed: {base_speed}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Rotations: {debug_print_list(rotations)}", LogLevel.Debug);
+				ModEntry.log($"{indent}Rotation Speeds: {debug_print_list(rot_speeds)}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Scale: {scale}", LogLevel.Debug);
+				ModEntry.log($"{indent}Scale Change: {scale_change}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Color: {color}", LogLevel.Debug);
+				ModEntry.log($"{indent}Alpha: {alpha}", LogLevel.Debug);
+				ModEntry.log($"{indent}Alpha Fade: {alpha_fade}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Frame Count: {frame_count}", LogLevel.Debug);
+				ModEntry.log($"{indent}Frame Length: {frame_length}", LogLevel.Debug);
+				ModEntry.log($"{indent}Loop Count: {loop_count}", LogLevel.Debug);
+				ModEntry.log($"{indent}Hold Last: {hold_last}", LogLevel.Debug);
+				ModEntry.log($"{indent}Flicker: {flicker}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Emit When On: {emit_when_on}", LogLevel.Debug);
+				ModEntry.log($"{indent}Emit When Off: {emit_when_off}", LogLevel.Debug);
+				ModEntry.log($"{indent}Does Burst: {does_burst}", LogLevel.Debug);
+			}
+
+			private string debug_print_list(List<float> list)
+			{
+				List<string> str_list = new();
+				foreach (float value in list)
+					str_list.Add(value.ToString("n3"));
+				return string.Join(", ", str_list);
 			}
 
 			#endregion

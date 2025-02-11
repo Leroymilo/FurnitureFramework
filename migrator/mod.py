@@ -4,6 +4,7 @@ from json import dumps
 
 from manifest import Manifest
 from pack import FPack
+from properties.lights import Light
 
 class Mod:
 	def __init__(self, folder: Path):
@@ -24,6 +25,10 @@ class Mod:
 			out /= "[FF]"
 
 		copytree(self.manifest.folder / "assets", out / "assets", dirs_exist_ok=True)
+
+		for key, value in Light.to_save.items():
+			(out / key).parent.mkdir(parents=True, exist_ok=True)
+			value.save(out / key, "png")
 
 		out.mkdir(parents=True, exist_ok=True)
 		self.manifest.save(out / "manifest.json")

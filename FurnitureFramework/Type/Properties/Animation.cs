@@ -27,8 +27,6 @@ namespace FurnitureFramework.Type.Properties
 			animates = frame_count > 0 && frame_length > 0;
 			if (!animates) return;
 
-			ModEntry.log("Parsing animation offset");
-
 			offsets = new(frame_count);
 			JToken? offset_token = data.GetValue("Offset");
 			if (offset_token is JArray offset_array)

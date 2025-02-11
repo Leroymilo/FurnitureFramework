@@ -1,5 +1,6 @@
 using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
@@ -20,16 +21,15 @@ namespace FurnitureFramework.Type.Properties
 			public readonly bool is_valid = false;
 			public readonly string? error_msg;
 			public readonly LightType light_type;
+
+			DynaTexture? texture = null;
 			Rectangle source_rect;	// directional
 			Point position;			// directional
 
-			DynaTexture? texture = null;
 			bool can_be_toggled;
 			bool time_based;
 			float radius;
 			Color color;
-
-			public readonly bool is_glow = false;
 
 			#region Light Parsing
 
@@ -134,7 +134,17 @@ namespace FurnitureFramework.Type.Properties
 			public void debug_print(int indent_count)
 			{
 				string indent = new('\t', indent_count);
-				ModEntry.log($"{indent}TODO");
+
+				if (texture is not null)
+					ModEntry.log($"{indent}Texture Path: {texture.Value.path}", LogLevel.Debug);
+				ModEntry.log($"{indent}Source Rectangle: {source_rect}", LogLevel.Debug);
+				ModEntry.log($"{indent}Position: {position}", LogLevel.Debug);
+
+				ModEntry.log($"{indent}Toggleable: {can_be_toggled}", LogLevel.Debug);
+				ModEntry.log($"{indent}Time Based: {time_based}", LogLevel.Debug);
+				ModEntry.log($"{indent}Radius: {radius}", LogLevel.Debug);
+				ModEntry.log($"{indent}Color: {color}", LogLevel.Debug);
+
 			}
 
 			#endregion

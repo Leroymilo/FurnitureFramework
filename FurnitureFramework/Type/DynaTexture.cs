@@ -6,7 +6,7 @@ namespace FurnitureFramework.Type
 	[RequiresPreviewFeatures]
 	struct DynaTexture
 	{
-		string path;
+		public string path {get; private set;}
 
 		[RequiresPreviewFeatures]
 		public DynaTexture(TypeInfo info, string path)

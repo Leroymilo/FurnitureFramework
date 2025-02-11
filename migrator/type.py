@@ -123,7 +123,7 @@ class FType:
 	def collapse(self):
 		
 		for field in ["Layers", "Lights", "Particles", "Slots"]:
-			value: dict[str, list[dict[str]]] = self.data[field]
+			value: dict[str, list[dict[str]]] = self.data[field].copy()
 			
 			for key, val in value.items():
 				if len(val) == 0:
