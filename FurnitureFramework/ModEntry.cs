@@ -111,8 +111,7 @@ namespace FurnitureFramework
 		private void register_commands()
 		{
 			string desc = "Reloads a Furniture Pack, or all Packs if no id is given.\n\n";
-			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.\n\n";
-			desc += "/!\\ Warning: reloading a Pack might overwrite Furniture from Pack with higher priority.";
+			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.";
 			Helper.ConsoleCommands.Add("ff_reload", desc, Pack.FurniturePack.reload_pack);
 
 			desc = "Dumps all the data from a Furniture Pack, or all Packs if no id is given.\n\n";

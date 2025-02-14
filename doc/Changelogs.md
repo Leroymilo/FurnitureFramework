@@ -68,17 +68,17 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
-- `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#mixed-content-pack))
+- `Seasonal` was removed. (You should now use a [mixed Content Pack](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Author.md#mixed-content-pack))
 - The "token" markers have been changed from `{{MyToken}}` to `[[MyToken]]` to avoid conflicts with CP tokens.
 - `Source Rect` was removed, now the first layer of `Layers` will be used as the base layer, this way it's possible to give it a custom depth and draw position. The `Layers` field is now required to be present and have at least one layer, but the new directional field parsing should make it manageable.
 - Layers are now aligned to the bottom left corner of the bounding box by default. Use the `Draw Pos` to move them.
-- **In Testing** Light sources went through a rework, see the [Light Source documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Light%20Sources.md) for more info.
-- **In Testing** All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
+- Light sources went through a rework, see the [Light Source documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Light%20Sources.md) for more info.
+- All positions that were relative to the top left of the base sprite are now relative to the *bottom left* of the *bounding box*.
 - Nested all animation related fields into a `Animation` object.
-- **In Testing** Renamed `Light Sources` to `Lights` since it includes both sources and glows.
+- Renamed `Light Sources` to `Lights` since it includes both sources and glows.
 
 **New Features**:
-- **In Testing** Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
+- Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
 - **NOT TESTED** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
@@ -90,7 +90,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.
 - Fixed Particles not reseting their timers when restarting the game.
-- **In Testing** Fixed lights sources and glows of Furniture not appearing in slots.
+- Fixed lights sources and glows of Furniture not appearing in slots.
 - Fixed compatibility with Precise Furniture pass-through feature.
 - Renamed `reload_furniture_pack` command to `ff_reload` because it was too long.
 

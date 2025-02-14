@@ -14,7 +14,8 @@ This tutorial and documentation uses the [Example Pack](https://github.com/Leroy
 	* [Furniture](#furniture)
 	* [Included](#included)
 * [Commands](#commands)
-* [Mixed Content Pack](#mixed-content-pack)
+* [Content Patcher Integration](#content-patcher-integration)
+* [Migration to FF 3.0](#migration-to-furniture-framework-300)
 
 ## Manifest
 
@@ -25,13 +26,13 @@ Like any other content pack, you will need a `manifest.json` file to make your F
 	"Name": "Furniture Example Pack",
 	"Author": "leroymilo",
 	"Version": "1.0",
-	"MinimumApiVersion": "4.0",
-	"MinimumGameVersion": "1.6",
+	"MinimumApiVersion": "4.1",
+	"MinimumGameVersion": "1.6.9",
 	"Description": "An example pack for the Furniture Framework",
 	"UniqueID": "leroymilo.FurnitureExample.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
-		"MinimumVersion": "2.0.0"
+		"MinimumVersion": "3.0.0"
 	},
 	"UpdateKeys": [ "Nexus:23458" ]
 }
@@ -52,7 +53,7 @@ The `content.json` file is a model with only 2 fields:
 
 ### Format
 
-The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Changelogs.md). The current Format is 2.
+The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Changelogs.md). The current Format is 2.
 
 ### Furniture
 
@@ -73,11 +74,11 @@ Note: you can have as many custom Furniture as you want but their IDs must be al
 It is strongly recommended to add `{{ModID}}.` at the start of every new Furniture ID to avoid conflicts with other mods or the game itself. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`.  
 You should also be able to modify vanilla Furniture by using their vanilla ID, doing so might be tricky for some Furniture because some properties are hardcoded (like the catalogues and the cauldron) so be carefull of what you modify.
 
-Note 2: when using [Furniture Variants](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#variants), the variation name or number will be automatically added to the original ID so that each variation can exist in the game.
+Note 2: when using [Furniture Variants](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#variants), the variation name or number will be automatically added to the original ID so that each variation can exist in the game.
 
-The next part of the tutorial, with details about the Furniture definition is [here](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md).
+The next part of the tutorial, with details about the Furniture definition is [here](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md).
 
-You can also check the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Templates.md) to make relatively simple Furniture.
+You can also check the [Templates](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Templates.md) to make relatively simple Furniture.
 
 ### Included
 
@@ -105,16 +106,17 @@ The `Description` is also up to you (and optional), it will show in the tooltip 
 
 Here's details about console commands:
 
-### reload_furniture_pack
+### ff_reload
 
-Reloads the furniture pack with the given UniqueID. It will add new Furniture and edit changed Furniture but not remove Furniture that was removed from the pack.  
-There are some known limits to this command:
-- Changing a Furniture's ID will create a new Furniture without removing the one with the old ID
-- Changing a Furniture's rotations will break already placed Furniture of this type
-- Removing slots and seats will remove anything that was in it, or cause errors
-- Particles might break?
+Reloads a Furniture Pack, or all Packs if no id is given. Be careful when using it, reloading to apply changes to Furniture that were already placed in the world might break stuff.  
+Usage: `ff_reload <ModID>` - ModID: the UniqueID of the Furniture Pack to reload
 
-## Mixed Content Pack
+### ff_debug_print
+
+Dumps all the data from a Furniture Pack in the console, or all Packs if no id is given.  
+Usage: `ff_debug_print <ModID>` - ModID: the UniqueID of the Furniture Pack to debug print.
+
+## Content Patcher Integration
 
 There are multiple cases where you might want your mod to be both a CP content pack and a Furniture pack, for exemple if your pack has Furniture and other items or buildings.  
 This is very easy: you basically have to make 2 separate mods, but since SMAPI is smart when reading mods, you can upload them together on Nexus (or other mod website) as a single file structured like this:
@@ -143,4 +145,24 @@ My Mod
 ```
 
 It is VERY IMPORTANT that the UniqueIDs of the 2 mods are different so that SMAPI correctly loads both.  
-However, you can use the same update key for both, just make sure that both mods have the same version.
+However, you can use the same update key for both, just make sure that both mods have the same version number to avoid SMAPI update warnings.
+
+### How to patch FF resources
+
+With the 3.0 FF update, it is now possible to patch textures (.png) and data (.json) requested by the Furniture Framework. This means that you can edit textures and data in your Furniture Pack with all the features of Content Patcher (config options, tokens, conditions,...).
+
+To patch a resource from your Furniture Pack, you'll need to target `FF/<Furniture Pack UniqueID>/<path to the resource>`. Be careful, the `{{ModID}}` token from Content Patcher will point to the UniqueID of your CP mod, not your Furniture Pack! The path to the resource is relative to the root of your Furniture Pack, most of the time, it is what you wrote in your Furniture Pack's data.  
+There is a simple example of this use in the [Example Pack](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/Example%20Pack/%5BCP%5D/content.json): to make a bush change sprite in each season, its texture was edited with a `{{season}}` token. In this case, the Content Patcher mod need a version of the final textures to be loaded.
+
+It is not recommended to patch a Furniture Pack's data, because it will cause FF to reload a lot of stuff. Patching stuff that will change only on every day day (as opposed to every time change) is mostly fine.
+
+## Alternative Textures Compatibility
+
+Short answer: no.  
+For technical reasons, it's practically impossible to make FF and AT truly compatible. This does not mean that installing both will break the game / burn your computer, but any Furniture made with FF cannot have Alternative Textures. I actually don't know for sure what would happen, but both mods change how the Furniture is shown in the game, so one would replace the other's method.
+
+## Migration to Furniture Framework 3.0.0
+
+Use the [migration script](https://github.com/Leroymilo/FurnitureFramework/tree/3.0.0/migrator), you'll need python and the PIL python library. You can also do the migration by hand by looking through the doc, but good luck to not miss anything.
+
+**TUTORIAL TODO**

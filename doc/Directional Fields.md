@@ -1,35 +1,37 @@
 # What are Directional Fields?
 
-Directional Fields is a type of field that *can* depend on the rotation of the Furniture.
+Directional Fields is a type of field that *can* depend on the rotation of the Furniture, so that the value read by the mod will change depending on which direction the Furniture is placed in.
 
-When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#rotations).
+When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#rotations).
 
-Let's take the Furniture's [Source Rect field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#source-rect) as an example. If you choose to have the same Source Rectangle for every rotation, the field will look like this:
+Let's take the Furniture's [Layers](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md) as an example. If you choose to have a single Layer for every rotation, the field will look like this:
 ```json
-"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 32}
+"Layers": {
+	"Source Rect": { "X": 0, "Y": 0, "Width": 32, "Height": 32 }
+}
 ```
-But if you want each rotation to use a different part of the spritesheet (which you often do), you need to use the directional variant of this field.  
-For this example, we'll take the "Chair Test" Furniture of the Example Pack, it has `"Rotation": 4`, if you read about the Furniture Rotations field, you'll now that its rotation keys are "Down", "Right", "Up" and "Left". This is how its Source Rectangle looks like:
+But if you want each rotation to look different (which you often do), you need to use the directional variant of this field.  
+For this example, we'll take the "Table Test" Furniture of the Example Pack, it has `"Rotation": 2`, if you read about the Furniture Rotations field, you'll now that its rotation keys are "Horizontal" and "Vartical". This is how its `Layer` looks like:
 ```json
-"Source Rect": {
-	"Down":		{"X": 0,  "Y": 0, "Width": 16, "Height": 32},
-	"Right":	{"X": 16, "Y": 0, "Width": 16, "Height": 32},
-	"Up":		{"X": 32, "Y": 0, "Width": 16, "Height": 32},
-	"Left":		{"X": 48, "Y": 0, "Width": 16, "Height": 32}
+"Layers": {
+	"Horizontal": {
+		"Source Rect": { "X": 0, "Y": 0, "Width": 32, "Height": 32 }
+	},
+	"Vertical": {
+		"Source Rect": { "X": 32, "Y": 0, "Width": 16, "Height": 48 }
+	}
 }
 ```
 
-For the Source Rect field, a value for all possible rotations are required, because the Furniture Framework need to know how to display the Furniture at all possible rotations. This is not true for other Directional Fields, most of them don't need to have values for all rotations.
-
-A directional field can also be an array instead of an object. This works the same way, let's take a Furniture's [Layers field](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#layers) as an example. Here what it looks like when it is non-directional:
-```json
+Most directional fields can also be defined by an array instead of an object (`Collisions` cannot be an Array), this works the same way. Here what it looks like when it is non-directional:
+```jsonc
 "Layers": [
 	// My layers applied to all directions
 ]
 ```
 
 And what it looks like when directional:
-```json
+```jsonc
 "Layers": {
 	"Down": [
 		// My layers applied when the rotation is "Down"
@@ -46,14 +48,35 @@ And what it looks like when directional:
 }
 ```
 
-As said earlier, the "Layers" field does not require a value for every direction, if your Furniture only has Layers when it's facing Right or Left, but not when it's facing Up or Down, you can reduce the field to this:
+Some fields do not require a value for every direction. For example, if your Furniture only has Particles when it's facing Right or Left, but not when it's facing Up or Down, you can reduce the field to this:
 ```json
-"Layers": {
+"Particles": {
 	"Right": [
-		// My layers applied when the rotation is "Right"
+		// My particles applied when the rotation is "Right"
 	],
 	"Left": [
-		// My layers applied when the rotation is "Left"
+		// My particles applied when the rotation is "Left"
 	]
 }
 ```
+
+Some Directional Fields have properties which are themselves directional (marked by `(directional)` in this documentation), this means that if the field is very similar in all directions but only one of its properties changes, you can define it once with a directional property. For example, here's a valid variant of the `Table Test`'s `Layers`:
+```json
+"Layers": {
+	"Source Rect": {
+		"Horizontal": {
+			"X": 0,
+			"Y": 0,
+			"Width": 32,
+			"Height": 32
+		},
+		"Vertical": {
+			"X": 32,
+			"Y": 0,
+			"Width": 16,
+			"Height": 48
+		}
+	}
+}
+```
+Here, there is a single Layer, but its Source Rect is directional. You can ignore this feature if it's too complex for you.
