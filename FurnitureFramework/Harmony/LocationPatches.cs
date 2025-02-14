@@ -116,12 +116,21 @@ ldarg.1
 ldarg.2
 call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furniture, int, int)
 
+And Replace :
+
+ldfld class Netcode.NetRef`1<class StardewValley.Object> StardewValley.Object::heldObject
+callvirt instance !0 class Netcode.NetFieldBase`2<class StardewValley.Object, class Netcode.NetRef`1<class StardewValley.Object>>::get_Value()
+
+	With :
+
+call check_held_object
 */
 
 		static IEnumerable<CodeInstruction> LowPriorityLeftClick(
 			IEnumerable<CodeInstruction> instructions
 		)
 		{
+			// replace bounding box contains with custom is_clicked
 			List<CodeInstruction> to_replace = new()
 			{
 				new CodeInstruction(OpCodes.Ldloc_2),
@@ -159,6 +168,28 @@ call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furnit
 						new System.Type[] {typeof(Furniture), typeof(int), typeof(int)}
 					)
 				)
+			};
+
+			instructions = Transpiler.replace_instructions(instructions, to_replace, to_write);
+
+			// replace heldObject != null with custom has_held_object
+			to_replace = new()
+			{
+				new(OpCodes.Ldfld, AccessTools.Field(
+					typeof(StardewValley.Object),
+					"heldObject"
+				)),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetRef<StardewValley.Object>),
+					"get_Value"
+				))
+			};
+			to_write = new()
+			{
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(Type.FurnitureType),
+					"has_held_object"
+				))
 			};
 
 			return Transpiler.replace_instructions(instructions, to_replace, to_write);
