@@ -1,0 +1,931 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].chair_test": {
+			"Display Name": "Chair Test",
+			"Rotations": 4,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/seats/chair.png",
+			"Layers": {
+				"Down": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				},
+				"Right": {
+					"Source Rect": {
+						"X": 16,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				},
+				"Up": [
+					{
+						"Source Rect": {
+							"X": 32,
+							"Y": 0,
+							"Width": 16,
+							"Height": 32
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 32,
+							"Y": 32,
+							"Width": 16,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						}
+					}
+				],
+				"Left": {
+					"Source Rect": {
+						"X": 48,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			},
+			"Seats": [
+				{
+					"Position": {
+						"X": 0,
+						"Y": 0
+					},
+					"Player Direction": {
+						"Up": "Up",
+						"Right": "Right",
+						"Down": "Down",
+						"Left": "Left"
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			]
+		},
+		"[[ModID]].bench_test": {
+			"Display Name": "Bench Test",
+			"Rotations": 4,
+			"Collisions": {
+				"Down": {
+					"Width": 2,
+					"Height": 1
+				},
+				"Right": {
+					"Width": 1,
+					"Height": 2
+				},
+				"Up": {
+					"Width": 2,
+					"Height": 1
+				},
+				"Left": {
+					"Width": 1,
+					"Height": 2
+				}
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/seats/bench.png",
+			"Layers": {
+				"Down": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Right": {
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				},
+				"Up": [
+					{
+						"Source Rect": {
+							"X": 48,
+							"Y": 0,
+							"Width": 32,
+							"Height": 32
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 48,
+							"Y": 48,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						}
+					}
+				],
+				"Left": {
+					"Source Rect": {
+						"X": 80,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				}
+			},
+			"Seats": [
+				{
+					"Position": {
+						"X": 0,
+						"Y": 0
+					},
+					"Player Direction": {
+						"Up": "Up",
+						"Right": "Right",
+						"Down": "Down",
+						"Left": "Left"
+					}
+				},
+				{
+					"Position": {
+						"X": 1,
+						"Y": 0
+					},
+					"Player Direction": {
+						"Up": "Up",
+						"Down": "Down"
+					}
+				},
+				{
+					"Position": {
+						"X": 0,
+						"Y": 1
+					},
+					"Player Direction": {
+						"Right": "Right",
+						"Left": "Left"
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			]
+		},
+		"[[ModID]].couch_test": {
+			"Display Name": "Couch Test",
+			"Rotations": 4,
+			"Collisions": {
+				"Down": {
+					"Width": 3,
+					"Height": 1
+				},
+				"Right": {
+					"Width": 2,
+					"Height": 2
+				},
+				"Up": {
+					"Width": 3,
+					"Height": 1
+				},
+				"Left": {
+					"Width": 2,
+					"Height": 2
+				}
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/seats/couch.png",
+			"Layers": {
+				"Down": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 48,
+						"Height": 32
+					}
+				},
+				"Right": [
+					{
+						"Source Rect": {
+							"X": 48,
+							"Y": 0,
+							"Width": 32,
+							"Height": 48
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 48,
+							"Y": 48,
+							"Width": 32,
+							"Height": 48
+						},
+						"Depth": {
+							"Tile": 1,
+							"Sub": 1000
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						}
+					}
+				],
+				"Up": [
+					{
+						"Source Rect": {
+							"X": 80,
+							"Y": 0,
+							"Width": 48,
+							"Height": 32
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 80,
+							"Y": 48,
+							"Width": 48,
+							"Height": 32
+						},
+						"Depth": {
+							"Tile": 0,
+							"Sub": 1000
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						}
+					}
+				],
+				"Left": [
+					{
+						"Source Rect": {
+							"X": 128,
+							"Y": 0,
+							"Width": 32,
+							"Height": 48
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 128,
+							"Y": 48,
+							"Width": 32,
+							"Height": 48
+						},
+						"Depth": {
+							"Tile": 1,
+							"Sub": 1000
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						}
+					}
+				]
+			},
+			"Seats": {
+				"Up": [
+					{
+						"Position": {
+							"X": 0.5,
+							"Y": 0
+						},
+						"Player Direction": "Up"
+					},
+					{
+						"Position": {
+							"X": 1.5,
+							"Y": 0
+						},
+						"Player Direction": "Up"
+					}
+				],
+				"Right": [
+					{
+						"Position": {
+							"X": 1,
+							"Y": 0
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 1
+						},
+						"Player Direction": "Right"
+					}
+				],
+				"Down": [
+					{
+						"Position": {
+							"X": 0.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 1.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					}
+				],
+				"Left": [
+					{
+						"Position": {
+							"X": 0,
+							"Y": 0
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 0,
+							"Y": 1
+						},
+						"Player Direction": "Left"
+					}
+				]
+			},
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			]
+		},
+		"[[ModID]].living_room": {
+			"Display Name": "Living Room",
+			"Description": "A complex Furniture to test Layers and Collision Maps.",
+			"Rotations": 4,
+			"Collisions": {
+				"Down": {
+					"Width": 8,
+					"Height": 3,
+					"Map": "..XXXX../XX....XX/...XX.XX"
+				},
+				"Right": {
+					"Width": 5,
+					"Height": 5,
+					"Map": "..XXX/XX.../XX..X/XX..X/..XX."
+				},
+				"Up": {
+					"Width": 8,
+					"Height": 3,
+					"Map": "XX.XX.../XX....XX/..XXXX.."
+				},
+				"Left": {
+					"Width": 5,
+					"Height": 5,
+					"Map": ".XX../X..XX/X..XX/...XX/XXX.."
+				}
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/seats/living_room.png",
+			"Layers": {
+				"Down": [
+					{
+						"Source Rect": {
+							"X": 0,
+							"Y": 0,
+							"Width": 128,
+							"Height": 64
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 128,
+							"Width": 32,
+							"Height": 48
+						},
+						"Draw Pos": {
+							"X": 96,
+							"Y": 0
+						},
+						"Depth": {
+							"Tile": 2,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 0,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -16
+						},
+						"Depth": {
+							"Tile": 1,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 144,
+							"Y": 224,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 48,
+							"Y": 0
+						},
+						"Depth": 2
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 32,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -16
+						},
+						"Depth": 1
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 176,
+							"Width": 32,
+							"Height": 48
+						},
+						"Draw Pos": {
+							"X": 96,
+							"Y": 0
+						},
+						"Depth": 1
+					}
+				],
+				"Right": [
+					{
+						"Source Rect": {
+							"X": 0,
+							"Y": 128,
+							"Width": 80,
+							"Height": 96
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 0,
+							"Y": 224,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 32,
+							"Y": 0
+						},
+						"Depth": {
+							"Tile": 4,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 128,
+							"Y": 0,
+							"Width": 32,
+							"Height": 64
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -16
+						},
+						"Depth": {
+							"Tile": 3,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 176,
+							"Y": 208,
+							"Width": 16,
+							"Height": 48
+						},
+						"Draw Pos": {
+							"X": 64,
+							"Y": -16
+						},
+						"Depth": 2
+					},
+					{
+						"Source Rect": {
+							"X": 128,
+							"Y": 64,
+							"Width": 32,
+							"Height": 64
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -16
+						},
+						"Depth": 1
+					}
+				],
+				"Up": [
+					{
+						"Source Rect": {
+							"X": 0,
+							"Y": 64,
+							"Width": 128,
+							"Height": 64
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 80,
+							"Y": 224,
+							"Width": 64,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 32,
+							"Y": 0
+						},
+						"Depth": {
+							"Tile": 2,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 160,
+							"Y": 128,
+							"Width": 32,
+							"Height": 48
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -16
+						},
+						"Depth": {
+							"Tile": 1,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 64,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 96,
+							"Y": -16
+						},
+						"Depth": {
+							"Tile": 1,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 192,
+							"Y": 96,
+							"Width": 32,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 96,
+							"Y": -16
+						},
+						"Depth": 1
+					}
+				],
+				"Left": [
+					{
+						"Source Rect": {
+							"X": 80,
+							"Y": 128,
+							"Width": 80,
+							"Height": 96
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 32,
+							"Y": 224,
+							"Width": 48,
+							"Height": 32
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": 0
+						},
+						"Depth": {
+							"Tile": 4,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 160,
+							"Y": 0,
+							"Width": 32,
+							"Height": 64
+						},
+						"Draw Pos": {
+							"X": 48,
+							"Y": -16
+						},
+						"Depth": {
+							"Tile": 3,
+							"Sub": 1000
+						}
+					},
+					{
+						"Source Rect": {
+							"X": 176,
+							"Y": 208,
+							"Width": 16,
+							"Height": 48
+						},
+						"Draw Pos": {
+							"X": 0,
+							"Y": -32
+						},
+						"Depth": 1
+					},
+					{
+						"Source Rect": {
+							"X": 160,
+							"Y": 64,
+							"Width": 32,
+							"Height": 64
+						},
+						"Draw Pos": {
+							"X": 48,
+							"Y": -16
+						},
+						"Depth": 1
+					}
+				]
+			},
+			"Seats": {
+				"Down": [
+					{
+						"Position": {
+							"X": 2.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 3.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 4.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 1
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 6,
+							"Y": 1
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 6,
+							"Y": 2
+						},
+						"Player Direction": "Left"
+					}
+				],
+				"Right": [
+					{
+						"Position": {
+							"X": 2.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 3.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 1
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 2
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 3
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 2.5,
+							"Y": 4
+						},
+						"Player Direction": "Up"
+					}
+				],
+				"Up": [
+					{
+						"Position": {
+							"X": 1,
+							"Y": 0
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 1,
+							"Y": 1
+						},
+						"Player Direction": "Right"
+					},
+					{
+						"Position": {
+							"X": 6,
+							"Y": 1
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 2.5,
+							"Y": 2
+						},
+						"Player Direction": "Up"
+					},
+					{
+						"Position": {
+							"X": 3.5,
+							"Y": 2
+						},
+						"Player Direction": "Up"
+					},
+					{
+						"Position": {
+							"X": 4.5,
+							"Y": 2
+						},
+						"Player Direction": "Up"
+					}
+				],
+				"Left": [
+					{
+						"Position": {
+							"X": 1.5,
+							"Y": 0
+						},
+						"Player Direction": "Down"
+					},
+					{
+						"Position": {
+							"X": 3,
+							"Y": 1
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 3,
+							"Y": 2
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 3,
+							"Y": 3
+						},
+						"Player Direction": "Left"
+					},
+					{
+						"Position": {
+							"X": 0.5,
+							"Y": 4
+						},
+						"Player Direction": "Up"
+					},
+					{
+						"Position": {
+							"X": 1.5,
+							"Y": 4
+						},
+						"Player Direction": "Up"
+					}
+				]
+			},
+			"Slots": {
+				"Down": {
+					"Area": {
+						"X": 48,
+						"Y": -21,
+						"Width": 32,
+						"Height": 13
+					},
+					"Depth": 2,
+					"Max Size": {
+						"X": 2,
+						"Y": 1
+					}
+				},
+				"Right": {
+					"Area": {
+						"X": 64,
+						"Y": -55,
+						"Width": 16,
+						"Height": 31
+					},
+					"Depth": 2,
+					"Max Size": {
+						"X": 1,
+						"Y": 2
+					}
+				},
+				"Up": {
+					"Area": {
+						"X": 48,
+						"Y": -53,
+						"Width": 32,
+						"Height": 13
+					},
+					"Depth": 0,
+					"Max Size": {
+						"X": 2,
+						"Y": 1
+					}
+				},
+				"Left": {
+					"Area": {
+						"X": 0,
+						"Y": -71,
+						"Width": 16,
+						"Height": 31
+					},
+					"Depth": 1,
+					"Max Size": {
+						"X": 1,
+						"Y": 2
+					}
+				}
+			},
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			]
+		}
+	},
+	"Included": {
+		"Armchair": {
+			"Path": "assets/seats/armchairs/armchairs.json",
+			"Description": "Sittable Test Furniture"
+		}
+	}
+}

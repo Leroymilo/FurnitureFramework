@@ -1,0 +1,584 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].simple_test": {
+			"Display Name": "Simple Test",
+			"Description": "A simple Custom Furniture example",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 1,
+			"Source Image": "assets/simple.png",
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				}
+			]
+		},
+		"[[ModID]].custom_catalogue": {
+			"Display Name": "Custom Catalogue",
+			"Description": "An example for a Custom Catalogue",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/catalogue.png",
+			"Shop Id": "[[ModID]].custom_catalogue",
+			"Shows in Shops": [
+				"Carpenter"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			]
+		},
+		"[[ModID]].seasonal_bush_test": {
+			"Display Name": "Bush Test",
+			"Description": "An example of seasonal Furniture.",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+			"Placement Restriction": 1,
+			"Source Image": "assets/bush.png",
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				}
+			]
+		},
+		"[[ModID]].table_test": {
+			"Display Name": "Table Test",
+			"Rotations": 2,
+			"Collisions": {
+				"Horizontal": {
+					"Width": 2,
+					"Height": 1
+				},
+				"Vertical": {
+					"Width": 1,
+					"Height": 2
+				}
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/table.png",
+			"Slots": {
+				"Horizontal": [
+					{
+						"Area": {
+							"X": 0,
+							"Y": -21,
+							"Width": 16,
+							"Height": 13
+						},
+						"Debug Color": "Blue"
+					},
+					{
+						"Area": {
+							"X": 16,
+							"Y": -21,
+							"Width": 16,
+							"Height": 13
+						},
+						"Debug Color": "Green"
+					}
+				],
+				"Vertical": [
+					{
+						"Area": {
+							"X": 0,
+							"Y": -40,
+							"Width": 16,
+							"Height": 16
+						},
+						"Debug Color": "Blue"
+					},
+					{
+						"Area": {
+							"X": 0,
+							"Y": -24,
+							"Width": 16,
+							"Height": 16
+						},
+						"Debug Color": "Green",
+						"Depth": 1
+					}
+				]
+			},
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": {
+				"Horizontal": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Vertical": {
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				}
+			}
+		},
+		"[[ModID]].cauldron_test": {
+			"Display Name": "Custom Cauldron",
+			"Description": "A Cauldron to test toggleability, sounds and particles",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/cauldron.png",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 32,
+						"Width": 32,
+						"Height": 32
+					},
+					"Draw Pos": {
+						"X": 0,
+						"Y": 0
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Sounds": [
+				{
+					"Mode": "on_turn_on",
+					"Name": "bubbles"
+				},
+				{
+					"Mode": "on_turn_on",
+					"Name": "fireball"
+				}
+			],
+			"Particles": [
+				{
+					"Source Image": "assets/smoke.png",
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 10,
+						"Height": 10
+					},
+					"Emission Interval": 500,
+					"Spawn Rect": {
+						"X": 12,
+						"Y": -17,
+						"Width": 8,
+						"Height": 4
+					},
+					"Depths": [
+						0.3,
+						0.5,
+						0.7,
+						0.9
+					],
+					"Speed": {
+						"X": 0,
+						"Y": -0.5
+					},
+					"Rotations": [],
+					"Rotation Speeds": [
+						-0.061,
+						-0.049,
+						-0.037,
+						-0.025,
+						-0.012,
+						0,
+						0.012,
+						0.025,
+						0.037,
+						0.049,
+						0.061
+					],
+					"Scale": 3,
+					"Scale Change": 0.01,
+					"Color": "Lime",
+					"Alpha": 0.75,
+					"Alpha Fade": 0.0027,
+					"Frame Count": 1,
+					"Frame Duration": 5000,
+					"Loop Count": 1,
+					"Hold Last Frame": false,
+					"Flicker": false,
+					"Emit When On": true,
+					"Emit When Off": false,
+					"Burst": true
+				}
+			],
+			"Toggle": true
+		},
+		"[[ModID]].cat_statue": {
+			"Display Name": "[[RectVariant]] Cat Statue",
+			"Description": "A statue to test Animations and Variants. Sprites by SonreirAngel",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/neko_statues.png",
+			"Source Rect Offsets": {
+				"White": {
+					"X": 0,
+					"Y": 0
+				},
+				"Black": {
+					"X": 0,
+					"Y": 32
+				}
+			},
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			],
+			"Animation": {
+				"Frame Count": 7,
+				"Frame Duration": 500,
+				"Offset": {
+					"X": 16,
+					"Y": 0
+				}
+			}
+		},
+		"[[ModID]].large_bed": {
+			"Display Name": "Large Bed",
+			"Description": "A bed to test Custom Beds",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 5,
+				"Height": 3,
+				"Map": "XXXXX/...../XXXXX"
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/large_bed.png",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 80,
+						"Height": 64
+					}
+				},
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 64,
+						"Width": 80,
+						"Height": 64
+					},
+					"Depth": 2,
+					"Draw Pos": {
+						"X": 0,
+						"Y": 0
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Special Type": "Bed",
+			"Bed Spot": {
+				"X": 2,
+				"Y": 1
+			},
+			"Bed Area": {
+				"X": 256,
+				"Y": 256,
+				"Width": 48,
+				"Height": 16
+			}
+		},
+		"[[ModID]].simple_bed": {
+			"Display Name": "Simple Bed",
+			"Description": "A bed to test Custom Beds",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 3,
+				"Map": "XX/../XX"
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/simple_bed.png",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 64
+					}
+				},
+				{
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 32,
+						"Height": 64
+					},
+					"Depth": 2,
+					"Draw Pos": {
+						"X": 0,
+						"Y": 0
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Special Type": "Bed",
+			"Bed Type": "Single",
+			"Bed Spot": {
+				"X": 1,
+				"Y": 1
+			}
+		},
+		"[[ModID]].rug_test": {
+			"Display Name": "Rug Test",
+			"Description": "A rug to test Custom Rugs",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 4,
+				"Height": 3
+			},
+			"Placement Restriction": 0,
+			"Placement Type": "Rug",
+			"Source Image": "assets/rug.png",
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 64,
+						"Height": 48
+					}
+				}
+			]
+		},
+		"[[ModID]].painting_test": {
+			"Display Name": "Painting Test",
+			"Description": "A painting to test Mural Custom Furniture",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 3,
+				"Height": 2
+			},
+			"Placement Restriction": 0,
+			"Placement Type": "Mural",
+			"Source Image": "assets/painting.png",
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 48,
+						"Height": 32
+					}
+				}
+			]
+		},
+		"[[ModID]].fishtank_test": {
+			"Display Name": "Fish-Tank Test",
+			"Description": "A Fish tank to test Custom Fish tanks",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 4,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/fish_tank.png",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 64,
+						"Height": 48
+					}
+				},
+				{
+					"Source Rect": {
+						"X": 64,
+						"Y": 0,
+						"Width": 64,
+						"Height": 48
+					},
+					"Depth": {
+						"Tile": 0,
+						"Sub": 1000
+					},
+					"Draw Pos": {
+						"X": 0,
+						"Y": 0
+					}
+				}
+			],
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Special Type": "FishTank",
+			"Fish Area": {
+				"X": 1,
+				"Y": -32,
+				"Width": 62,
+				"Height": 25
+			}
+		},
+		"[[ModID]].lamp_test": {
+			"Display Name": "Lamp Test",
+			"Description": "A simple Lamp example",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/lamp.png",
+			"Toggle": true,
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				}
+			],
+			"Lights": [
+				{
+					"Position": {
+						"X": 8,
+						"Y": -48
+					},
+					"Source Image": "assets/lights/light_0.png",
+					"Toggle": true,
+					"Light Type": "Source",
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 493,
+						"Height": 638
+					}
+				}
+			]
+		},
+		"[[ModID]].window_test": {
+			"Display Name": "Window Test",
+			"Description": "A simple Window example",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 2
+			},
+			"Placement Restriction": 0,
+			"Placement Type": "Mural",
+			"Source Image": "assets/window.png",
+			"Time Based": true,
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			],
+			"Lights": [
+				{
+					"Position": {
+						"X": 9,
+						"Y": -7
+					},
+					"Source Image": "assets/lights/light_1.png",
+					"Time Based": true,
+					"Light Type": "Glow",
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 28,
+						"Height": 56
+					}
+				}
+			]
+		}
+	},
+	"Included": {
+		"Sittables": {
+			"Path": "assets/seats/seats.json",
+			"Description": "Sittable Test Furniture"
+		}
+	}
+}
