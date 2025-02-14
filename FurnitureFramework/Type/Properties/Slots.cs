@@ -143,8 +143,8 @@ namespace FurnitureFramework.Type.Properties
 						return;
 					}
 					
-					draw_data.position.Y -= furn.boundingBox.Value.Size.Y;
-					// draw pos is on top left of Furniture bounding box
+					draw_data.position.Y -= furn.sourceRect.Value.Size.Y * draw_data.scale;
+					// vanilla draw pos is on top left of Furniture source rectangle
 
 					furn.drawAtNonTileSpot(
 						draw_data.sprite_batch,

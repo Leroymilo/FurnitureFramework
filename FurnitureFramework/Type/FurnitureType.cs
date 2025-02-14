@@ -137,26 +137,7 @@ namespace FurnitureFramework.Type
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
 			furniture.boundingBox.Value = collisions[rot].get_bounding_box(pos);
-		}
-
-		#endregion
-
-		#region Drawing
-
-		// for drawInMenu transpiler
-		private static Rectangle get_icon_source_rect(Furniture furniture)
-		{
-			if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
-			{
-				return type.icon_rect;
-			}
-
-			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
-		}
-
-		public Texture2D get_texture()
-		{
-			return texture.get();
+			furniture.sourceRect.Value = layers[rot].get_source_rect();
 		}
 
 		#endregion
@@ -473,42 +454,6 @@ namespace FurnitureFramework.Type
 				result = false;
 
 			return;
-		}
-
-		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
-		{
-			int rot = furniture.currentRotation.Value;
-			Rectangle bounding_box = furniture.boundingBox.Value;
-			Rectangle source_rect = layers[rot].get_source_rect();
-
-			Point position = new(
-				bounding_box.X,
-				bounding_box.Y + bounding_box.Height
-			);	// bottom left of the bounding box
-			Point size = source_rect.Size * new Point(4);
-
-			Rectangle? area = fish_area[rot];
-
-			if (area is null)
-			{
-				position.Y -= source_rect.Height * 4;
-				position += layers[rot].get_draw_offset().ToPoint();
-				// top left of the base layer
-				
-				result = new Rectangle(
-					position + new Point(4, 64),
-					size - new Point(8, 92)
-					// offsets taken from vanilla code
-				);
-			}
-
-			else
-			{
-				result = new Rectangle(
-					position + area.Value.Location * new Point(4),
-					area.Value.Size * new Point(4)
-				);
-			}
 		}
 
 		#endregion

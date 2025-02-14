@@ -44,6 +44,23 @@ namespace FurnitureFramework.Type
 
 	partial class FurnitureType
 	{
+
+		// for drawInMenu transpiler
+		private static Rectangle get_icon_source_rect(Furniture furniture)
+		{
+			if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
+			{
+				return type.icon_rect;
+			}
+
+			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
+		}
+
+		public Texture2D get_texture()
+		{
+			return texture.get();
+		}
+
 		public void drawAtNonTileSpot(
 			Furniture furniture, SpriteBatch sprite_batch,
 			Vector2 position, float depth, float alpha = 1f
@@ -53,7 +70,7 @@ namespace FurnitureFramework.Type
 			DrawData draw_data = new(sprite_batch);
 
 			draw_data.position = position;
-			draw_data.position.Y += furniture.boundingBox.Height;
+			draw_data.position.Y += furniture.sourceRect.Height * 4;
 			draw_data.color = new Color(draw_data.color, alpha);
 			draw_data.depth = depth;
 
@@ -96,16 +113,55 @@ namespace FurnitureFramework.Type
 			}
 		}
 
+		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
+		{
+			int rot = furniture.currentRotation.Value;
+			Rectangle bounding_box = furniture.boundingBox.Value;
+			Rectangle source_rect = layers[rot].get_source_rect();
+
+			Point position = new(
+				bounding_box.X,
+				bounding_box.Y + bounding_box.Height
+			);	// bottom left of the bounding box
+			Point size = source_rect.Size * new Point(4);
+
+			Rectangle? area = fish_area[rot];
+
+			if (area is null)
+			{
+				position.Y -= source_rect.Height * 4;
+				position += layers[rot].get_draw_offset().ToPoint();
+				// top left of the base layer
+				
+				result = new Rectangle(
+					position + new Point(4, 64),
+					size - new Point(8, 92)
+					// offsets taken from vanilla code
+				);
+			}
+
+			else
+			{
+				result = new Rectangle(
+					position + area.Value.Location * new Point(4),
+					area.Value.Size * new Point(4)
+				);
+			}
+		}
+
 		private void draw_fish_tank(FishTankFurniture furniture, DrawData draw_data)
 		{
 			// Code copied from FishTankFurniture.draw
+
+			Vector2 fish_sort_region = furniture.GetFishSortRegion();
+			Rectangle tank_bounds = furniture.GetTankBounds();
 
 			for (int i = 0; i < furniture.tankFish.Count; i++)
 			{
 				TankFish tankFish = furniture.tankFish[i];
 				float num = Utility.Lerp(
-					furniture.GetFishSortRegion().Y,
-					furniture.GetFishSortRegion().X,
+					fish_sort_region.Y,
+					fish_sort_region.X,
 					tankFish.zPosition / 20f
 				);
 				num += 1E-07f * i;
@@ -124,16 +180,16 @@ namespace FurnitureFramework.Type
 				fish_data.texture = furniture.GetAquariumTexture();
 
 				fish_data.position = new Vector2(
-					furniture.GetTankBounds().Left,
-					furniture.GetTankBounds().Bottom
+					tank_bounds.Left,
+					tank_bounds.Bottom
 				) + new Vector2(1, -1) * pos * 4f - new Vector2(0, 4);
 				fish_data.position = Game1.GlobalToLocal(fish_data.position);
 
 				fish_data.source_rect = key;
 				fish_data.origin = new Vector2(key.Width / 2, key.Height - 4);
 				fish_data.depth = Utility.Lerp(
-					furniture.GetFishSortRegion().Y,
-					furniture.GetFishSortRegion().X,
+					fish_sort_region.Y,
+					fish_sort_region.X,
 					pos.Y / 20f
 				) - 1E-06f;
 
@@ -147,8 +203,8 @@ namespace FurnitureFramework.Type
 				bubble_data.texture = furniture.GetAquariumTexture();
 
 				bubble_data.position = new Vector2(
-					furniture.GetTankBounds().Left,
-					furniture.GetTankBounds().Bottom
+					tank_bounds.Left,
+					tank_bounds.Bottom
 				) + new Vector2(bubble.X, -bubble.Y - bubble.Z * 4f - 4);
 				bubble_data.position = Game1.GlobalToLocal(bubble_data.position);
 
@@ -156,8 +212,8 @@ namespace FurnitureFramework.Type
 				bubble_data.origin = new Vector2(8f, 8f);
 				bubble_data.scale = 4f * bubble.W;
 				bubble_data.depth = Utility.Lerp(
-					furniture.GetFishSortRegion().Y,
-					furniture.GetFishSortRegion().X,
+					fish_sort_region.Y,
+					fish_sort_region.X,
 					bubble.Z / 20f
 				) - 1E-06f;
 
