@@ -17,4 +17,4 @@ The name of a Sound tells the game which sound to play when it is triggered, you
 
 # Add new Sounds
 
-It is possible to use a Sound that is not already in the game by adding it with Content Patcher, more information about this [here](https://www.stardewvalleywiki.com/Modding:Migrate_to_Stardew_Valley_1.6#Custom_audio).
+It is possible to use a Sound that is not already in the game by adding it with Content Patcher, more information about this [here](https://www.stardewvalleywiki.com/Modding:Audio).

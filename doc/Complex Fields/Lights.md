@@ -13,7 +13,7 @@ The possible values are `Source` and `Glow`.
 
 ## Source Rect (required) (directional)
 
-The Source Rect is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Rectangle.md), it is the part of the Source Image that will be used to draw this light.
+The Source Rect is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Rectangle.md), it is the part of the Source Image that will be used to draw this light.
 
 ## Position (required) (directional)
 
@@ -22,8 +22,8 @@ This is the position of the center of the light source on the Furniture **in pix
 ## Source Image
 
 The path to the image that will be used for the light, you can provide it yourself in your assets or use one from the game.  
-For example, "Content/LooseSprites/Lighting/indoorWindowLight.png" is used for lamp lights, and "FF/assets/light_glows/window.png" is used for the window glow (it is in the Furniture Framework's assets because I extracted it from the cursors tilesheet). 
-If you omit this path, the main texture will be used.
+For example, "Content/LooseSprites/Lighting/indoorWindowLight.png" is used for lamp lights, and "FF/assets/light_glows/window.png" is used for the window glow (it is in the Furniture Framework's assets because I extracted it from the game's cursors tilesheet).  
+If you omit this path, the main texture of your Furniture will be used.
 
 ## Toggle
 
@@ -45,6 +45,6 @@ This is a number defining the radius of your light source, it simply scales your
 
 A way to give a tint to your light source, if you don't want to modify the texture itself. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted). Defaults to `White` (which will not affect the color of the texture).
 
-## Other Info
+# Examples
 
 For better examples and references for Position coordiantes, check the Lamp and Window Tests in the Example Pack.

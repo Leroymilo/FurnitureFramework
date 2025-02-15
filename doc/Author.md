@@ -15,6 +15,7 @@ This tutorial and documentation uses the [Example Pack](https://github.com/Leroy
 	* [Included](#included)
 * [Commands](#commands)
 * [Content Patcher Integration](#content-patcher-integration)
+* [Alternative Textures Compatibility](#alternative-textures-compatibility)
 * [Migration to FF 3.0](#migration-to-furniture-framework-300)
 
 ## Manifest
@@ -163,6 +164,6 @@ For technical reasons, it's practically impossible to make FF and AT truly compa
 
 ## Migration to Furniture Framework 3.0.0
 
-Use the [migration script](https://github.com/Leroymilo/FurnitureFramework/tree/3.0.0/migrator), you'll need python and the PIL python library. You can also do the migration by hand by looking through the doc, but good luck to not miss anything.
+Use the [migration script](https://github.com/Leroymilo/FurnitureFramework/tree/3.0.0/migrator), you'll need python and the PIL python library. The migrated version of you Furniture Pack will not keep its comments, so it is recommended to add them back after the conversion.  You can also do the migration by hand by looking through the doc, but good luck to not miss anything.
 
 **TUTORIAL TODO**
