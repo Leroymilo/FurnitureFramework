@@ -174,7 +174,7 @@
 								]
 							}
 						},
-						"required": ["Frame Count", "Frame Duration", "Animation Offset"],
+						"required": ["Frame Count", "Frame Duration", "Offset"],
 						"additionalProperties": false
 					},
 
