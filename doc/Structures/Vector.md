@@ -13,5 +13,6 @@ Here's an example of a valid **integer** Vector:
 	"X": 16, "Y": 32
 }
 ```
+Some Vectors can also contain float (decimal) values, it will be indicated in the documentation when they can.
 
 Keep in mind that negative Y is up and positive Y is down.

@@ -24,6 +24,10 @@ Is equivalent to this:
 "Depth": 2
 ```
 
+## Draw in Front
+
+If you need something to be drawn in front of everything, you can write `"Depth": "Front"`. However, it will probably cause [Z-fighting](https://en.wikipedia.org/wiki/Z-fighting) if you have multiple things drawn in Front.
+
 # Visual explanation
 
-// TODO
+**TODO**

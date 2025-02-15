@@ -1,14 +1,11 @@
 # How to define a Custom TV?
 
-To make a TV work, you only need 2 new fields:
-- "Screen Position"
-- "Screen Scale"
+To make a TV work, you only need to add 2 new fields:
 
-```json
-"Screen Position": {"X": 6, "Y": 0},
-"Screen Scale": 2
-```
+## Screen Position (directional)
 
-The screen position is an integer [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Structures/Vector.md) in pixels, starting from the top left of the sprite.
+It's an integer [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Vector.md) in pixels, starting from the bottom left corner of the bounding box of the Furniture.
 
-The screen scale might not be very intuitive: most TVs have a screen scale of 4, except the Plasma TV and the Tropical TV with a scale of 2, so you can base your TV's screen scale from these values.
+## Screen Scale
+
+It might not be very intuitive at first: most vanilla TVs have a screen scale of 4, except the Plasma TV and the Tropical TV with a scale of 2, so you can base your TV's screen scale from these values.
