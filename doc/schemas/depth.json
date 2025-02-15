@@ -12,6 +12,10 @@
 		},
 		{
 			"type": "integer"
+		},
+		{
+			"type": "string",
+			"const": "Front"
 		}
 	]
 }

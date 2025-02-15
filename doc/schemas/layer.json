@@ -1,0 +1,41 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/layer.json",
+	"title": "Layer",
+	"description": "A Layer for this Furniture.",
+	"type": "object",
+	"properties": {
+		"Source Rect": {
+			"description": "The Source Rectangle in the sprite-sheet for this Layer. Can be directional.",
+			"oneOf": [
+				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json" },
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+					}
+				}
+			]
+		},
+
+		"Draw Pos": {
+			"description": "The position, in pixels, relative to the bottom left of the Furniture where this Layer should be drawn. Can be directional.",
+			"oneOf": [
+				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json" },
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+					}
+				}
+			]
+		},
+
+		"Depth": {
+			"description": "The depth where this Layer should be drawn.",
+			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/depth.json"
+		}
+	},
+	"required": [ "Source Rect" ],
+	"additionalProperties": false
+}

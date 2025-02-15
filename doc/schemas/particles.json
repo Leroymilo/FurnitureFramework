@@ -1,0 +1,56 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json",
+	"title": "Particles",
+	"description": "The definition for a type of Particles to be emitted.",
+	"type": "object",
+	"properties": {
+		"Source Image": {
+			"description": "The path to the image where the Particles type will take its sprite(s).",
+			"type": "string"
+		},
+		"Source Rect": {
+			"description": "The part of the image corresponding to this type of Particles (will take the size of the image if not set).",
+			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+		},
+		"Emission Interval": { "type": "integer", "minimum": 1 },
+		"Spawn Rect": {
+			"description": "The area in the Furniture where the Particles of this type will spawn.",
+			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+		},
+
+		"Depths": {
+			"type": "array",
+			"items": { "type": "number" }
+		},
+		"Speed": {
+			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json"
+		},
+		"Rotations": {
+			"type": "array",
+			"items": { "type": "number" }
+		},
+		"Rotation Speeds": {
+			"type": "array",
+			"items": { "type": "number" }
+		},
+
+		"Scale": { "type": "number", "exclusiveMinimum": 0 },
+		"Scale Change": { "type": "number" },
+		"Color": { "type": "string" },
+		"Alpha": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+		"Alpha Fade": { "type": "number" },
+
+		"Frame Count": { "type": "integer", "minimum": 0 },
+		"Frame Duration": { "type": "integer", "minimum": 1 },
+		"Loop Count": { "type": "integer", "minimum": 1 },
+		"Hold Last Frame": { "type": "boolean" },
+		"Flicker": { "type": "boolean" },
+
+		"Emit When On": { "type": "boolean" },
+		"Emit When Off": { "type": "boolean" },
+		"Burst": { "type": "boolean" }
+	},
+	"required": [ "Source Image", "Spawn Rect" ],
+	"additionalProperties": false
+}

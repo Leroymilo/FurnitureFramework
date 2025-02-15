@@ -1,0 +1,10 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"type": "object",
+	"properties": {
+		"X": {"type": "integer"},
+		"Y": {"type": "integer"}
+	},
+	"required": [ "X", "Y" ],
+	"additionalProperties": false
+}

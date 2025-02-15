@@ -1,4 +1,3 @@
-using System.Collections;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;

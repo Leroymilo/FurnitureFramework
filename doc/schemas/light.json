@@ -1,0 +1,60 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/light.json",
+	"title": "Light",
+	"description": "A Light for this Furniture.",
+	"type": "object",
+	"properties": {
+		"Light Type": {
+			"description": "Whether this Light is a Source or a Glow. See the documentation for more information.",
+			"type": "string",
+			"enum": ["Glow", "Source"]
+		},
+		"Source Rect": {
+			"description": "The Rectangle of the Source Image to use for this Light.",
+			"oneOf": [
+				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json" },
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+					}
+				}
+			]
+		},
+		"Position": {
+			"description": "Where this Light will be displayed on the Furniture. This is the position of the center of the Light.",
+			"oneOf": [
+				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json" },
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+					}
+				}
+			]
+		},
+		"Source Image": {
+			"description": "The path of the image to use as this Light's texture. Will use the Furniture's texture if omitted.",
+			"type": "string"
+		},
+		"Toggle": {
+			"description": "Makes this Light toggleable, will inherit the Furniture's toggleability if omitted.",
+			"type": "boolean"
+		},
+		"Time Based": {
+			"description": "Makes this Light depends on outdoot lighting, will inherit the Furniture's time basedness (?) if omitted.",
+			"type": "boolean"
+		},
+		"Radius": {
+			"description": "The radius, or scale of this Light, defaults to 2, which is the value for vanilla lights.",
+			"type": "number"
+		},
+		"Color": {
+			"description": "The tint of the Light (defaults to White), see here for a list of valid colors https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties.",
+			"type": "string"
+		}
+	},
+	"required": [ "Light Type", "Source Rect", "Position" ],
+	"additionalProperties": false
+}
