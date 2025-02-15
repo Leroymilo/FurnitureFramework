@@ -166,4 +166,13 @@ For technical reasons, it's practically impossible to make FF and AT truly compa
 
 Use the [migration script](https://github.com/Leroymilo/FurnitureFramework/tree/3.0.0/migrator), you'll need python and the PIL python library. The migrated version of you Furniture Pack will not keep its comments, so it is recommended to add them back after the conversion.  You can also do the migration by hand by looking through the doc, but good luck to not miss anything.
 
-**TUTORIAL TODO**
+How to run the python script:
+- Install [python](https://www.python.org/downloads/).
+- Once installed, open a terminal to run the command `pip install Pillow` and wait for it to finish.
+- Download and uncompress the [migrator script](https://github.com/Leroymilo/FurnitureFramework/releases/tag/Migrator-3.0.0).
+- Make a copy of your Furniture Pack in case something goes wrong (might not be your fault, so make one even if you have experience with python).
+- Run the migrator script with the command `<path to>/migrator/main.py <Furniture Pack directory> -o <Output directory>`, replace `<path to>` with the path to the newly downloaded script, `<Furniture Pack directory>` with the path to your mod (where the `manifest.json` is located), and `<Output directory>` with the path where you want your updated Furniture Pack to be written.
+- The script might ask you for the directory for FF or for the game's extracted files if your Pack make uses of them, so you'll need to provide the **absolute path** to these if it asks you.
+- If you had seasonal Furniture, the migrator will create a [Mixed Pack](#content-patcher-integration), because the Seasonal feature was removed from FF in favor of CP compatibility since it's much easier to setup dynamic sprites with CP than in FF's code.
+
+Note: Seats' `Player Direction`s were changed from integers to clearer direction names (Up, Right, Down and Left), but the numbers still work, so the script won't change that.
