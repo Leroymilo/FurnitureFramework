@@ -152,7 +152,7 @@
 								"type": "integer"
 							},
 		
-							"Animation Offset": {
+							"Offset": {
 								"description": "The offset applied to the Source Rectangles at each frame of animation.\nIt is also possible to provide the offset of each frame separately in a list.",
 								"oneOf": [
 									{
@@ -320,7 +320,7 @@
 						]
 					},
 
-					"Light Sources": {
+					"Lights": {
 						"description": "Light Sources or Glows that this Furniture will emit.",
 						"oneOf": [
 							{

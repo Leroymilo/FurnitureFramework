@@ -11,7 +11,7 @@
 				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json" },
 				{
 					"type": "object",
-					"additionalItems": {
+					"additionalProperties": {
 						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json"
 					}
 				}
@@ -22,14 +22,14 @@
 			"description": "The direction a Player will be facing when sitting in this Seat.",
 			"oneOf": [
 				{
-					"type": "integer",
-					"enum": [ 0, 1, 2, 3 ]
+					"type": "string",
+					"enum": [ "Up", "Right", "Down", "Left" ]
 				},
 				{
 					"type": "object",
 					"additionalProperties": {
-						"type": "integer",
-						"enum": [ 0, 1, 2, 3 ]
+						"type": "string",
+						"enum": [ "Up", "Right", "Down", "Left" ]
 					}
 				}
 			]
