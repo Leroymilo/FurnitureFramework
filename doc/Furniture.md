@@ -6,16 +6,17 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 
 ## Contents
 
+* [Priority](#priority)
 * [Display Name](#display-name)
-* [Rotations](#rotations)
-* [Source Image](#source-image)
-* [Layers](#layers)
-* [Collisions](#collisions)
+* [Rotations](#rotations-required)
+* [Source Image](#source-image-required)
+* [Layers](#layers-required-directional)
+* [Collisions](#collisions-required)
 * [Vanilla Fields](#vanilla-fields)
 	* [Force Type](#force-type)
 	* [Price](#price)
 	* [Placement Restriction](#placement-restriction)
-	* [Context Tags](#exclude-from-random-sales)
+	* [Context Tags](#context-tags)
 	* [Exclude from Random Sales](#exclude-from-random-sales)
 * [Custom Catalogue Shop](#custom-catalogue-shop)
 	* [Shows in Shops](#shows-in-shops)
@@ -28,12 +29,17 @@ Once again, this documentation uses the [Example Pack](https://github.com/Leroym
 * [Special Type](#special-type)
 * [Placement Type](#placement-type)
 * [Icon Rect](#icon-rect)
-* [Seats](#seats)
-* [Slots](#slots)
 * [Toggle](#toggle)
 * [Time Based](#time-based)
 * [Sounds](#sounds)
-* [Light Sources](#light-sources)
+* [Seats](#seats-directional)
+* [Slots](#seats-directional)
+* [Light](#lights-directional)
+
+### Priority
+
+This is an integer to change the priority of this Furniture being loaded if other packs define a Furniture with the same ID. A lower number in this field makes this Furniture not load if another Furniture has the same ID with a higher Priority number, the default is 1000.  
+This can be used if you have multiple Included Packs defining the same Furniture to leave a choice to the player.
 
 ### Display Name
 
@@ -87,7 +93,7 @@ Note 2: if you want to edit/load this image with a Content Patcher mod, the patc
 Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md).  
 This is also the first and most important [Directional Field](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Directional%20Fields.md), so you might want to read that as well.
 
-### Collisions (required)
+### Collisions (required) (directional)
 
 This field defines the collisions of your Furniture, it's what defines what part of the Furniture the player will not be able to walk through and place other Furniture on. Since they are quite complicated, they have their own [Collisions documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Collisions.md).
 
@@ -252,14 +258,6 @@ Please note that some right-click interactions might not work for Rug Furniture 
 
 This field is a Rectangle, like a Layer's [Source Rect](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md#source-rect-required-directional). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu. It is affected by [Variants](#variants). If this is not set, the first Layer will be shown in the menu instead.
 
-### Seats (directional)
-
-Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Seats.md).
-
-### Slots (directional)
-
-Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Slots.md).
-
 ### Toggle
 
 This field is boolean (true or false) and will make a Furniture toggleable. "Toggleable" means that it can be turned on and off with right-click.  
@@ -278,6 +276,14 @@ You can see this field used in the `Window Test` Furniture in the Example Pack.
 ### Sounds
 
 With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Sounds.md).
+
+### Seats (directional)
+
+Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Seats.md).
+
+### Slots (directional)
+
+Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Slots.md).
 
 ### Particles (directional)
 

@@ -71,6 +71,8 @@ Each entry in this dictionary has the Id of the Furniture for key and the Furnit
 }
 ```
 
+Since 3.0.0, every Furniture will have its own config entry automatically generated in the Generic Mod Config Menu interface.
+
 Note: you can have as many custom Furniture as you want but their IDs must be all differents from each other.  
 It is strongly recommended to add `{{ModID}}.` at the start of every new Furniture ID to avoid conflicts with other mods or the game itself. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`.  
 You should also be able to modify vanilla Furniture by using their vanilla ID, doing so might be tricky for some Furniture because some properties are hardcoded (like the catalogues and the cauldron) so be carefull of what you modify.
@@ -102,6 +104,10 @@ The "Name" can be anything you want, it will be used as the config option name i
 The `Path` is the path of the included file, **relative to the mod folder**.  
 The `Description` is also up to you (and optional), it will show in the tooltip of the config option.  
 `Enabled` defines if this file is included by default. It is optional and its default value is `true`.
+
+Since 3.0.0, every Included pack will have its own config page automatically generated in the Generic Mod Config Menu interface.
+
+Note: if you want to edit/load this data with a Content Patcher mod, the patch would have `FF/<Furniture Pack UniqueID>/<Included Pack data path>` as a target, with `<Included Pack data path>` the path you wrote in the `Path` field.
 
 ## Commands
 
