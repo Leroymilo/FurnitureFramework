@@ -57,8 +57,14 @@ class FPack:
 		for furn in self.furniture.values():
 			furn.migrate()
 			if furn.seasonal:
-				self.seasonal.append(furn.source_image)
-		
+				image = furn.source_image
+				if type(image) is str:
+					self.seasonal.append(image)
+				elif type(image) is dict:
+					self.seasonal += list(image.values())
+				elif type(image) is list:
+					self.seasonal += image
+	
 		for ipack in self.included.values():
 			if ipack.pack is None: continue
 			ipack.pack.migrate()
