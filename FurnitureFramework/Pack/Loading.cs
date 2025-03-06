@@ -185,27 +185,7 @@ namespace FurnitureFramework.Pack
 
 		#endregion
 
-		#region Invalidate
-
-		public static void invalidate(string name)
-		{
-			if (!name.StartsWith("FF/")) return;
-			name = name[3..];
-
-			if (packs.ContainsKey(name))
-				packs[name].invalidate();
-		}
-
-		private void invalidate()
-		{
-			if (!is_loaded) return;
-
-			clear(cascade: false);
-			unregister_config();
-
-			ModEntry.log($"Invalidated {data_UID}", LogLevel.Trace);
-			is_loaded = false;
-		}
+		#region Reload
 
 		private void clear(bool cascade)
 		{
@@ -221,23 +201,22 @@ namespace FurnitureFramework.Pack
 			included_packs.Clear();
 			config.clear();
 
-			to_load.Push(data_UID);
-
 			invalidate_game_data();
 		}
 
-		#endregion
+		private void invalidate()
+		{
+			// Invalidate game assets attached to this pack:
+			foreach (string asset_name in loaded_assets[UID])
+				ModEntry.get_helper().GameContent.InvalidateCache(asset_name);
 
-		#region Reload
+			ModEntry.log($"Invalidated assets from {UID}.");
+		}
 
 		public static void reload_pack(string command, string[] args)
 		{
 			if (args.Count() == 0) reload_all();
 			else reload_single(args[0]);
-			
-			invalidate_game_data();
-
-			load_all();
 		}
 
 		private static void reload_all()
@@ -261,9 +240,12 @@ namespace FurnitureFramework.Pack
 
 		private void reload()
 		{
+			ModEntry.log($"Reloading {data_UID}...");
+
 			if (!is_loaded) return;
 
 			clear(cascade: true);
+			invalidate();
 			unregister_config();
 
 			is_loaded = false;

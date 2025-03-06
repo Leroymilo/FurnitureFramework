@@ -306,7 +306,7 @@
 			"Collisions": {
 				"Width": 5,
 				"Height": 3,
-				"Map": "XXXXX/...XX/XXXXX"
+				"Map": "XXXXX/...../XXXXX"
 			},
 			"Placement Restriction": 2,
 			"Source Image": "assets/large_bed.png",
