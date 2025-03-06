@@ -16,6 +16,8 @@ class Light:
 		if rot_name in data:
 			data = data[rot_name]
 		
+		if "Position" not in data: raise KeyError
+		
 		self.data = deepcopy(data)
 
 		self.data["Position"]["Y"] -= base_height
@@ -147,7 +149,10 @@ class Lights:
 					print(f"Could not read the Source Image of a Light in {data}:\n{e}\nskipping light.")
 		
 		elif type(data) is dict:
-			self.data = [Light(data, rot_name, base_height)]
+			try:
+				self.data = [Light(data, rot_name, base_height)]
+			except KeyError:
+				self.data = []
 		
 	def to_json(self):
 		return [light.data for light in self.data]

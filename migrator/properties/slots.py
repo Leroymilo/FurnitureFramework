@@ -5,6 +5,8 @@ class Slot:
 		if rot_name in data:
 			data = data[rot_name]
 		
+		if "Area" not in data: raise KeyError
+		
 		self.data = deepcopy(data)
 		self.data["Area"]["Y"] -= base_height
 
@@ -20,7 +22,10 @@ class Slots:
 			self.data = [Slot(val, rot_name, base_height) for val in data]
 		
 		elif type(data) is dict:
-			self.data = [Slot(data, rot_name, base_height)]
+			try:
+				self.data = [Slot(data, rot_name, base_height)]
+			except KeyError:
+				self.data = []
 
 	def to_json(self):
 		return [layer.data for layer in self.data]
