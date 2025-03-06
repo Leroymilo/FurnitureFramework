@@ -101,5 +101,5 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 ## 3.1 (**Work in Progress**)
 
-**Work in Progress** API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.
+**Work in Progress** API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
 **Work in Progress** Customize StorageFurniture allowed item types.

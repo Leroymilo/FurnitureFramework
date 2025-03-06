@@ -737,7 +737,10 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				{
+					__result = __instance.GetBoundingBox().Intersects(rect);
 					type.IntersectsForCollision(__instance, rect, ref __result);
+				}
 			}
 			catch (Exception ex)
 			{
