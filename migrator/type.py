@@ -53,7 +53,10 @@ class FType:
 		if "Bed Area Pixel" in new_data:
 			new_data["Bed Area"] = new_data.pop("Bed Area Pixel")
 		elif "Bed Area" in new_data:
-			new_data["Bed Area"] = (Point(new_data["Bed Area"]) * 16).data
+			area = Rectangle(new_data["Bed Area"])
+			area.data['X'] *= 16
+			area.data['Y'] *= 16
+			new_data["Bed Area"] = area.data
 
 		# FF tokens handling
 		new_data["Display Name"] = FType.replace_token(new_data["Display Name"])
