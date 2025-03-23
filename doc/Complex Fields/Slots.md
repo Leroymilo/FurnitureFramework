@@ -11,7 +11,7 @@ This is the [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/3.0
 Items placed in this slot will be horizontally centered in this area, and they will be aligned to the bottom of this area (the lowest pixel of the item sprite will be on the same line as the lowest pixel of the area). This can be changed with the Offset field.  
 The Area of a Slot is relative to the bottom left corner of the Bounding Box defined in [Collisions](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Collisions.md).
 
-Note: It is not recommended to define overlapping areas, but if you do they will be prioritized in the order they were defined (this might change to sort by depth in a Future udpate, so that an invalid slot (already used or with a condition evaluating false) can be skipped for the slot behind it).
+Note: If you define overlapping Slot Areas, the game will check all of them in the order they were defined to find a valid one (an empty slot when trying to place an item, or a non-empty one when trying to remove or interact with an item).
 
 ## Offset
 

@@ -86,6 +86,8 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
 - **NOT TESTED** `Fish Area` and `Screen Position` are now directional.
+- Added a new config option for a "Slot interaction key" (right click by default) to interact with Furniture in slots. It doesn't work perfectly for vanilla Furniture (missing flame on torches), but it should work fine for any custom Furniture.
+- There is new logic to handle overlapping custom Slots: now the mod will search for the first valid slot when you click on a pixel where multiple Slots exist in the same Furniture (doesn't work if Slots from different Furniture overlap, but let's say that it won't happen).
 
 **Fixes**:
 - Fixed animation not working in some cases where Animation Offset had negative coordinates.
