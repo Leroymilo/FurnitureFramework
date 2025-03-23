@@ -155,6 +155,87 @@
 				}
 			}
 		},
+		"[[ModID]].toggle_table": {
+			"Display Name": "Toggle Table",
+			"Rotations": 2,
+			"Collisions": {
+				"Horizontal": {
+					"Width": 2,
+					"Height": 1
+				},
+				"Vertical": {
+					"Width": 1,
+					"Height": 2
+				}
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/toggle_table.png",
+			"Slots": {
+				"Horizontal": [
+					{
+						"Area": {
+							"X": 0,
+							"Y": -21,
+							"Width": 16,
+							"Height": 13
+						},
+						"Debug Color": "Blue"
+					},
+					{
+						"Area": {
+							"X": 16,
+							"Y": -21,
+							"Width": 16,
+							"Height": 13
+						},
+						"Debug Color": "Green"
+					}
+				],
+				"Vertical": [
+					{
+						"Area": {
+							"X": 0,
+							"Y": -40,
+							"Width": 16,
+							"Height": 16
+						},
+						"Debug Color": "Blue"
+					},
+					{
+						"Area": {
+							"X": 0,
+							"Y": -24,
+							"Width": 16,
+							"Height": 16
+						},
+						"Debug Color": "Green",
+						"Depth": 1
+					}
+				]
+			},
+			"Shows in Shops": [
+				"[[ModID]].custom_catalogue"
+			],
+			"Layers": {
+				"Horizontal": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Vertical": {
+					"Source Rect": {
+						"X": 64,
+						"Y": 0,
+						"Width": 16,
+						"Height": 48
+					}
+				}
+			},
+			"Toggle": true
+		},
 		"[[ModID]].cauldron_test": {
 			"Display Name": "Custom Cauldron",
 			"Description": "A Cauldron to test toggleability, sounds and particles",

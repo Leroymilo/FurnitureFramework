@@ -232,9 +232,11 @@ namespace FurnitureFramework.Type
 
 			if (can_be_toggled)
 				draw_data.is_on = furniture.IsOn;
+			else draw_data.is_on = false;
 
 			if (time_based)
 				draw_data.is_dark = furniture.timeToTurnOnLights();
+			else draw_data.is_dark = false;
 
 			draw_data.rect_offset = rect_offset + animation.get_offset();
 
