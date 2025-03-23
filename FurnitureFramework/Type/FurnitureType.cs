@@ -316,40 +316,23 @@ namespace FurnitureFramework.Type
 			}
 		}
 
-		private int get_slot(Furniture furniture, Point pos)
+		private Point get_rel_pos(Furniture furniture, Point pos)
 		{
-			int rot = furniture.currentRotation.Value;
-
 			Point this_pos = furniture.boundingBox.Value.Location;
 			this_pos.Y += furniture.boundingBox.Value.Height;
-			Point rel_pos = (pos - this_pos) / new Point(4);
-
-			return slots[rot].get_slot(rel_pos);
+			return (pos - this_pos) / new Point(4);
 		}
 
-		public bool place_in_slot(Furniture furniture, SVObject obj, Point pos, Farmer who)
+		public bool place_in_slot(Furniture furniture, Point pos, Farmer who, SVObject obj)
 		{
 			int rot = furniture.currentRotation.Value;
-			
-			// initialize_slots(furniture, rot);
 			
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			int slot_index = get_slot(furniture, pos);
+			int slot_index = slots[rot].get_empty_slot(get_rel_pos(furniture, pos), chest, who, furniture, obj);
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
-
-			if (chest.Items[slot_index] is not null) return false;
-			// Slot already occupied
-
-			if (!slots[rot].can_hold(slot_index, obj, furniture, who))
-			{
-				Game1.showRedMessage("This item cannot be placed here.");
-				return false;
-			}
-			// held item doesn't have valid context tags
-			// or held furniture is too big
 
 			obj.Location = furniture.Location;
 			slots[rot].set_box(slot_index, obj, new Point(
@@ -367,18 +350,13 @@ namespace FurnitureFramework.Type
 		public bool remove_from_slot(Furniture furniture, Point pos, Farmer who)
 		{
 			int rot = furniture.currentRotation.Value;
-			
-			// initialize_slots(furniture, rot);
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			int slot_index = get_slot(furniture, pos);
-			if (slot_index < 0) return false;
+			int slot_index = slots[rot].get_filled_slot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
+			if (slot_index < 0 || obj is null) return false;
 			// No slot found at this pixel
-
-			if (chest.Items[slot_index] is not SVObject obj) return false;
-			// No Object in slot
 
 			if (who.addItemToInventoryBool(obj))
 			{
@@ -389,6 +367,20 @@ namespace FurnitureFramework.Type
 			}
 
 			return false;
+		}
+
+		public bool action_in_slot(Furniture furniture, Point pos, Farmer who)
+		{
+			int rot = furniture.currentRotation.Value;
+
+			if (furniture.heldObject.Value is not Chest chest) return false;
+			// Furniture is not a proper initialized table
+
+			int slot_index = slots[rot].get_filled_slot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
+			if (slot_index < 0 || obj is not Furniture furn) return false;
+			// No slot found at this pixel or item is not a Furniture
+
+			return furn.checkForAction(who);
 		}
 
 		// used in Furniture.canBeRemoved Transpiler

@@ -73,12 +73,7 @@ namespace FurnitureFramework
 		private void on_game_launched(object? sender, GameLaunchedEventArgs e)
 		{
 			Pack.FurniturePack.pre_load(get_helper());
-
 			register_config();
-
-			if (get_config().load_packs_on_start)
-				Pack.FurniturePack.load_all();
-
 			register_commands();
 
 			if (
@@ -149,7 +144,7 @@ namespace FurnitureFramework
 					Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
 					if (type == null) continue;
 
-					if (type.place_in_slot(furniture, obj, pos, Game1.player))
+					if (type.place_in_slot(furniture, pos, Game1.player, obj))
 					{
 						Helper.Input.Suppress(get_config().slot_place_key);
 						return;
@@ -168,6 +163,25 @@ namespace FurnitureFramework
 					{
 						Helper.Input.Suppress(get_config().slot_take_key);
 						return;
+					}
+				}
+			}
+
+			if (e.Button == get_config().slot_interact_key)
+			{
+				// Checking distance between player and click
+				if ((Game1.player.StandingPixel - pos).ToVector2().Length() <= 128)
+				{
+					foreach (Furniture furniture in Game1.currentLocation.furniture)
+					{
+						Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
+						if (type == null) continue;
+
+						if (type.action_in_slot(furniture, pos, Game1.player))
+						{
+							Helper.Input.Suppress(get_config().slot_interact_key);
+							return;
+						}
 					}
 				}
 			}

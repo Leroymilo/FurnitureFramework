@@ -43,15 +43,12 @@ namespace FurnitureFramework.Pack
 				setValue: value => config.slot_take_key = value
 			);
 
-			config_menu_api.AddBoolOption(
+			config_menu_api.AddKeybind(
 				mod: manifest,
-				name: () => "Load all on Game Start",
-				tooltip: () => "If this is not checked, the game will load packs only when it needs the data.",
-				getValue: () => config.load_packs_on_start,
-				setValue: value => {
-					config.load_packs_on_start = value;
-					load_all();
-				}
+				name: () => "Slot Interact Keybind",
+				tooltip: () => "The key to press to interact with a Furniture placed in a slot.",
+				getValue: () => config.slot_interact_key,
+				setValue: value => config.slot_interact_key = value
 			);
 
 			config_menu_api.AddBoolOption(

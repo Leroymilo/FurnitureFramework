@@ -172,56 +172,6 @@ namespace FurnitureFramework
 			return false;
 		}
 
-		// Parse directional rectangles
-		// public static bool try_parse(JToken? token, List<string> rot_names, ref List<Rectangle> result)
-		// {
-		// 	result.Clear();
-		// 	Rectangle rect = new();
-		// 	if (try_parse(token, ref rect))
-		// 	{
-		// 		result = Enumerable.Repeat(rect, rot_names.Count).ToList();
-		// 		return true;
-		// 	}
-		// 	else if (token is JObject rect_dict)
-		// 	{
-		// 		foreach (string key in rot_names)
-		// 		{
-		// 			JToken? rect_token = rect_dict.GetValue(key);
-		// 			if (try_parse(rect_token, ref rect))
-		// 				result.Add(rect);
-		// 			else return false;
-		// 		}
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
-
-		// Parse directional integers
-		// public static bool try_parse(JToken? token, List<string> rot_names, ref List<int?> result)
-		// {
-		// 	result.Clear();
-		// 	int i = 0;
-
-		// 	if (rot_names.Count == 0)
-		// 	{
-		// 		if(!try_parse(token, ref i)) return false;
-		// 		result.Add(i);
-		// 		return true;
-		// 	}
-		// 	else if (token is JObject rect_dict)
-		// 	{
-		// 		foreach (string key in rot_names)
-		// 		{
-		// 			JToken? int_token = rect_dict.GetValue(key);
-		// 			if (try_parse(int_token, ref i))
-		// 				result.Add(i);
-		// 			else result.Add(null);
-		// 		}
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }		
-
 		public static Color parse_color(JToken? token, Color def)
 		{
 			string color_name = "";

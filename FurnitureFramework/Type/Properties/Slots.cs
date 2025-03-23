@@ -88,7 +88,7 @@ namespace FurnitureFramework.Type.Properties
 
 			#region Slot Methods
 
-			public bool can_hold(SVObject held_obj, Furniture furniture, Farmer who)
+			public bool can_hold(Farmer who, Furniture furniture, SVObject held_obj)
 			{
 				bool result = true;
 
@@ -344,20 +344,43 @@ namespace FurnitureFramework.Type.Properties
 
 		#region SlotList Methods
 
-		public int get_slot(Point rel_pos)
+		public int get_empty_slot(Point rel_pos, Chest chest, Farmer who, Furniture furn, SVObject obj)
 		{	
+			// handles overlapping slots, size limit and condition
+
+			bool skipped_invalid = false;
 			foreach ((Slot slot, int index) in list.Select((value, index) => (value, index)))
 			{
 				if (!slot.area.Contains(rel_pos)) continue;
+				if (chest.Items[index] is not null) continue;
+				if (!slot.can_hold(who, furn, obj))
+				{
+					skipped_invalid = true;
+					continue;
+				}
 				return index;
 			}
 			
+			if (skipped_invalid) Game1.showRedMessage("This item cannot be placed here.");
+			// held item doesn't have valid context tags
+			// or held furniture is too big
+
 			return -1;
 		}
 
-		public bool can_hold(int index, SVObject obj, Furniture furniture, Farmer who)
+		public int get_filled_slot(Point rel_pos, Chest chest, out SVObject? obj)
 		{
-			return list[index].can_hold(obj, furniture, who);
+			foreach ((Slot slot, int index) in list.Select((value, index) => (value, index)))
+			{
+				if (!slot.area.Contains(rel_pos)) continue;
+				if (chest.Items[index] is SVObject obj_)
+				{
+					obj = obj_;
+					return index;
+				}
+			}
+			obj = null;
+			return -1;
 		}
 
 		public void set_box(int index, SVObject obj, Point position)
