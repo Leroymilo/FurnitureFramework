@@ -64,7 +64,7 @@ The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in t
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
 
-# 3.0 (**Work in Progress**)
+# 3.0 (**Testing**)
 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
@@ -100,6 +100,17 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Furniture Packs are only loaded when the game need them (lazy loading).
 - Invalidating an included pack will only cause this included pack and its new children to reload. Any included pack that was already loaded will not be loaded again if not invalidated.
 - Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).
+
+### 3.0.1 (**Testing**)
+
+- Fixed the `ff_reload` command because it wasn't implemented correctly (oopsy).
+- Changed Bed Collision to completely overwrite the default row of empty tiles letting the player go through (use the Collision Map instead).
+
+### 3.0.2 (**Work in Progress**)
+
+**Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
+- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
+- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
 
 ## 3.1 (**Work in Progress**)
 
