@@ -1,0 +1,34 @@
+{
+	"$schema": "https://smapi.io/schemas/content-patcher.json",
+	"Format": "2.6.0",
+	"DynamicTokens": [
+		// To use to refer to resources from the Furniture Pack
+		{"Name": "FFModID", "Value": "leroymilo.DropdownTemplate.FF"}
+	],
+	"ConfigSchema": {
+		"LoadColor": {
+			"AllowValues": "brown, yellow, blue",
+			"Default": "brown"
+		},
+		"EditColor": {
+			"AllowValues": "brown, yellow, blue",
+			"Default": "brown"
+		} 
+	},
+	"Changes": [
+		{
+			// Using the "Load" action means that you don't need to have a dummy sprite-sheet of the right size in the Furniture Pack
+			"Action": "Load",
+			"LogName": "Dropdown Template Load",
+			"Target": "FF/{{FFModID}}/spritesheet.png",	// must match the "Source Image" in the Furniture definition
+			"FromFile": "assets/armchair_{{LoadColor}}.png"
+		},
+		{
+			// You need to have a base sprite-sheet to edit from the Furniture Pack to use "EditImage"
+			"Action": "EditImage",
+			"LogName": "Dropdown Template Edit",
+			"Target": "FF/{{FFModID}}/assets/blank.png",	// must match the "Source Image" in the Furniture definition
+			"FromFile": "assets/armchair_{{EditColor}}.png"
+		}
+	]
+}

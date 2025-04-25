@@ -35,24 +35,10 @@
 					},
 					{
 						"Source Rect": {
-							"Right": {
-								"X": 32,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Up": {
-								"X": 64,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Left": {
-								"X": 96,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							}
+							"X": 32,
+							"Y": 32,
+							"Width": 32,
+							"Height": 32
 						},
 						"Draw Pos": {
 							"X": 0,
@@ -71,24 +57,10 @@
 					},
 					{
 						"Source Rect": {
-							"Right": {
-								"X": 32,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Up": {
-								"X": 64,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Left": {
-								"X": 96,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							}
+							"X": 64,
+							"Y": 32,
+							"Width": 32,
+							"Height": 32
 						},
 						"Draw Pos": {
 							"X": 0,
@@ -107,24 +79,10 @@
 					},
 					{
 						"Source Rect": {
-							"Right": {
-								"X": 32,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Up": {
-								"X": 64,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							},
-							"Left": {
-								"X": 96,
-								"Y": 32,
-								"Width": 32,
-								"Height": 32
-							}
+							"X": 96,
+							"Y": 32,
+							"Width": 32,
+							"Height": 32
 						},
 						"Draw Pos": {
 							"X": 0,

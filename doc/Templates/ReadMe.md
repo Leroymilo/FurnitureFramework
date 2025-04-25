@@ -1,0 +1,7 @@
+# Templates
+
+This folder holds Furniture Packs made to be used as examples for specific features. If you think there's something in FF that would be easier to understand with a template, feel free to suggest it.
+
+## Dropdown Config
+
+This is an example on how to create a Mixed Pack (Content Patcher and Furniture Framework) which create a config option to switch between variants of a Furniture with a dropdown option button in the Generic Mod Config Menu (GMCM).

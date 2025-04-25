@@ -1,16 +1,13 @@
 {
-	"Name": "Furniture Example Pack (FF)",
+	"Name": "Dropdown Config Option Template (FF)",
 	"Author": "leroymilo",
 	"Version": "3.0.1",
 	"MinimumApiVersion": "4.1",
 	"MinimumGameVersion": "1.6.9",
-	"Description": "An example pack for the Furniture Framework",
-	"UniqueID": "leroymilo.FurnitureExample.FF",
+	"Description": "A template pack for the Furniture Framework (FF)",
+	"UniqueID": "leroymilo.DropdownTemplate.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
 		"MinimumVersion": "3.0.0"
-	},
-	"UpdateKeys": [
-		"Nexus:23458"
-	]
+	}
 }

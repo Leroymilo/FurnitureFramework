@@ -1,0 +1,102 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		// The following furniture is an example of patching with a "Load" action
+		"[[ModID]].dropdown_by_load": {
+			"Display Name": "Dropdown Armchair (load)",
+			"Source Image": "spritesheet.png", // This file doesn't actually exist,
+			// there will be an error if something isn't loaded in its place by Content Patcher
+
+			// The rest is just a copy of the Armchair Furniture from the example pack,
+			// it doesn't contain anything important for this template
+			"Rotations": 4,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+			"Layers": {
+				"Down": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Right": {
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Up": {
+					"Source Rect": {
+						"X": 64,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Left": {
+					"Source Rect": {
+						"X": 96,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				}
+			}
+		},
+
+		// The following furniture is an example of patching with an "EditImage" action
+		"[[ModID]].dropdown_by_edit": {
+			"Display Name": "Dropdown Armchair (edit)",
+			"Source Image": "assets/blank.png",	// An empty spritesheet to be edited by CP
+
+			// The rest is just a copy of the Armchair Furniture from the example pack,
+			// it doesn't contain anything important for this template
+			"Rotations": 4,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+			"Layers": {
+				"Down": {
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Right": {
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Up": {
+					"Source Rect": {
+						"X": 64,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				},
+				"Left": {
+					"Source Rect": {
+						"X": 96,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				}
+			}
+		}
+	}
+}

@@ -74,7 +74,7 @@ Each entry in this dictionary has the Id of the Furniture for key and the Furnit
 Since 3.0.0, every Furniture will have its own config entry automatically generated in the Generic Mod Config Menu interface.
 
 Note: you can have as many custom Furniture as you want but their IDs must be all differents from each other.  
-It is strongly recommended to add `{{ModID}}.` at the start of every new Furniture ID to avoid conflicts with other mods or the game itself. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`.  
+It is strongly recommended to add `[[ModID]].` at the start of every new Furniture ID to avoid conflicts with other mods or the game itself. For example, the first custom furniture of the Example Pack would be added to the game as `leroymilo.FurnitureExample.FF.simple_test`.  
 You should also be able to modify vanilla Furniture by using their vanilla ID, doing so might be tricky for some Furniture because some properties are hardcoded (like the catalogues and the cauldron) so be carefull of what you modify.
 
 Note 2: when using [Furniture Variants](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#variants), the variation name or number will be automatically added to the original ID so that each variation can exist in the game.

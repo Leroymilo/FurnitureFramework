@@ -1,5 +1,6 @@
 {
-	"Format": "2.5.0",
+	"$schema": "https://smapi.io/schemas/content-patcher.json",
+	"Format": "2.6.0",
 	"Changes": [
 		{
 			"LogName": "Seasonal texture for FF/leroymilo.FurnitureExample.FF/assets/bush.png",
