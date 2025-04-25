@@ -81,7 +81,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
-- **NOT TESTED** Added the possibility to put a list in `Animation Offset` to define the offset of every frame separately.
+- **NOT TESTED** Added the possibility to put a list in the `Animation`'s `Offset` to define the offset of every frame separately.
 - Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
@@ -106,13 +106,14 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed the `ff_reload` command because it wasn't implemented correctly (oopsy).
 - Changed Bed Collision to completely overwrite the default row of empty tiles letting the player go through (use the Collision Map instead).
 
-### 3.0.2 (**Work in Progress**)
+### 3.1 (**Work in Progress**)
 
-**Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
-- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
-- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
-
-## 3.1 (**Work in Progress**)
-
-**Work in Progress** API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
-**Work in Progress** Customize StorageFurniture allowed item types.
+**New Features**:
+- **Work in Progress** Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
+- **Work in Progress** Added the possibility to put a list in the `Animation`'s `Frame Duration` to define the length of every frame separately. (Reedtanguerra)
+- **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
+	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
+	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
+- **Work in Progress** i18n support in `Display Name` and `Description` (also in variants tokens?).
+- **Work in Progress** API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
+- **Work in Progress** Customize StorageFurniture allowed item types.

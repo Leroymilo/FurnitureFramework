@@ -73,18 +73,15 @@ If you are a C# mod author and need an API for this mod, you can either make it 
 
 Huge thanks to:
 - The Stardew Valley modding community for all their help and support
-- All testers (@LynnNexus, @aviroen, @tikamin, @tea)
-- @LynnNexus for testing, feedback and bug report
+- All testers (@LynnNexus, @aviroen, @tikamin, @tea, @reedtanguerra) for requesting and testing features, and reporting bugs 
 - @atravita for the initial idea on how to implement multiple slots per Furniture
 
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- Add better titles and descriptions for the json schema.
-- Support for i18n translations.
-- Customize StorageFurniture allowed item types (`ShopMenu.setUpStoreForContext`).	@B
+- See [changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Changelogs.md#31-work-in-progress) for future versions
 
-What I don't plan on adding, but I can work on if someone asks for it:
+What I don't plan on adding, but I can work on if multiple people ask for it:
 - Custom Randomized Plant
 - More customization for Particles (make some fields directional, list of scales and list of scale changes)
 
