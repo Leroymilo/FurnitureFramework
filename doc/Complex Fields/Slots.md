@@ -7,15 +7,15 @@ A slot object has multiple fields:
 
 ## Area (required) (directional)
 
-This is the [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Rectangle.md) where the slot is located on the Furniture. This area correspond to where you should click on the Furniture to place or remove something from the slot.  
-Items placed in this slot will be horizontally centered in this area, and they will be aligned to the bottom of this area (the lowest pixel of the item sprite will be on the same line as the lowest pixel of the area). This can be changed with the Offset field.  
-The Area of a Slot is relative to the bottom left corner of the Bounding Box defined in [Collisions](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Collisions.md).
+This is the [Rectangle](../Structures/Rectangle.md) where the slot is located on the Furniture. This area correspond to where you should click on the Furniture to place or remove something from the slot.  
+Items placed in this slot will be horizontally centered in this area, and they will be aligned to the bottom of this area (the lowest pixel of the item sprite will be on the same line as the lowest pixel of the area). This can be changed with the `Offset` field.  
+The Area of a Slot is relative to the bottom left corner of the Bounding Box defined in [Collisions](Collisions.md).
 
 Note: If you define overlapping Slot Areas, the game will check all of them in the order they were defined to find a valid one (an empty slot when trying to place an item, or a non-empty one when trying to remove or interact with an item).
 
 ## Offset
 
-An offset, in pixels to change the default position of the item placed in this slot (it usually depends on the Area), it's a **decimal** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Vector.md).  
+An offset, in pixels to change the default position of the item placed in this slot (it usually depends on the Area), it's a **decimal** [Vector](../Structures/Vector.md).  
 It can be omitted, its default value is (0, 0).
 
 ## Draw Shadow
@@ -25,14 +25,14 @@ If the shadow is enabled, items will be drawn 1 (one) pixel higher, defaults to 
 
 ## Shadow Offset
 
-An offset, in pixels to change the default position of the shadow of the item placed in this slot (it usually depends on the Area), it's a **decimal** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Vector.md).  
+An offset, in pixels to change the default position of the shadow of the item placed in this slot (it usually depends on the Area), it's a **decimal** [Vector](../Structures/Vector.md).  
 It can be omitted, its default value is (0, 0).
 
 ## Depth
 
-This is the [depth](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Depth.md) at which the item in the slot should be drawn. See the "Living Room" furniture in the Example Pack to have examples of slots with depth.  
+This is the [depth](../Structures/Depth.md) at which the item in the slot should be drawn. See the "Living Room" furniture in the Example Pack to have examples of slots with depth.  
 
-As a general rule, if you have to create a [Layer](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#layers) for the part of the Furniture where you'll place the spot, then the spot should have the same depth (or bigger) as the corresponding layer.
+As a general rule, if you have to create a [Layer](../Furniture.md#layers) for the part of the Furniture where you'll place the spot, then the spot should have the same depth (or bigger) as the corresponding layer.
 
 Defaults to `{"Tile": 0, "Sub": 0}`.
 
@@ -40,11 +40,11 @@ Note: if a Slot has the same depth as a Layer, the item in the Slot will be draw
 
 ## Max Size
 
-This is an **integer** [vector](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Vector.md) that defines how big (**in tiles**) a Furniture can be to be placed in this spot. It defaults to 1x1 if omitted.
+This is an **integer** [vector](../Structures/Vector.md) that defines how big (**in tiles**) a Furniture can be to be placed in this spot. It defaults to 1x1 if omitted.
 
 ## Debug Color
 
-This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted).
+This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (RGB values are not accepted).
 
 ## Condition
 
@@ -60,7 +60,7 @@ Note 2: if there's an error in the Game State Query, the game will give you an e
 Here is an example of a table slot in a bigger Furniture (taken from the `living_room` Furniture of the Example Pack). It uses the Depth field to make sure the item placed in the slot displays above the correct layers.
 
 This is where the slots are in the spritesheet (I removed some stuff for clarity):  
-![slots example](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/images/slots_example.png)
+![slots example](../images/slots_example.png)
 
 This is the definition of the slots:
 ```json

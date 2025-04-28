@@ -9,7 +9,7 @@ Like the Source Image of a Furniture, a Particle can have its own .png (or be st
 
 ## Source Rect
 
-Like the [Source Rect](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md#source-rect) of a Layer, this tells the game which part of your image should be used for a single Particle. If making an animated Particle (see lower), this should be the Rectangle around the first frame.  
+Like the [Source Rect](Layers.md#source-rect) of a Layer, this tells the game which part of your image should be used for a single Particle. If making an animated Particle (see lower), this should be the Rectangle around the first frame.  
 If omitted, the Source Rect will be the size of the given image.
 
 ## Emission Interval
@@ -26,7 +26,7 @@ Be carefull, the Spawn Rect of a Particle is relative to the bottom left of the 
 ## Depths
 
 This is a list of decimal numbers from which the game will randomly pick to draw each Particle. A depth of 0 is at the front of the Furniture and a depth of Collisions.Height is at the back of the Furniture.  
-If you did not define any [Layers](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#layers) for this Furniture, you probably don't have to worry about it.  
+If you did not define any [Layers](../Furniture.md#layers) for this Furniture, you probably don't have to worry about it.  
 
 If omitted, every Particle will spawn with a depth of 0.
 
@@ -88,7 +88,7 @@ There are a few more options defining when a Particle will spawn:
 - `Emit When On` (true or false)
 - `Emit When Off` (true or false)
 
-If the Furniture is not [Toggleable](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#toggle), it will be "Off" forever.
+If the Furniture is not [Toggleable](../Furniture.md#toggle), it will be "Off" forever.
 
 ## Burst
 

@@ -149,7 +149,7 @@ This is an array (a list) of string Shop IDs where you want your Furniture to sh
 ```json
 "Shows in Shops": ["Carpenter"]
 ```
-will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki.
+will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki. It's also possible to add your Furniture to shops and catalogues from other mods, you just need to make sure to get the exact Shop ID from it.
 
 When used in combination to the "Shop Id" field, you can create a custom Catalogue for your custom Furniture.
 
@@ -254,11 +254,11 @@ This will change the way you place the Furniture, it's only used for Rugs and Wa
 - Rug
 - Mural
 
-Please note that some right-click interactions might not work for Rug Furniture (not tested, you can make experiments). However, Mural Furniture are compatible with all other features.
+Please note that some right-click interactions might not work for Rug Furniture (not tested, you can make experiments). However, Mural Furniture should be compatible with all other features.
 
 ## Icon Rect
 
-This field is a Rectangle, like a Layer's [Source Rect](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md#source-rect-required-directional). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu. It is affected by [Variants](#variants). If this is not set, the first Layer will be shown in the menu instead.
+This field is a Rectangle, like a Layer's [Source Rect](Complex%20Fields/Layers.md#source-rect-required-directional). This rectangle will tell the game which part of the texture to use to display the Furniture in the menu. It is affected by [Variants](#variants). If this is not set, the first Layer will be shown in the menu instead.
 
 ## Toggle
 
@@ -266,31 +266,32 @@ This field is boolean (true or false) and will make a Furniture toggleable. "Tog
 When a Furniture can be toggled, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (in the [Layers](#layers)), the Width of the Rectangle will be added to its horizontal position when the Furniture is turned on. This way, your Furniture can change how it looks when it's toggled.
 
 A good example of this is the `Lamp Test` Furniture in the Example Pack: you can see in its sprite-sheet that it has its base sprite on the left, while the "On" variant of its sprite is on the right of the sprite-sheet.  
-![Lamp sprite-sheet](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/Example%20Pack/%5BFF%5D/assets/lamp.png)
+![Lamp sprite-sheet](../Example%20Pack/%5BFF%5D/assets/lamp.png)
 
 ## Time Based
 
 This field is boolean (true or false) and will make your Furniture change when it's dark outside (whether with night or rainy weather), like windows and lamps will in the Vanilla game.  
 When a Furniture is Time Based, every sprite in its sprite-sheet needs to be duplicated: for every "Source Rect" you defined (in the [Layers](#layers)), the Height of the Rectangle will be added to its horizontal position when it's dark outside, this way, your Furniture can change how it looks.
 
-You can see this field used in the `Window Test` Furniture in the Example Pack.
+A good example of this is the `Window Test` Furniture in the Example Pack: you can see in its sprite-sheet that it has its base sprite on the top, while the "Night" variant of its sprite is on the bottom of the sprite-sheet.  
+![Window sprite-sheet](../Example%20Pack/%5BFF%5D/assets/window.png)
 
 ## Sounds
 
-With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Sounds.md).
+With sounds, you can make your Furniture play custom sound effects when you click on it! Since they are quite complicated, they have their own [Sounds documentation](Complex%20Fields/Sounds.md).
 
 ## Seats (directional)
 
-Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Seats.md).
+Seats are what allow the Farmer to sit on your Furniture (duh), since they are quite complicated, they have their own [Seats documentation](Complex%20Fields/Seats.md).
 
 ## Slots (directional)
 
-Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Slots.md).
+Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](Complex%20Fields/Slots.md).
 
 ## Particles (directional)
 
-Particles have so many settings, you have to read the [Custom Particles Documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Particles.md).
+Particles have so many settings, you have to read the [Custom Particles Documentation](Complex%20Fields/Particles.md).
 
 ## Lights (directional)
 
-You can place Light Sources on your Furniture with this field, see the [Custom Light Sources Doc](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Light%20Sources.md).
+You can place Light Sources on your Furniture with this field, see the [Custom Light Sources Doc](Complex%20Fields/Lights.md).

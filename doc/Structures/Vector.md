@@ -15,4 +15,5 @@ Here's an example of a valid **integer** Vector:
 ```
 Some Vectors can also contain float (decimal) values, it will be indicated in the documentation when they can.
 
-Keep in mind that negative Y is up and positive Y is down.
+Keep in mind that negative Y is up and positive Y is down.  
+![axes](../images/axes.png)

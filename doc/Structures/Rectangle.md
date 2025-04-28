@@ -22,4 +22,5 @@ or, if spread on multiple lines, like this:
 }
 ```
 
-Keep in mind that negative Y is up and positive Y is down.
+Keep in mind that negative Y is up and positive Y is down.  
+![axes](../images/axes.png)

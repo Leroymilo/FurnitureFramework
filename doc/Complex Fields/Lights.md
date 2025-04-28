@@ -13,7 +13,7 @@ The possible values are `Source` and `Glow`.
 
 ## Source Rect (required) (directional)
 
-The Source Rect is a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Rectangle.md), it is the part of the Source Image that will be used to draw this light.
+The Source Rect is a [Rectangle](../Structures/Rectangle.md), it is the part of the Source Image that will be used to draw this light.
 
 ## Position (required) (directional)
 
@@ -43,7 +43,7 @@ This is a number defining the radius of your light source, it simply scales your
 
 ## Color
 
-A way to give a tint to your light source, if you don't want to modify the texture itself. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted). Defaults to `White` (which will not affect the color of the texture).
+A way to give a tint to your light source, if you don't want to modify the texture itself. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (RGB values are not accepted). Defaults to `White` (which will not affect the color of the texture).
 
 # Examples
 
