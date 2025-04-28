@@ -574,6 +574,7 @@ namespace FurnitureFramework.Type
 				sounds.play(furniture.Location, furniture.IsOn);
 
 				particles[rot].burst(furniture);
+				had_action = true;
 			}
 			else
 			{
