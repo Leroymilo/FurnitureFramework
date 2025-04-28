@@ -1,6 +1,6 @@
-# How to define Custom Layers?
+# How to define Layers?
 
-![Layers](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/images/layers.png)
+![Layers](../images/layers.png)
 
 The Layers field of a Furniture is a directional list of layer objects.
 
@@ -10,21 +10,21 @@ A layer object has 3 fields:
 
 ## Source Rect (required) (directional)
 
-The part of the source image this layer should draw on the screen, it's a [Rectangle](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Rectangle.md) **in pixels**.
+The part of the source image this layer should draw on the screen, it's a [Rectangle](../Structures/Rectangle.md) **in pixels**.
 
 ## Draw Pos (directional)
 
-This is the position, **in pixels**, relative to the bottom left of the furniture (for the current rotation), where the layer should be drawn. It is an **integer** [Vector](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Vector.md).
+This is the position, **in pixels**, relative to the bottom left of the furniture (for the current rotation), where the layer should be drawn. It is an **integer** [Vector](../Structures/Vector.md).
 
-It defaults to `{"X": 0, "Y": 0}`, which means that the bottom left corner of the sprite is at the bottom left corner of the furniture. Keep in mind that the positive Y axis is down, so you have to use negative Y coordinate to move the layer up.
+It defaults to `{"X": 0, "Y": 0}`, which means that the bottom left corner of the sprite is at the bottom left corner of the furniture, this matches the behavior of all vanilla Furniture. Keep in mind that the positive Y axis is down, so you have to use negative Y coordinate to move the layer up.
 
 ## Depth
 
-This is the [depth](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Structures/Depth.md) at which the layer should be drawn. See the [Example](#example) to have examples of layers with depth.
+This is the [depth](../Structures/Depth.md) at which the layer should be drawn. See the [Example](#example) to have examples of layers with depth.
 
 Defaults to `{"Tile": 0, "Sub": 1000}` (it represents the bottom of the top-most tile of the Furniture's bounding box), except for the Base Layer, fot which it's `{"Tile": 0, "Sub": 0}`.
 
-## Example of a complex Layers layout
+## Example
 
 Here's an example on how to use layers with the down-facing `living_room` Furniture of the Example Pack. This is basically as complicated as it gets, I'd recommend checking some other Furniture from the Example Pack or other mods for simpler layers fitting your needs.
 
@@ -32,7 +32,7 @@ In this example, we will go through the layers from back to front. In this case,
 
 This gif shows how the layers are drawn from back to front, with a Farmer to show how it would be drawn in-between the layers:
 
-![layers example gif](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/images/layers_example.gif)
+![layers example gif](../images/layers_example.gif)
 
 Here's the list of Layers for this Furniture facing down, from back to front:
 ```json
@@ -75,4 +75,4 @@ Here's the list of Layers for this Furniture facing down, from back to front:
 ]
 ```
 
-Keep in mind that the Source Rect is defined from [this spritesheet](https://github.com/Leroymilo/FurnitureFramework/tree/3.0.0/%5BFF%5D%20Example%20Pack/assets/living_room.png). As you can see, all the shadows are on the Base Layer, this is a good rule to avoid weird shadows, but you can put transparent shadows if the Furniture is meant to cast a shadow on the Player (like an umbrella for example).
+Keep in mind that the Source Rect is defined from [this spritesheet](../../Example%20Pack/[FF]/assets/seats/living_room.png). As you can see, all the shadows are on the Base Layer, this is a good rule to avoid weird shadows, but you can put transparent shadows if the Furniture is meant to cast a shadow on the Player (like an umbrella for example).

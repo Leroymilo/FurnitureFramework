@@ -110,10 +110,10 @@ namespace FurnitureFramework.Pack
 			{
 				case > FORMAT:
 				case < 1:
-					ModEntry.log($"Invalid Format: {format}, skipping Furniture Pack.", LogLevel.Error);
+					ModEntry.log($"Invalid Format for {data_UID}: {format}, skipping Furniture Pack.", LogLevel.Error);
 					return false;
 				case < FORMAT:
-					ModEntry.log($"Format {format} is outdated, skipping Furniture Pack.", LogLevel.Error);
+					ModEntry.log($"Format {format} for {data_UID} is outdated, skipping Furniture Pack.", LogLevel.Error);
 					ModEntry.log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
 					ModEntry.log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
 					ModEntry.log("If you are the author, check the Changelogs in the documentation to update your Pack.", LogLevel.Info);

@@ -1,17 +1,19 @@
 # What are Directional Fields?
 
-Directional Fields is a type of field that *can* depend on the rotation of the Furniture, so that the value read by the mod will change depending on which direction the Furniture is placed in.
+Directional Fields is a type of field that *can* (not must) depend on the rotation of the Furniture, so that the value read by the mod will change depending on which direction the Furniture is placed in.
 
-When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations field](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#rotations).
+When a field is directional, its value can either be itself, or a dictionary with rotation names as keys and the actual data fields as values, the rotation names being defined in the Furniture's [Rotations](Furniture.md#rotations) field.
 
-Let's take the Furniture's [Layers](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Complex%20Fields/Layers.md) as an example. If you choose to have a single Layer for every rotation, the field will look like this:
+If you have a doubt about the validity of a Directional Field you defined, you can rely on the json schema to tell you when there's a mistake. More info on how to set it up [here](Author.md#content).
+
+Let's take the Furniture's [Layers](Complex%20Fields/Layers.md) as an example. If you choose to have a single Layer for every rotation, the field will look like this:
 ```json
 "Layers": {
 	"Source Rect": { "X": 0, "Y": 0, "Width": 32, "Height": 32 }
 }
 ```
 But if you want each rotation to look different (which you often do), you need to use the directional variant of this field.  
-For this example, we'll take the "Table Test" Furniture of the Example Pack, it has `"Rotation": 2`, if you read about the Furniture Rotations field, you'll now that its rotation keys are "Horizontal" and "Vartical". This is how its `Layer` looks like:
+For this example, we'll take the "Table Test" Furniture of the Example Pack. It has `"Rotation": 2`, if you read about the Furniture `Rotations` field, you'll now that its rotation keys are "Horizontal" and "Vertical". This is how its `Layer` looks like:
 ```json
 "Layers": {
 	"Horizontal": {
@@ -22,6 +24,8 @@ For this example, we'll take the "Table Test" Furniture of the Example Pack, it 
 	}
 }
 ```
+![Table sprite-sheet](images/directional_layers_example.png)  
+You can see how each object in the `Layers` definition matches a part of the sprite-sheet.
 
 Most directional fields can also be defined by an array instead of an object (`Collisions` cannot be an Array), this works the same way. Here what it looks like when it is non-directional:
 ```jsonc

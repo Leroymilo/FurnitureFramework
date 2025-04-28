@@ -4,7 +4,7 @@ If you want to use a mod (Furniture Pack) that was made for this Framework, you 
 
 # Author Tutorial
 
-Here is [the documentation](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Author.md) on how to create a Furniture Pack.  
+Here is [the documentation](Author.md) on how to create a Furniture Pack.  
 Here's a list of published mods using this Framework that you can use as examples:
 - [Lynn's Livingroom](https://www.nexusmods.com/stardewvalley/mods/23677)
 - [Lynn's Bedroom](https://www.nexusmods.com/stardewvalley/mods/24275)
@@ -13,7 +13,7 @@ Here's a list of published mods using this Framework that you can use as example
 
 If you are a C# mod author and need an API for this mod, you can either make it and ask for a pull request, or ping me on the SV discord server, I should be able to make it for you.
 
-[CHANGELOGS](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Changelogs.md)
+[CHANGELOGS](Changelogs.md)
 
 # Features
 
@@ -79,7 +79,7 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- See [changelogs](https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Changelogs.md#31-work-in-progress) for future versions
+- See [changelogs](Changelogs.md#31-work-in-progress) for future versions
 
 What I don't plan on adding, but I can work on if multiple people ask for it:
 - Custom Randomized Plant
