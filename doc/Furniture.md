@@ -167,6 +167,8 @@ If you want to add more rules to your custom Catalogue (multipliers, prices, own
 
 Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it by using `[[ModID]]` for example).
 
+Note 2: having a Shop ID will prevent other actions from being triggered (toggling, playing sounds and sitting).
+
 ## Variants
 
 This is kind of a replacement for a compatibility with Alternative Textures because making this mod truly compatible with AT might never be possible.  

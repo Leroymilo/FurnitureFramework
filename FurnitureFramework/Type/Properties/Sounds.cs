@@ -84,8 +84,9 @@ namespace FurnitureFramework.Type.Properties
 
 		#region SoundList Methods
 
-		public void play(GameLocation location, bool? state = null)
+		public bool play(GameLocation location, bool? state = null)
 		{
+			bool played_sound = false;
 			bool turn_on = state.HasValue && state.Value;
 			bool turn_off = state.HasValue && !state.Value;
 			foreach (Sound sound in list)
@@ -97,9 +98,11 @@ namespace FurnitureFramework.Type.Properties
 				)
 				{
 					location.playSound(sound.cue_name);
+					played_sound = true;
 					// ICue cue = Game1.soundBank.GetCue(sound.cue_name);
 				}
 			}
+			return played_sound;
 		}
 
 		public void debug_print(int indent_count)

@@ -559,6 +559,8 @@ namespace FurnitureFramework.Type
 
 			int rot = furniture.currentRotation.Value;
 
+			// None of these actions are blocking other actions because I couldn't find a reason why they should.
+
 			// Shop
 			if (shop_id != null)
 			{
@@ -578,11 +580,11 @@ namespace FurnitureFramework.Type
 			}
 			else
 			{
-				sounds.play(furniture.Location);
+				had_action |= sounds.play(furniture.Location);
 			}
 
 			// Seats
-			if (seats[rot].has_seats && !had_action)
+			if (seats[rot].has_seats)
 			{
 				int sit_count = furniture.GetSittingFarmerCount();
 				who.BeginSitting(furniture);

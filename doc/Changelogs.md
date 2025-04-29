@@ -106,7 +106,15 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed the `ff_reload` command because it wasn't implemented correctly (oopsy).
 - Changed Bed Collision to completely overwrite the default row of empty tiles letting the player go through (use the Collision Map instead).
 
-### 3.1 (**Work in Progress**)
+### 3.0.2
+
+- Fixed custom Furniture getting toggled when placed in a Slot of a custom Furniture which is toggled on.
+
+### 3.0.3
+
+- Removed check preventing sitting on toggleable Furniture.
+
+## 3.1 (**Work in Progress**)
 
 **New Features**:
 - **Work in Progress** Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.

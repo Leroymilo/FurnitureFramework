@@ -8,7 +8,7 @@
 		<GamePath>$(SVPATH)</GamePath>
 		<GameModsPath>$(GamePath)/Mods (dev)</GameModsPath>
 		<EnableHarmony>true</EnableHarmony>
-		<VersionPrefix>3.0.0</VersionPrefix>
+		<VersionPrefix>3.0.3</VersionPrefix>
 	</PropertyGroup>
 
 	<ItemGroup>

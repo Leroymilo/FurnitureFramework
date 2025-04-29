@@ -1,14 +1,14 @@
 {
 	"Name": "Furniture Example Pack (FF)",
 	"Author": "leroymilo",
-	"Version": "3.0.1",
+	"Version": "3.0.3",
 	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "An example pack for the Furniture Framework",
 	"UniqueID": "leroymilo.FurnitureExample.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
-		"MinimumVersion": "3.0.1"
+		"MinimumVersion": "3.0.3"
 	},
 	"UpdateKeys": [
 		"Nexus:23458"

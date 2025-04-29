@@ -1,0 +1,45 @@
+[size=6][color=#ff5555]The Furniture Framework 3.0 Update is Out![/color][/size]
+
+[size=5][color=#ff5555]New: Content Patcher compatibility[/color][/size]
+[size=3]It is now possible to patch both FF content files and textures with CP, see [url=https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md#content-patcher-integration]here[/url].[/size]
+
+[size=5]Check the list below for new features (last updated April 28th 2025).[/size]
+
+[size=5]If you are a mod user:[/size]
+[size=3]This is a Framework mod to make Furniture Packs, if you are using a mod requiring this Framework and you are encountering a bug, please report it to the Furniture Pack author.[/size]
+
+[size=5]If you are a Furniture Pack author:[/size] 
+[size=3]Make sure to read [url=https://github.com/Leroymilo/FurnitureFramework/blob/main/doc]the documentation[/url] before reporting bugs or asking question.
+
+If you think you encountered a bug, you can report it on [url=https://www.nexusmods.com/stardewvalley/mods/23458?tab=bugs]this mod page[/url], or on the [url=https://github.com/Leroymilo/FurnitureFramework/issues]GitHub repository[/url]. Make sure to include the [url=https://smapi.io/log]SMAPI log[/url], the [url=https://smapi.io/json]content.json[/url] and/or screenshots in the bug report. Feel free to ping me on the [url=https://discord.com/channels/137344473976799233/156109690059751424]Stardew Valley discord's modding channel[/url] if I don't notice the bug report.
+
+If you want help to make a Furniture Pack or have questions about the documentation, please come ask it on the [url=https://discord.com/channels/137344473976799233/156109690059751424]Stardew Valley discord's modding channel[/url] by pinging me.[/size]
+[size=5]What can this Framework do that Content Patcher can't?[/size]
+[size=3]Here's a list of what you can customize thanks to this Framework:
+[list]
+[*]Custom Description
+[*]Custom Rotations
+[*]Custom Bounding Box size
+[*]Custom Collision map
+[*]Custom Layers
+[*]Custom Seats
+[*]Custom Shop on click
+[*]Custom Table Slots
+[*]Support for Seasonal Sprites
+[*]Support for Sprites variants
+[*]Support for Source Rectangle variants (variants on the same sprite-sheet)
+[*]Custom Menu Icon
+[*]Toggle-able Furniture (right click to change state)
+[*]Custom Particles
+[*]Support for animated base Sprite and Layers
+[*]Support for some special Furniture (Dresser, TV, Bed and Fish-Tank)
+[*]Support for Rugs
+[*]Support for Wall-mounted Furniture
+[*]Support for included files. Included files can be toggled with the [url=https://www.nexusmods.com/stardewvalley/mods/5098]Generic Mod Config Menu[/url]﻿.
+[*]Custom Light Sources
+[/list]
+See also: [url=https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Changelogs.md]Changelogs[/url]﻿
+
+The key to place an item in or remove it from a slot is configurable with the [url=https://www.nexusmods.com/stardewvalley/mods/5098]Generic Mod Config Menu[/url].
+It is now also possible to activate a Furniture placed in a Slot.[/size]
+

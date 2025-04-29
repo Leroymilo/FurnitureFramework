@@ -1,11 +1,13 @@
 {
 	"Name": "Furniture Framework",
 	"Author": "leroymilo",
-	"Version": "3.0.1",
+	"Version": "3.0.3",
 	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "Allows a Content Pack to create highly customized Furniture",
 	"UniqueID": "leroymilo.FurnitureFramework",
 	"EntryDll": "FurnitureFramework.dll",
-	"UpdateKeys": [ "Nexus:23458" ]
+	"UpdateKeys": [
+		"Nexus:23458"
+	]
 }
