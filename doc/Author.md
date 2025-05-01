@@ -172,6 +172,8 @@ For technical reasons, it's practically impossible to make FF and AT truly compa
 
 Use the [migration script](../migrator), you'll need python and the PIL python library. The migrated version of you Furniture Pack will not keep its comments, so it is recommended to add them back after the conversion.  You can also do the migration by hand by looking through the doc, but good luck to not miss anything.
 
+<span style="color:red">Please make sure to leave a version of your mod for FF 2.x available on your mod page</span>, this is because all Furniture Pack authors cannot update their mods at the same time, so many users will want to wait for all their mods to be updated before migrating, thus needing an earlier version of your mod.
+
 How to run the python script:
 - Install [python](https://www.python.org/downloads/).
 - Once installed, open a terminal to run the command `pip install Pillow` and wait for it to finish.
