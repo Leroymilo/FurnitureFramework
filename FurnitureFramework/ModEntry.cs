@@ -54,8 +54,8 @@ namespace FurnitureFramework
 			helper = Helper;
 			config = helper.ReadConfig<ModConfig>();
 
-            helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
+            helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.Content.AssetRequested += on_asset_requested;
 			helper.Events.Player.Warped += on_player_warped;
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
