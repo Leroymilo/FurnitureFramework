@@ -1,0 +1,47 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].animated_cat": {
+			// It uses variants to make two versions of the Furniture
+			// You can make a similar Furniture without using any Variants.
+			"Display Name": "Cat Statue (Animated during [[ImageVariant]])",
+			"Source Image": {
+				"Night": "assets/night_animated.png",
+				"Day": "assets/day_animated.png"
+			},	// Check the textures to understand how it works
+			// Sprite credit: SonreirAngel
+
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Time Based": true,
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			],
+			"Animation": {
+				"Frame Count": 7,
+				"Frame Duration": 500,
+				"Offset": {
+					"X": 16,
+					"Y": 0
+				}
+			},
+
+			"Shows in Shops": [
+				"leroymilo.FurnitureExample.FF.custom_catalogue"
+				// Will make the Furniture appear in the catalogue of the Example Pack
+			]
+		}
+	}
+}

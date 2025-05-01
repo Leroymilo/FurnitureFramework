@@ -48,7 +48,12 @@
 						"Height": 32
 					}
 				}
-			}
+			},
+
+			"Shows in Shops": [
+				"leroymilo.FurnitureExample.FF.custom_catalogue"
+				// Will make the Furniture appear in the catalogue of the Example Pack
+			]
 		},
 
 		// The following furniture is an example of patching with an "EditImage" action
@@ -96,7 +101,12 @@
 						"Height": 32
 					}
 				}
-			}
+			},
+
+			"Shows in Shops": [
+				"leroymilo.FurnitureExample.FF.custom_catalogue"
+				// Will make the Furniture appear in the catalogue of the Example Pack
+			]
 		}
 	}
 }
