@@ -149,7 +149,19 @@
 		
 							"Frame Duration": {
 								"description": "The length of each animation frame, in milliseconds",
-								"type": "integer"
+								"oneOf": [
+									{
+										"type": "integer",
+										"minimum": 1
+									},
+									{
+										"type": "array",
+										"items": {
+											"type": "integer",
+											"minimum": 1
+										}
+									}
+								]
 							},
 		
 							"Offset": {
