@@ -481,9 +481,6 @@ namespace FurnitureFramework.Type
 					area.Value.Size * new Point(4)
 				);
 			}
-
-			result.Width = Math.Max(1, result.Width);
-			result.Height = Math.Max(1, result.Height);
 		}
 
 		#endregion

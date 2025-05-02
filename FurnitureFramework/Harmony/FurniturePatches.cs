@@ -900,7 +900,6 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
 				{
 					type.GetTankBounds(__instance, ref __result);
-			
 				}
 
 			}
@@ -908,6 +907,9 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			{
 				ModEntry.log($"Failed in {nameof(GetTankBounds)}:\n{ex}", LogLevel.Error);
 			}
+
+			__result.Width = Math.Max(1, __result.Width);
+			__result.Height = Math.Max(1, __result.Height);
 
 			return __result;
 		}

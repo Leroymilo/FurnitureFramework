@@ -59,7 +59,7 @@ The format you're using for your Furniture Pack, it matches the leftmost number 
 
 ### Furniture
 
-This is a dictionary where you'll define your custom Furniture.</br>
+This is a dictionary where you'll define your custom Furniture.  
 Each entry in this dictionary has the Id of the Furniture for key and the Furniture definition for value like this:
 ```json
 "Furniture": {
@@ -71,6 +71,8 @@ Each entry in this dictionary has the Id of the Furniture for key and the Furnit
 	}
 }
 ```
+
+:warning: <span style="color:red">**WARNING**</span> Do not change any Furniture IDs in-between updates: this will cause the game to not recognize any Furniture in a save that has the old ID and show up a bunch of errors for users.
 
 Since 3.0.0, every Furniture will have its own config entry automatically generated in the Generic Mod Config Menu interface.
 
