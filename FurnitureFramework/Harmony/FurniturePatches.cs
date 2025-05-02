@@ -605,6 +605,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 	// Other Fixes for Special Furniture
 
+	#region StorageFurniture
+
 	[RequiresPreviewFeatures]
 	internal class StorageFurniturePostFixes
 	{
@@ -632,6 +634,10 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 		#endregion
 	}
+
+	#endregion
+
+	#region TV
 
 	[RequiresPreviewFeatures]
 	internal class TVPostFixes
@@ -683,6 +689,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 		#endregion
 	}
+
+	#endregion
 
 	#region BedFurniture
 
@@ -814,6 +822,10 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		#endregion
 	}
 
+	#endregion
+
+	#region FishTankFurniture
+
 	[RequiresPreviewFeatures]
 	internal class FishTankFurniturePreFixes
 	{
@@ -886,7 +898,11 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				{
 					type.GetTankBounds(__instance, ref __result);
+			
+				}
+
 			}
 			catch (Exception ex)
 			{

@@ -113,42 +113,6 @@ namespace FurnitureFramework.Type
 			}
 		}
 
-		public void GetTankBounds(FishTankFurniture furniture, ref Rectangle result)
-		{
-			int rot = furniture.currentRotation.Value;
-			Rectangle bounding_box = furniture.boundingBox.Value;
-			Rectangle source_rect = layers[rot].get_source_rect();
-
-			Point position = new(
-				bounding_box.X,
-				bounding_box.Y + bounding_box.Height
-			);	// bottom left of the bounding box
-			Point size = source_rect.Size * new Point(4);
-
-			Rectangle? area = fish_area[rot];
-
-			if (area is null)
-			{
-				position.Y -= source_rect.Height * 4;
-				position += layers[rot].get_draw_offset().ToPoint();
-				// top left of the base layer
-				
-				result = new Rectangle(
-					position + new Point(4, 64),
-					size - new Point(8, 92)
-					// offsets taken from vanilla code
-				);
-			}
-
-			else
-			{
-				result = new Rectangle(
-					position + area.Value.Location * new Point(4),
-					area.Value.Size * new Point(4)
-				);
-			}
-		}
-
 		private void draw_fish_tank(FishTankFurniture furniture, DrawData draw_data)
 		{
 			// Code copied from FishTankFurniture.draw
