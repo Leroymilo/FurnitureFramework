@@ -244,9 +244,9 @@ Here's an example of the fields for an animation using individual frame lengths 
 	"Frame Count": 9,
 	"Frame Duration": [100, 200, 300, 400, 500, 400, 300, 200, 100],
 	"Animation Offset": [
-		{"X": 16, "Y": 0}, {"X": 32, "Y": 0}, {"X": 48, "Y": 0},
-		{"X": 16, "Y": 32}, {"X": 32, "Y": 32}, {"X": 48, "Y": 32},
-		{"X": 16, "Y": 64}, {"X": 32, "Y": 64}, {"X": 48, "Y": 64}
+		{"X": 0, "Y": 0}, 	{"X": 16, "Y": 0}, 	{"X": 32, "Y": 0},
+		{"X": 0, "Y": 32}, 	{"X": 16, "Y": 32}, {"X": 32, "Y": 32},
+		{"X": 0, "Y": 64}, 	{"X": 16, "Y": 64}, {"X": 32, "Y": 64}
 	]
 }
 ```
