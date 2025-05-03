@@ -660,7 +660,7 @@ namespace FurnitureFramework.Type
 
 			info.debug_print(indent);
 
-			ModEntry.log($"{indent}Texture Path: {texture.path}", LogLevel.Debug);
+			ModEntry.log($"{indent}Texture Path: {texture.asset_name}", LogLevel.Debug);
 			ModEntry.log($"{indent}Type: {type}", LogLevel.Debug);
 			ModEntry.log($"{indent}Price: {price}", LogLevel.Debug);
 			ModEntry.log($"{indent}Exclude from Random Sales: {exclude_from_random_sales}", LogLevel.Debug);

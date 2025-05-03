@@ -231,7 +231,7 @@ namespace FurnitureFramework.Type.Properties
 			{
 				string indent = new('\t', indent_count);
 
-				ModEntry.log($"{indent}Texture Path: {texture.path}", LogLevel.Debug);	
+				ModEntry.log($"{indent}Texture Path: {texture.asset_name}", LogLevel.Debug);	
 				ModEntry.log($"{indent}Source Recatangle: {source_rect}", LogLevel.Debug);
 				ModEntry.log($"{indent}Emition Interval: {emit_interval}", LogLevel.Debug);
 

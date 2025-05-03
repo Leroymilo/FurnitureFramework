@@ -135,7 +135,7 @@ namespace FurnitureFramework.Type.Properties
 				string indent = new('\t', indent_count);
 
 				if (texture is not null)
-					ModEntry.log($"{indent}Texture Path: {texture.Value.path}", LogLevel.Debug);
+					ModEntry.log($"{indent}Texture Path: {texture.Value.asset_name}", LogLevel.Debug);
 				ModEntry.log($"{indent}Source Rectangle: {source_rect}", LogLevel.Debug);
 				ModEntry.log($"{indent}Position: {position}", LogLevel.Debug);
 

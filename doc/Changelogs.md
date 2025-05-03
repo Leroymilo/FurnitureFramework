@@ -114,6 +114,10 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - Removed check preventing sitting on toggleable Furniture.
 
+### 3.0.4
+
+- Fixed issues with CP integration when playing in any language that isn't English.
+
 ## 3.1 (**Work in Progress**)
 
 **New Features**:

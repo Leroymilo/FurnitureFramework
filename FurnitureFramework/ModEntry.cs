@@ -196,17 +196,14 @@ namespace FurnitureFramework
         /// <param name="e">The event data.</param>
 		private void on_asset_requested(object? sender, AssetRequestedEventArgs e)
 		{
-			string name = e.NameWithoutLocale.Name;
-
-			if (name.StartsWith("Data/Furniture"))
+			if (e.NameWithoutLocale.IsEquivalentTo("Data/Furniture") || e.Name.IsEquivalentTo("Data/Furniture_international"))
 				e.Edit(Pack.FurniturePack.edit_data_furniture, priority: AssetEditPriority.Early);
 
-			else if (name.StartsWith("Data/Shops"))
-				e.Edit(Pack.FurniturePack.edit_data_shop);
+			else if (e.NameWithoutLocale.IsEquivalentTo("Data/Shops") || e.Name.IsEquivalentTo("Data/Shops_international"))
+				e.Edit(Pack.FurniturePack.edit_data_shop, priority: AssetEditPriority.Early);
 
-			// Loading any Furniture Pack data or texture
-			else
-				Pack.FurniturePack.load_resource(e);
+			// Loading any Furniture Pack data or texture (including menu icons)
+			else Pack.FurniturePack.load_resource(e);
 		}
 
 		#endregion

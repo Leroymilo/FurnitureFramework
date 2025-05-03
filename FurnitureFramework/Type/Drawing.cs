@@ -56,11 +56,6 @@ namespace FurnitureFramework.Type
 			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
 		}
 
-		public Texture2D get_texture()
-		{
-			return texture.get();
-		}
-
 		public void drawAtNonTileSpot(
 			Furniture furniture, SpriteBatch sprite_batch,
 			Vector2 position, float depth, float alpha = 1f

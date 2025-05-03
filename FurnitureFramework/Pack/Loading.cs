@@ -30,7 +30,7 @@ namespace FurnitureFramework.Pack
 		{
 			if (to_load.Count == 0) return;
 			
-			ModEntry.log($"Loading {to_load.Count} Furniture Packs...");
+			ModEntry.log($"Loading {to_load.Count} Furniture Packs...", LogLevel.Info);
 
 			while (to_load.Count > 0)
 			{
@@ -79,7 +79,7 @@ namespace FurnitureFramework.Pack
 
 			to_register.Add(UID);
 
-			ModEntry.log($"Loaded {data_UID}!");
+			ModEntry.log($"Loaded {data_UID}!", LogLevel.Info);
 
 			is_loaded = true;
 

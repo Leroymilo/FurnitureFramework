@@ -369,7 +369,7 @@ namespace FurnitureFramework.Type
 			result += $"/{placement_rules}";
 			result += $"/{info.display_name}";
 			result += $"/0";
-			result += $"/{info.id}";	// used for menu icon
+			result += $"/{texture.asset_name.Replace('/', '\\')}";	// for menu icon
 			result += $"/{exclude_from_random_sales}";
 			if (context_tags.Count > 0)
 				result += $"/" + context_tags.Join(delimiter: " ");

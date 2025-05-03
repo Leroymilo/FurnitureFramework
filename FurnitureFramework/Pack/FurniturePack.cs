@@ -60,9 +60,6 @@ namespace FurnitureFramework.Pack
 
 		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out FurnitureType type)
 		{
-			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
-			// ensure that Furniture are loaded
-
 			type = null;
 
 			if (!static_types.TryGetValue(f_id, out string? UID))
@@ -83,55 +80,86 @@ namespace FurnitureFramework.Pack
 
 		public static bool load_resource(AssetRequestedEventArgs e)
 		{
-			string name = e.NameWithoutLocale.Name;
+			if (!e.Name.StartsWith("FF/")) return false;
 
-			// Loading texture for menu icon
-			if (try_get_type(name, out FurnitureType? type))
+			if (!try_get_cp_from_resource(e.Name, out IContentPack? c_pack))
 			{
-				e.LoadFrom(type.get_texture, AssetLoadPriority.Low);
-				return true;
-			}
-
-			if (!name.StartsWith("FF/")) return false;
-			name = name[3..];	// removing the "FF/" marker
-
-			if (!try_get_cp_from_resource(name, out IContentPack? c_pack))
-			{
-				ModEntry.log($"Could not find a valid pack to load asset {name}", LogLevel.Warn);
+				ModEntry.log($"Could not find a valid pack to load asset {e.Name} (I don't know how this is possible tbh).", LogLevel.Warn);
 				return false;
 			}
 
 			string UID = c_pack.Manifest.UniqueID;
-			name = name[(UID.Length+1)..];	// removing the "{UID}/" marker
+			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
+			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
 			if (e.DataType == typeof(JObject))
-			{
+			{	
+				if (!asset_exists<JObject>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return c_pack.ModContent.Load<JObject>(name);},
+					() => {return load_resource<JObject>(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
-
-				if (!loaded_assets.ContainsKey(UID))
-					loaded_assets[UID] = new();
-				loaded_assets[UID].Add(e.NameWithoutLocale.Name);
 			}
 
-			if (e.DataType == typeof(Texture2D))
+			else if (e.DataType == typeof(Texture2D))
 			{
+				if (!asset_exists<Texture2D>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return load_texture(c_pack.ModContent, name);},
+					() => {return load_resource<Texture2D>(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
-
-				if (!loaded_assets.ContainsKey(UID))
-					loaded_assets[UID] = new();
-				loaded_assets[UID].Add(e.NameWithoutLocale.Name);
 			}
+
+			else return false;	// Neither a content file nor a texture
+
+			if (!loaded_assets.ContainsKey(UID))
+				loaded_assets[UID] = new();
+			loaded_assets[UID].Add(e.NameWithoutLocale.Name);
 
 			return true;
 		}
 
-		private static bool try_get_cp_from_resource(string resource_name, [MaybeNullWhen(false)] out IContentPack c_pack)
+		private static bool asset_exists<Type>(IModContentHelper pc_helper, string path) where Type: notnull
+		{
+			if (path.StartsWith("FF/"))
+				return ModEntry.get_helper().ModContent.DoesAssetExist<Type>(path[3..]);
+
+			else if (path.StartsWith("Content/"))
+			{
+				IGameContentHelper gc_helper = ModEntry.get_helper().GameContent;
+				IAssetName name = gc_helper.ParseAssetName(Path.ChangeExtension(path[8..], null));
+				return gc_helper.DoesAssetExist<Type>(name);
+			}
+
+			else return pc_helper.DoesAssetExist<Type>(path);
+		}
+
+		private static Type load_resource<Type>(IModContentHelper helper, string path) where Type: notnull
+		{
+			Type result;
+
+			if (path.StartsWith("FF/"))
+			{
+				result = ModEntry.get_helper().ModContent.Load<Type>(path[3..]);
+				// Load from FF content
+			}
+
+			else if (path.StartsWith("Content/"))
+			{
+				string fixed_path = Path.ChangeExtension(path[8..], null);
+				result = ModEntry.get_helper().GameContent.Load<Type>(fixed_path);
+				// Load from game content
+			}
+			
+			else result = helper.Load<Type>(path);
+			// Load from Pack content
+
+			ModEntry.log($"loaded asset at {path}", LogLevel.Trace);
+			return result;
+			
+		}
+
+		private static bool try_get_cp_from_resource(IAssetName asset_name, [MaybeNullWhen(false)] out IContentPack c_pack)
 		{
 			c_pack = null;
 			int max_key_l = 0;
@@ -140,7 +168,7 @@ namespace FurnitureFramework.Pack
 			// taking only the one with the longer matching UID in case of substring UIDs (bad)
 			foreach (string key in UIDs.Keys)
 			{
-				if (resource_name.StartsWith(key) && key.Length > max_key_l)
+				if (asset_name.StartsWith("FF/" + key) && key.Length > max_key_l)
 				{
 					c_pack = UIDs[key];
 					max_key_l = key.Length;
@@ -148,30 +176,6 @@ namespace FurnitureFramework.Pack
 			}
 
 			return c_pack is not null;
-		}
-
-		private static Texture2D load_texture(IModContentHelper pack_helper, string path)
-		{
-			Texture2D result;
-
-			if (path.StartsWith("FF/"))
-			{
-				result = ModEntry.get_helper().ModContent.Load<Texture2D>(path[3..]);
-				// Load from FF content
-			}
-
-			else if (path.StartsWith("Content/"))
-			{
-				string fixed_path = Path.ChangeExtension(path[8..], null);
-				result = ModEntry.get_helper().GameContent.Load<Texture2D>(fixed_path);
-				// Load from game content
-			}
-			
-			else result = pack_helper.Load<Texture2D>(path);
-			// Load from Pack content
-
-			ModEntry.log($"loaded texture at {path}", LogLevel.Trace);
-			return result;
 		}
 
 		public static void edit_data_furniture(IAssetData asset)
@@ -212,8 +216,7 @@ namespace FurnitureFramework.Pack
 
 		public static void edit_data_shop(IAssetData asset)
 		{
-			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
-			// ensure that Furniture are loaded
+			load_all();
 
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
