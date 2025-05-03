@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/content.json",
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
 	"Format": 3,
 	"Furniture": {
 		// The following furniture is an example of patching with a "Load" action

@@ -1,5 +1,5 @@
 
-[Go to bottom](#24)
+[Go to bottom](#304)
 
 # 2.0
 
@@ -64,7 +64,7 @@ The functionality of "Bed Area Pixel" will be moved to the "Bed Area" field in t
 
 Added a "Condition" option to restrict what can be placed in a slot with a Game State Query.
 
-# 3.0 (**Testing**)
+# 3.0
 
 **Format Update**:
 - `Bed Area Pixel` was removed, `Bed Area` is now a Rectangle **in pixels**.
@@ -101,7 +101,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Invalidating an included pack will only cause this included pack and its new children to reload. Any included pack that was already loaded will not be loaded again if not invalidated.
 - Implemented layered lazy loading (packs -> types -> [collisions, layers, lightsources, particles, seats, slots, sounds]).
 
-### 3.0.1 (**Testing**)
+### 3.0.1
 
 - Fixed the `ff_reload` command because it wasn't implemented correctly (oopsy).
 - Changed Bed Collision to completely overwrite the default row of empty tiles letting the player go through (use the Collision Map instead).
@@ -116,13 +116,13 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 ### 3.0.4
 
-- Fixed issues with CP integration when playing in any language that isn't English.
+- Fixed issues with asset loading and CP integration when playing in any language that isn't English.
+- Added the possibility to put a list in the `Animation`'s `Frame Duration` to define the length of every frame separately.
 
 ## 3.1 (**Work in Progress**)
 
 **New Features**:
 - **Work in Progress** Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
-- **Work in Progress** Added the possibility to put a list in the `Animation`'s `Frame Duration` to define the length of every frame separately. (Reedtanguerra)
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
@@ -131,4 +131,4 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - i18n support in `Display Name` and `Description` (also in variants tokens?).
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
-- Customize StorageFurniture allowed item types.
+- Customize StorageFurniture allowed item types. (@B)

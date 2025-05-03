@@ -13,7 +13,7 @@ namespace FurnitureFramework.Type.Properties
 		public bool animates {get; private set;} = false;
 
 		int frame_count = 0;
-		int frame_length = 0;
+		List<int> end_times;	// ::)
 		List<Point> offsets;
 
 		public void parse(JToken? anim_token)
@@ -22,9 +22,49 @@ namespace FurnitureFramework.Type.Properties
 				return;
 
 			frame_count = JsonParser.parse(data.GetValue("Frame Count"), 0);
-			frame_length = JsonParser.parse(data.GetValue("Frame Duration"), 0);
+			animates = frame_count > 0;
+			if (!animates) return;
+			
+			end_times = new(frame_count);
+			int last_end = 0;
+			JToken? length_token = data.GetValue("Frame Duration");
+			if (length_token is JArray length_array)
+			{
+				foreach (JToken token in length_array)
+				{
+					int length = 0;
+					if (!JsonParser.try_parse(token, ref length))
+						continue;
+					last_end += length;
+					end_times.Add(last_end);
+				}
 
-			animates = frame_count > 0 && frame_length > 0;
+				if (end_times.Count != frame_count)
+				{
+					string msg = "Count of Frame Durations does not match Frame Count";
+					msg += ", skipping animation";
+					ModEntry.log(msg, LogLevel.Warn);
+					animates = false;
+					return;
+				}
+			}
+			else
+			{
+				int length = 0;
+				JsonParser.try_parse(length_token, ref length);
+
+				if (length == 0)
+				{
+					animates = false;
+					return;
+				}
+
+				end_times.Add(length);
+				for (int i = 1; i < frame_count; i++)
+					end_times.Add(end_times[i-1] + length);
+			}
+
+			animates &= end_times.Last() > 0;
 			if (!animates) return;
 
 			offsets = new(frame_count);
@@ -43,7 +83,7 @@ namespace FurnitureFramework.Type.Properties
 				{
 					string msg = "Count of Animation Offset does not match Frame Count";
 					msg += ", skipping animation";
-					ModEntry.log(msg, StardewModdingAPI.LogLevel.Warn);
+					ModEntry.log(msg, LogLevel.Warn);
 					animates = false;
 					return;
 				}
@@ -69,7 +109,9 @@ namespace FurnitureFramework.Type.Properties
 			if (!animates) return Point.Zero;
 
 			long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
-			int frame = (int)(time_ms / frame_length) % frame_count;
+			int loop_time = (int)(time_ms % end_times.Last());
+			int frame = end_times.BinarySearch(loop_time);
+			if (frame < 0) frame = ~frame;
 			return offsets[frame];
 		}
 
@@ -82,12 +124,12 @@ namespace FurnitureFramework.Type.Properties
 
 			indent += '\t';
 			ModEntry.log($"{indent}frame count: {frame_count}", LogLevel.Debug);
-			ModEntry.log($"{indent}frame length: {frame_length}", LogLevel.Debug);
-			ModEntry.log($"{indent}offsets: ");
-			
-			indent += '\t';
+			ModEntry.log($"{indent}frame ends:", LogLevel.Debug);
+			foreach (int end in end_times)
+				ModEntry.log($"{indent}\t{end}ms", LogLevel.Debug);
+			ModEntry.log($"{indent}offsets: ", LogLevel.Debug);
 			foreach (Point offset in offsets)
-				ModEntry.log($"{indent}{offset}", LogLevel.Debug);
+				ModEntry.log($"{indent}\t{offset}", LogLevel.Debug);
 		}
 	}
 
