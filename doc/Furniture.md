@@ -222,6 +222,8 @@ The `Animation` field requires some properties to be set in order to work proper
 - `Frame Duration`: the length of every frame in milliseconds
 - `Animation Offset`: the position of each frame relative to the preceding frame.
 
+The `Frame Duration` is an **Integer** field, it defines the length of each frame in milliseconds. You can also use a list of durations to define the length of each frame individually, in which case it must have as many values as there are Frames.
+
 The `Animation Offset` is an **Integer** [Vector](Structures/Vector.md) field. At every new animation frame, the top left of every Layer's Source Rect will be moved by this offset, so you can have your animations aligned however you want in your sprite-sheet.  
 You can also use a list of offsets, which must have as many values as there are Frames, to define the specific Source Rect offset of each frame individually.
 
@@ -233,6 +235,19 @@ Here's an example of the fields for a working animation taken from the `cat_stat
 	"Frame Count": 7,
 	"Frame Duration": 500,
 	"Animation Offset": {"X": 16, "Y": 0}
+}
+```
+
+Here's an example of the fields for an animation using individual frame lengths and offsets (the values are arbitrary):
+```json
+"Animation": {
+	"Frame Count": 9,
+	"Frame Duration": [100, 200, 300, 400, 500, 400, 300, 200, 100],
+	"Animation Offset": [
+		{"X": 16, "Y": 0}, {"X": 32, "Y": 0}, {"X": 48, "Y": 0},
+		{"X": 16, "Y": 32}, {"X": 32, "Y": 32}, {"X": 48, "Y": 32},
+		{"X": 16, "Y": 64}, {"X": 32, "Y": 64}, {"X": 48, "Y": 64}
+	]
 }
 ```
 
