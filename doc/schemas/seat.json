@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft-07/schema",
-	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/seat.json",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/seat.json",
 	"title": "Seat",
 	"description": "A Seat for this Furniture.",
 	"type": "object",
@@ -8,11 +8,11 @@
 		"Position": {
 			"description": "The position of this seat in the Furniture bounding box.",
 			"oneOf": [
-				{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json" },
+				{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json" },
 				{
 					"type": "object",
 					"additionalProperties": {
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
 					}
 				}
 			]
@@ -37,7 +37,7 @@
 
 		"Depth": {
 			"description": "The depth a Player will be drawn when sitting in this Seat. Do not set to let the game decide (often a good choice).",
-			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/depth.json"
+			"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/depth.json"
 		}
 	},
 	"required": [ "Position", "Player Direction" ],

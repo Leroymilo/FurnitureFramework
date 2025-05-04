@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft-07/schema",
-	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/content.json",
-    "@documentationUrl": "https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Author.md",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+    "@documentationUrl": "https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Author.md",
 
 	"title": "Furniture Pack",
 	"description": "The definition of a Content Pack for the Furniture Framework",
@@ -72,11 +72,11 @@
 					"Collisions": {
 						"description": "The Collisions of your Furniture. Can be directional.",
 						"oneOf": [
-							{ "$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/collisions.json" },
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/collisions.json" },
 							{
 								"type": "object",
 								"additionalProperties": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/collisions.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/collisions.json"
 								}
 							}
 						]
@@ -123,14 +123,14 @@
 							{
 								"type": "object",
 								"additionalProperties": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
 								},
 								"minProperties": 1
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
 								},
 								"minItems": 1,
 								"uniqueItems": true
@@ -168,7 +168,7 @@
 								"description": "The offset applied to the Source Rectangles at each frame of animation.\nIt is also possible to provide the offset of each frame separately in a list.",
 								"oneOf": [
 									{
-										"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json",
+										"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json",
 										"not": {
 											"type": "object",
 											"properties": {
@@ -180,7 +180,7 @@
 									{
 										"type": "array",
 										"items": {
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
 										}
 									}
 								]
@@ -204,17 +204,17 @@
 
 					"Icon Rect": {
 						"description": "The part of the Source Image to use as the icon of the Furniture in inventories.",
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},
 
 					"Toggle": {
 						"type": "boolean",
-						"description": "Makes your Furniture toggleable, see https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#Toggle"
+						"description": "Makes your Furniture toggleable, see https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Toggle"
 					},
 
 					"Time Based": {
 						"type": "boolean",
-						"description": "Makes your Furniture depend on the outdoor luminosity, see https://github.com/Leroymilo/FurnitureFramework/blob/3.0.0/doc/Furniture.md#Time-Based"
+						"description": "Makes your Furniture depend on the outdoor luminosity, see https://github.com/Leroymilo/FurnitureFramework/blob/main/doc/Furniture.md#Time-Based"
 					},
 
 					"Sounds": {
@@ -241,12 +241,12 @@
 						"description": "The Layers that will be drawn in the game to show this Furniture. At least one Layer is required.",
 						"oneOf": [
 							{
-								"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/layer.json"
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layer.json"
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/layer.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layer.json"
 								},
 								"minLength": 1
 							},
@@ -255,12 +255,12 @@
 								"additionalProperties": {
 									"oneOf": [
 										{
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/layer.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layer.json"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/layer.json"
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/layer.json"
 											},
 											"minLength": 1
 										}
@@ -274,12 +274,12 @@
 						"description": "The Seats where Players will be able to sit, like in a chair, or a couch.",
 						"oneOf": [
 							{
-								"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/seat.json"
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seat.json"
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/seat.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seat.json"
 								}
 							},
 							{
@@ -287,12 +287,12 @@
 								"additionalProperties": {
 									"oneOf": [
 										{
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/seat.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seat.json"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/seat.json"
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/seat.json"
 											}
 										}
 									]
@@ -305,12 +305,12 @@
 						"description": "The slots where players will be able to place items, like on a table.",
 						"oneOf": [
 							{
-								"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/slot.json"
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slot.json"
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/slot.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slot.json"
 								}
 							},
 							{
@@ -318,12 +318,12 @@
 								"additionalProperties": {
 									"oneOf": [
 										{
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/slot.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slot.json"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/slot.json"
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/slot.json"
 											}
 										}
 									]
@@ -336,12 +336,12 @@
 						"description": "Light Sources or Glows that this Furniture will emit.",
 						"oneOf": [
 							{
-								"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/light.json"
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/light.json"
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/light.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/light.json"
 								}
 							},
 							{
@@ -349,12 +349,12 @@
 								"additionalProperties": {
 									"oneOf": [
 										{
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/light.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/light.json"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/light.json"
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/light.json"
 											}
 										}
 									]
@@ -367,12 +367,12 @@
 						"description": "The types of Particles that will be emitted by this Furniture.",
 						"oneOf": [
 							{
-								"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json"
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/particles.json"
 							},
 							{
 								"type": "array",
 								"items": {
-									"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json"
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/particles.json"
 								}
 							},
 							{
@@ -380,12 +380,12 @@
 								"additionalProperties": {
 									"oneOf": [
 										{
-											"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json"
+											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/particles.json"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json"
+												"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/particles.json"
 											}
 										}
 									]
@@ -396,7 +396,7 @@
 
 					"Screen Position": {
 						"description": "The position of the TV screen, in pixels, starting from the bottom left of the Furniture.",
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
 					},
 
 					"Screen Scale": {
@@ -406,7 +406,7 @@
 
 					"Bed Spot": {
 						"description": "Where the Player will respawn in the Bed on a new day.",
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/point.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
 					},
 
 					"Bed Type": {
@@ -416,12 +416,12 @@
 
 					"Bed Area": {
 						"description": "Defines the rectangle (in pixels) where the player will be asked to sleep.",
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},
 
 					"Fish Area": {
 						"description": "The Rectangle of the Furniture where the fishes will be able swim.",
-						"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 					},
 
 					"Disable Fishtank Light": {

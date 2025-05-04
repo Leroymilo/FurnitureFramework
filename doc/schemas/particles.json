@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft-07/schema",
-	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/particles.json",
+	"$id": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/particles.json",
 	"title": "Particles",
 	"description": "The definition for a type of Particles to be emitted.",
 	"type": "object",
@@ -11,12 +11,12 @@
 		},
 		"Source Rect": {
 			"description": "The part of the image corresponding to this type of Particles (will take the size of the image if not set).",
-			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+			"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 		},
 		"Emission Interval": { "type": "integer", "minimum": 1 },
 		"Spawn Rect": {
 			"description": "The area in the Furniture where the Particles of this type will spawn.",
-			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/rectangle.json"
+			"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
 		},
 
 		"Depths": {
@@ -24,7 +24,7 @@
 			"items": { "type": "number" }
 		},
 		"Speed": {
-			"$ref": "/Leroymilo/FurnitureFramework/3.0.0/doc/schemas/vector.json"
+			"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/vector.json"
 		},
 		"Rotations": {
 			"type": "array",
