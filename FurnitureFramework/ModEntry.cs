@@ -133,9 +133,18 @@ namespace FurnitureFramework
 			#region Slot Interactions
 
 			if (!Game1.player.CanMove) return;
-			
-			Point pos = new(Game1.viewport.X + Game1.getOldMouseX(), Game1.viewport.Y + Game1.getOldMouseY());
+			if (Game1.activeClickableMenu != null) return;
 
+			Point screen_pos = e.Cursor.GetScaledScreenPixels().ToPoint();
+
+			// Block click if mouse is over any main HUD component
+			foreach (StardewValley.Menus.IClickableMenu menu in Game1.onScreenMenus)
+			{
+				Rectangle bounding_box = new(menu.xPositionOnScreen, menu.yPositionOnScreen, menu.width, menu.height);
+				if (bounding_box.Contains(screen_pos)) return;
+			}
+
+			Point pos = e.Cursor.AbsolutePixels.ToPoint();
 			Item? item = Game1.player.ActiveItem?.getOne();
 			if (e.Button == get_config().slot_place_key && item is SVObject obj)
 			{
