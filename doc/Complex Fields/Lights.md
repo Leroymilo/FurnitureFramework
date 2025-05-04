@@ -22,8 +22,9 @@ This is the position of the center of the light source on the Furniture **in pix
 ## Source Image
 
 The path to the image that will be used for the light, you can provide it yourself in your assets or use one from the game.  
-For example, "Content/LooseSprites/Lighting/indoorWindowLight.png" is used for lamp lights, and "FF/assets/light_glows/window.png" is used for the window glow (it is in the Furniture Framework's assets because I extracted it from the game's cursors tilesheet).  
 If you omit this path, the main texture of your Furniture will be used.
+
+Because a Light Source (as opposed to Light Glow) works by removing darkness from the screen instead of adding a sprite to the screen, changing the color of pixels in the Source Image will not affect the color of the light in game, please use the ["Color"](#color) field to do this.
 
 ## Toggle
 
@@ -43,7 +44,7 @@ This is a number defining the radius of your light source, it simply scales your
 
 ## Color
 
-A way to give a tint to your light source, if you don't want to modify the texture itself. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (RGB values are not accepted). Defaults to `White` (which will not affect the color of the texture).
+A way to give a tint to your light. The `Color` is the _Name_ of a color, see [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names. You can also provide a color code by starting with `#` (`#FF00FF` is purple for example). Defaults to `White`, or `#FFFFFF` (which will not change the color of the texture).
 
 # Examples
 

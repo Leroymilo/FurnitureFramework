@@ -60,6 +60,8 @@ namespace FurnitureFramework.Pack
 
 		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out FurnitureType type)
 		{
+			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
+
 			type = null;
 
 			if (!static_types.TryGetValue(f_id, out string? UID))

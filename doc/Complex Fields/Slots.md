@@ -44,7 +44,7 @@ This is an **integer** [vector](../Structures/Vector.md) that defines how big (*
 
 ## Debug Color
 
-This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (RGB values are not accepted).
+This is the name of the color of the rectangle that will be shown if the "Slots Debug" options are enabled in the config, this is just a visual help to know where the Slot's Area is located. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names. You can also provide a color code by starting with `#` (`#FF00FF` is purple for example).
 
 ## Condition
 

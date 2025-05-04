@@ -65,7 +65,7 @@ The `Scale Change` is a decimal number defining the rate at which the Particles 
 
 ## Color
 
-The `Color` is the _Name_ of a color that you want to apply to your particles. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color names (R, G, B and A are not accepted). Defaults to White (will not change the color of the Particle).
+The `Color` is the _Name_ of a color that you want to apply to your particles. See [here](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color?view=net-8.0#properties) for a list of accepted color namesYou can also provide a color code by starting with `#` (`#FF00FF` is purple for example). Defaults to `White`, or `#FFFFFF` (which will not change the color of the Particle).
 
 ## Transparency
 

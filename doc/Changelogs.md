@@ -119,6 +119,12 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed issues with asset loading and CP integration when playing in any language that isn't English.
 - Added the possibility to put a list in the `Animation`'s `Frame Duration` to define the length of every frame separately.
 
+### 3.0.5
+
+- Fixed `ff_reload` command crashing the game because of previous changes (oopsie).
+- Added the possibility of using a Color code instead of a name in all color fields.
+- Colored Light Sources should now be more intuitive: if the texture provided is white, the tint of the Light Source can be controlled by the "Color" field, which defaults to "White". This shouldn't break any existing pack, but it might change the color of Light Sources in some cases.
+
 ## 3.1 (**Work in Progress**)
 
 **New Features**:

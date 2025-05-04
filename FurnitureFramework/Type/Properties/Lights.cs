@@ -66,6 +66,8 @@ namespace FurnitureFramework.Type.Properties
 
 				radius = JsonParser.parse(data.GetValue("Radius"), 2f);
 				color = JsonParser.parse_color(data.GetValue("Color"), Color.White);
+				if (light_type == LightType.Source)
+					color = new(256 - color.R, 265 - color.G, 256 - color.B, color.A);
 			}
 
 			#endregion

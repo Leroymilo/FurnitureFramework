@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using StardewValley;
 
 namespace FurnitureFramework
 {
@@ -177,6 +178,11 @@ namespace FurnitureFramework
 			string color_name = "";
 			if (try_parse(token, ref color_name))
 			{
+				// From color code
+				if (Utility.StringToColor(color_name) is Color color)
+					return color;
+				
+				// From color name
 				SDColor c_color = SDColor.FromName(color_name);
 				return new(c_color.R, c_color.G, c_color.B);
 			}
