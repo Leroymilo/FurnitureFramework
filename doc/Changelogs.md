@@ -127,6 +127,10 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 ## 3.1 (**Work in Progress**)
 
+**Fixes**:
+- **Work in Progress** Furniture data is now refreshed after a CP EditData patch (oopsie again).
+- **Work in Progress** The Santa easter-egg now checks custom Slots.
+
 **New Features**:
 - **Work in Progress** Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:

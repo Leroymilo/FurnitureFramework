@@ -157,13 +157,13 @@ However, you can use the same update key for both, just make sure that both mods
 
 ### How to patch FF resources
 
-With the 3.0 FF update, it is now possible to patch textures (.png) and data (.json) requested by the Furniture Framework. This means that you can edit textures and data in your Furniture Pack with all the features of Content Patcher (config options, tokens, conditions,...).
+With the 3.0 FF update, it is now possible to patch textures (.png) ~~and data (.json)~~ requested by the Furniture Framework. This means that you can edit textures ~~and data~~ in your Furniture Pack with all the features of Content Patcher (config options, tokens, conditions,...).
 
 To patch a resource from your Furniture Pack, you'll need to target `FF/<Furniture Pack UniqueID>/<path to the resource>`. Be careful, the `{{ModID}}` token from Content Patcher will point to the UniqueID of your CP mod, not your Furniture Pack! The path to the resource is relative to the root of your Furniture Pack, most of the time, it is what you wrote in your Furniture Pack's data.  
 There is a simple example of this use in the [Example Pack](../Example%20Pack/%5BCP%5D/content.json): to make a bush change sprite in each season, its texture was edited with a `{{season}}` token. Another example is the [Template to make a dropdown config option](Templates/Dropdown%20Config).  
 In both examples, the Content Patcher mod needs a version of the final textures to be loaded.
 
-It is not recommended to patch a Furniture Pack's data, because it will cause FF to reload a lot of stuff. Patching stuff that will change only on every day (as opposed to every time change) is mostly fine.
+~~It is not recommended to patch a Furniture Pack's data, because it will cause FF to reload a lot of stuff. Patching stuff that will change only on every day (as opposed to every time change) is mostly fine.~~
 
 ## Alternative Textures Compatibility
 
