@@ -393,9 +393,14 @@ namespace FurnitureFramework.Type
 			{
 				foreach (Item? item in chest.Items)
 				{
-					if (item != null) return true;
+					if (item != null)
+					{
+						ModEntry.log($"{item.ItemId} in custom slot");
+						return true;
+					}
 				}
 
+				ModEntry.log("Nothing in custom slot");
 				return false;	// empty chest
 			}
 

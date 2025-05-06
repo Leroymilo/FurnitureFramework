@@ -224,7 +224,7 @@ call check_held_object
 				))
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 1);
 		}
 
 		#endregion

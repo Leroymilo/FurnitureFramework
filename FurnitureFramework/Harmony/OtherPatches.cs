@@ -122,4 +122,54 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 		#endregion
 	}
 
+
+	[RequiresPreviewFeatures]
+	internal class UtilityTranspiler
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Transpiler;
+		static readonly System.Type base_type = typeof(Utility);
+		#pragma warning restore 0414
+
+		#region canGrabSomethingFromHere
+/* 	Replace :
+
+ldfld class Netcode.NetRef`1<class StardewValley.Object> StardewValley.Object::heldObject
+callvirt instance !0 class Netcode.NetFieldBase`2<class StardewValley.Object, class Netcode.NetRef`1<class StardewValley.Object>>::get_Value()
+
+	With :
+
+call check_held_object
+
+*/
+
+		static IEnumerable<CodeInstruction> canGrabSomethingFromHere(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new()
+			{
+				new(OpCodes.Ldfld, AccessTools.Field(
+					typeof(StardewValley.Object),
+					"heldObject"
+				)),
+				new(OpCodes.Callvirt, AccessTools.Method(
+					typeof(Netcode.NetRef<StardewValley.Object>),
+					"get_Value"
+				))
+			};
+			List<CodeInstruction> to_write = new()
+			{
+				new(OpCodes.Call, AccessTools.Method(
+					typeof(Type.FurnitureType),
+					"has_held_object"
+				))
+			};
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+
+		}
+
+		#endregion
+	}
 }
