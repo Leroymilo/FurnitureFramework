@@ -307,7 +307,7 @@ namespace FurnitureFramework.Type
 					break;
 
 				case SpecialType.FishTank:
-					fish_area = JsonParser.parse_dir<Rectangle?>(data.GetValue("Fish Area"), rot_names, null);
+					fish_area = JsonParser.parse_dir(data.GetValue("Fish Area"), rot_names, Rectangle.Empty);
 					disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
 					break;
 			}

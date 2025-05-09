@@ -129,9 +129,8 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **Fixes**:
 - Fixed Furniture with "Force Type" set to `table` or `long table` being impossible to pick-up.
-- **Work in Progress** Fixed whatever was broken with FishTanks.
+- Fixed whatever was broken with FishTanks (broken Fish Area parsing, and bubbles and decoration not being drawn).
 - **Work in Progress** Furniture data is now refreshed after a CP EditData patch (oopsie again).
-- **Work in Progress** The Santa easter-egg now checks custom Slots.
 
 **New Features**:
 - **Work in Progress** Added a way to customize the category of the Furniture in the vanilla Furniture Catalogue (in which tab it appears).
@@ -139,6 +138,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
+- **Work in Progress** The Santa easter-egg now checks custom Slots.
 
 # Planned Future Features
 

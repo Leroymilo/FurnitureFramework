@@ -113,7 +113,7 @@ namespace FurnitureFramework.Type
 		public readonly BedType bed_type = BedType.Double;
 		Rectangle bed_area;
 
-		List<Rectangle?> fish_area = new();
+		List<Rectangle> fish_area = new();
 		public readonly bool disable_fishtank_light = false;
 
 		#endregion
@@ -394,13 +394,9 @@ namespace FurnitureFramework.Type
 				foreach (Item? item in chest.Items)
 				{
 					if (item != null)
-					{
-						ModEntry.log($"{item.ItemId} in custom slot");
 						return true;
-					}
 				}
 
-				ModEntry.log("Nothing in custom slot");
 				return false;	// empty chest
 			}
 
@@ -464,9 +460,9 @@ namespace FurnitureFramework.Type
 			);	// bottom left of the bounding box
 			Point size = source_rect.Size * new Point(4);
 
-			Rectangle? area = fish_area[rot];
+			Rectangle area = fish_area[rot];
 
-			if (area is null)
+			if (area.IsEmpty)
 			{
 				position.Y -= source_rect.Height * 4;
 				position += layers[rot].get_draw_offset().ToPoint();
@@ -482,8 +478,8 @@ namespace FurnitureFramework.Type
 			else
 			{
 				result = new Rectangle(
-					position + area.Value.Location * new Point(4),
-					area.Value.Size * new Point(4)
+					position + area.Location * new Point(4),
+					area.Size * new Point(4)
 				);
 			}
 		}
