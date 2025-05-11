@@ -1,0 +1,31 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"FF.debug_catalog": {
+			"Display Name": "FF Debug Catalogue",
+			"Description": "A Catalogue containing all FF Custom Furniture",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 1,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/catalogue.png",
+			"Shop Id": "FF.debug_catalog",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 16,
+						"Height": 32
+					}
+				}
+			]
+		}
+	},
+	"Included": {
+
+	}
+}

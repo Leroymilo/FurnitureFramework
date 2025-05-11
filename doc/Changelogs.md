@@ -131,10 +131,11 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed Furniture with "Force Type" set to `table` or `long table` being impossible to pick-up.
 - Fixed whatever was broken with FishTanks (broken Fish Area parsing, and bubbles and decoration not being drawn).
 - **Work in Progress** Furniture data is now refreshed after a CP EditData patch (oopsie again).
+- Removed the default "Have a look at my wares" text in Catalogues created with FF.
 
 **New Features**:
 - **Work in Progress** Added a way to customize the category of the Furniture in the vanilla Furniture Catalogue (in which tab it appears).
-- **Work in Progress** Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
+- Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay

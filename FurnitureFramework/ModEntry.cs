@@ -57,6 +57,7 @@ namespace FurnitureFramework
 			helper.Events.GameLoop.GameLaunched += on_game_launched;
             helper.Events.Input.ButtonPressed += on_button_pressed;
 			helper.Events.Content.AssetRequested += on_asset_requested;
+			helper.Events.Content.AssetsInvalidated += on_assets_invalidated;
 			helper.Events.Player.Warped += on_player_warped;
 			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
 			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
@@ -114,6 +115,8 @@ namespace FurnitureFramework
 		}
 
 		#endregion
+
+		#region On Button Pressed
 
         /// <inheritdoc cref="IInputEvents.ButtonPressed"/>
         /// <param name="sender">The event sender.</param>
@@ -198,6 +201,8 @@ namespace FurnitureFramework
 			#endregion
         }
 
+		#endregion
+
 		#region Asset handling
 
         /// <inheritdoc cref="IContentEvents.AssetRequested"/>
@@ -213,6 +218,17 @@ namespace FurnitureFramework
 
 			// Loading any Furniture Pack data or texture (including menu icons)
 			else Pack.FurniturePack.load_resource(e);
+		}
+
+		private void on_assets_invalidated(object? sender, AssetsInvalidatedEventArgs e)
+		{
+			foreach (IAssetName name in e.Names)
+			{
+				if (name.StartsWith("FF"))
+				{
+					log($"{name} invalidated", LogLevel.Warn);
+				}
+			}
 		}
 
 		#endregion

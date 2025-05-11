@@ -181,44 +181,51 @@ namespace FurnitureFramework.Pack
 
 			public void register(IGenericModConfigMenuApi api, IManifest manifest)
 			{
-				api.AddSectionTitle(manifest, () => "Furniture", null);
-				foreach (string type_id in types.Keys)
+				if (types.Count > 0)
 				{
-					api.AddBoolOption(
-						manifest,
-						() => types[type_id],
-						(bool value) => {
-							if (types[type_id] != value)
-								invalidate_game_data();
-							types[type_id] = value;
-						},
-						() => type_names[type_id],
-						() => type_id,
-						type_id
-					);
+					api.AddSectionTitle(manifest, () => "Furniture", null);
+					foreach (string type_id in types.Keys)
+					{
+						if (type_id == "FF.debug_catalog") continue;
+						api.AddBoolOption(
+							manifest,
+							() => types[type_id],
+							(bool value) => {
+								if (types[type_id] != value)
+									invalidate_game_data();
+								types[type_id] = value;
+							},
+							() => type_names[type_id],
+							() => type_id,
+							type_id
+						);
+					}
 				}
 
-				api.AddSectionTitle(manifest, () => "Included Packs", null);
-				foreach (string i_data_UID in i_packs.Keys)
+				if (i_packs.Count > 0)
 				{
-					api.AddBoolOption(
-						manifest,
-						() => i_packs[i_data_UID],
-						(bool value) => {
-							if (i_packs[i_data_UID] != value)
-								invalidate_game_data();
-							i_packs[i_data_UID] = value;
-						},
-						() => i_pack_names[i_data_UID],
-						() => i_data_UID,
-						i_data_UID
-					);
+					api.AddSectionTitle(manifest, () => "Included Packs", null);
+					foreach (string i_data_UID in i_packs.Keys)
+					{
+						api.AddBoolOption(
+							manifest,
+							() => i_packs[i_data_UID],
+							(bool value) => {
+								if (i_packs[i_data_UID] != value)
+									invalidate_game_data();
+								i_packs[i_data_UID] = value;
+							},
+							() => i_pack_names[i_data_UID],
+							() => i_data_UID,
+							i_data_UID
+						);
 
-					api.AddPageLink(
-						mod: manifest,
-						pageId: i_data_UID,
-						text: () => $"{i_pack_names[i_data_UID]} Config"
-					);
+						api.AddPageLink(
+							mod: manifest,
+							pageId: i_data_UID,
+							text: () => $"{i_pack_names[i_data_UID]} Config"
+						);
+					}
 				}
 			}
 		}

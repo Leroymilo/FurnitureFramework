@@ -242,6 +242,7 @@ namespace FurnitureFramework.Type
 			JsonParser.try_parse(data.GetValue("Shows in Shops"), ref shops);
 			for (int i = 0; i < shops.Count; i++)
 				shops[i] = shops[i].Replace("[[ModID]]", info.mod_id, true, null);
+			shops.Add("FF.debug_catalog");
 
 			#endregion
 
@@ -399,7 +400,10 @@ namespace FurnitureFramework.Type
 					{"HappyHomeDesigner/Catalogue", "true"}
 				},
 				Owners = new List<ShopOwnerData>() { 
-					new() { Name = "AnyOrNone" }
+					new() {
+						Name = "AnyOrNone",
+						Dialogues = new() {}	// To remove default dialogue
+					}
 				}
 			};
 			editor[s_id] = catalogue_shop_data;

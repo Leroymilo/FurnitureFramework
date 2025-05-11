@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewValley.GameData;
 using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
@@ -31,6 +32,8 @@ namespace FurnitureFramework.Pack
 		// maps type_id to the data_UID of the pack where it's defined.
 		static Dictionary<string, HashSet<string>> loaded_assets = new();
 		// a set of what asset names were loaded by each pack UID.
+
+		static IContentPack default_pack;
 
 		// Pack Properties
 
@@ -224,6 +227,15 @@ namespace FurnitureFramework.Pack
 
 			foreach (string UID in UIDs.Keys)
 				packs[$"{UID}/{DEFAULT_PATH}"].add_data_shop(editor);
+			
+			// All items in the Debug Catalogue are free
+			if (!editor.ContainsKey("FF.debug_catalog")) return;    // Just in case
+			QuantityModifier price_mod = new() { Id = "FreeCatalogue",
+				Modification = QuantityModifier.ModificationType.Set,
+				Amount = 0
+			};
+			editor["FF.debug_catalog"].PriceModifiers = new() { price_mod };
+			editor["FF.debug_catalog"].PriceModifierMode = QuantityModifier.QuantityModifierMode.Minimum;
 		}
 
 		private void add_data_shop(IDictionary<string, ShopData> editor)

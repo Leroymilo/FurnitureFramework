@@ -15,8 +15,18 @@ namespace FurnitureFramework.Pack
 
 		public static void pre_load(IModHelper helper)
 		{
-			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned())
+			default_pack = helper.ContentPacks.CreateTemporary(
+				helper.DirectoryPath,
+				"leroymilo.FurnitureFramework.DefaultPack",
+				"FF Default Pack",
+				"An empty Furniture Pack coming with FF and can be edited with CP.",
+				"leroymilo",
+				new SemanticVersion("3.1")
+			);
+
+			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned().Append(default_pack))
 			{
+				ModEntry.log(c_pack.Manifest.UniqueID, LogLevel.Warn);
 				FurniturePack pack = new(c_pack);
 				to_load.Push(pack.data_UID);
 				packs[pack.data_UID] = pack;
