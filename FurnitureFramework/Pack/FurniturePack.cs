@@ -183,6 +183,8 @@ namespace FurnitureFramework.Pack
 			return c_pack is not null;
 		}
 
+		#region Data/Furniture
+
 		public static void edit_data_furniture(IAssetData asset)
 		{
 			load_all();
@@ -219,6 +221,10 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
+		#endregion
+
+		#region Data/Shops
+
 		public static void edit_data_shop(IAssetData asset)
 		{
 			load_all();
@@ -254,6 +260,8 @@ namespace FurnitureFramework.Pack
 				i_pack.pack.add_data_shop(editor);
 			}
 		}
+
+		#endregion
 
 		#endregion
 

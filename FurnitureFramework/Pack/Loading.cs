@@ -26,7 +26,6 @@ namespace FurnitureFramework.Pack
 
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned().Append(default_pack))
 			{
-				ModEntry.log(c_pack.Manifest.UniqueID, LogLevel.Warn);
 				FurniturePack pack = new(c_pack);
 				to_load.Push(pack.data_UID);
 				packs[pack.data_UID] = pack;
