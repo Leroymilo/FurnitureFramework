@@ -134,7 +134,6 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Removed the default "Have a look at my wares" text in Catalogues created with FF.
 
 **New Features**:
-- **Work in Progress** Added a way to customize the category of the Furniture in the vanilla Furniture Catalogue (in which tab it appears).
 - Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
@@ -147,3 +146,4 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - i18n support in `Display Name` and `Description` (also in variants tokens?).
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
 - Customize StorageFurniture allowed item types. (@B)
+- Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
