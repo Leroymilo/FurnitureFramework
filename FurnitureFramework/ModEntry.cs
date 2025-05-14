@@ -222,13 +222,11 @@ namespace FurnitureFramework
 
 		private void on_assets_invalidated(object? sender, AssetsInvalidatedEventArgs e)
 		{
+			bool did_stuff = false;
 			foreach (IAssetName name in e.Names)
-			{
-				if (name.StartsWith("FF"))
-				{
-					log($"{name} invalidated", LogLevel.Warn);
-				}
-			}
+				did_stuff |= Pack.FurniturePack.invalidate_asset(name);
+			
+			if (did_stuff) Pack.FurniturePack.invalidate_game_data();
 		}
 
 		#endregion

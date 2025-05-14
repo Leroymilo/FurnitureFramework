@@ -66,10 +66,10 @@ namespace FurnitureFramework.Pack
 		{
 			if (is_loaded) return;
 
-			JObject data;
+			Data.Pack data;
 			try
 			{
-				data = ModEntry.get_helper().GameContent.Load<JObject>($"FF/{data_UID}");
+				data = ModEntry.get_helper().GameContent.Load<Data.Pack>($"FF/{data_UID}");
 			}
 			catch (ContentLoadException ex)
 			{
@@ -78,13 +78,13 @@ namespace FurnitureFramework.Pack
 			}
 
 			if (!is_included)
-				if (!check_format(data)) return;
+				if (!check_format(data.Format)) return;
 			
 			load_config();
 
-			load_furniture(data);
+			load_furniture(data.Furniture);
 
-			load_included(data);
+			load_included(data.Included);
 
 			to_register.Add(UID);
 
@@ -99,24 +99,13 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		private bool check_format(JObject data)
+		private bool check_format(int format)
 		{
-			JToken? format_token = data.GetValue("Format");
-			if (format_token is null || format_token.Type != JTokenType.Integer)
-			{
-				ModEntry.log("Missing Format, skipping Furniture Pack.", LogLevel.Error);
-				return false;
-			}
-
-			int format = -1;
-			if (!JsonParser.try_parse(data.GetValue("Format"), ref format))
-			{
-				ModEntry.log("Missing or invalid Format, skipping Furniture Pack.", LogLevel.Error);
-				return false;
-			}
-
 			switch (format)
 			{
+				case 0:
+					ModEntry.log("Missing Format, skipping Furniture Pack.", LogLevel.Error);
+					return false;
 				case > FORMAT:
 				case < 1:
 					ModEntry.log($"Invalid Format for {data_UID}: {format}, skipping Furniture Pack.", LogLevel.Error);
@@ -131,30 +120,28 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		private void load_furniture(JObject data)
+		private void load_furniture(Dictionary<string, JObject> furniture)
 		{
-			if (data.GetValue("Furniture") is not JObject furn_obj) return;
-
 			List<Type.FurnitureType> new_types = new();
-			foreach (JProperty f_prop in furn_obj.Properties())
+			foreach (KeyValuePair<string, JObject> f_prop in furniture)
 			{
 				if (f_prop.Value is not JObject f_obj)
 				{
-					ModEntry.log($"No data for Furniture \"{f_prop.Name}\" in {data_UID}, skipping entry.", LogLevel.Warn);
+					ModEntry.log($"No data for Furniture \"{f_prop.Key}\" in {data_UID}, skipping entry.", LogLevel.Warn);
 					continue;
 				}
 
 				try
 				{
 					Type.FurnitureType.make_furniture(
-						content_pack, f_prop.Name,
+						content_pack, f_prop.Key,
 						f_obj, new_types
 					);
 				}
 				catch (Exception ex)
 				{
 					ModEntry.log(ex.ToString(), LogLevel.Error);
-					ModEntry.log($"Failed to load data for Furniture \"{f_prop.Name}\" in {data_UID}, skipping entry.", LogLevel.Warn);
+					ModEntry.log($"Failed to load data for Furniture \"{f_prop.Key}\" in {data_UID}, skipping entry.", LogLevel.Warn);
 					continue;
 				}
 			}
@@ -166,13 +153,11 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		private void load_included(JObject data)
+		private void load_included(Dictionary<string, Data.IncludedPack> included)
 		{
-			if (data.GetValue("Included") is not JObject includes_obj) return;
-
-			foreach (JProperty property in includes_obj.Properties())
+			foreach (KeyValuePair<string, Data.IncludedPack> data in included)
 			{
-				IncludedPack i_pack = new(content_pack, property, root ?? this);
+				IncludedPack i_pack = new(content_pack, data.Key, data.Value, root ?? this);
 				string i_data_UID = i_pack.data_UID;
 
 				if (i_pack.is_valid)
@@ -209,17 +194,13 @@ namespace FurnitureFramework.Pack
 			types.Clear();
 			included_packs.Clear();
 			config.clear();
-
-			invalidate_game_data();
 		}
 
-		private void invalidate()
+		public static bool invalidate_asset(IAssetName name)
 		{
-			// Invalidate game assets attached to this pack:
-			foreach (string asset_name in loaded_assets[UID])
-				ModEntry.get_helper().GameContent.InvalidateCache(asset_name);
-
-			ModEntry.log($"Invalidated assets from {UID}.");
+			if (!name.StartsWith("FF")) return false;
+			if (!try_get_cp_from_resource(name, out IContentPack? c_pack)) return false;
+			return reload_single(c_pack.Manifest.UniqueID);
 		}
 
 		public static void reload_pack(string command, string[] args)
@@ -230,36 +211,45 @@ namespace FurnitureFramework.Pack
 
 		private static void reload_all()
 		{
+			bool reloaded = false;
 			foreach (string UID in UIDs.Keys)
-				reload_single(UID);
+				reloaded |= reload_single(UID);
+			
+			if (reloaded) invalidate_game_data();
 		}
 
-		private static void reload_single(string UID)
+		private static bool reload_single(string UID)
 		{
 			string data_UID = $"{UID}/{DEFAULT_PATH}";
 
 			if (!packs.ContainsKey(data_UID))
 			{
 				ModEntry.log($"Pack {UID} does not exist!", LogLevel.Warn);
-				return;
+				return false;
 			}
 
-			packs[data_UID].reload();
+			return packs[data_UID].reload();
 		}
 
-		private void reload()
+		private bool reload()
 		{
+			if (!is_loaded) return false;
+
 			ModEntry.log($"Reloading {data_UID}...");
 
-			if (!is_loaded) return;
-
 			clear(cascade: true);
-			invalidate();
 			unregister_config();
 
 			is_loaded = false;
 
+			// Invalidate game assets attached to this pack:
+			foreach (string asset_name in loaded_assets[UID])
+				ModEntry.get_helper().GameContent.InvalidateCache(asset_name);
+
+			ModEntry.log($"Invalidated assets from {UID}.");
+
 			to_load.Push(data_UID);
+			return true;
 		}
 
 		#endregion

@@ -19,7 +19,6 @@ namespace FurnitureFramework.Pack
 
 		const int FORMAT = 3;
 		const string DEFAULT_PATH = "content.json";
-		const int DEFAULT_PRIO = 1000;
 		const string CONFIG_PATH = "config.json";
 
 		// Static Collections 
@@ -47,7 +46,7 @@ namespace FurnitureFramework.Pack
 		Dictionary<string, FurnitureType> types = new();
 		Dictionary<string, IncludedPack> included_packs = new();
 
-		private static void invalidate_game_data()
+		public static void invalidate_game_data()
 		{
 			IGameContentHelper helper = ModEntry.get_helper().GameContent;
 			helper.InvalidateCache("Data/Furniture");
@@ -97,11 +96,11 @@ namespace FurnitureFramework.Pack
 			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
-			if (e.DataType == typeof(JObject))
+			if (e.DataType == typeof(Data.Pack))
 			{	
-				if (!asset_exists<JObject>(pc_helper, path)) return false;
+				if (!asset_exists<Data.Pack>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return load_resource<JObject>(pc_helper, path);},
+					() => {return load_resource<Data.Pack>(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
 			}

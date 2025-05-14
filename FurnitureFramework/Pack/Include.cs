@@ -20,23 +20,11 @@ namespace FurnitureFramework.Pack
 
 			#region Parsing
 
-			public IncludedPack(IContentPack c_pack, JProperty property, FurniturePack root)
+			public IncludedPack(IContentPack c_pack, string name, Data.IncludedPack data, FurniturePack root)
 			{
-				name = property.Name;
+				this.name = name;
 
-				if (property.Value is not JObject obj)
-				{
-					error_msg = "Data should be an object.";
-					return;
-				}
-
-				string path = "";
-				if (!JsonParser.try_parse(obj.GetValue("Path"), ref path))
-				{
-					error_msg = "Invalid or missing Path.";
-					return;
-				}
-				
+				string path = data.Path;
 				pack = new(c_pack, path, root);
 
 				if (packs.ContainsKey(data_UID))
@@ -44,8 +32,8 @@ namespace FurnitureFramework.Pack
 
 				is_valid = true;
 
-				description = JsonParser.parse<string?>(obj.GetValue("Description"), null);
-				default_enabled = JsonParser.parse(obj.GetValue("Enabled"), true);
+				description = data.Description;
+				default_enabled = data.Enabled;
 			}
 
 			#endregion
