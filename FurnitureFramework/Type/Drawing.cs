@@ -64,7 +64,7 @@ namespace FurnitureFramework.Type
 
 			draw_data.position = position;
 			draw_data.position.Y += furniture.sourceRect.Height * 4;
-			draw_data.color = new Color(draw_data.color, alpha);
+			draw_data.color = Color.White * alpha;
 			draw_data.depth = depth;
 
 			draw(furniture, draw_data, draw_in_slot: true);
@@ -74,7 +74,7 @@ namespace FurnitureFramework.Type
 		{
 			DrawData draw_data = new(sprite_batch);
 
-			draw_data.color = new Color(draw_data.color, alpha);;
+			draw_data.color = Color.White * alpha;
 			Rectangle bounding_box = furniture.boundingBox.Value;
 
 			// when the furniture is placed
