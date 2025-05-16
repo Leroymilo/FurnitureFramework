@@ -1,5 +1,5 @@
 using System.Runtime.Versioning;
-using FurnitureFramework.Type.Properties;
+using FurnitureFramework.FType.Properties;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +10,7 @@ using StardewValley.Extensions;
 using StardewValley.Locations;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Type
+namespace FurnitureFramework.FType
 {
 	using SVObject = StardewValley.Object;
 	using BedType = BedFurniture.BedType;
@@ -39,20 +39,20 @@ namespace FurnitureFramework.Type
 		public readonly string? description;
 		public readonly int priority;
 
-		public TypeInfo(IContentPack pack, string id, JObject data, string rect_var = "", string image_var = "")
+		public TypeInfo(IContentPack pack, string id, Data.FType data, string rect_var = "", string image_var = "")
 		{
 			mod_id = pack.Manifest.UniqueID;
 			this.id = id.Replace("[[ModID]]", mod_id, true, null);
-			display_name = JsonParser.parse(data.GetValue("Display Name"), "No Name");
+			display_name = data.DisplayName;
 			display_name = display_name.Replace("[[ImageVariant]]", image_var, true, null);
 			display_name = display_name.Replace("[[RectVariant]]", rect_var, true, null);
-			description = JsonParser.parse<string?>(data.GetValue("Description"), null);
+			description = data.Description;
 			if (description is not null)
 			{
 				description = description.Replace("[[ImageVariant]]", image_var, true, null);
 				description = description.Replace("[[RectVariant]]", rect_var, true, null);
 			}
-			priority = JsonParser.parse(data.GetValue("Priority"), 1000);
+			priority = data.Priority;
 			priority = Math.Max(priority, 0); // rounded up to 0
 		}
 

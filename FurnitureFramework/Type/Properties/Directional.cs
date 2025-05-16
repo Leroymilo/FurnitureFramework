@@ -2,7 +2,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using System.Runtime.Versioning;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	[RequiresPreviewFeatures]
 	interface IProperty<T>

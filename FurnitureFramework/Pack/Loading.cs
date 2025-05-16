@@ -120,22 +120,18 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		private void load_furniture(Dictionary<string, JObject> furniture)
+		private void load_furniture(Dictionary<string, Data.FType> furniture)
 		{
-			List<Type.FurnitureType> new_types = new();
-			foreach (KeyValuePair<string, JObject> f_prop in furniture)
+			List<FType.FurnitureType> new_types = new();
+			foreach (KeyValuePair<string, Data.FType> f_prop in furniture)
 			{
-				if (f_prop.Value is not JObject f_obj)
-				{
-					ModEntry.log($"No data for Furniture \"{f_prop.Key}\" in {data_UID}, skipping entry.", LogLevel.Warn);
-					continue;
-				}
-
+				if (f_prop.Value is null) continue;
+				
 				try
 				{
-					Type.FurnitureType.make_furniture(
+					FType.FurnitureType.make_furniture(
 						content_pack, f_prop.Key,
-						f_obj, new_types
+						f_prop.Value, new_types
 					);
 				}
 				catch (Exception ex)
@@ -146,7 +142,7 @@ namespace FurnitureFramework.Pack
 				}
 			}
 
-			foreach (Type.FurnitureType type in new_types)
+			foreach (FType.FurnitureType type in new_types)
 			{
 				config.add_type(type.info.id, type.info.display_name);
 				types[type.info.id] = type;

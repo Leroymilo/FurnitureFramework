@@ -8,7 +8,7 @@ using StardewValley;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	using SVObject = StardewValley.Object;
 

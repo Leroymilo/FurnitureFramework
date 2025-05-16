@@ -5,7 +5,7 @@ using StardewModdingAPI;
 using StardewValley.GameData.Shops;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Type
+namespace FurnitureFramework.FType
 {
 	using BedType = BedFurniture.BedType;
 
@@ -14,15 +14,13 @@ namespace FurnitureFramework.Type
 		#region Makers
 
 		public static void make_furniture(
-			IContentPack pack, string id, JObject data,
+			IContentPack pack, string id, Data.FType data,
 			List<FurnitureType> list
 		)
 		{
-			JToken? r_token = data.GetValue("Source Rect Offsets");
-
 			#region Source Rect Variants Dict
 
-			if (r_token is JObject r_dict)
+			if (data.SourceRectOffsets is JObject r_dict)
 			{
 				bool has_valid = false;
 
@@ -55,7 +53,7 @@ namespace FurnitureFramework.Type
 
 			#region Source Rect Variants List 
 
-			else if (r_token is JArray r_array)
+			else if (data.SourceRectOffsets is JArray r_array)
 			{
 				bool has_valid = false;
 
@@ -92,16 +90,14 @@ namespace FurnitureFramework.Type
 		}
 
 		public static void make_furniture(
-			IContentPack pack, string id, JObject data,
+			IContentPack pack, string id, Data.FType data,
 			List<FurnitureType> list,
 			Point rect_offset, string rect_var = ""
 		)
 		{
-			JToken? t_token = data.GetValue("Source Image");
-
 			#region Texture Variants Dict
 
-			if (t_token is JObject t_dict)
+			if (data.SourceImage is JObject t_dict)
 			{
 				bool has_valid = false;
 
@@ -131,7 +127,7 @@ namespace FurnitureFramework.Type
 
 			#region Texture Variants Array
 
-			else if (t_token is JArray t_array)
+			else if (data.SourceImage is JArray t_array)
 			{
 				bool has_valid = false;
 
@@ -161,7 +157,7 @@ namespace FurnitureFramework.Type
 
 			#region Single Texture
 
-			else if (t_token is JValue t_value)
+			else if (data.SourceImage is JValue t_value)
 			{
 				if (t_value.Type != JTokenType.String)
 					throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
@@ -178,7 +174,7 @@ namespace FurnitureFramework.Type
 		#endregion
 
 		public FurnitureType(
-			TypeInfo type_info, JObject data,
+			TypeInfo type_info, Data.FType data,
 			Point rect_offset, string texture_path)
 		{
 			JToken? token;
@@ -186,13 +182,13 @@ namespace FurnitureFramework.Type
 			#region attributes for Data/Furniture
 
 			info = type_info;
-			type = JsonParser.parse(data.GetValue("Force Type"), "other");
-			price = JsonParser.parse(data.GetValue("Price"), 0);
-			exclude_from_random_sales = JsonParser.parse(data.GetValue("Exclude from Random Sales"), true);
-			JsonParser.try_parse(data.GetValue("Context Tags"), ref context_tags);
-			placement_rules = JsonParser.parse(data.GetValue("Placement Restriction"), 2);
+			type = data.ForceType;
+			price = data.Price;
+			exclude_from_random_sales = data.ExcludefromRandomSales;
+			context_tags = data.ContextTags;
+			placement_rules = data.PlacementRestriction;
 
-			List<string> rot_names = parse_rotations(data.GetValue("Rotations"));
+			List<string> rot_names = data.Rotations.rot_names;
 
 			#endregion
 
@@ -200,18 +196,18 @@ namespace FurnitureFramework.Type
 
 			texture = new(info, texture_path);
 
-			layers = new(info, data.GetValue("Layers"), rot_names);
+			layers = new(info, data.Layers, rot_names);
 			for (int i = 0; i < rotations; i++)
 			{
 				if (!layers[i].has_layer)
 					throw new InvalidDataException($"Need at least one Layer for each rotation.");
 			}
 
-			placing_layers = JsonParser.parse(data.GetValue("Draw Layers When Placing"), false);
+			placing_layers = data.DrawLayersWhenPlacing;
 
 			this.rect_offset = rect_offset;
 
-			token = data.GetValue("Icon Rect");
+			token = data.IconRect;
 			if (!JsonParser.try_parse(token, ref icon_rect) || icon_rect.IsEmpty)
 				icon_rect = layers[0].get_source_rect();
 			
@@ -221,40 +217,40 @@ namespace FurnitureFramework.Type
 
 			#region data in classes
 
-			animation.parse(data.GetValue("Animation"));
-			placing_animate = JsonParser.parse(data.GetValue("Animate When Placing"), true);
+			animation.parse(data.Animation);
+			placing_animate = data.AnimateWhenPlacing;
 
-			collisions = new(info, data.GetValue("Collisions"), rot_names);
-			seats = new(info, data.GetValue("Seats"), rot_names);
-			slots = new(info, data.GetValue("Slots"), rot_names);
-			light_sources = new(info, data.GetValue("Lights"), rot_names);
-			sounds = new(data.GetValue("Sounds"));
-			particles = new(info, data.GetValue("Particles"), rot_names);
+			collisions = new(info, data.Collisions, rot_names);
+			seats = new(info, data.Seats, rot_names);
+			slots = new(info, data.Slots, rot_names);
+			light_sources = new(info, data.Lights, rot_names);
+			sounds = new(data.Sounds);
+			particles = new(info, data.Particles, rot_names);
 
 			#endregion
 
 			#region Shops
 
-			shop_id = JsonParser.parse<string?>(data.GetValue("Shop Id"), null);
+			shop_id = data.ShopId;
 			if (shop_id is string)
 				shop_id = shop_id.Replace("[[ModID]]", info.mod_id, true, null);
 			
-			JsonParser.try_parse(data.GetValue("Shows in Shops"), ref shops);
+			shops = data.ShowsinShop;
 			for (int i = 0; i < shops.Count; i++)
 				shops[i] = shops[i].Replace("[[ModID]]", info.mod_id, true, null);
 			shops.Add("FF.debug_catalog");
 
 			#endregion
 
-			can_be_toggled = JsonParser.parse(data.GetValue("Toggle"), false);
-			time_based = JsonParser.parse(data.GetValue("Time Based"), false);
+			can_be_toggled = data.Toggle;
+			time_based = data.TimeBased;
 
 			#region Placement Type
 
-			p_type = Enum.Parse<PlacementType>(JsonParser.parse(data.GetValue("Placement Type"), "Normal"));
+			p_type = Enum.Parse<PlacementType>(data.PlacementType);
 			if (!Enum.IsDefined(p_type)) {
 				p_type = PlacementType.Normal;
-				ModEntry.log($"Invalid Placement Type at {data.Path}, defaulting to Normal.", LogLevel.Warn);
+				ModEntry.log($"Invalid Placement Type for {info.id}, defaulting to Normal.", LogLevel.Warn);
 			}
 
 			if (p_type == PlacementType.Rug) type = "rug";
@@ -264,29 +260,29 @@ namespace FurnitureFramework.Type
 
 			#region Special Furniture
 
-			s_type = Enum.Parse<SpecialType>(JsonParser.parse(data.GetValue("Special Type"), "None"));
+			s_type = Enum.Parse<SpecialType>(data.SpecialType);
 			if (!Enum.IsDefined(s_type)) {
 				s_type = SpecialType.None;
-				ModEntry.log($"Invalid Special Type at {data.Path}, defaulting to None.", LogLevel.Warn);
+				ModEntry.log($"Invalid Special Type for {info.id}, defaulting to None.", LogLevel.Warn);
 			}
 
 			switch (s_type)
 			{
 				case SpecialType.TV:
-					screen_position = JsonParser.parse_dir(data.GetValue("Screen Position"), rot_names, Vector2.Zero);
-					screen_scale = JsonParser.parse(data.GetValue("Screen Scale"), 4f);
+					screen_position = JsonParser.parse_dir(data.ScreenPosition, rot_names, Vector2.Zero);
+					screen_scale = data.ScreenScale;
 					break;
 				
 				case SpecialType.Bed:
-					bed_type = Enum.Parse<BedType>(JsonParser.parse(data.GetValue("Bed Type"), "Double"));
+					bed_type = Enum.Parse<BedType>(data.BedType);
 					if (!Enum.IsDefined(bed_type)) {
 						bed_type = BedType.Double;
-						ModEntry.log($"Invalid Bed Type at {data.Path}, defaulting to Double.", LogLevel.Warn);
+						ModEntry.log($"Invalid Bed Type for {info.id}, defaulting to Double.", LogLevel.Warn);
 					}
 
-					JsonParser.try_parse(data.GetValue("Bed Spot"), ref bed_spot);
+					JsonParser.try_parse(data.BedSpot, ref bed_spot);
 
-					if (JsonParser.try_parse(data.GetValue("Bed Area"), ref bed_area))
+					if (JsonParser.try_parse(data.BedArea, ref bed_area))
 					{
 						bed_area = new Rectangle(
 							bed_area.Location * new Point(4),
@@ -308,8 +304,8 @@ namespace FurnitureFramework.Type
 					break;
 
 				case SpecialType.FishTank:
-					fish_area = JsonParser.parse_dir(data.GetValue("Fish Area"), rot_names, Rectangle.Empty);
-					disable_fishtank_light = JsonParser.parse(data.GetValue("Disable Fishtank Light"), false);
+					fish_area = JsonParser.parse_dir(data.FishArea, rot_names, Rectangle.Empty);
+					disable_fishtank_light = data.DisableFishtankLight;
 					break;
 			}
 			

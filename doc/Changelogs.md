@@ -130,8 +130,9 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **Fixes**:
 - Fixed Furniture with "Force Type" set to `table` or `long table` being impossible to pick-up.
 - Fixed whatever was broken with FishTanks (broken Fish Area parsing, and bubbles and decoration not being drawn).
-- **Work in Progress** Furniture data is now refreshed after a CP EditData patch (oopsie again).
+- Furniture data is now refreshed after a CP EditData patch (oopsie again).
 - Removed the default "Have a look at my wares" text in Catalogues created with FF.
+- Fixed inconsistent transparency handling when placing Furniture (visual inconsistency between vanilla and modded Furniture).
 
 **New Features**:
 - Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.

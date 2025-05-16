@@ -26,7 +26,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
@@ -94,7 +94,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.DeclaredMethod(
-						typeof(Type.FurnitureType),
+						typeof(FType.FurnitureType),
 						"draw_lighting",
 						new System.Type[] {typeof(SpriteBatch) }
 					)
@@ -161,7 +161,7 @@ call check_held_object
 			List<CodeInstruction> to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Type.FurnitureType),
+					typeof(FType.FurnitureType),
 					"has_held_object"
 				))
 			};

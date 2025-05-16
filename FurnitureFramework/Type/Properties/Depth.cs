@@ -1,7 +1,7 @@
 using System.Runtime.Versioning;
 using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	[RequiresPreviewFeatures]
 	class Depth

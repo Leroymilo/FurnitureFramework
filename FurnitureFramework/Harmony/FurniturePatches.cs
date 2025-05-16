@@ -29,7 +29,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -53,7 +53,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.drawAtNonTileSpot(__instance, spriteBatch, location, layerDepth, alpha);
@@ -76,7 +76,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.rotate(__instance);
@@ -97,7 +97,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.updateRotation(__instance);
@@ -179,7 +179,7 @@ call get_icon_source_rect
 			{
 				new(OpCodes.Ldarg_0),
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Type.FurnitureType),
+					typeof(FType.FurnitureType),
 					"get_icon_source_rect"
 				))
 			};
@@ -219,7 +219,7 @@ call check_held_object
 			List<CodeInstruction> to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Type.FurnitureType),
+					typeof(FType.FurnitureType),
 					"has_held_object"
 				))
 			};
@@ -325,21 +325,21 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__result, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__result, out FType.FurnitureType? type))
 				{
 					switch (type.s_type)
 					{
-						case Type.SpecialType.Dresser:
+						case FType.SpecialType.Dresser:
 							__result = new StorageFurniture(itemId, position.Value);
 							break;
-						case Type.SpecialType.TV:
+						case FType.SpecialType.TV:
 							__result = new TV(itemId, position.Value);
 							break;
-						case Type.SpecialType.Bed:
+						case FType.SpecialType.Bed:
 							__result = new BedFurniture(itemId, position.Value)
 								{ bedType = type.bed_type };
 							break;
-						case Type.SpecialType.FishTank:
+						case FType.SpecialType.FishTank:
 							__result = new FishTankFurniture(itemId, position.Value);
 							break;
 					}
@@ -365,7 +365,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.GetSeatPositions(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -385,7 +385,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.GetSittingDirection(__instance, Game1.player, ref __result);
 			}
 			catch (Exception ex)
@@ -407,7 +407,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.IntersectsForCollision(__instance, rect, ref __result);
 			}
 			catch (Exception ex)
@@ -429,7 +429,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.canBePlacedHere(__instance, l, tile, collisionMask, ref __result);
 			}
 			catch (Exception ex)
@@ -450,7 +450,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.AllowPlacementOnThisTile(__instance, tile_x, tile_y, ref __result);
 			}
 			catch (Exception ex)
@@ -471,7 +471,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
@@ -492,7 +492,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
@@ -511,7 +511,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.isGroundFurniture(ref __result);
 			}
 			catch (Exception ex)
@@ -532,7 +532,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.isPassable(ref __result);
 			}
 			catch (Exception ex)
@@ -554,7 +554,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (
-					Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type)
+					Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type)
 					&& type.info.description is not null
 				) return type.info.description;
 			}
@@ -574,7 +574,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 				{
 					type.addLights(__instance);
 
@@ -623,7 +623,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
@@ -655,7 +655,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.getScreenPosition(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -676,7 +676,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.getScreenSizeModifier(ref __result);
 			}
 			catch (Exception ex)
@@ -711,7 +711,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -744,7 +744,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 				{
 					__result = __instance.GetBoundingBox().Intersects(rect);
 					type.IntersectsForCollision(__instance, rect, ref __result);
@@ -767,7 +767,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.GetBedSpot(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -790,7 +790,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.DoesTileHaveProperty(property_name, layer_name, ref __result);
 			}
 			catch (Exception ex)
@@ -810,7 +810,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Type.FurnitureType.has_held_object(__instance)) return false;
+				if (FType.FurnitureType.has_held_object(__instance)) return false;
 			}
 			catch (Exception ex)
 			{
@@ -843,7 +843,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (!Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -876,7 +876,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
@@ -897,7 +897,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(__instance, out FType.FurnitureType? type))
 				{
 					type.GetTankBounds(__instance, ref __result);
 				}

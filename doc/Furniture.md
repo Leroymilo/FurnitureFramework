@@ -14,6 +14,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 * [Rotations](#rotations-required)
 * [Source Image](#source-image-required)
 * [Layers](#layers-required-directional)
+* [Draw Layers When Placing](#draw-layers-when-placing)
 * [Collisions](#collisions-required)
 * [Vanilla Fields](#vanilla-fields)
 	* [Force Type](#force-type)
@@ -29,6 +30,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 	* [Rect Variants](#rect-variants)
 * [Description](#description)
 * [Animation](#animation)
+* [Animate When Placing](#animate-when-placing)
 * [Special Type](#special-type)
 * [Placement Type](#placement-type)
 * [Icon Rect](#icon-rect)
@@ -95,6 +97,10 @@ Note 2: if you want to edit/load this image with a Content Patcher mod, the patc
 
 Layers are an important tool for making custom Furniture, they are necessary to properly display your Furniture when other objects are passing through it (the player, or other Furniture). Since they are quite complicated, they have their own [Layers documentation](Complex%20Fields/Layers.md).  
 This is also the first and most important [Directional Field](Directional%20Fields.md), so you might want to read that as well.
+
+## Draw Layers When Placing
+
+This is a boolean (`true` or `false`). If there are overlapping Layers, it might look weird if they are all drawn when the player is placing the Furniture because of transparency. Defaults to `false`.
 
 ## Collisions (required) (directional)
 
@@ -252,6 +258,10 @@ Here's an example of the fields for an animation using individual frame lengths 
 ```
 
 Note 2: If using both [Source Rect Offsets](#rect-variants) and Animation, the offsets will be added together.
+
+## Animate When Placing
+
+This is a boolean (`true` or `false`). Set to `false` to disable the Animation when the player is placing the Furniture. Defaults to `true`.
 
 ## Special Type
 

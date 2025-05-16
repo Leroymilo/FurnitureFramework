@@ -5,7 +5,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	[RequiresPreviewFeatures]
 	class LightList: IProperty<LightList>

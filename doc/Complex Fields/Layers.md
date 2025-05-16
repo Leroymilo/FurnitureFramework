@@ -6,6 +6,8 @@ The Layers field of a Furniture is a directional list of layer objects.
 
 This is required for a Furniture to work: it needs at least 1 layer (refered to as the "base layer"). By default, the [Depth](#depth) of the base layer is `{"Tile": 0, "Sub": 0}` instead of `{"Tile": 0, "Sub": 1000}` to match what it was before version 3.0.0 (also it makes more sense).
 
+Note: Only the first Layer is drawn when the Furniture is placed in a Slot because it is not possible to maintain how Depth is computed in a Slot.
+
 A layer object has 3 fields:
 
 ## Source Rect (required) (directional)

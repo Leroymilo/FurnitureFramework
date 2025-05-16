@@ -22,6 +22,11 @@
 				"type": "object",
 				"properties": {
 
+					"Priority": {
+						"type": "integer",
+						"description": "The Priority of this Furniture. Higher priority Furniture with the same ID will replace this one."
+					},
+
 					"Display Name": {
 						"type": "string",
 						"description": "The name of your Furniture in game. Supports [[RectVariant and [[ImageVariant]] tokens."
@@ -392,6 +397,16 @@
 								}
 							}
 						]
+					},
+
+					"Draw Layers When Placing": {
+						"description": "If false (default), then only the first Layer is drawn while placing.",
+						"type": "boolean"
+					},
+
+					"Animate When Placing": {
+						"description": "If true (default), then the Animation will be applied while placing.",
+						"type": "boolean"
 					},
 
 					"Screen Position": {

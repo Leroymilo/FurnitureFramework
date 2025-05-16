@@ -4,7 +4,7 @@ using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Type
+namespace FurnitureFramework.FType
 {
 	struct DrawData
 	{

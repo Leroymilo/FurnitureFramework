@@ -153,7 +153,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type);
 					if (type == null) continue;
 
 					if (type.place_in_slot(furniture, pos, Game1.player, obj))
@@ -168,7 +168,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
+					Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type);
 					if (type == null) continue;
 
 					if (type.remove_from_slot(furniture, pos, Game1.player))
@@ -186,7 +186,7 @@ namespace FurnitureFramework
 				{
 					foreach (Furniture furniture in Game1.currentLocation.furniture)
 					{
-						Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type);
+						Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type);
 						if (type == null) continue;
 
 						if (type.action_in_slot(furniture, pos, Game1.player))
@@ -240,7 +240,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
 				{
 					type.on_placed(furniture);
 				}
@@ -248,7 +248,7 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
 				{
 					type.on_removed(furniture);
 				}
@@ -262,7 +262,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}
@@ -276,7 +276,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Type.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
 				{
 					furniture.modData["FF.particle_timers"] = "[]";
 				}

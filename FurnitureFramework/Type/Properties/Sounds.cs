@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	[RequiresPreviewFeatures]
 	class SoundList

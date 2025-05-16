@@ -6,7 +6,7 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
-namespace FurnitureFramework.Type.Properties
+namespace FurnitureFramework.FType.Properties
 {
 	[RequiresPreviewFeatures]
 	class Collisions: IProperty<Collisions>

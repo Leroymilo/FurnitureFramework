@@ -1,7 +1,7 @@
 using System.Runtime.Versioning;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FurnitureFramework.Type
+namespace FurnitureFramework.FType
 {
 	[RequiresPreviewFeatures]
 	struct DynaTexture
