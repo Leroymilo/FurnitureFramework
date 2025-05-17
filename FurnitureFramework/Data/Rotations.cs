@@ -3,52 +3,41 @@ using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
-	/// <summary>
-	/// Holds the rotations names
-	/// </summary
-	public class Rotations
+	class RotationConverter : JsonReadOnlyConv<List<string>>
 	{
-		public static List<string> current = new();
-		public List<string> rot_names = new();
+		public static List<string> last = new();
 
-		public Rotations(List<string> rot_names)
+		public override List<string>? ReadJson(JsonReader reader, Type objectType, List<string>? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			this.rot_names = rot_names;
-			current = rot_names;
-		}
-	}
+			List<string> result = new();
 
-	class RotationConverter : JsonReadOnlyConv<Rotations>
-	{
-		public override Rotations? ReadJson(JsonReader reader, Type objectType, Rotations? existingValue, bool hasExistingValue, JsonSerializer serializer)
-		{
 			if (reader.TokenType == JsonToken.Integer)
 			{
-				int? rot_count = reader.ReadAsInt32();
+				int? rot_count = JToken.Load(reader).Value<int>();
 
 				switch (rot_count)
 				{
 					case 1:
-						return new(new() { "NoRot" });
+						result.Add("NoRot"); break;
 					case 2:
-						return new(new() {
+						result.AddRange(new List<string>() {
 							"Horizontal", "Vertical"
-						});
+						}); break;
 					case 4:
-						return new(new() {
+						result.AddRange(new List<string>() {
 							"Up", "Right", "Down", "Left"
-						});
+						}); break;
+					default:
+						throw new InvalidDataException($"Could not parse Rotations from {reader.Value} at {reader.Path}.");
 				}
 			}
 			else if (reader.TokenType == JsonToken.StartArray)
 			{
-				JObject obj = new() {
-					{ "rot_names", JArray.Load(reader) }
-				};
-				return obj.ToObject<Rotations>();
+				result = JArray.Load(reader).ToObject<List<string>>() ?? new() { "NoRot" };
 			}
 
-			throw new InvalidDataException($"Could not parse Furniture from {reader.Value} at {reader.Path}.");
+			last = result;
+			return result;
 		}
 	}
 
@@ -79,14 +68,14 @@ namespace FurnitureFramework.Data
 				{
 					// Make all directions point to the same instance
 
-					result.values = Enumerable.Repeat(instance, Rotations.current.Count).ToList();
+					result.values = Enumerable.Repeat(instance, RotationConverter.last.Count).ToList();
 				}
 				else
 				{
 					// Parse directions separately
 
 					result.values = new();
-					foreach (string rot_name in Rotations.current)
+					foreach (string rot_name in RotationConverter.last)
 					{
 						JToken? token = obj.GetValue(rot_name);
 						if (token == null) instance = new();

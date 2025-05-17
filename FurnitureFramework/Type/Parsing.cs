@@ -188,7 +188,7 @@ namespace FurnitureFramework.FType
 			context_tags = data.ContextTags;
 			placement_rules = data.PlacementRestriction;
 
-			List<string> rot_names = data.Rotations.rot_names;
+			List<string> rot_names = data.Rotations;
 
 			#endregion
 

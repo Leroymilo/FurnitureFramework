@@ -10,7 +10,10 @@ namespace FurnitureFramework.Data
 		public int Priority = 1000;
 		public string DisplayName = "No Name";
 		public string? Description;
-		public Rotations Rotations;
+
+		[JsonConverter(typeof(RotationConverter))]
+		public List<string> Rotations;
+
 		public JToken SourceImage;
 		public JToken Collisions;
 		public string ForceType = "other";
