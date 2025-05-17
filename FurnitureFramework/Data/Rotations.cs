@@ -1,9 +1,10 @@
+using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
-	class RotationConverter : JsonReadOnlyConv<List<string>>
+	class RotationConverter : ReadOnlyConverter<List<string>>
 	{
 		public static List<string> last = new();
 
@@ -25,7 +26,7 @@ namespace FurnitureFramework.Data
 						}); break;
 					case 4:
 						result.AddRange(new List<string>() {
-							"Up", "Right", "Down", "Left"
+							"Down", "Right", "Up", "Left"
 						}); break;
 					default:
 						throw new InvalidDataException($"Could not parse Rotations from {reader.Value} at {reader.Path}.");
@@ -45,6 +46,8 @@ namespace FurnitureFramework.Data
 	/// Holds data of Directional Fields (1 value per direction)
 	/// T must be an object, not a value or an array
 	/// </summary>
+	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(DirectionalConverter<>))]
 	class DirectionalField<T> where T : new()
 	{
 		public List<T> values;
@@ -53,7 +56,8 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Removes spaces in the keys of a json
 	/// </summary>
-	class DirectionalConverter<T> : JsonReadOnlyConv<DirectionalField<T>> where T : new()
+	[RequiresPreviewFeatures]
+	class DirectionalConverter<T> : ReadOnlyConverter<DirectionalField<T>> where T : new()
 	{
 		/// <inheritdoc />
 		public override DirectionalField<T> ReadJson(JsonReader reader, Type objectType, DirectionalField<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
@@ -87,7 +91,7 @@ namespace FurnitureFramework.Data
 				return result;
 			}
 
-			throw new InvalidDataException($"Could not parse Furniture from {reader.Value} at {reader.Path}.");
+			throw new InvalidDataException($"Could not parse Directional Field from {reader.Value} at {reader.Path}.");
 		}
 	}
 }

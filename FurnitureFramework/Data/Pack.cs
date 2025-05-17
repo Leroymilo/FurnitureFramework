@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace FurnitureFramework.Data
 {
 	[RequiresPreviewFeatures]
-	public sealed class Pack
+	public sealed class FurniturePack
 	{
 		public int Format = 0;
 		public Dictionary<string, FType> Furniture = new();
@@ -19,7 +19,7 @@ namespace FurnitureFramework.Data
 	}
 
 	// Used in place of JsonConverter because there's no need to Write anything that is parsed in this namespace
-	public abstract class JsonReadOnlyConv<T> : JsonConverter<T>
+	public abstract class ReadOnlyConverter<T> : JsonConverter<T>
 	{
 		public override bool CanWrite => false;
 

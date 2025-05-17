@@ -66,10 +66,10 @@ namespace FurnitureFramework.Pack
 		{
 			if (is_loaded) return;
 
-			Data.Pack data;
+			Data.FurniturePack data;
 			try
 			{
-				data = ModEntry.get_helper().GameContent.Load<Data.Pack>($"FF/{data_UID}");
+				data = ModEntry.get_helper().GameContent.Load<Data.FurniturePack>($"FF/{data_UID}");
 			}
 			catch (ContentLoadException ex)
 			{

@@ -1,3 +1,5 @@
+using System.Runtime.Versioning;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,7 +16,9 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(RotationConverter))]
 		public List<string> Rotations;
 
-		public JToken SourceImage;
+		[JsonConverter(typeof(ImageVariantConverter))]
+		public Dictionary<string, string> SourceImage;
+
 		public JToken Collisions;
 		public string ForceType = "other";
 		public int Price = 0;
@@ -23,16 +27,20 @@ namespace FurnitureFramework.Data
 		public bool ExcludefromRandomSales = true;
 		public List<string> ShowsinShop = new();
 		public string? ShopId;
-		public JToken? SourceRectOffsets;
-		public JObject Animation;
+
+		[JsonConverter(typeof(VariantConverter<Point>))]
+		public Dictionary<string, Point> SourceRectOffsets = new() {{"", Point.Zero}};
+
+		public JObject? Animation;
+
 		public bool AnimateWhenPlacing = true;
 		public string SpecialType = "None";
 		public string PlacementType = "Normal";
 		public JObject? IconRect;
 		public bool Toggle = false;
 		public bool TimeBased = false;
-		public JToken Sounds;
-		public JToken Layers;
+		public JToken? Sounds;
+		public JToken? Layers;
 		public bool DrawLayersWhenPlacing = false;
 		public JToken? Seats;
 		public JToken? Slots;
@@ -56,7 +64,7 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Removes spaces in the keys of a json
 	/// </summary>
-	class SpaceRemover<T> : JsonReadOnlyConv<T> where T : new()
+	class SpaceRemover<T> : ReadOnlyConverter<T> where T : new()
 	{
 		/// <inheritdoc />
 		public override T ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)

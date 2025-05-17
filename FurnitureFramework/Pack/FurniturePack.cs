@@ -96,11 +96,11 @@ namespace FurnitureFramework.Pack
 			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
-			if (e.DataType == typeof(Data.Pack))
+			if (e.DataType == typeof(Data.FurniturePack))
 			{	
-				if (!asset_exists<Data.Pack>(pc_helper, path)) return false;
+				if (!asset_exists<Data.FurniturePack>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return load_resource<Data.Pack>(pc_helper, path);},
+					() => {return load_resource<Data.FurniturePack>(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
 			}

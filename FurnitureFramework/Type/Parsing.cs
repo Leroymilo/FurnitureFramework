@@ -18,75 +18,22 @@ namespace FurnitureFramework.FType
 			List<FurnitureType> list
 		)
 		{
-			#region Source Rect Variants Dict
-
-			if (data.SourceRectOffsets is JObject r_dict)
+			switch (data.SourceRectOffsets.Count)
 			{
-				bool has_valid = false;
-
-				foreach ((string name, JToken? rect_token) in r_dict)
-				{
-					Point offset = new();
-					if (!JsonParser.try_parse(rect_token, ref offset))
+				case 0:
+					throw new InvalidDataException("No valid Source Rect Offset.");
+				case 1:
+					// No need to change the Furniture ID
+					make_furniture(pack, id, data, list, data.SourceRectOffsets.First().Value);
+					break;
+				default:
+					foreach (KeyValuePair<string, Point> elt in data.SourceRectOffsets)
 					{
-						ModEntry.log(
-							$"Invalid Source Rect Offset at {r_dict.Path}: {name}, skipping variant.",
-							LogLevel.Warn
-						);
-						continue;
+						string v_id = $"{id}_{elt.Key.ToLower()}";
+						make_furniture(pack, v_id, data, list, elt.Value, elt.Key);
 					}
-
-					string v_id = $"{id}_{name.ToLower()}";
-
-					make_furniture(
-						pack, v_id, data, list, 
-						offset, name
-					);
-					has_valid = true;
-				}
-
-				if (!has_valid)
-					throw new InvalidDataException("Source Rect Offsets dictionary has no valid value.");
+					break;
 			}
-
-			#endregion
-
-			#region Source Rect Variants List 
-
-			else if (data.SourceRectOffsets is JArray r_array)
-			{
-				bool has_valid = false;
-
-				foreach ((JToken rect_token, int i) in r_array.Children().Select((value, index) => (value, index)))
-				{
-					Point offset = new();
-					if (!JsonParser.try_parse(rect_token, ref offset))
-					{
-						ModEntry.log(
-							$"Invalid Source Rect Offset at {rect_token.Path}, skipping variant.",
-							LogLevel.Warn
-						);
-						continue;
-					}
-
-					string v_id = $"{id}_{i}";
-
-					make_furniture(
-						pack, v_id, data, list, 
-						offset
-					);
-					has_valid = true;
-				}
-
-				if (!has_valid)
-					throw new InvalidDataException("Source Rect Offsets list has no valid value.");
-			}
-
-			#endregion
-
-			// Single Source Rect
-			else make_furniture(pack, id, data, list, Point.Zero);
-
 		}
 
 		public static void make_furniture(
@@ -95,80 +42,24 @@ namespace FurnitureFramework.FType
 			Point rect_offset, string rect_var = ""
 		)
 		{
-			#region Texture Variants Dict
-
-			if (data.SourceImage is JObject t_dict)
+			switch (data.SourceImage.Count)
 			{
-				bool has_valid = false;
-
-				foreach ((string name, JToken? t_path) in t_dict)
-				{
-					if(t_path is null || t_path.Type != JTokenType.String)
+				case 0:
+					throw new InvalidDataException("No valid Source Image.");
+				case 1:
+					// No need to change the Furniture ID
+					TypeInfo info = new(pack, id, data, rect_var);
+					list.Add(new(info, data, rect_offset, data.SourceImage.First().Value));
+					break;
+				default:
+					foreach (KeyValuePair<string, string> elt in data.SourceImage)
 					{
-						ModEntry.log(
-							$"Could not read Source Image path at {t_dict.Path}: {name}, skipping variant.",
-							LogLevel.Warn
-						);
-						continue;
+						string v_id = $"{id}_{elt.Key.ToLower()}";
+						info = new(pack, v_id, data, rect_var, image_var: elt.Key);
+						list.Add(new(info, data, rect_offset, elt.Value));
 					}
-
-					string v_id = $"{id}_{name.ToLower()}";
-
-					TypeInfo info = new(pack, v_id, data, rect_var, image_var: name);
-					list.Add(new(info, data, rect_offset, t_path.ToString()));
-					has_valid = true;
-				}
-
-				if (!has_valid)
-					throw new InvalidDataException("Source Image dictionary has no valid path.");
+					break;
 			}
-
-			#endregion
-
-			#region Texture Variants Array
-
-			else if (data.SourceImage is JArray t_array)
-			{
-				bool has_valid = false;
-
-				foreach ((JToken t_path, int i) in t_array.Children().Select((value, index) => (value, index)))
-				{
-					if(t_path.Type != JTokenType.String)
-					{
-						ModEntry.log(
-							$"Could not read Source Image path at {t_path.Path}, skipping variant.",
-							LogLevel.Warn
-						);
-						continue;
-					}
-
-					string v_id = $"{id}_{i}";
-
-					TypeInfo info = new(pack, v_id, data, rect_var);
-					list.Add(new(info, data, rect_offset, t_path.ToString()));
-					has_valid = true;
-				}
-
-				if (!has_valid)
-					throw new InvalidDataException("Source Image list has no valid path.");
-			}
-
-			#endregion
-
-			#region Single Texture
-
-			else if (data.SourceImage is JValue t_value)
-			{
-				if (t_value.Type != JTokenType.String)
-					throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
-
-				TypeInfo info = new(pack, id, data, rect_var);
-				list.Add(new(info, data, rect_offset, t_value.ToString()));
-			}
-
-			#endregion
-			
-			else throw new InvalidDataException("Source Image is invalid, should be a string or a dictionary.");
 		}
 
 		#endregion
@@ -189,6 +80,7 @@ namespace FurnitureFramework.FType
 			placement_rules = data.PlacementRestriction;
 
 			List<string> rot_names = data.Rotations;
+			rotations = rot_names.Count;
 
 			#endregion
 
