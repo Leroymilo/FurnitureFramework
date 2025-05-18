@@ -114,15 +114,17 @@ namespace FurnitureFramework.Data
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
+				ModEntry.log("In Reader");
+
 				DirectionalField<T> result = new();
 
 				JObject obj = JObject.Load(reader);
 				T? instance = obj.ToObject<T>();
-				
+
 				// Make all directions point to the same instance
-				if (instance != null) result.unique = instance;
+				if (instance != null && instance.is_valid) result.unique = instance;
 				// Assume directional and parse as Dictionary
-				else result = obj.ToObject<DirectionalField<T>>() ?? new();
+				else serializer.Populate(obj.CreateReader(), result);
 
 				ModEntry.log($"result type: {result.GetType()}");
 

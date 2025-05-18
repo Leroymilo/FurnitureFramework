@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,42 +8,6 @@ using StardewValley.TerrainFeatures;
 
 namespace FurnitureFramework.Data
 {
-	[JsonConverter(typeof(CollisionsConverter))]
-	public class DirectionalCollisions : Dictionary<string, Collisions>
-	{
-		public Collisions unique = new();
-
-		public Collisions first
-		{
-			get
-			{
-				foreach (Collisions value in Values)
-					if (value.is_valid) return value;
-				if (unique.is_valid) return unique;
-				throw new InvalidOperationException();
-			}
-		}
-
-		new public Collisions this[string key]
-		{
-			get
-			{
-				Collisions? result;
-				if (ContainsKey(key))
-				{
-					result = base[key];
-					if (result.is_valid) return result;
-				}
-				if (unique.is_valid) return unique;
-				throw new KeyNotFoundException();
-			}
-			set
-			{
-				base[key] = value;
-			}
-		}
-	}
-
 	public class Collisions : Field
 	{
 		static readonly Point TILESIZE = new(64);
@@ -237,6 +200,42 @@ namespace FurnitureFramework.Data
 		}
 
 		#endregion
+	}
+
+	[JsonConverter(typeof(CollisionsConverter))]
+	public class DirectionalCollisions : Dictionary<string, Collisions>
+	{
+		public Collisions unique = new();
+
+		public Collisions first
+		{
+			get
+			{
+				foreach (Collisions value in Values)
+					if (value.is_valid) return value;
+				if (unique.is_valid) return unique;
+				throw new InvalidOperationException();
+			}
+		}
+
+		new public Collisions this[string key]
+		{
+			get
+			{
+				Collisions? result;
+				if (ContainsKey(key))
+				{
+					result = base[key];
+					if (result.is_valid) return result;
+				}
+				if (unique.is_valid) return unique;
+				throw new KeyNotFoundException();
+			}
+			set
+			{
+				base[key] = value;
+			}
+		}
 	}
 
 	class CollisionsConverter : ReadOnlyConverter<DirectionalCollisions>
