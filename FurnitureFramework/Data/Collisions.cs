@@ -1,7 +1,6 @@
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
@@ -200,65 +199,5 @@ namespace FurnitureFramework.Data
 		}
 
 		#endregion
-	}
-
-	[JsonConverter(typeof(CollisionsConverter))]
-	public class DirectionalCollisions : Dictionary<string, Collisions>
-	{
-		public Collisions unique = new();
-
-		public Collisions first
-		{
-			get
-			{
-				foreach (Collisions value in Values)
-					if (value.is_valid) return value;
-				if (unique.is_valid) return unique;
-				throw new InvalidOperationException();
-			}
-		}
-
-		new public Collisions this[string key]
-		{
-			get
-			{
-				Collisions? result;
-				if (ContainsKey(key))
-				{
-					result = base[key];
-					if (result.is_valid) return result;
-				}
-				if (unique.is_valid) return unique;
-				throw new KeyNotFoundException();
-			}
-			set
-			{
-				base[key] = value;
-			}
-		}
-	}
-
-	class CollisionsConverter : ReadOnlyConverter<DirectionalCollisions>
-	{
-		/// <inheritdoc />
-		public override DirectionalCollisions ReadJson(JsonReader reader, Type objectType, DirectionalCollisions? existingValue, bool hasExistingValue, JsonSerializer serializer)
-		{
-			if (reader.TokenType == JsonToken.StartObject)
-			{
-				DirectionalCollisions result = new();
-
-				JObject obj = JObject.Load(reader);
-				Collisions? instance = obj.ToObject<Collisions>();
-
-				// Make all directions point to the same instance
-				if (instance != null && instance.is_valid) result.unique = instance;
-				// Assume directional and parse as Dictionary
-				else serializer.Populate(obj.CreateReader(), result);
-
-				return result;
-			}
-
-			throw new InvalidDataException($"Could not parse Collisions from {reader.Value} at {reader.Path}.");
-		}
 	}
 }

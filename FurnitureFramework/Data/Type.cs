@@ -1,10 +1,12 @@
 using System.Runtime.Serialization;
+using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
+	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(SpaceRemover<FType>))]
 	public class FType
 	{
@@ -22,7 +24,8 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();
 
-		public DirectionalCollisions Collisions = new();
+		[JsonConverter(typeof(DirectionalConverter<Collisions>))]
+		public DirectionalField<Collisions> Collisions = new();
 		public string ForceType = "other";
 		public int Price = 0;
 		public int PlacementRestriction = 2;

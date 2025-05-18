@@ -90,7 +90,7 @@ namespace FurnitureFramework.FType
 		Animation animation = new();
 		bool placing_animate;
 
-		Data.DirectionalCollisions collisions;
+		Data.DirectionalField<Data.Collisions> collisions;
 		DirectionalStructure<SeatList> seats;
 		DirectionalStructure<SlotList> slots;
 		SoundList sounds;

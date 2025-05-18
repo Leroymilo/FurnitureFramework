@@ -1,4 +1,3 @@
-using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -49,8 +48,6 @@ namespace FurnitureFramework.Data
 	/// Holds data of Directional Fields (1 value per direction)
 	/// T must be an object, not a value or an array
 	/// </summary>
-	[RequiresPreviewFeatures]
-	[JsonConverter(typeof(DirectionalConverter<>))]
 	public class DirectionalField<T> : Dictionary<string, T> where T : Field, new()
 	{
 		public T unique = new();
@@ -106,7 +103,6 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Removes spaces in the keys of a json
 	/// </summary>
-	[RequiresPreviewFeatures]
 	class DirectionalConverter<T> : ReadOnlyConverter<DirectionalField<T>> where T : Field, new()
 	{
 		/// <inheritdoc />
@@ -114,8 +110,6 @@ namespace FurnitureFramework.Data
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
-				ModEntry.log("In Reader");
-
 				DirectionalField<T> result = new();
 
 				JObject obj = JObject.Load(reader);
@@ -125,8 +119,6 @@ namespace FurnitureFramework.Data
 				if (instance != null && instance.is_valid) result.unique = instance;
 				// Assume directional and parse as Dictionary
 				else serializer.Populate(obj.CreateReader(), result);
-
-				ModEntry.log($"result type: {result.GetType()}");
 
 				return result;
 			}
