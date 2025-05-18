@@ -133,7 +133,7 @@ namespace FurnitureFramework.FType
 			int rot = furniture.currentRotation.Value;
 
 			// Just in case there is a corrupted furniture.
-			if (rot >= rotations)
+			if (rot >= rotations.Count)
 			{
 				rot = 0;
 				furniture.currentRotation.Set(0);

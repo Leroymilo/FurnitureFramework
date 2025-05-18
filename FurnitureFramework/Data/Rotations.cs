@@ -6,8 +6,6 @@ namespace FurnitureFramework.Data
 {
 	class RotationConverter : ReadOnlyConverter<List<string>>
 	{
-		public static List<string> last = new();
-
 		public override List<string>? ReadJson(JsonReader reader, Type objectType, List<string>? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			List<string> result = new();
@@ -36,10 +34,15 @@ namespace FurnitureFramework.Data
 			{
 				result = JArray.Load(reader).ToObject<List<string>>() ?? new() { "NoRot" };
 			}
+			else throw new InvalidDataException($"Could not parse Rotations from {reader.Value} at {reader.Path}.");
 
-			last = result;
 			return result;
 		}
+	}
+
+	public class Field
+	{
+		public bool is_valid = false;
 	}
 
 	/// <summary>
@@ -48,16 +51,63 @@ namespace FurnitureFramework.Data
 	/// </summary>
 	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(DirectionalConverter<>))]
-	class DirectionalField<T> where T : new()
+	public class DirectionalField<T> : Dictionary<string, T> where T : Field, new()
 	{
-		public List<T> values;
+		public T unique = new();
+
+		public T first
+		{
+			get
+			{
+				foreach (T value in Values)
+					if (value.is_valid) return value;
+				if (unique.is_valid) return unique;
+				throw new InvalidOperationException();
+			}
+		}
+
+		new public T this[string key]
+		{
+			get
+			{
+				T? result;
+				if (ContainsKey(key))
+				{
+					result = base[key];
+					if (result.is_valid) return result;
+				}
+				if (unique.is_valid) return unique;
+				throw new KeyNotFoundException();
+			}
+			set
+			{
+				base[key] = value;
+			}
+		}
+
+		public List<T> ToList(List<string> rot_names)
+		{
+			List<T> result = new();
+			foreach (string rot_name in rot_names)
+			{
+				try
+				{
+					result.Add(this[rot_name]);
+				}
+				catch (KeyNotFoundException)
+				{
+					result.Add(new());
+				}
+			}
+			return result;
+		}
 	}
 
 	/// <summary>
 	/// Removes spaces in the keys of a json
 	/// </summary>
 	[RequiresPreviewFeatures]
-	class DirectionalConverter<T> : ReadOnlyConverter<DirectionalField<T>> where T : new()
+	class DirectionalConverter<T> : ReadOnlyConverter<DirectionalField<T>> where T : Field, new()
 	{
 		/// <inheritdoc />
 		public override DirectionalField<T> ReadJson(JsonReader reader, Type objectType, DirectionalField<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
@@ -68,25 +118,13 @@ namespace FurnitureFramework.Data
 
 				JObject obj = JObject.Load(reader);
 				T? instance = obj.ToObject<T>();
-				if (instance != null)
-				{
-					// Make all directions point to the same instance
+				
+				// Make all directions point to the same instance
+				if (instance != null) result.unique = instance;
+				// Assume directional and parse as Dictionary
+				else result = obj.ToObject<DirectionalField<T>>() ?? new();
 
-					result.values = Enumerable.Repeat(instance, RotationConverter.last.Count).ToList();
-				}
-				else
-				{
-					// Parse directions separately
-
-					result.values = new();
-					foreach (string rot_name in RotationConverter.last)
-					{
-						JToken? token = obj.GetValue(rot_name);
-						if (token == null) instance = new();
-						else instance = token.ToObject<T>() ?? new();
-						result.values.Add(instance);
-					}
-				}
+				ModEntry.log($"result type: {result.GetType()}");
 
 				return result;
 			}

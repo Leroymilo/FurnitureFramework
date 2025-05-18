@@ -68,8 +68,6 @@ namespace FurnitureFramework.FType
 			TypeInfo type_info, Data.FType data,
 			Point rect_offset, string texture_path)
 		{
-			JToken? token;
-
 			#region attributes for Data/Furniture
 
 			info = type_info;
@@ -79,8 +77,7 @@ namespace FurnitureFramework.FType
 			context_tags = data.ContextTags;
 			placement_rules = data.PlacementRestriction;
 
-			List<string> rot_names = data.Rotations;
-			rotations = rot_names.Count;
+			rotations = data.Rotations;
 
 			#endregion
 
@@ -88,8 +85,8 @@ namespace FurnitureFramework.FType
 
 			texture = new(info, texture_path);
 
-			layers = new(info, data.Layers, rot_names);
-			for (int i = 0; i < rotations; i++)
+			layers = new(info, data.Layers, rotations);
+			for (int i = 0; i < rotations.Count; i++)
 			{
 				if (!layers[i].has_layer)
 					throw new InvalidDataException($"Need at least one Layer for each rotation.");
@@ -99,10 +96,7 @@ namespace FurnitureFramework.FType
 
 			this.rect_offset = rect_offset;
 
-			token = data.IconRect;
-			if (!JsonParser.try_parse(token, ref icon_rect) || icon_rect.IsEmpty)
-				icon_rect = layers[0].get_source_rect();
-			
+			icon_rect = data.IconRect ?? layers[0].get_source_rect();
 			icon_rect.Location += rect_offset;
 
 			#endregion
@@ -112,12 +106,12 @@ namespace FurnitureFramework.FType
 			animation.parse(data.Animation);
 			placing_animate = data.AnimateWhenPlacing;
 
-			collisions = new(info, data.Collisions, rot_names);
-			seats = new(info, data.Seats, rot_names);
-			slots = new(info, data.Slots, rot_names);
-			light_sources = new(info, data.Lights, rot_names);
+			collisions = data.Collisions;
+			seats = new(info, data.Seats, rotations);
+			slots = new(info, data.Slots, rotations);
+			light_sources = new(info, data.Lights, rotations);
 			sounds = new(data.Sounds);
-			particles = new(info, data.Particles, rot_names);
+			particles = new(info, data.Particles, rotations);
 
 			#endregion
 
@@ -161,7 +155,7 @@ namespace FurnitureFramework.FType
 			switch (s_type)
 			{
 				case SpecialType.TV:
-					screen_position = JsonParser.parse_dir(data.ScreenPosition, rot_names, Vector2.Zero);
+					screen_position = JsonParser.parse_dir(data.ScreenPosition, rotations, Vector2.Zero);
 					screen_scale = data.ScreenScale;
 					break;
 				
@@ -183,7 +177,7 @@ namespace FurnitureFramework.FType
 					}
 					else
 					{
-						Point bed_size = collisions[0].game_size;
+						Point bed_size = collisions.first.game_size;
 						Point area_size = new Point(
 							Math.Max(64, bed_size.X - 64*2),
 							Math.Max(64, bed_size.Y - 64*2)
@@ -196,55 +190,12 @@ namespace FurnitureFramework.FType
 					break;
 
 				case SpecialType.FishTank:
-					fish_area = JsonParser.parse_dir(data.FishArea, rot_names, Rectangle.Empty);
+					fish_area = JsonParser.parse_dir(data.FishArea, rotations, Rectangle.Empty);
 					disable_fishtank_light = data.DisableFishtankLight;
 					break;
 			}
 			
 			#endregion
-		}
-
-		public List<string> parse_rotations(JToken? token)
-		{
-			if (token == null || token.Type == JTokenType.Null)
-				throw new InvalidDataException($"Missing or invalid Rotations for Furniture {info.id}.");
-			
-			#region Rotations number
-
-			if (JsonParser.try_parse(token, ref rotations))
-			{
-				return rotations switch
-				{
-					1 => new() { "NoRot" },
-					2 => new() { "Horizontal", "Vertical" },
-					4 => new() { "Down", "Right", "Up", "Left" },
-					_ => throw new InvalidDataException($"Invalid Rotations for Furniture {info.id}: number can be 1, 2 or 4."),
-				};
-			}
-
-			#endregion
-
-			#region Rotations list
-
-			List<string> rot_names = new();
-
-			if (JsonParser.try_parse(token, ref rot_names))
-			{
-				rotations = rot_names.Count;
-
-				if (rotations == 0)
-				{
-					rotations = 1;
-					rot_names = new() { "NoRot" };
-					ModEntry.log($"Furniture {info.id} has no valid rotation key, fallback to \"Rotations\": 1", LogLevel.Warn);
-				}
-
-				return rot_names;
-			}
-
-			#endregion
-
-			throw new InvalidDataException($"Invalid Rotations for Furniture {info.id}, should be a number or a list of names.");
 		}
 
 		public string get_string_data()

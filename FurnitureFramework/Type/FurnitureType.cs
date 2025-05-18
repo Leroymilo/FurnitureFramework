@@ -77,7 +77,7 @@ namespace FurnitureFramework.FType
 		bool exclude_from_random_sales;
 		int placement_rules;
 		List<string> context_tags = new();
-		int rotations;
+		List<string> rotations;
 		bool can_be_toggled = false;
 		bool time_based = false;
 		
@@ -90,7 +90,7 @@ namespace FurnitureFramework.FType
 		Animation animation = new();
 		bool placing_animate;
 
-		DirectionalStructure<Collisions> collisions;
+		Data.DirectionalCollisions collisions;
 		DirectionalStructure<SeatList> seats;
 		DirectionalStructure<SlotList> slots;
 		SoundList sounds;
@@ -123,7 +123,7 @@ namespace FurnitureFramework.FType
 		public void rotate(Furniture furniture)
 		{
 			int rot = furniture.currentRotation.Value;
-			rot = (rot + 1) % rotations;
+			rot = (rot + 1) % rotations.Count;
 			if (rot < 0) rot = 0;
 
 			furniture.currentRotation.Value = rot;
@@ -135,7 +135,7 @@ namespace FurnitureFramework.FType
 			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
-			furniture.boundingBox.Value = collisions[rot].get_bounding_box(pos);
+			furniture.boundingBox.Value = collisions[rotations[rot]].get_bounding_box(pos);
 			furniture.sourceRect.Value = layers[rot].get_source_rect();
 		}
 
@@ -189,7 +189,7 @@ namespace FurnitureFramework.FType
 				return;
 			}
 			
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 			Point pos = furniture.boundingBox.Value.Location;
 			collides = collisions[rot].is_colliding(rect, pos);
 		}
@@ -222,7 +222,7 @@ namespace FurnitureFramework.FType
 
 			// Actual collision detection made by collisions
 
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 			if (!collisions[rot].can_be_placed_here(furniture, loc, tile.ToPoint(), collisionMask, passable_ignored))
 			{
 				result = false;
@@ -677,7 +677,7 @@ namespace FurnitureFramework.FType
 			if (shops.Count > 0) ModEntry.log($"{indent}Shows in Shops: {string.Join(", ", shops)}", LogLevel.Debug);
 
 			animation.debug_print(indent_count+1);
-			collisions.debug_print(indent_count+1);
+			// collisions.debug_print(indent_count+1);
 			seats.debug_print(indent_count+1);
 			slots.debug_print(indent_count+1);
 			sounds.debug_print(indent_count+1);
