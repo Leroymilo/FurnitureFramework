@@ -103,7 +103,7 @@ namespace FurnitureFramework.FType
 
 			#region data in classes
 
-			animation.parse(data.Animation);
+			animation = data.Animation;
 			placing_animate = data.AnimateWhenPlacing;
 
 			collisions = data.Collisions;
@@ -177,7 +177,7 @@ namespace FurnitureFramework.FType
 					}
 					else
 					{
-						Point bed_size = collisions.first.game_size;
+						Point bed_size = collisions.First.GameSize;
 						Point area_size = new Point(
 							Math.Max(64, bed_size.X - 64*2),
 							Math.Max(64, bed_size.Y - 64*2)

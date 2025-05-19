@@ -1,13 +1,8 @@
-using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
-
-	[JsonConverter(typeof(VariantConverter<Point>))]
-	public class SourceRectOffsets : Dictionary<string, Point> {}
-
 	public class VariantConverter<T> : ReadOnlyConverter<Dictionary<string, T>>
 	{
 		public override Dictionary<string, T>? ReadJson(JsonReader reader, Type objectType, Dictionary<string, T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
@@ -47,8 +42,9 @@ namespace FurnitureFramework.Data
 			if (reader.TokenType == JsonToken.String)
 			{
 				// Only if a single Image Source path is given (most cases)
-				string value = JToken.Load(reader).Value<string>() ?? "FF/assets/error.png";
-				return new() {{ "", value }};
+				string? value = JToken.Load(reader).Value<string>() ??
+					throw new InvalidDataException($"Could not parse Source Image from {reader.Value} at {reader.Path}.");
+				return new() { { "", value } };
 			}
 			else return base.ReadJson(reader, objectType, existingValue, hasExistingValue, serializer);
 		}

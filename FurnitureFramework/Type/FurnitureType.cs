@@ -87,7 +87,7 @@ namespace FurnitureFramework.FType
 		Point rect_offset;
 		Rectangle icon_rect = Rectangle.Empty;
 
-		Animation animation = new();
+		Data.Animation animation = new();
 		bool placing_animate;
 
 		Data.DirectionalField<Data.Collisions> collisions;
@@ -135,7 +135,7 @@ namespace FurnitureFramework.FType
 			int rot = furniture.currentRotation.Value;
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
-			furniture.boundingBox.Value = collisions[rotations[rot]].get_bounding_box(pos);
+			furniture.boundingBox.Value = collisions[rotations[rot]].GetBoundingBox(pos);
 			furniture.sourceRect.Value = layers[rot].get_source_rect();
 		}
 
@@ -191,7 +191,7 @@ namespace FurnitureFramework.FType
 			
 			string rot = rotations[furniture.currentRotation.Value];
 			Point pos = furniture.boundingBox.Value.Location;
-			collides = collisions[rot].is_colliding(rect, pos);
+			collides = collisions[rot].IsColliding(rect, pos);
 		}
 
 		public void canBePlacedHere(
@@ -223,7 +223,7 @@ namespace FurnitureFramework.FType
 			// Actual collision detection made by collisions
 
 			string rot = rotations[furniture.currentRotation.Value];
-			if (!collisions[rot].can_be_placed_here(furniture, loc, tile.ToPoint(), collisionMask, passable_ignored))
+			if (!collisions[rot].CanBePlacedHere(furniture, loc, tile.ToPoint(), collisionMask, passable_ignored))
 			{
 				result = false;
 				return;
@@ -676,7 +676,7 @@ namespace FurnitureFramework.FType
 			if (shop_id != null) ModEntry.log($"{indent}Shop ID: {shop_id}", LogLevel.Debug);
 			if (shops.Count > 0) ModEntry.log($"{indent}Shows in Shops: {string.Join(", ", shops)}", LogLevel.Debug);
 
-			animation.debug_print(indent_count+1);
+			// animation.debug_print(indent_count+1);
 			// collisions.debug_print(indent_count+1);
 			seats.debug_print(indent_count+1);
 			slots.debug_print(indent_count+1);

@@ -19,7 +19,7 @@ namespace FurnitureFramework.Data
 		private List<Point> Tiles = new();
 
 		[OnDeserialized]
-		private void validate(StreamingContext context)
+		private void Validate(StreamingContext context)
 		{
 			// Empty collision is invalid
 			if (Width == 0 || Height == 0) return;
@@ -44,7 +44,7 @@ namespace FurnitureFramework.Data
 		#region methods
 
 		[JsonIgnore]
-		public Point game_size
+		public Point GameSize
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace FurnitureFramework.Data
 			}
 		}
 
-		public Rectangle get_bounding_box(Point this_game_pos)
+		public Rectangle GetBoundingBox(Point this_game_pos)
 		{
 			return new(
 				this_game_pos,
@@ -60,9 +60,9 @@ namespace FurnitureFramework.Data
 			);
 		}
 
-		public bool is_colliding(Rectangle rect, Point this_game_pos)
+		public bool IsColliding(Rectangle rect, Point this_game_pos)
 		{
-			Rectangle bounding_box = get_bounding_box(this_game_pos);
+			Rectangle bounding_box = GetBoundingBox(this_game_pos);
 
 			if (!bounding_box.Intersects(rect))
 				return false; // bounding box does not intersect
@@ -81,7 +81,7 @@ namespace FurnitureFramework.Data
 			return false;   // no collision map tile intersects
 		}
 
-		public bool can_be_placed_here(
+		public bool CanBePlacedHere(
 			Furniture furniture, GameLocation loc, Point tile_pos,
 			CollisionMask collisionMask, CollisionMask passable_ignored)
 		{
@@ -89,7 +89,7 @@ namespace FurnitureFramework.Data
 			{
 				foreach (Point map_tile_pos in Tiles)
 				{
-					if (!is_tile_free(
+					if (!IsTileFree(
 						furniture,
 						tile_pos + map_tile_pos, loc,
 						collisionMask, passable_ignored
@@ -107,12 +107,12 @@ namespace FurnitureFramework.Data
 				{
 					for (int x = 0; x < Width; x++)
 					{
-						if (can_place_on_table(new Point(x, y) + tile_pos, loc))
+						if (CanPlaceOnTable(new Point(x, y) + tile_pos, loc))
 						{
 							return true;
 						}
 
-						if (!is_tile_free(
+						if (!IsTileFree(
 							furniture,
 							new Point(x, y) + tile_pos, loc,
 							collisionMask, passable_ignored
@@ -126,7 +126,7 @@ namespace FurnitureFramework.Data
 			}
 		}
 
-		private bool is_tile_free(
+		private bool IsTileFree(
 			Furniture furniture, Point tile, GameLocation loc,
 			CollisionMask collisionMask, CollisionMask passable_ignored
 		)
@@ -172,7 +172,7 @@ namespace FurnitureFramework.Data
 			return true;
 		}
 
-		private bool can_place_on_table(Point tile, GameLocation loc)
+		private bool CanPlaceOnTable(Point tile, GameLocation loc)
 		{
 			if (Width > 1 || Height > 1)
 				return false;

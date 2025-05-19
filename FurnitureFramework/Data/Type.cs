@@ -37,7 +37,7 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(VariantConverter<Point>))]
 		public Dictionary<string, Point> SourceRectOffsets = new() { { "", Point.Zero } };
 
-		public JObject? Animation;
+		public Animation Animation = new();
 
 		public bool AnimateWhenPlacing = true;
 		public string SpecialType = "None";
@@ -69,7 +69,7 @@ namespace FurnitureFramework.Data
 		#endregion
 
 		[OnDeserialized]
-		private void validate(StreamingContext context)
+		private void Validate(StreamingContext context)
 		{
 			foreach (string rot_name in Rotations)
 			{

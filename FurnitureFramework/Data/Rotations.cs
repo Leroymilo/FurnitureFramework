@@ -50,15 +50,15 @@ namespace FurnitureFramework.Data
 	/// </summary>
 	public class DirectionalField<T> : Dictionary<string, T> where T : Field, new()
 	{
-		public T unique = new();
+		public T Unique = new();
 
-		public T first
+		public T First
 		{
 			get
 			{
 				foreach (T value in Values)
 					if (value.is_valid) return value;
-				if (unique.is_valid) return unique;
+				if (Unique.is_valid) return Unique;
 				throw new InvalidOperationException();
 			}
 		}
@@ -73,7 +73,7 @@ namespace FurnitureFramework.Data
 					result = base[key];
 					if (result.is_valid) return result;
 				}
-				if (unique.is_valid) return unique;
+				if (Unique.is_valid) return Unique;
 				throw new KeyNotFoundException();
 			}
 			set
@@ -116,7 +116,7 @@ namespace FurnitureFramework.Data
 				T? instance = obj.ToObject<T>();
 
 				// Make all directions point to the same instance
-				if (instance != null && instance.is_valid) result.unique = instance;
+				if (instance != null && instance.is_valid) result.Unique = instance;
 				// Assume directional and parse as Dictionary
 				else serializer.Populate(obj.CreateReader(), result);
 

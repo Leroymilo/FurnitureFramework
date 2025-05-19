@@ -123,7 +123,7 @@ namespace FurnitureFramework.FType
 				draw_data.is_dark = furniture.timeToTurnOnLights();
 			else draw_data.is_dark = false;
 
-			draw_data.rect_offset = rect_offset + animation.get_offset();
+			draw_data.rect_offset = rect_offset + animation.GetOffset();
 
 			if (furniture.shakeTimer > 0) {
 				draw_data.position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
@@ -163,7 +163,7 @@ namespace FurnitureFramework.FType
 				// while placing
 				
 				if (!placing_animate)
-					draw_data.rect_offset -= animation.get_offset();
+					draw_data.rect_offset -= animation.GetOffset();
 
 				if (placing_layers) layers[rot].draw_all(draw_data, top);
 				else layers[rot].draw_one(draw_data, top);
