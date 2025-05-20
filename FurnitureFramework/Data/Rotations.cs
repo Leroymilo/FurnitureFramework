@@ -81,23 +81,6 @@ namespace FurnitureFramework.Data
 				base[key] = value;
 			}
 		}
-
-		public List<T> ToList(List<string> rot_names)
-		{
-			List<T> result = new();
-			foreach (string rot_name in rot_names)
-			{
-				try
-				{
-					result.Add(this[rot_name]);
-				}
-				catch (KeyNotFoundException)
-				{
-					result.Add(new());
-				}
-			}
-			return result;
-		}
 	}
 
 	/// <summary>

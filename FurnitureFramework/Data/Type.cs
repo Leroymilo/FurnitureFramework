@@ -6,6 +6,23 @@ using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
+	using BedType = StardewValley.Objects.BedFurniture.BedType;
+
+	public enum SpecialType {
+		None,
+		Dresser,
+		TV,
+		Bed,
+		FishTank,
+		// RandomizedPlant
+	}
+
+	public enum PlacementType {
+		Normal,
+		Rug,
+		Mural
+	}
+
 	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(SpaceRemover<FType>))]
 	public class FType
@@ -16,8 +33,6 @@ namespace FurnitureFramework.Data
 		public string DisplayName = "No Name";
 		public string? Description;
 
-		// The method to use parsed rotations to parse directional field isn't reliable: it's dependant on json order
-		// Fix: parse directional fields into a dict, then use actual rotations keys when fetching the values
 		[JsonConverter(typeof(RotationConverter))]
 		public List<string> Rotations;
 
@@ -38,10 +53,9 @@ namespace FurnitureFramework.Data
 		public Dictionary<string, Point> SourceRectOffsets = new() { { "", Point.Zero } };
 
 		public Animation Animation = new();
-
 		public bool AnimateWhenPlacing = true;
-		public string SpecialType = "None";
-		public string PlacementType = "Normal";
+		public SpecialType SpecialType = SpecialType.None;
+		public PlacementType PlacementType = PlacementType.Normal;
 		public Rectangle? IconRect;
 		public bool Toggle = false;
 		public bool TimeBased = false;
@@ -58,7 +72,7 @@ namespace FurnitureFramework.Data
 		public float ScreenScale = 2f;
 
 		// Bed
-		public string BedType = "Double";
+		public BedType BedType = BedType.Double;
 		public JToken? BedSpot;
 		public JToken? BedArea;
 

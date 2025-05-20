@@ -1,14 +1,10 @@
 using HarmonyLib;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley.GameData.Shops;
-using StardewValley.Objects;
 
 namespace FurnitureFramework.FType
 {
-	using BedType = BedFurniture.BedType;
-
 	partial class FurnitureType
 	{
 		#region Makers
@@ -133,38 +129,26 @@ namespace FurnitureFramework.FType
 
 			#region Placement Type
 
-			p_type = Enum.Parse<PlacementType>(data.PlacementType);
-			if (!Enum.IsDefined(p_type)) {
-				p_type = PlacementType.Normal;
-				ModEntry.log($"Invalid Placement Type for {info.id}, defaulting to Normal.", LogLevel.Warn);
-			}
+			p_type = data.PlacementType;
 
-			if (p_type == PlacementType.Rug) type = "rug";
-			if (p_type == PlacementType.Mural) type = "painting";
+			if (p_type == Data.PlacementType.Rug) type = "rug";
+			if (p_type == Data.PlacementType.Mural) type = "painting";
 
 			#endregion
 
 			#region Special Furniture
 
-			s_type = Enum.Parse<SpecialType>(data.SpecialType);
-			if (!Enum.IsDefined(s_type)) {
-				s_type = SpecialType.None;
-				ModEntry.log($"Invalid Special Type for {info.id}, defaulting to None.", LogLevel.Warn);
-			}
+			s_type = data.SpecialType;
 
 			switch (s_type)
 			{
-				case SpecialType.TV:
+				case Data.SpecialType.TV:
 					screen_position = JsonParser.parse_dir(data.ScreenPosition, rotations, Vector2.Zero);
 					screen_scale = data.ScreenScale;
 					break;
 				
-				case SpecialType.Bed:
-					bed_type = Enum.Parse<BedType>(data.BedType);
-					if (!Enum.IsDefined(bed_type)) {
-						bed_type = BedType.Double;
-						ModEntry.log($"Invalid Bed Type for {info.id}, defaulting to Double.", LogLevel.Warn);
-					}
+				case Data.SpecialType.Bed:
+					bed_type = data.BedType;
 
 					JsonParser.try_parse(data.BedSpot, ref bed_spot);
 
@@ -189,7 +173,7 @@ namespace FurnitureFramework.FType
 					}
 					break;
 
-				case SpecialType.FishTank:
+				case Data.SpecialType.FishTank:
 					fish_area = JsonParser.parse_dir(data.FishArea, rotations, Rectangle.Empty);
 					disable_fishtank_light = data.DisableFishtankLight;
 					break;

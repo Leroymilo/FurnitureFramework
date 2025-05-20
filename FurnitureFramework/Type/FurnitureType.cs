@@ -3,7 +3,6 @@ using FurnitureFramework.FType.Properties;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
@@ -14,21 +13,6 @@ namespace FurnitureFramework.FType
 {
 	using SVObject = StardewValley.Object;
 	using BedType = BedFurniture.BedType;
-
-	enum SpecialType {
-		None,
-		Dresser,
-		TV,
-		Bed,
-		FishTank,
-		// RandomizedPlant
-	}
-
-	enum PlacementType {
-		Normal,
-		Rug,
-		Mural
-	}
 
 	[RequiresPreviewFeatures]
 	struct TypeInfo
@@ -97,14 +81,14 @@ namespace FurnitureFramework.FType
 		DirectionalStructure<ParticlesList> particles;
 		DirectionalStructure<LightList> light_sources;
 
-		PlacementType p_type = PlacementType.Normal;
+		Data.PlacementType p_type = Data.PlacementType.Normal;
 
 
 		public readonly string? shop_id = null;
 		public readonly List<string> shops = new();
 
 
-		public readonly SpecialType s_type = SpecialType.None;
+		public readonly Data.SpecialType s_type = Data.SpecialType.None;
 
 		List<Vector2> screen_position;
 		float screen_scale = 4;
@@ -183,7 +167,7 @@ namespace FurnitureFramework.FType
 				return;
 			}
 
-			if (p_type == PlacementType.Rug)
+			if (p_type == Data.PlacementType.Rug)
 			{
 				collides = false;
 				return;
@@ -229,7 +213,7 @@ namespace FurnitureFramework.FType
 				return;
 			}
 
-			if (p_type == PlacementType.Mural)
+			if (p_type == Data.PlacementType.Mural)
 			{
 
 				Point point = tile.ToPoint();
@@ -409,12 +393,12 @@ namespace FurnitureFramework.FType
 
 		public void isGroundFurniture(ref bool is_ground_f)
 		{
-			is_ground_f = p_type != PlacementType.Mural;
+			is_ground_f = p_type != Data.PlacementType.Mural;
 		}
 
 		public void isPassable(ref bool is_passable)
 		{
-			is_passable = p_type == PlacementType.Rug;
+			is_passable = p_type == Data.PlacementType.Rug;
 		}
 
 		#endregion
@@ -492,7 +476,7 @@ namespace FurnitureFramework.FType
 		{
 			if (
 				!Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type)
-				|| type.p_type == PlacementType.Rug
+				|| type.p_type == Data.PlacementType.Rug
 			)
 			{
 				return furniture.boundingBox.Value.Contains(x, y);
@@ -555,7 +539,7 @@ namespace FurnitureFramework.FType
 			particles[rot].update_timer(furniture, ms_time);
 
 			// Checking bed intersection
-			if (s_type == SpecialType.Bed)
+			if (s_type == Data.SpecialType.Bed)
 			{
 				Rectangle bed_col = bed_area.Clone();
 				bed_col.Location += furniture.boundingBox.Value.Location;
@@ -688,18 +672,18 @@ namespace FurnitureFramework.FType
 
 			switch (s_type)
 			{
-				case SpecialType.TV:
+				case Data.SpecialType.TV:
 					ModEntry.log($"{indent}TV screen pos: {screen_position}", LogLevel.Debug);
 					ModEntry.log($"{indent}TV screen scale: {screen_scale}", LogLevel.Debug);
 					break;
 				
-				case SpecialType.Bed:
+				case Data.SpecialType.Bed:
 					ModEntry.log($"{indent}Bed Spot: {bed_spot}", LogLevel.Debug);
 					ModEntry.log($"{indent}Bed Area: {bed_area}", LogLevel.Debug);
 					ModEntry.log($"{indent}Bed Type: {bed_type}", LogLevel.Debug);
 					break;
 				
-				case SpecialType.FishTank:
+				case Data.SpecialType.FishTank:
 					ModEntry.log($"{indent}Fish Area: {fish_area}", LogLevel.Debug);
 					ModEntry.log($"{indent}Disable Fishtank Light: {disable_fishtank_light}", LogLevel.Debug);
 					break;
