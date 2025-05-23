@@ -7,11 +7,13 @@ using StardewValley.TerrainFeatures;
 
 namespace FurnitureFramework.Data
 {
-	public class Collisions : Field
+	public class Collisions : DirField
 	{
 		static readonly Point TILESIZE = new(64);
 
+		[Required]
 		public int Width = 0;
+		[Required]
 		public int Height = 0;
 		public string? Map;
 

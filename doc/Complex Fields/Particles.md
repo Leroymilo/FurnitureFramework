@@ -5,23 +5,23 @@ If you need an example, the `Custom Cauldron` Furniture in the Example Pack has 
 
 ## Source Image (required)
 
-Like the Source Image of a Furniture, a Particle can have its own .png (or be stored in the same spritesheet as the Furniture).
+Like the Source Image of a Furniture, a Particle can have its own image (or be stored in the same spritesheet as the Furniture).
 
 ## Source Rect
 
 Like the [Source Rect](Layers.md#source-rect) of a Layer, this tells the game which part of your image should be used for a single Particle. If making an animated Particle (see lower), this should be the Rectangle around the first frame.  
 If omitted, the Source Rect will be the size of the given image.
 
+## Spawn Rect (required) (directional)
+
+This field is another Rectangle, but this one defines the area of the sprite where the Particles will spawn.  
+Be carefull, the Spawn Rect of a Particle is relative to the bottom left of the Furniture's collision, so the Y coordinate must be negative for it to be on the Furniture itself.
+
 ## Emission Interval
 
 This field defines how much time passes between each Particle is emitted, it is mesured in whole milliseconds (no decimals).  
 Setting this interval too low (less than 100) might cause issues because of the number of Particles that would be created.  
 Defaults to 500ms.
-
-## Spawn Rect (required) (directional)
-
-This field is another Rectangle, but this one defines the area of the sprite where the Particles will spawn.  
-Be carefull, the Spawn Rect of a Particle is relative to the bottom left of the Furniture's collision, so the Y coordinate must be negative for it to be on the Furniture itself.
 
 ## Depths
 

@@ -9,7 +9,7 @@ namespace FurnitureFramework.FType.Properties
 	[RequiresPreviewFeatures]
 	class SeatList: IProperty<SeatList>
 	{
-		private enum SeatDir { Up, Right, Down, Left }
+		public enum SeatDir { Up, Right, Down, Left }
 
 		#region Seat Subclass
 

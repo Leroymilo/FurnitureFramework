@@ -39,8 +39,8 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();
 
-		[JsonConverter(typeof(DirectionalConverter<Collisions>))]
-		public DirectionalField<Collisions> Collisions = new();
+		[JsonConverter(typeof(DirFieldDictConverter<Collisions>))]
+		public DirFieldDict<Collisions> Collisions = new();
 		public string ForceType = "other";
 		public int Price = 0;
 		public int PlacementRestriction = 2;
@@ -90,7 +90,10 @@ namespace FurnitureFramework.Data
 				bool valid = false;
 				try { valid = Collisions[rot_name].is_valid; }
 				catch { }
-				if (!valid) throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
+				if (!valid)
+				{
+					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
+				}
 			}
 		}
 	}

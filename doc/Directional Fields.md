@@ -68,7 +68,13 @@ You can see how each object in the `Layers` definition matches a part of the spr
 Directional lists can also be defined by an array instead of an object, this works the same way. Here what it looks like when it is non-directional:
 ```jsonc
 "Layers": [
-	// My layers applied to all directions
+	{
+		// First layer (not directional)
+	},
+	{
+		// Second layer (not directional)
+	},
+	// As many other layers as you want
 ]
 ```
 

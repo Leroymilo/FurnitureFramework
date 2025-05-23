@@ -329,17 +329,17 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 				{
 					switch (type.s_type)
 					{
-						case FType.SpecialType.Dresser:
+						case Data.SpecialType.Dresser:
 							__result = new StorageFurniture(itemId, position.Value);
 							break;
-						case FType.SpecialType.TV:
+						case Data.SpecialType.TV:
 							__result = new TV(itemId, position.Value);
 							break;
-						case FType.SpecialType.Bed:
+						case Data.SpecialType.Bed:
 							__result = new BedFurniture(itemId, position.Value)
 								{ bedType = type.bed_type };
 							break;
-						case FType.SpecialType.FishTank:
+						case Data.SpecialType.FishTank:
 							__result = new FishTankFurniture(itemId, position.Value);
 							break;
 					}

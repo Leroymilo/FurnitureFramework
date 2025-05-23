@@ -68,9 +68,9 @@ namespace FurnitureFramework
 
 		#region On Game Launched
 
-        /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
+		/// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event data.</param>
 		private void on_game_launched(object? sender, GameLaunchedEventArgs e)
 		{
 			Pack.FurniturePack.pre_load(get_helper());

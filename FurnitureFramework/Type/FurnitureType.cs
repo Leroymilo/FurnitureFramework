@@ -74,7 +74,7 @@ namespace FurnitureFramework.FType
 		Data.Animation animation = new();
 		bool placing_animate;
 
-		Data.DirectionalField<Data.Collisions> collisions;
+		Data.DirFieldDict<Data.Collisions> collisions;
 		DirectionalStructure<SeatList> seats;
 		DirectionalStructure<SlotList> slots;
 		SoundList sounds;
