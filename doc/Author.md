@@ -55,7 +55,8 @@ The `content.json` file is a model with only 3 fields:
 
 ### Format
 
-The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Changelogs](Changelogs.md). The current Format is 3.
+The format you're using for your Furniture Pack, it matches the leftmost number in the mod's version. See the [Changelogs](Changelogs.md). The current Format is 3.  
+A good practice is to also match the first number of your Furniture Pack's version to this, to avoid users being confused by version number mismatch.
 
 ### Furniture
 

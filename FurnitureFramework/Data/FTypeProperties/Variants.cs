@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -35,6 +36,7 @@ namespace FurnitureFramework.Data
 		}
 	}
 
+	[RequiresPreviewFeatures]
 	public class ImageVariantConverter : VariantConverter<string>
 	{
 		public override Dictionary<string, string>? ReadJson(JsonReader reader, Type objectType, Dictionary<string, string>? existingValue, bool hasExistingValue, JsonSerializer serializer)

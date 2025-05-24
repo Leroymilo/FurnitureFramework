@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using StardewValley;
@@ -7,6 +8,7 @@ using StardewValley.TerrainFeatures;
 
 namespace FurnitureFramework.Data
 {
+	[RequiresPreviewFeatures]
 	public class Collisions : DirField
 	{
 		static readonly Point TILESIZE = new(64);

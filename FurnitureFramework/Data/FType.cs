@@ -39,6 +39,10 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();
 
+		[JsonConverter(typeof(DirListDictConverter<LayerList, Layer>))]
+		public DirListDict<LayerList, Layer> Layers = new();
+		public bool DrawLayersWhenPlacing = false;
+
 		[JsonConverter(typeof(DirFieldDictConverter<Collisions>))]
 		public DirFieldDict<Collisions> Collisions = new();
 		public string ForceType = "other";
@@ -60,8 +64,6 @@ namespace FurnitureFramework.Data
 		public bool Toggle = false;
 		public bool TimeBased = false;
 		public JToken? Sounds;
-		public JToken? Layers;
-		public bool DrawLayersWhenPlacing = false;
 		public JToken? Seats;
 		public JToken? Slots;
 		public JToken? Lights;
@@ -92,7 +94,17 @@ namespace FurnitureFramework.Data
 				catch { }
 				if (!valid)
 				{
+					ModEntry.log($"Missing Collisions for rotation {rot_name}.");
 					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
+				}
+
+				valid = false;
+				try { valid = Layers[rot_name][0].is_valid; }
+				catch { }
+				if (!valid)
+				{
+					ModEntry.log($"Missing Layer for rotation {rot_name}.");
+					throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
 				}
 			}
 		}
@@ -101,22 +113,18 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Removes spaces in the keys of a json
 	/// </summary>
+	[RequiresPreviewFeatures]
 	class SpaceRemover<T> : ReadOnlyConverter<T> where T : new()
 	{
+
 		/// <inheritdoc />
 		public override T ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
-				JObject obj = JObject.Load(reader);
-				JObject new_obj = new();
-				foreach (JProperty property in obj.Properties())
-				{
-					new_obj.Add(property.Name.Replace(" ", null), property.Value);
-				}
-
+				JObject obj = Utils.RemoveSpaces(JObject.Load(reader));
 				T result = new();
-				serializer.Populate(new_obj.CreateReader(), result);
+				serializer.Populate(obj.CreateReader(), result);
 				return result;
 			}
 

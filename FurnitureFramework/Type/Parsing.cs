@@ -81,18 +81,13 @@ namespace FurnitureFramework.FType
 
 			texture = new(info, texture_path);
 
-			layers = new(info, data.Layers, rotations);
-			for (int i = 0; i < rotations.Count; i++)
-			{
-				if (!layers[i].has_layer)
-					throw new InvalidDataException($"Need at least one Layer for each rotation.");
-			}
+			layers = data.Layers;
 
 			placing_layers = data.DrawLayersWhenPlacing;
 
 			this.rect_offset = rect_offset;
 
-			icon_rect = data.IconRect ?? layers[0].get_source_rect();
+			icon_rect = data.IconRect ?? layers[rotations[0]][0].SourceRect;
 			icon_rect.Location += rect_offset;
 
 			#endregion

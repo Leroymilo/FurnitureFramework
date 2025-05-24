@@ -13,16 +13,14 @@
 			"Placement Restriction": 2,
 			"Source Image": "assets/catalogue.png",
 			"Shop Id": "FF.debug_catalog",
-			"Layers": [
-				{
-					"Source Rect": {
-						"X": 0,
-						"Y": 0,
-						"Width": 16,
-						"Height": 32
-					}
+			"Layers": {
+				"Source Rect": {
+					"X": 0,
+					"Y": 0,
+					"Width": 16,
+					"Height": 32
 				}
-			]
+			}
 		}
 	},
 	"Included": {

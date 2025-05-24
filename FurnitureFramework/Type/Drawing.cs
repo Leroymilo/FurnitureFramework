@@ -6,7 +6,7 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.FType
 {
-	struct DrawData
+	public struct DrawData
 	{
 		public readonly SpriteBatch sprite_batch;
 		public Texture2D texture;
@@ -144,8 +144,8 @@ namespace FurnitureFramework.FType
 				// when placed
 
 				if (draw_in_slot)
-					layers[rot].draw_one(draw_data, top, ignore_depth: true);
-				else layers[rot].draw_all(draw_data, top);
+					layers[rotations[rot]][0].Draw(draw_data, top, ignore_depth: true);
+				else layers[rotations[rot]].DrawAll(draw_data, top);
 
 				light_sources[rot].draw_glows(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
 
@@ -165,8 +165,8 @@ namespace FurnitureFramework.FType
 				if (!placing_animate)
 					draw_data.rect_offset -= animation.GetOffset();
 
-				if (placing_layers) layers[rot].draw_all(draw_data, top);
-				else layers[rot].draw_one(draw_data, top);
+				if (placing_layers) layers[rotations[rot]].DrawAll(draw_data, top);
+				else layers[rotations[rot]][0].Draw(draw_data, top);
 			}
 		}
 

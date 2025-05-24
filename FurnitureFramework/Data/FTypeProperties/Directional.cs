@@ -65,53 +65,17 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// The base class for values inside a DirFieldDict or DirListDict
 	/// </summary>
+	[RequiresPreviewFeatures]
 	public class DirField
 	{
-		public const string NOROT = "NoRot";
-
 		[JsonIgnore]
 		public bool is_valid = false;
 
+		public string? ID;	// Used by CP to patch elements in a List
+
+		public static int Count = 0;
 		public static string? CurrentDirKey = null;
 		// The direction key that will be used to parse directional sub-fields
-
-		public static List<string> GetSubDirections(Type type, JObject obj)
-		// type is passed for the method to work on inherited classes
-		{
-			List<string> result = new();
-
-			// Check if all [Required] fields are in the obj
-			foreach (string field_name in TagAttribute.GetRequired(type))
-			{
-				if (!obj.ContainsKey(field_name)) return new() { };
-				// If not return empty list to indicate that this might be a directional dict of DirListField
-			}
-
-			// Check if any of the [Directional] fields are present
-			foreach (string field_name in TagAttribute.GetDirectional(type))
-			{
-				JToken? field_token = obj.GetValue(field_name);
-				if (field_token is not JObject field_obj) continue;
-				// Must be a JObject (and not null) to be directional
-
-				FieldInfo? field = type.GetField(field_name);
-				if (field == null) continue;
-
-				// Only 3 cases (for now): enum, Point or Rectangle
-
-				if (field.FieldType.IsEnum || field_obj.First is JObject)
-				// If the value is a JObject but represents an enum, then it's directional
-				// If any value in the JObject is also a JObjext, then it's directional
-				{
-					foreach (JProperty prop in field_obj.Properties())
-						result.Add(prop.Name);
-				}
-			}
-
-			// Differentiates between invalid and no Directional Sub-Field
-			if (result.Count == 0) result.Add(NOROT);
-			return result;
-		}
 	}
 
 	[RequiresPreviewFeatures]
@@ -166,6 +130,7 @@ namespace FurnitureFramework.Data
 	/// Holds data of Directional Fields (1 value per direction)
 	/// Only used for Collisions
 	/// </summary>
+	[RequiresPreviewFeatures]
 	public class DirFieldDict<T> : Dictionary<string, T> where T : DirField, new()
 	{
 		// Only required because BedArea is not directional
@@ -175,7 +140,7 @@ namespace FurnitureFramework.Data
 			{
 				foreach (T value in Values)
 					if (value.is_valid) return value;
-				if (ContainsKey(DirField.NOROT) && this[DirField.NOROT].is_valid) return this[DirField.NOROT];
+				if (ContainsKey(Utils.NOROT) && this[Utils.NOROT].is_valid) return this[Utils.NOROT];
 				throw new InvalidOperationException("Unique value invalid");
 			}
 		}
@@ -185,7 +150,7 @@ namespace FurnitureFramework.Data
 			get
 			{
 				T? result;
-				if (!ContainsKey(key)) key = DirField.NOROT;
+				if (!ContainsKey(key)) key = Utils.NOROT;
 				if (ContainsKey(key))
 				{
 					result = base[key];
@@ -210,9 +175,9 @@ namespace FurnitureFramework.Data
 			{
 				DirFieldDict<T> result = new();
 
-				JObject obj = JObject.Load(reader);
+				JObject obj = Utils.RemoveSpaces(JObject.Load(reader));
 
-				List<string> sub_dirs = DirField.GetSubDirections(typeof(T), obj);
+				List<string> sub_dirs = Utils.GetSubDirections(typeof(T), obj);
 
 				if (sub_dirs.Count > 0)
 				{
@@ -227,7 +192,7 @@ namespace FurnitureFramework.Data
 					foreach (JProperty property in obj.Properties())
 					{
 						if (property.Value is JObject dir_obj)
-							ReadField(dir_obj, property.Name, ref result, serializer);
+							ReadField(Utils.RemoveSpaces(dir_obj), property.Name, ref result, serializer);
 					}
 				}
 
@@ -236,6 +201,7 @@ namespace FurnitureFramework.Data
 				return result;
 			}
 
+			ModEntry.log($"Could not parse Directional Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 			throw new InvalidDataException($"Could not parse Directional Field from {reader.Value} at {reader.Path}.");
 		}
 
@@ -256,6 +222,7 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Holds data of Directional Lists (1 value per direction)
 	/// </summary>
+	[RequiresPreviewFeatures]
 	public class DirListDict<ListT, T> : Dictionary<string, ListT> where ListT : List<T>, new() where T : DirField
 	{
 		new public ListT this[string key]
@@ -263,7 +230,7 @@ namespace FurnitureFramework.Data
 			get
 			{
 				if (ContainsKey(key)) return base[key];
-				return base[DirField.NOROT];
+				return base[Utils.NOROT];
 			}
 			set { base[key] = value; }
 		}
@@ -271,12 +238,13 @@ namespace FurnitureFramework.Data
 		public DirListDict()
 		{
 			// Always have an empty List<T> to default to
-			this[DirField.NOROT] = new();
+			this[Utils.NOROT] = new();
 		}
 
 		public void Add(string key, T value)
 		{
 			if (!ContainsKey(key)) this[key] = new();
+			value.ID ??= this[key].Count.ToString();	// Assigning default ID when omitted
 			this[key].Add(value);
 		}
 	}
@@ -290,10 +258,10 @@ namespace FurnitureFramework.Data
 
 			if (reader.TokenType == JsonToken.StartObject)
 			{
-				JObject obj = JObject.Load(reader);
+				JObject obj = Utils.RemoveSpaces(JObject.Load(reader));
 
 				// Ask T if the JObject can be parsed as a simple T
-				List<string> sub_dirs = DirField.GetSubDirections(typeof(T), obj);
+				List<string> sub_dirs = Utils.GetSubDirections(typeof(T), obj);
 
 				if (sub_dirs.Count > 0)
 				{
@@ -308,23 +276,26 @@ namespace FurnitureFramework.Data
 					{
 						if (property.Value is JObject dir_obj)
 							// Parsing as a directional T
-							ReadField(dir_obj, property.Name, ref result, serializer);
+							ReadField(Utils.RemoveSpaces(dir_obj), property.Name, ref result, serializer);
 
 						else if (property.Value is JArray dir_arr)
 							// Parsing as a directional List<T>
 							ReadArray(dir_arr, property.Name, ref result, serializer);
 					}
 				}
-
-				DirField.CurrentDirKey = null;
-
-				return result;
 			}
+
 			else if (reader.TokenType == JsonToken.StartArray)
 				// Parsing as single List<T>
-				ReadArray(JArray.Load(reader), DirField.NOROT, ref result, serializer);
+				ReadArray(JArray.Load(reader), Utils.NOROT, ref result, serializer);
 
-			throw new InvalidDataException($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
+			else
+			{
+				ModEntry.log($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
+				throw new InvalidDataException($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
+			}
+
+			return result;
 		}
 
 		static void ReadArray(JArray array, string direction_key, ref DirListDict<ListT, T> result, JsonSerializer serializer)
@@ -332,12 +303,13 @@ namespace FurnitureFramework.Data
 			foreach (JToken token in array.Children())
 			{
 				if (token is not JObject obj) continue;
+				obj = Utils.RemoveSpaces(obj);
 
 				List<string> sub_dirs;
 				// Force single direction if one is given by a parent direction dictionary
-				if (direction_key != DirField.NOROT) sub_dirs = new() { direction_key };
+				if (direction_key != Utils.NOROT) sub_dirs = new() { direction_key };
 				// Getting direction keys from directional sub-fields
-				else sub_dirs = DirField.GetSubDirections(typeof(T), obj);
+				else sub_dirs = Utils.GetSubDirections(typeof(T), obj);
 
 				foreach (string dir_key in sub_dirs)
 					ReadField(obj, dir_key, ref result, serializer);

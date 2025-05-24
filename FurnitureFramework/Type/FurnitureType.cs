@@ -66,7 +66,7 @@ namespace FurnitureFramework.FType
 		bool time_based = false;
 		
 		DynaTexture texture;
-		DirectionalStructure<LayerList> layers;
+		Data.DirListDict<Data.LayerList, Data.Layer> layers;
 		bool placing_layers;
 		Point rect_offset;
 		Rectangle icon_rect = Rectangle.Empty;
@@ -116,11 +116,11 @@ namespace FurnitureFramework.FType
 
 		public void updateRotation(Furniture furniture)
 		{
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
 
-			furniture.boundingBox.Value = collisions[rotations[rot]].GetBoundingBox(pos);
-			furniture.sourceRect.Value = layers[rot].get_source_rect();
+			furniture.boundingBox.Value = collisions[rot].GetBoundingBox(pos);
+			furniture.sourceRect.Value = layers[rot][0].SourceRect;
 		}
 
 		#endregion
@@ -436,7 +436,7 @@ namespace FurnitureFramework.FType
 		{
 			int rot = furniture.currentRotation.Value;
 			Rectangle bounding_box = furniture.boundingBox.Value;
-			Rectangle source_rect = layers[rot].get_source_rect();
+			Rectangle source_rect = layers[rotations[rot]][0].SourceRect;
 
 			Point position = new(
 				bounding_box.X,
@@ -449,7 +449,7 @@ namespace FurnitureFramework.FType
 			if (area.IsEmpty)
 			{
 				position.Y -= source_rect.Height * 4;
-				position += layers[rot].get_draw_offset().ToPoint();
+				position += layers[rotations[rot]][0].DrawPos * new Point(4);
 				// top left of the base layer
 				
 				result = new Rectangle(
