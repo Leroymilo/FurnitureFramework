@@ -76,7 +76,7 @@ namespace FurnitureFramework.FType
 
 		Data.FieldDict<Data.Collisions> collisions;
 		Data.FieldListDict<Data.SeatList, Data.Seat> seats;
-		DirectionalStructure<SlotList> slots;
+		Data.FieldListDict<Data.SlotList, Data.Slot> slots;
 		Data.SoundList sounds;
 		DirectionalStructure<ParticlesList> particles;
 		DirectionalStructure<LightList> light_sources;
@@ -259,9 +259,9 @@ namespace FurnitureFramework.FType
 
 		#region Methods for Slots
 
-		private void initialize_slots(Furniture furniture, int rot)
+		private void initialize_slots(Furniture furniture, string rot)
 		{
-			int slots_count = slots[rot].count;
+			int slots_count = slots[rot].Count;
 			Point position = new Point(
 				furniture.boundingBox.Left,
 				furniture.boundingBox.Bottom
@@ -275,7 +275,7 @@ namespace FurnitureFramework.FType
 				furniture.heldObject.Value = chest;
 
 				if (slots_count > 0 && held != null)
-					slots[rot].set_box(0, held, position);
+					slots[rot][0].SetBox(held, position);
 			}
 			
 			while (chest.Items.Count > slots_count)
@@ -309,17 +309,17 @@ namespace FurnitureFramework.FType
 
 		public bool place_in_slot(Furniture furniture, Point pos, Farmer who, SVObject obj)
 		{
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 			
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			int slot_index = slots[rot].get_empty_slot(get_rel_pos(furniture, pos), chest, who, furniture, obj);
+			int slot_index = slots[rot].GetEmptySlot(get_rel_pos(furniture, pos), chest, who, furniture, obj);
 			if (slot_index < 0) return false;
 			// No slot found at this pixel
 
 			obj.Location = furniture.Location;
-			slots[rot].set_box(slot_index, obj, new Point(
+			slots[rot][slot_index].SetBox(obj, new Point(
 				furniture.boundingBox.Left,
 				furniture.boundingBox.Bottom
 			));
@@ -333,12 +333,12 @@ namespace FurnitureFramework.FType
 
 		public bool remove_from_slot(Furniture furniture, Point pos, Farmer who)
 		{
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			int slot_index = slots[rot].get_filled_slot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
+			int slot_index = slots[rot].GetFilledSlot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
 			if (slot_index < 0 || obj is null) return false;
 			// No slot found at this pixel
 
@@ -355,12 +355,12 @@ namespace FurnitureFramework.FType
 
 		public bool action_in_slot(Furniture furniture, Point pos, Farmer who)
 		{
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			// Furniture is not a proper initialized table
 
-			int slot_index = slots[rot].get_filled_slot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
+			int slot_index = slots[rot].GetFilledSlot(get_rel_pos(furniture, pos), chest, out SVObject? obj);
 			if (slot_index < 0 || obj is not Furniture furn) return false;
 			// No slot found at this pixel or item is not a Furniture
 
@@ -626,7 +626,7 @@ namespace FurnitureFramework.FType
 		{
 			int rot = furniture.currentRotation.Value;
 			particles[rot].burst(furniture);
-			initialize_slots(furniture, rot);
+			initialize_slots(furniture, rotations[rot]);
 		}
 
 		public void debug_print(int indent_count, bool enabled)
@@ -663,7 +663,7 @@ namespace FurnitureFramework.FType
 			// animation.debug_print(indent_count+1);
 			// collisions.debug_print(indent_count+1);
 			// seats.debug_print(indent_count+1);
-			slots.debug_print(indent_count+1);
+			// slots.debug_print(indent_count+1);
 			// sounds.debug_print(indent_count+1);
 			particles.debug_print(indent_count+1);
 			light_sources.debug_print(indent_count+1);

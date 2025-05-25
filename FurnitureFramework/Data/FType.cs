@@ -69,7 +69,9 @@ namespace FurnitureFramework.Data
 
 		[JsonConverter(typeof(FieldListDictConverter<SeatList, Seat>))]
 		public FieldListDict<SeatList, Seat> Seats = new();
-		public JToken? Slots;
+
+		[JsonConverter(typeof(FieldListDictConverter<SlotList, Slot>))]
+		public FieldListDict<SlotList, Slot> Slots = new();
 		public JToken? Lights;
 		public JToken? Particles;
 

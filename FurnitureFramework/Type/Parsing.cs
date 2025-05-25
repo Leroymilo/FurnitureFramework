@@ -99,7 +99,7 @@ namespace FurnitureFramework.FType
 
 			collisions = data.Collisions;
 			seats = data.Seats;
-			slots = new(info, data.Slots, rotations);
+			slots = data.Slots;
 			light_sources = new(info, data.Lights, rotations);
 			sounds = data.Sounds;
 			particles = new(info, data.Particles, rotations);

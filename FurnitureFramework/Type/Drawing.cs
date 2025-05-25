@@ -153,8 +153,8 @@ namespace FurnitureFramework.FType
 				{
 					// draw items in slots
 					if (furniture.heldObject.Value is Chest chest)
-						slots[rot].draw(draw_data, top, chest.Items);
-					else initialize_slots(furniture, rot);
+						slots[rotations[rot]].Draw(draw_data, top, chest.Items);
+					else initialize_slots(furniture, rotations[rot]);
 				}
 			}
 
@@ -259,8 +259,8 @@ namespace FurnitureFramework.FType
 
 			// items in slots
 			if (furniture.heldObject.Value is Chest chest)
-				slots[rot].draw_lights(draw_data, chest.Items);
-			else initialize_slots(furniture, rot);
+				slots[rotations[rot]].DrawLights(draw_data, chest.Items);
+			else initialize_slots(furniture, rotations[rot]);
 		}
 
 		public void draw_lights(DrawData draw_data, int rot, bool is_on, bool is_dark)
