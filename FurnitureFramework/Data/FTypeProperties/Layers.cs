@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace FurnitureFramework.Data
 {
 	[RequiresPreviewFeatures]
-	public class Layer : DirField
+	public class Layer : Field
 	{
 		[Required]
 		[Directional]
@@ -14,7 +14,7 @@ namespace FurnitureFramework.Data
 		[Directional]
 		public Point DrawPos = Point.Zero;
 
-		public Depth Depth = new();
+		public Depth Depth = new() {is_default = true};
 
 		[OnDeserialized]
 		private void Validate(StreamingContext context)

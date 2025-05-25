@@ -39,12 +39,12 @@ namespace FurnitureFramework.Data
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();
 
-		[JsonConverter(typeof(DirListDictConverter<LayerList, Layer>))]
-		public DirListDict<LayerList, Layer> Layers = new();
+		[JsonConverter(typeof(FieldListDictConverter<LayerList, Layer>))]
+		public FieldListDict<LayerList, Layer> Layers = new();
 		public bool DrawLayersWhenPlacing = false;
 
-		[JsonConverter(typeof(DirFieldDictConverter<Collisions>))]
-		public DirFieldDict<Collisions> Collisions = new();
+		[JsonConverter(typeof(FieldDictConverter<Collisions>))]
+		public FieldDict<Collisions> Collisions = new();
 		public string ForceType = "other";
 		public int Price = 0;
 		public int PlacementRestriction = 2;
@@ -63,7 +63,10 @@ namespace FurnitureFramework.Data
 		public Rectangle? IconRect;
 		public bool Toggle = false;
 		public bool TimeBased = false;
-		public JToken? Sounds;
+
+		
+		public SoundList Sounds = new();
+
 		public JToken? Seats;
 		public JToken? Slots;
 		public JToken? Lights;
@@ -94,7 +97,7 @@ namespace FurnitureFramework.Data
 				catch { }
 				if (!valid)
 				{
-					ModEntry.log($"Missing Collisions for rotation {rot_name}.");
+					ModEntry.log($"Missing Collisions for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
 					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
 				}
 
@@ -103,10 +106,19 @@ namespace FurnitureFramework.Data
 				catch { }
 				if (!valid)
 				{
-					ModEntry.log($"Missing Layer for rotation {rot_name}.");
+					ModEntry.log($"Missing Layer for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
 					throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
 				}
+
+				// The default depth of non-base layers is 
+				foreach (Layer layer in Layers[rot_name].Skip(1))
+					if (layer.Depth.is_default) layer.Depth.Sub = 1000;
 			}
+		}
+
+		public void DebugPrint()
+		{
+			ModEntry.log(JObject.FromObject(this).ToString());
 		}
 	}
 

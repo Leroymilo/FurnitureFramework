@@ -1,11 +1,18 @@
+using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
+	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(DepthConverter))]
-	public class Depth
+	public class Depth: Field
 	{
+		public Depth() { is_valid = true; }	// used for non-base layer default depth
+
+		[JsonIgnore]
+		public bool is_default = false;
+
 		public int Tile = 0;
 		public int Sub = 0;
 		public bool Front = false;
@@ -23,6 +30,7 @@ namespace FurnitureFramework.Data
 		}
 	}
 
+	[RequiresPreviewFeatures]
 	class DepthConverter : ReadOnlyConverter<Depth>
 	{
 		public override Depth? ReadJson(JsonReader reader, Type objectType, Depth? existingValue, bool hasExistingValue, JsonSerializer serializer)

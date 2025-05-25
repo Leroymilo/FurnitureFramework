@@ -101,7 +101,7 @@ namespace FurnitureFramework.FType
 			seats = new(info, data.Seats, rotations);
 			slots = new(info, data.Slots, rotations);
 			light_sources = new(info, data.Lights, rotations);
-			sounds = new(data.Sounds);
+			sounds = data.Sounds;
 			particles = new(info, data.Particles, rotations);
 
 			#endregion

@@ -66,7 +66,7 @@ namespace FurnitureFramework.FType
 		bool time_based = false;
 		
 		DynaTexture texture;
-		Data.DirListDict<Data.LayerList, Data.Layer> layers;
+		Data.FieldListDict<Data.LayerList, Data.Layer> layers;
 		bool placing_layers;
 		Point rect_offset;
 		Rectangle icon_rect = Rectangle.Empty;
@@ -74,10 +74,10 @@ namespace FurnitureFramework.FType
 		Data.Animation animation = new();
 		bool placing_animate;
 
-		Data.DirFieldDict<Data.Collisions> collisions;
+		Data.FieldDict<Data.Collisions> collisions;
 		DirectionalStructure<SeatList> seats;
 		DirectionalStructure<SlotList> slots;
-		SoundList sounds;
+		Data.SoundList sounds;
 		DirectionalStructure<ParticlesList> particles;
 		DirectionalStructure<LightList> light_sources;
 
@@ -594,14 +594,14 @@ namespace FurnitureFramework.FType
 			{
 				furniture.IsOn = !furniture.IsOn;
 
-				sounds.play(furniture.Location, furniture.IsOn);
+				sounds.Play(furniture.Location, furniture.IsOn);
 
 				particles[rot].burst(furniture);
 				had_action = true;
 			}
 			else
 			{
-				had_action |= sounds.play(furniture.Location);
+				had_action |= sounds.Play(furniture.Location);
 			}
 
 			// Seats
@@ -664,7 +664,7 @@ namespace FurnitureFramework.FType
 			// collisions.debug_print(indent_count+1);
 			seats.debug_print(indent_count+1);
 			slots.debug_print(indent_count+1);
-			sounds.debug_print(indent_count+1);
+			// sounds.debug_print(indent_count+1);
 			particles.debug_print(indent_count+1);
 			light_sources.debug_print(indent_count+1);
 			

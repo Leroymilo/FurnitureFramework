@@ -66,7 +66,7 @@ namespace FurnitureFramework.Data
 	/// The base class for values inside a DirFieldDict or DirListDict
 	/// </summary>
 	[RequiresPreviewFeatures]
-	public class DirField
+	public class Field
 	{
 		[JsonIgnore]
 		public bool is_valid = false;
@@ -79,13 +79,10 @@ namespace FurnitureFramework.Data
 	}
 
 	[RequiresPreviewFeatures]
-	public class DirFieldConverter<T> : ReadOnlyConverter<T> where T : DirField, new()
+	public class FieldConverter<T> : ReadOnlyConverter<T> where T : Field, new()
 	{
 		public override T? ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			if (DirField.CurrentDirKey == null)
-				throw new InvalidDataException("Trying to parse Directional Field with no directional key specified.");
-
 			// Starts to read the data
 			if (reader.TokenType == JsonToken.None) reader.Read();
 
@@ -94,23 +91,33 @@ namespace FurnitureFramework.Data
 				JObject obj = JObject.Load(reader);
 				JObject new_obj = new();
 
-				foreach (JProperty property in obj.Properties())
+				if (Field.CurrentDirKey == null)
 				{
-					FieldInfo? field = objectType.GetField(property.Name);
-					if (field == null) continue;
+					// Non-directional Field (for FieldList)
+					new_obj = Utils.RemoveSpaces(obj);
+				}
 
-					DirectionalAttribute? tag = (DirectionalAttribute?)Attribute.GetCustomAttribute(field, typeof(DirectionalAttribute));
-					if (tag != null && tag.Directional)
+				else
+				{
+					// Directional Field
+					foreach (JProperty property in obj.Properties())
 					{
-						// Removing the layer of directionality if present
-						if (property.Value is JObject prop_obj && (field.FieldType.IsEnum || prop_obj.First is JObject))
+						FieldInfo? field = objectType.GetField(property.Name);
+						if (field == null) continue;
+
+						DirectionalAttribute? tag = (DirectionalAttribute?)Attribute.GetCustomAttribute(field, typeof(DirectionalAttribute));
+						if (tag != null && tag.Directional)
 						{
-							if (prop_obj.ContainsKey(DirField.CurrentDirKey))
-								new_obj.Add(property.Name, prop_obj.GetValue(DirField.CurrentDirKey));
+							// Removing the layer of directionality if present
+							if (property.Value is JObject prop_obj && (field.FieldType.IsEnum || prop_obj.First is JObject))
+							{
+								if (prop_obj.ContainsKey(Field.CurrentDirKey))
+									new_obj.Add(property.Name, prop_obj.GetValue(Field.CurrentDirKey));
+							}
+							else new_obj.Add(property.Name, property.Value);
 						}
 						else new_obj.Add(property.Name, property.Value);
 					}
-					else new_obj.Add(property.Name, property.Value);
 				}
 
 				T result = new();
@@ -124,6 +131,64 @@ namespace FurnitureFramework.Data
 
 	#endregion
 
+	#region Field List
+
+	/// <summary>
+	/// Holds data for List of Fields
+	/// </summary>
+	[RequiresPreviewFeatures]
+	public class FieldList<T> : List<T> where T : Field
+	{
+		public FieldList() {}
+
+		public new void Add(T value)
+		{
+			value.ID ??= Count.ToString();  // Assigning default ID when omitted
+			base.Add(value);
+		}
+	}
+
+	[RequiresPreviewFeatures]
+	public class FieldListConverter<T> : ReadOnlyConverter<FieldList<T>> where T : Field, new()
+	{
+		public override FieldList<T>? ReadJson(JsonReader reader, Type objectType, FieldList<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		{
+			FieldList<T> result = new();
+
+			if (reader.TokenType == JsonToken.StartObject)
+				// Parsing single T
+				ReadField(Utils.RemoveSpaces(JObject.Load(reader)), ref result, serializer);
+
+			else if (reader.TokenType == JsonToken.StartArray)
+			{
+				// Parsing array of T
+				foreach (JToken token in JArray.Load(reader).Children())
+				{
+					if (token is not JObject obj) continue;
+					ReadField(Utils.RemoveSpaces(obj), ref result, serializer);
+				}
+			}
+
+			else
+			{
+				ModEntry.log($"Could not parse List Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+				throw new InvalidDataException($"Could not parse List Field from {reader.Value} at {reader.Path}.");
+			}
+
+			return result;
+		}
+
+		static void ReadField(JObject obj, ref FieldList<T> result, JsonSerializer serializer)
+		{
+			FieldConverter<T> converter = new();
+			T? value = converter.ReadJson(obj.CreateReader(), typeof(T), null, false, serializer);
+			if (value == null || !value.is_valid) return;
+			result.Add(value);
+		}
+	}
+
+	#endregion
+
 	#region Directional Field Dictionary
 
 	/// <summary>
@@ -131,7 +196,7 @@ namespace FurnitureFramework.Data
 	/// Only used for Collisions
 	/// </summary>
 	[RequiresPreviewFeatures]
-	public class DirFieldDict<T> : Dictionary<string, T> where T : DirField, new()
+	public class FieldDict<T> : Dictionary<string, T> where T : Field, new()
 	{
 		// Only required because BedArea is not directional
 		public T First
@@ -166,14 +231,14 @@ namespace FurnitureFramework.Data
 	}
 
 	[RequiresPreviewFeatures]
-	class DirFieldDictConverter<T> : ReadOnlyConverter<DirFieldDict<T>> where T : DirField, new()
+	class FieldDictConverter<T> : ReadOnlyConverter<FieldDict<T>> where T : Field, new()
 	{
 		/// <inheritdoc />
-		public override DirFieldDict<T> ReadJson(JsonReader reader, Type objectType, DirFieldDict<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override FieldDict<T> ReadJson(JsonReader reader, Type objectType, FieldDict<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
-				DirFieldDict<T> result = new();
+				FieldDict<T> result = new();
 
 				JObject obj = Utils.RemoveSpaces(JObject.Load(reader));
 
@@ -196,8 +261,7 @@ namespace FurnitureFramework.Data
 					}
 				}
 
-				DirField.CurrentDirKey = null;
-
+				Field.CurrentDirKey = null;
 				return result;
 			}
 
@@ -205,10 +269,10 @@ namespace FurnitureFramework.Data
 			throw new InvalidDataException($"Could not parse Directional Field from {reader.Value} at {reader.Path}.");
 		}
 
-		static void ReadField(JObject obj, string dir_key, ref DirFieldDict<T> result, JsonSerializer serializer)
+		static void ReadField(JObject obj, string dir_key, ref FieldDict<T> result, JsonSerializer serializer)
 		{
-			DirField.CurrentDirKey = dir_key;
-			DirFieldConverter<T> converter = new();
+			Field.CurrentDirKey = dir_key;
+			FieldConverter<T> converter = new();
 			T? value = converter.ReadJson(obj.CreateReader(), typeof(T), null, false, serializer);
 			if (value == null || !value.is_valid) return;
 			result[dir_key] = value;
@@ -223,7 +287,7 @@ namespace FurnitureFramework.Data
 	/// Holds data of Directional Lists (1 value per direction)
 	/// </summary>
 	[RequiresPreviewFeatures]
-	public class DirListDict<ListT, T> : Dictionary<string, ListT> where ListT : List<T>, new() where T : DirField
+	public class FieldListDict<ListT, T> : Dictionary<string, ListT> where ListT : List<T>, new() where T : Field
 	{
 		new public ListT this[string key]
 		{
@@ -235,7 +299,7 @@ namespace FurnitureFramework.Data
 			set { base[key] = value; }
 		}
 
-		public DirListDict()
+		public FieldListDict()
 		{
 			// Always have an empty List<T> to default to
 			this[Utils.NOROT] = new();
@@ -250,11 +314,11 @@ namespace FurnitureFramework.Data
 	}
 
 	[RequiresPreviewFeatures]
-	class DirListDictConverter<ListT, T> : ReadOnlyConverter<DirListDict<ListT, T>> where ListT : List<T>, new() where T : DirField, new()
+	class FieldListDictConverter<ListT, T> : ReadOnlyConverter<FieldListDict<ListT, T>> where ListT : List<T>, new() where T : Field, new()
 	{
-		public override DirListDict<ListT, T>? ReadJson(JsonReader reader, Type objectType, DirListDict<ListT, T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override FieldListDict<ListT, T>? ReadJson(JsonReader reader, Type objectType, FieldListDict<ListT, T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			DirListDict<ListT, T> result = new();
+			FieldListDict<ListT, T> result = new();
 
 			if (reader.TokenType == JsonToken.StartObject)
 			{
@@ -291,14 +355,15 @@ namespace FurnitureFramework.Data
 
 			else
 			{
-				ModEntry.log($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
+				ModEntry.log($"Could not parse Directional List from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 				throw new InvalidDataException($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
 			}
 
+			Field.CurrentDirKey = null;
 			return result;
 		}
 
-		static void ReadArray(JArray array, string direction_key, ref DirListDict<ListT, T> result, JsonSerializer serializer)
+		static void ReadArray(JArray array, string direction_key, ref FieldListDict<ListT, T> result, JsonSerializer serializer)
 		{
 			foreach (JToken token in array.Children())
 			{
@@ -316,10 +381,10 @@ namespace FurnitureFramework.Data
 			}
 		}
 
-		static void ReadField(JObject obj, string dir_key, ref DirListDict<ListT, T> result, JsonSerializer serializer)
+		static void ReadField(JObject obj, string dir_key, ref FieldListDict<ListT, T> result, JsonSerializer serializer)
 		{
-			DirField.CurrentDirKey = dir_key;
-			DirFieldConverter<T> converter = new();
+			Field.CurrentDirKey = dir_key;
+			FieldConverter<T> converter = new();
 			T? value = converter.ReadJson(obj.CreateReader(), typeof(T), null, false, serializer);
 			if (value == null || !value.is_valid) return;
 			result.Add(dir_key, value);
