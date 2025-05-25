@@ -75,7 +75,7 @@ namespace FurnitureFramework.FType
 		bool placing_animate;
 
 		Data.FieldDict<Data.Collisions> collisions;
-		DirectionalStructure<SeatList> seats;
+		Data.FieldListDict<Data.SeatList, Data.Seat> seats;
 		DirectionalStructure<SlotList> slots;
 		Data.SoundList sounds;
 		DirectionalStructure<ParticlesList> particles;
@@ -117,7 +117,7 @@ namespace FurnitureFramework.FType
 		public void updateRotation(Furniture furniture)
 		{
 			string rot = rotations[furniture.currentRotation.Value];
-			Point pos = furniture.TileLocation.ToPoint() * Collisions.tile_game_size;
+			Point pos = furniture.TileLocation.ToPoint() * Data.Utils.TILESIZE;
 
 			furniture.boundingBox.Value = collisions[rot].GetBoundingBox(pos);
 			furniture.sourceRect.Value = layers[rot][0].SourceRect;
@@ -131,27 +131,27 @@ namespace FurnitureFramework.FType
 		{
 			// This is a postfix, it keeps the original seat positions.
 
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 			Vector2 tile_pos = furniture.boundingBox.Value.Location.ToVector2() / 64f;
 			
-			seats[rot].get_seat_positions(tile_pos, list);
+			seats[rot].GetSeatPositions(tile_pos, list);
 		}
 
 		public void GetSittingDirection(Furniture furniture, Farmer who, ref int sit_dir)
 		{
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 
-			int new_sit_dir = seats[rot].get_sitting_direction(seat_index);
+			int new_sit_dir = seats[rot].GetSittingDirection(seat_index);
 			if (new_sit_dir >= 0) sit_dir = new_sit_dir;
 		}
 
 		public void GetSittingDepth(Furniture furniture, Farmer who, ref float depth)
 		{
 			int seat_index = furniture.sittingFarmers[who.UniqueMultiplayerID];
-			int rot = furniture.currentRotation.Value;
+			string rot = rotations[furniture.currentRotation.Value];
 
-			float new_sit_depth = seats[rot].get_sitting_depth(seat_index, furniture.boundingBox.Top);
+			float new_sit_depth = seats[rot].GetSittingDepth(seat_index, furniture.boundingBox.Top);
 			if (new_sit_depth >= 0) depth = new_sit_depth;
 		}
 
@@ -605,7 +605,7 @@ namespace FurnitureFramework.FType
 			}
 
 			// Seats
-			if (seats[rot].has_seats)
+			if (seats[rotations[rot]].Count > 0)
 			{
 				int sit_count = furniture.GetSittingFarmerCount();
 				who.BeginSitting(furniture);
@@ -662,7 +662,7 @@ namespace FurnitureFramework.FType
 
 			// animation.debug_print(indent_count+1);
 			// collisions.debug_print(indent_count+1);
-			seats.debug_print(indent_count+1);
+			// seats.debug_print(indent_count+1);
 			slots.debug_print(indent_count+1);
 			// sounds.debug_print(indent_count+1);
 			particles.debug_print(indent_count+1);

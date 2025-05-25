@@ -11,8 +11,6 @@ namespace FurnitureFramework.Data
 	[RequiresPreviewFeatures]
 	public class Collisions : Field
 	{
-		static readonly Point TILESIZE = new(64);
-
 		[Required]
 		public int Width = 0;
 		[Required]
@@ -52,7 +50,7 @@ namespace FurnitureFramework.Data
 		{
 			get
 			{
-				return new Point(Width, Height) * TILESIZE;
+				return new Point(Width, Height) * Utils.TILESIZE;
 			}
 		}
 
@@ -60,7 +58,7 @@ namespace FurnitureFramework.Data
 		{
 			return new(
 				this_game_pos,
-				new Point(Width, Height) * TILESIZE
+				new Point(Width, Height) * Utils.TILESIZE
 			);
 		}
 
@@ -76,8 +74,8 @@ namespace FurnitureFramework.Data
 			foreach (Point tile_pos in Tiles)
 			{
 				Rectangle tile_rect = new(
-					this_game_pos + tile_pos * TILESIZE,
-					TILESIZE
+					this_game_pos + tile_pos * Utils.TILESIZE,
+					Utils.TILESIZE
 				);
 				if (tile_rect.Intersects(rect))
 					return true;    // collision map tile intersects
@@ -182,8 +180,8 @@ namespace FurnitureFramework.Data
 				return false;
 
 			Rectangle tile_rect = new Rectangle(
-				tile * TILESIZE,
-				TILESIZE
+				tile * Utils.TILESIZE,
+				Utils.TILESIZE
 			);
 
 			foreach (Furniture item in loc.furniture)

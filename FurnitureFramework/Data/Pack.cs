@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Runtime.Versioning;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -36,6 +37,7 @@ namespace FurnitureFramework.Data
 	class Utils
 	{
 		public const string NOROT = "NoRot";
+		public static readonly Point TILESIZE = new(64);
 
 		public static JObject RemoveSpaces(JObject obj)
 		{

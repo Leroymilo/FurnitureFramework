@@ -45,6 +45,7 @@ namespace FurnitureFramework.Data
 
 		[JsonConverter(typeof(FieldDictConverter<Collisions>))]
 		public FieldDict<Collisions> Collisions = new();
+
 		public string ForceType = "other";
 		public int Price = 0;
 		public int PlacementRestriction = 2;
@@ -64,10 +65,10 @@ namespace FurnitureFramework.Data
 		public bool Toggle = false;
 		public bool TimeBased = false;
 
-		
 		public SoundList Sounds = new();
 
-		public JToken? Seats;
+		[JsonConverter(typeof(FieldListDictConverter<SeatList, Seat>))]
+		public FieldListDict<SeatList, Seat> Seats = new();
 		public JToken? Slots;
 		public JToken? Lights;
 		public JToken? Particles;

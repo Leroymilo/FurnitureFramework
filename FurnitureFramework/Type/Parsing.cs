@@ -98,7 +98,7 @@ namespace FurnitureFramework.FType
 			placing_animate = data.AnimateWhenPlacing;
 
 			collisions = data.Collisions;
-			seats = new(info, data.Seats, rotations);
+			seats = data.Seats;
 			slots = new(info, data.Slots, rotations);
 			light_sources = new(info, data.Lights, rotations);
 			sounds = data.Sounds;
