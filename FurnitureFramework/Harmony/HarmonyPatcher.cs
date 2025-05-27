@@ -1,11 +1,9 @@
 using HarmonyLib;
 using StardewModdingAPI;
 using System.Reflection;
-using System.Runtime.Versioning;
 
 namespace FurnitureFramework.FFHarmony
 {
-
 	namespace Patches
 	{
 		enum PatchType {
@@ -15,7 +13,6 @@ namespace FurnitureFramework.FFHarmony
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	class HarmonyPatcher
 	{
 		public static Harmony? harmony;

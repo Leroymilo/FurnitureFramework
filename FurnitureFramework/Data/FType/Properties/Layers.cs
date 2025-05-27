@@ -1,10 +1,10 @@
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
-	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(FieldConverter<Layer>))]
 	public class Layer : Field
 	{
 		[Required]
@@ -14,7 +14,7 @@ namespace FurnitureFramework.Data
 		[Directional]
 		public Point DrawPos = Point.Zero;
 
-		public Depth Depth = new() {is_default = true};
+		public Depth Depth = new() { is_default = true };
 
 		[OnDeserialized]
 		private void Validate(StreamingContext context)
@@ -22,7 +22,7 @@ namespace FurnitureFramework.Data
 			is_valid = true;
 		}
 
-		public void Draw(FurnitureFramework.FType.DrawData draw_data, float top, bool ignore_depth = false)
+		public void Draw(DrawData draw_data, float top, bool ignore_depth = false)
 		{
 			draw_data.source_rect = SourceRect;
 			draw_data.position += DrawPos.ToVector2() * 4f;
@@ -30,14 +30,13 @@ namespace FurnitureFramework.Data
 
 			if (!ignore_depth) draw_data.depth = Depth.GetValue(top);
 
-			draw_data.draw();
+			draw_data.Draw();
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	public class LayerList : List<Layer>
 	{
-		public void DrawAll(FurnitureFramework.FType.DrawData draw_data, float top)
+		public void DrawAll(DrawData draw_data, float top)
 		{
 			foreach (Layer layer in this)
 				layer.Draw(draw_data, top);

@@ -1,13 +1,9 @@
-
-
-
-
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewValley;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
 	using SDColor = System.Drawing.Color;
 	

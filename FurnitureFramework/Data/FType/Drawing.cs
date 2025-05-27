@@ -3,29 +3,42 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.Objects;
+using FurnitureFramework.Data.FType.Properties;
+using HarmonyLib;
+using System.Text.Json.Serialization;
 
-namespace FurnitureFramework.FType
+namespace FurnitureFramework.Data.FType
 {
 	public struct DrawData
 	{
+		[JsonIgnore]
 		public readonly SpriteBatch sprite_batch;
-		public Texture2D texture;
+		public string mod_id;
+		[JsonIgnore]
+		public Texture2D? texture;
+		public string texture_path;
 		public Vector2 position;
 		public Rectangle source_rect;
 		public Color color = Color.White;
 		public float rotation = 0f;
 		public Vector2 origin = Vector2.Zero;
 		public float scale = 4f;
+		[JsonIgnore]
 		public SpriteEffects effects = SpriteEffects.None;
 		public float depth;
-		
+
 		public bool is_on = false;
 		public bool is_dark = false;
 		public Point rect_offset = Point.Zero;
 
-		public DrawData(SpriteBatch sprite_batch) { this.sprite_batch = sprite_batch; }
+		public DrawData(SpriteBatch sprite_batch, string mod_id, string texture_path)
+		{
+			this.sprite_batch = sprite_batch;
+			this.mod_id = mod_id;
+			this.texture_path = texture_path;
+		}
 
-		public void draw()
+		public void Draw()
 		{
 			Rectangle rect = source_rect.Clone();
 			if (is_on)
@@ -34,6 +47,8 @@ namespace FurnitureFramework.FType
 				rect.Y += rect.Height;
 			rect.Location += rect_offset;
 
+			texture ??= ModEntry.get_helper().GameContent.Load<Texture2D>($"FF/{mod_id}/{texture_path}");
+
 			sprite_batch.Draw(
 				texture, position, rect,
 				color, rotation, origin, scale,
@@ -41,16 +56,41 @@ namespace FurnitureFramework.FType
 			);
 		}
 	}
-
-	partial class FurnitureType
+	
+	public partial class FType
 	{
+		Rectangle GetIconSourceRect()
+		{
+			if (IconRect != null)
+				return (Rectangle)IconRect;
+			return Layers[Rotations.First()].First().SourceRect;
+		}
+
+		public string GetSourceImage(Furniture furniture)
+		{
+			if (SourceImage.Count == 1)
+				return SourceImage[""];
+
+			return SourceImage[furniture.modData["FF.ImageVariant"]];
+		}
+
+		Point GetOffset(Furniture furniture)
+		{
+			if (SourceRectOffsets.Count == 0)
+				return Point.Zero;
+
+			return SourceRectOffsets[furniture.modData["FF.RectVariant"]];
+		}
 
 		// for drawInMenu transpiler
-		private static Rectangle get_icon_source_rect(Furniture furniture)
+		private static Rectangle GetIconSourceRect(Furniture furniture)
 		{
-			if (Pack.FurniturePack.try_get_type(furniture, out FurnitureType? type))
-				return type.icon_rect;
-
+			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			{
+				Rectangle result = type.GetIconSourceRect();
+				result.Location += type.GetOffset(furniture);
+				return result;
+			}
 			return ItemRegistry.GetDataOrErrorItem(furniture.QualifiedItemId).GetSourceRect();
 		}
 
@@ -60,21 +100,25 @@ namespace FurnitureFramework.FType
 		)
 		{
 			// Used for FF Furniture placed in vanilla slot
-			DrawData draw_data = new(sprite_batch);
+			DrawData draw_data = new(sprite_batch, ModID, GetSourceImage(furniture))
+			{
+				position = position,
+				color = Color.White * alpha,
+				depth = depth
+			};
 
-			draw_data.position = position;
 			draw_data.position.Y += furniture.sourceRect.Height * 4;
-			draw_data.color = Color.White * alpha;
-			draw_data.depth = depth;
 
 			draw(furniture, draw_data, draw_in_slot: true);
 		}
 
 		public void draw(Furniture furniture, SpriteBatch sprite_batch, int x, int y, float alpha)
 		{
-			DrawData draw_data = new(sprite_batch);
+			DrawData draw_data = new(sprite_batch, ModID, GetSourceImage(furniture))
+			{
+				color = Color.White * alpha
+			};
 
-			draw_data.color = Color.White * alpha;
 			Rectangle bounding_box = furniture.boundingBox.Value;
 
 			// when the furniture is placed
@@ -85,7 +129,6 @@ namespace FurnitureFramework.FType
 					bounding_box.Bottom
 				);
 			}
-
 			// when the furniture follows the cursor
 			else
 			{
@@ -108,65 +151,54 @@ namespace FurnitureFramework.FType
 
 		public void draw(Furniture furniture, DrawData draw_data, bool draw_in_slot = true)
 		{
-			draw_data.texture = texture.get();
+			// draw_data.texture_path = texture.get();
 
-			if (furniture.isTemporarilyInvisible) return;	// taken from game code, no idea what this property is
+			if (furniture.isTemporarilyInvisible) return;   // taken from game code, no idea what this property is
 
 			if (furniture is FishTankFurniture fish_tank)
 				draw_fish_tank(fish_tank, draw_data);
 
-			if (can_be_toggled)
-				draw_data.is_on = furniture.IsOn;
-			else draw_data.is_on = false;
+			draw_data.is_on = Toggle && furniture.IsOn;
+			draw_data.is_dark = TimeBased && furniture.timeToTurnOnLights();
 
-			if (time_based)
-				draw_data.is_dark = furniture.timeToTurnOnLights();
-			else draw_data.is_dark = false;
+			draw_data.rect_offset = Animation.GetOffset() + GetOffset(furniture);
 
-			draw_data.rect_offset = rect_offset + animation.GetOffset();
-
-			if (furniture.shakeTimer > 0) {
+			if (furniture.shakeTimer > 0)
+			{
 				draw_data.position += new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
 			}
 
 			float top = furniture.boundingBox.Top;
-			int rot = furniture.currentRotation.Value;
-
-			// Just in case there is a corrupted furniture.
-			if (rot >= rotations.Count)
-			{
-				rot = 0;
-				furniture.currentRotation.Set(0);
-			}
+			string rot = GetRot(furniture);
 
 			if (Furniture.isDrawingLocationFurniture)
 			{
 				// when placed
 
 				if (draw_in_slot)
-					layers[rotations[rot]][0].Draw(draw_data, top, ignore_depth: true);
-				else layers[rotations[rot]].DrawAll(draw_data, top);
+					Layers[rot][0].Draw(draw_data, top, ignore_depth: true);
+				else Layers[rot].DrawAll(draw_data, top);
 
-				light_sources[rot].draw_glows(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
+				Lights[rot].DrawGlows(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
 
 				if (!draw_in_slot)
 				{
 					// draw items in slots
 					if (furniture.heldObject.Value is Chest chest)
-						slots[rotations[rot]].Draw(draw_data, top, chest.Items);
-					else initialize_slots(furniture, rotations[rot]);
+						Slots[rot].Draw(draw_data, top, chest.Items);
+					else InitializeSlots(furniture, rot);
 				}
 			}
 
 			else
 			{
 				// while placing
-				
-				if (!placing_animate)
-					draw_data.rect_offset -= animation.GetOffset();
 
-				if (placing_layers) layers[rotations[rot]].DrawAll(draw_data, top);
-				else layers[rotations[rot]][0].Draw(draw_data, top);
+				if (!AnimateWhenPlacing)
+					draw_data.rect_offset -= Animation.GetOffset();
+
+				if (DrawLayersWhenPlacing) Layers[rot].DrawAll(draw_data, top);
+				else Layers[rot][0].Draw(draw_data, top);
 			}
 		}
 
@@ -197,10 +229,11 @@ namespace FurnitureFramework.FType
 
 				Vector2 pos = pair.Value.Value;
 				Rectangle key = pair.Value.Key;
-				
+
 				DrawData fish_data = draw_data;
 
-				fish_data.texture = furniture.GetAquariumTexture();
+				fish_data.texture_path = "Content/LooseSprites/AquariumFish";
+				// From FishTankFurniture.GetAquariumTexture
 
 				fish_data.position = new Vector2(
 					tank_bounds.Left,
@@ -216,7 +249,7 @@ namespace FurnitureFramework.FType
 					pos.Y / 20f
 				) - 1E-06f;
 
-				fish_data.draw();
+				fish_data.Draw();
 			}
 
 			// Bubbles
@@ -224,7 +257,8 @@ namespace FurnitureFramework.FType
 			{
 				DrawData bubble_data = draw_data;
 
-				bubble_data.texture = furniture.GetAquariumTexture();
+				bubble_data.texture_path = "Content/LooseSprites/AquariumFish";
+				// From FishTankFurniture.GetAquariumTexture
 
 				bubble_data.position = new Vector2(
 					tank_bounds.Left + bubble.X,
@@ -241,32 +275,34 @@ namespace FurnitureFramework.FType
 					bubble.Z / 20f
 				) - 1E-06f;
 
-				bubble_data.draw();
+				bubble_data.Draw();
 			}
 		}
 
-		private void draw_lights(Furniture furniture, SpriteBatch sprite_batch)
+		private void DrawLights(Furniture furniture, SpriteBatch sprite_batch)
 		{
-			DrawData draw_data = new(sprite_batch);
+			DrawData draw_data = new(sprite_batch, ModID, GetSourceImage(furniture));
 
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			draw_data.position = new(bounding_box.X, bounding_box.Bottom);
 			draw_data.position = Game1.GlobalToLocal(Game1.viewport, draw_data.position);
 
-			int rot = furniture.currentRotation.Value;
+			string rot = Rotations[furniture.currentRotation.Value];
 
-			draw_lights(draw_data, rot, furniture.IsOn, furniture.timeToTurnOnLights());
+			DrawLights(furniture, draw_data);
 
 			// items in slots
 			if (furniture.heldObject.Value is Chest chest)
-				slots[rotations[rot]].DrawLights(draw_data, chest.Items);
-			else initialize_slots(furniture, rotations[rot]);
+				Slots[rot].DrawLights(draw_data, chest.Items);
+			else InitializeSlots(furniture, rot);
 		}
 
-		public void draw_lights(DrawData draw_data, int rot, bool is_on, bool is_dark)
+		public void DrawLights(Furniture furniture, DrawData draw_data)
 		{
-			draw_data.texture = texture.get();
-			light_sources[rot].draw_sources(draw_data, is_on, is_dark);
+			string rot = Rotations[furniture.currentRotation.Value];
+			draw_data.texture_path = GetSourceImage(furniture);
+			draw_data.mod_id = ModID;
+			Lights[rot].DrawSources(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
 		}
 	}
 }

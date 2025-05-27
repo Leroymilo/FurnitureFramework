@@ -1,16 +1,41 @@
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
+	class Vector2Converter : ReadOnlyConverter<Vector2>
+	{
+		public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
+		{
+			if (reader.TokenType == JsonToken.StartObject)
+			{
+				JObject obj = JObject.Load(reader);
+				JToken? X = obj.GetValue("X");
+				JToken? Y = obj.GetValue("Y");
+				if (X != null && Y != null)
+				{
+					return new(
+						X.Value<float>(),
+						Y.Value<float>()
+					);
+				}
+			}
+
+			ModEntry.log($"Could not parse Vector2 from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+			throw new InvalidDataException($"Could not parse Vector2 from {reader.Value} at {reader.Path}.");
+		}
+	}
+
 	public enum SeatDir { Up, Right, Down, Left }
 
-	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(FieldConverter<Seat>))]
 	public class Seat : Field
 	{
 		[Required]
 		[Directional]
+		[JsonConverter(typeof(Vector2Converter))]
 		public Vector2 Position;
 
 		[Required]
@@ -33,7 +58,6 @@ namespace FurnitureFramework.Data
 	}
 
 
-	[RequiresPreviewFeatures]
 	public class SeatList : List<Seat>
 	{
 		public void GetSeatPositions(Vector2 tile_pos, List<Vector2> result)

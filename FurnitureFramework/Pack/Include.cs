@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 
 namespace FurnitureFramework.Pack

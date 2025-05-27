@@ -1,14 +1,13 @@
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
-	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(FieldConverter<Collisions>))]
 	public class Collisions : Field
 	{
 		[Required]
@@ -128,7 +127,7 @@ namespace FurnitureFramework.Data
 			}
 		}
 
-		private bool IsTileFree(
+		private static bool IsTileFree(
 			Furniture furniture, Point tile, GameLocation loc,
 			CollisionMask collisionMask, CollisionMask passable_ignored
 		)
@@ -179,7 +178,7 @@ namespace FurnitureFramework.Data
 			if (Width > 1 || Height > 1)
 				return false;
 
-			Rectangle tile_rect = new Rectangle(
+			Rectangle tile_rect = new(
 				tile * Utils.TILESIZE,
 				Utils.TILESIZE
 			);

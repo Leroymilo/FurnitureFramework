@@ -1,11 +1,9 @@
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.Versioning;
 using HarmonyLib;
 
 namespace FurnitureFramework.FFHarmony
 {
-	[RequiresPreviewFeatures]
 	static class Transpiler
 	{
 
@@ -55,28 +53,28 @@ namespace FurnitureFramework.FFHarmony
 					CodeInstruction orig = original.ElementAt(i);
 					CodeInstruction to_f = to_find.ElementAt(j);
 
-					if (debug)
-					{
-						ModEntry.log($"original element at {i} :");
-						ModEntry.log($"\topcode : {orig.opcode}");
-						ModEntry.log($"\toperand : {orig.operand}");
-						ModEntry.log($"to_find element at {j} :");
-						ModEntry.log($"\topcode : {to_f.opcode}");
-						ModEntry.log($"\toperand : {to_f.operand}");
-					}
+					// if (debug)
+					// {
+					// 	ModEntry.log($"original element at {i} :");
+					// 	ModEntry.log($"\topcode : {orig.opcode}");
+					// 	ModEntry.log($"\toperand : {orig.operand}");
+					// 	ModEntry.log($"to_find element at {j} :");
+					// 	ModEntry.log($"\topcode : {to_f.opcode}");
+					// 	ModEntry.log($"\toperand : {to_f.operand}");
+					// }
 
 					if (!are_equal(orig, to_f, debug))
 					{
-						if (debug) ModEntry.log("Restart match");
+						// if (debug) ModEntry.log("Restart match");
 						seq_matches = false;
 						break;
 					}
-					else if (debug) ModEntry.log("Matching!");
+					// else if (debug) ModEntry.log("Matching!");
 				}
 				if (seq_matches)
 				{
 					indices.Add(i-j);
-					if (debug) ModEntry.log("Full Match found!", StardewModdingAPI.LogLevel.Info);
+					// if (debug) ModEntry.log("Full Match found!", StardewModdingAPI.LogLevel.Info);
 				}
 			}
 

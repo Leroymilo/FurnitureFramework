@@ -1,5 +1,4 @@
 using System.Reflection.Emit;
-using System.Runtime.Versioning;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -8,12 +7,11 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.FFHarmony.Patches
 {
-	[RequiresPreviewFeatures]
 	internal class FarmerPostfixes
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Postfix;
-		static readonly System.Type base_type = typeof(Farmer);
+		static readonly Type base_type = typeof(Farmer);
 		#pragma warning restore 0414
 
 		internal static float getDrawLayer(
@@ -26,7 +24,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out FType.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
@@ -38,12 +36,11 @@ namespace FurnitureFramework.FFHarmony.Patches
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	internal class Game1Transpiler
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Transpiler;
-		static readonly System.Type base_type = typeof(Game1);
+		static readonly Type base_type = typeof(Game1);
 		#pragma warning restore 0414
 
 		#region DrawLighting
@@ -78,7 +75,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 					AccessTools.DeclaredMethod(
 						typeof(SpriteBatch),
 						"End",
-						new System.Type[] {}
+						Array.Empty<Type>()
 					)
 				)
 			};
@@ -94,9 +91,9 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.DeclaredMethod(
-						typeof(FType.FurnitureType),
-						"draw_lighting",
-						new System.Type[] {typeof(SpriteBatch) }
+						typeof(Data.FType.FType),
+						"DrawLighting",
+						new Type[] {typeof(SpriteBatch) }
 					)
 				),
 				new CodeInstruction(
@@ -111,7 +108,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 					AccessTools.DeclaredMethod(
 						typeof(SpriteBatch),
 						"End",
-						Array.Empty<System.Type>()
+						Array.Empty<Type>()
 					)
 				)
 			};
@@ -123,12 +120,11 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 	}
 
 
-	[RequiresPreviewFeatures]
 	internal class UtilityTranspiler
 	{
 		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Transpiler;
-		static readonly System.Type base_type = typeof(Utility);
+		static readonly Type base_type = typeof(Utility);
 		#pragma warning restore 0414
 
 		#region canGrabSomethingFromHere
@@ -161,8 +157,8 @@ call check_held_object
 			List<CodeInstruction> to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(FType.FurnitureType),
-					"has_held_object"
+					typeof(Data.FType.FType),
+					"HasHeldObject"
 				))
 			};
 

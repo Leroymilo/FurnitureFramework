@@ -129,7 +129,9 @@ namespace FurnitureFramework.Pack
 			public void add_type(string type_id, string type_name)
 			{
 				type_names[type_id] = type_name;
-				types[type_id] = JsonParser.parse(data_f.GetValue(type_id), true);
+				JToken? token = data_f.GetValue(type_id);
+				if (token == null) types[type_id] = true;
+				else types[type_id] = token.Value<bool>();
 			}
 
 			public bool is_type_enabled(string type_id)
@@ -141,7 +143,9 @@ namespace FurnitureFramework.Pack
 			{
 				i_pack_defaults[i_data_UID] = def;
 				i_pack_names[i_data_UID] = name;
-				i_packs[i_data_UID] = JsonParser.parse(data_p.GetValue(i_data_UID), def);
+				JToken? token = data_p.GetValue(i_data_UID);
+				if (token == null) i_packs[i_data_UID] = def;
+				else i_packs[i_data_UID] = token.Value<bool>();
 			}
 
 			public bool is_pack_enabled(string i_data_UID)
@@ -186,7 +190,7 @@ namespace FurnitureFramework.Pack
 					api.AddSectionTitle(manifest, () => "Furniture", null);
 					foreach (string type_id in types.Keys)
 					{
-						if (type_id == "FF.debug_catalog") continue;
+						if (type_id == "leroymilo.FF.debug_catalog") continue;
 						api.AddBoolOption(
 							manifest,
 							() => types[type_id],

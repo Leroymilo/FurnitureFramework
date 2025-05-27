@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
 	"Format": 3,
 	"Furniture": {
-		"FF.debug_catalog": {
+		"leroymilo.FF.debug_catalog": {
 			"Display Name": "FF Debug Catalogue",
 			"Description": "A Catalogue containing all FF Custom Furniture",
 			"Rotations": 1,
@@ -12,7 +12,7 @@
 			},
 			"Placement Restriction": 2,
 			"Source Image": "assets/catalogue.png",
-			"Shop Id": "FF.debug_catalog",
+			"Shop Id": "leroymilo.FF.debug_catalog",
 			"Layers": {
 				"Source Rect": {
 					"X": 0,

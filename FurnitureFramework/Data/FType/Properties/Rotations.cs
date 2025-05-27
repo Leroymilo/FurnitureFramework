@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
 	class RotationConverter : ReadOnlyConverter<List<string>>
 	{

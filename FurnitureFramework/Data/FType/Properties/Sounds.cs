@@ -1,10 +1,8 @@
-
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using System.Text.Json.Serialization;
 using StardewValley;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
 	public enum SoundMode
 	{
@@ -13,7 +11,7 @@ namespace FurnitureFramework.Data
 		on_click
 	}
 
-	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(FieldConverter<Sound>))]
 	public class Sound : Field
 	{
 		public SoundMode Mode;
@@ -32,7 +30,6 @@ namespace FurnitureFramework.Data
 	}
 
 	[JsonConverter(typeof(FieldListConverter<Sound>))]
-	[RequiresPreviewFeatures]
 	public class SoundList : FieldList<Sound>
 	{
 		public bool Play(GameLocation location, bool? state = null)
@@ -40,6 +37,7 @@ namespace FurnitureFramework.Data
 			bool played_sound = false;
 			bool turn_on = state.HasValue && state.Value;
 			bool turn_off = state.HasValue && !state.Value;
+
 			foreach (Sound sound in this)
 			{
 				if (
@@ -50,7 +48,6 @@ namespace FurnitureFramework.Data
 				{
 					location.playSound(sound.Name);
 					played_sound = true;
-					// ICue cue = Game1.soundBank.GetCue(sound.cue_name);
 				}
 			}
 			return played_sound;

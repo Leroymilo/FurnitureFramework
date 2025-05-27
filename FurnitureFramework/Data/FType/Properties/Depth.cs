@@ -1,10 +1,8 @@
-using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
-	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(DepthConverter))]
 	public class Depth: Field
 	{
@@ -30,7 +28,6 @@ namespace FurnitureFramework.Data
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	class DepthConverter : ReadOnlyConverter<Depth>
 	{
 		public override Depth? ReadJson(JsonReader reader, Type objectType, Depth? existingValue, bool hasExistingValue, JsonSerializer serializer)

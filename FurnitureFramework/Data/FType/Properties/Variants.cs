@@ -1,8 +1,7 @@
-using System.Runtime.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
 	public class VariantConverter<T> : ReadOnlyConverter<Dictionary<string, T>>
 	{
@@ -36,7 +35,6 @@ namespace FurnitureFramework.Data
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	public class ImageVariantConverter : VariantConverter<string>
 	{
 		public override Dictionary<string, string>? ReadJson(JsonReader reader, Type objectType, Dictionary<string, string>? existingValue, bool hasExistingValue, JsonSerializer serializer)

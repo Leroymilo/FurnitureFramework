@@ -1,6 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Versioning;
-using FurnitureFramework.FType;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
@@ -12,7 +10,6 @@ using StardewValley.Objects;
 namespace FurnitureFramework.Pack
 {
 
-	[RequiresPreviewFeatures]
 	partial class FurniturePack
 	{
 		// Constants
@@ -23,13 +20,13 @@ namespace FurnitureFramework.Pack
 
 		// Static Collections 
 
-		static Dictionary<string, IContentPack> UIDs = new();
+		static readonly Dictionary<string, IContentPack> UIDs = new();
 		// UIDs of all Furniture Packs (for reload all).
-		static Dictionary<string, FurniturePack> packs = new();
+		static readonly Dictionary<string, FurniturePack> packs = new();
 		// maps data_UID to pack.
-		static Dictionary<string, string> static_types = new();
+		static readonly Dictionary<string, string> static_types = new();
 		// maps type_id to the data_UID of the pack where it's defined.
-		static Dictionary<string, HashSet<string>> loaded_assets = new();
+		private static Dictionary<string, HashSet<string>> loaded_assets = new();
 		// a set of what asset names were loaded by each pack UID.
 
 		static IContentPack default_pack;
@@ -40,10 +37,11 @@ namespace FurnitureFramework.Pack
 		string path = DEFAULT_PATH;
 		string UID { get => content_pack.Manifest.UniqueID; }
 		string data_UID { get => $"{UID}/{path}"; }
+		Data.FurniturePack data;
 		FurniturePack? root = null;
 		bool is_included { get => root != null; }
 		bool is_loaded = false;
-		Dictionary<string, FurnitureType> types = new();
+		Dictionary<string, Data.FType.FType> types = new();
 		Dictionary<string, IncludedPack> included_packs = new();
 
 		public static void invalidate_game_data()
@@ -55,12 +53,12 @@ namespace FurnitureFramework.Pack
 
 		#region Getters
 
-		private FurnitureType get_type(string f_id)
+		private Data.FType.FType get_type(string f_id)
 		{
 			return types[f_id];
 		}
 
-		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out FurnitureType type)
+		private static bool try_get_type(string f_id, [MaybeNullWhen(false)] out Data.FType.FType type)
 		{
 			ModEntry.get_helper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
 
@@ -73,7 +71,7 @@ namespace FurnitureFramework.Pack
 			return true;
 		}
 
-		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out FurnitureType type)
+		public static bool try_get_type(Furniture furniture, [MaybeNullWhen(false)] out Data.FType.FType type)
 		{
 			return try_get_type(furniture.ItemId, out type);
 		}
@@ -184,7 +182,7 @@ namespace FurnitureFramework.Pack
 
 		#region Data/Furniture
 
-		public static void edit_data_furniture(IAssetData asset)
+		public static void EditFurnitureData(IAssetData asset)
 		{
 			load_all();
 
@@ -193,30 +191,33 @@ namespace FurnitureFramework.Pack
 			static_types.Clear();
 
 			foreach (string UID in UIDs.Keys)
-				packs[$"{UID}/{DEFAULT_PATH}"].add_data_furniture(editor);
+				packs[$"{UID}/{DEFAULT_PATH}"].AddFurnitureData(editor);
 		}
 
-		private void add_data_furniture(IDictionary<string, string> editor)
+		private void AddFurnitureData(IDictionary<string, string> editor)
 		{
-			foreach (FurnitureType type in types.Values)
+			foreach (Data.FType.FType type in types.Values)
 			{
-				if (!config.is_type_enabled(type.info.id)) continue;
-
-				if (static_types.ContainsKey(type.info.id))
+				foreach (KeyValuePair<string, string> pair in type.GetStringData())
 				{
-					int prev_prio = packs[static_types[type.info.id]].get_type(type.info.id).info.priority;
-					if (type.info.priority <= prev_prio) continue;
-				}
+					if (!config.is_type_enabled(pair.Key)) continue;
 
-				static_types[type.info.id] = data_UID;
-				editor[type.info.id] = type.get_string_data();
+					if (static_types.ContainsKey(pair.Key))
+					{
+						int prev_prio = packs[static_types[pair.Key]].get_type(pair.Key).Priority;
+						if (type.Priority <= prev_prio) continue;
+					}
+
+					static_types[pair.Key] = data_UID;
+					editor[pair.Key] = pair.Value;
+				}
 			}
 
 			foreach (IncludedPack i_pack in included_packs.Values)
 			{
 				if (!config.is_pack_enabled(i_pack.data_UID)) continue;
 
-				i_pack.pack.add_data_furniture(editor);
+				i_pack.pack.AddFurnitureData(editor);
 			}
 		}
 
@@ -224,40 +225,80 @@ namespace FurnitureFramework.Pack
 
 		#region Data/Shops
 
-		public static void edit_data_shop(IAssetData asset)
+		public static void EditShopData(IAssetData asset)
 		{
 			load_all();
 
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
 			foreach (string UID in UIDs.Keys)
-				packs[$"{UID}/{DEFAULT_PATH}"].add_data_shop(editor);
+				packs[$"{UID}/{DEFAULT_PATH}"].AddShopData(editor);
 			
 			// All items in the Debug Catalogue are free
-			if (!editor.ContainsKey("FF.debug_catalog")) return;    // Just in case
-			QuantityModifier price_mod = new() { Id = "FreeCatalogue",
+			if (!editor.ContainsKey("leroymilo.FF.debug_catalog")) return;    // Just in case
+			QuantityModifier price_mod = new() {
+				Id = "FreeCatalogue",
 				Modification = QuantityModifier.ModificationType.Set,
 				Amount = 0
 			};
-			editor["FF.debug_catalog"].PriceModifiers = new() { price_mod };
-			editor["FF.debug_catalog"].PriceModifierMode = QuantityModifier.QuantityModifierMode.Minimum;
+			editor["leroymilo.FF.debug_catalog"].PriceModifiers = new() { price_mod };
+			editor["leroymilo.FF.debug_catalog"].PriceModifierMode = QuantityModifier.QuantityModifierMode.Minimum;
 		}
 
-		private void add_data_shop(IDictionary<string, ShopData> editor)
+		void AddShopData(IDictionary<string, ShopData> editor)
 		{
-			foreach (FurnitureType type in types.Values)
+			foreach (Data.FType.FType type in types.Values)
 			{
-				if (!config.is_type_enabled(type.info.id)) continue;
+				if (type.ShopId != null) AddShop(editor, type.ShopId);
 
-				type.add_data_shop(editor);
+				foreach (KeyValuePair<string, List<ShopItemData>> shop_items in type.GetShopItemData())
+				{
+					string s_id = shop_items.Key;
+					AddShop(editor, s_id);
+					foreach (ShopItemData shop_item in shop_items.Value)
+					{
+						string f_id = shop_item.Id;
+						if (!config.is_type_enabled(f_id)) continue;
+						if (HasShopItem(editor[s_id], f_id)) continue;
+						editor[s_id].Items.Add(shop_item);
+					}
+				}
 			}
 
 			foreach (IncludedPack i_pack in included_packs.Values)
 			{
 				if (!config.is_pack_enabled(i_pack.data_UID)) continue;
-
-				i_pack.pack.add_data_shop(editor);
+				i_pack.pack.AddShopData(editor);
 			}
+		}
+
+		static void AddShop(IDictionary<string, ShopData> editor, string s_id)
+		{
+			if (editor.ContainsKey(s_id)) return;
+
+			ShopData catalogue_shop_data = new()
+			{
+				CustomFields = new Dictionary<string, string>() {
+					{"HappyHomeDesigner/Catalogue", "true"}
+				},
+				Owners = new List<ShopOwnerData>() { 
+					new() {
+						Name = "AnyOrNone",
+						Dialogues = new() {}	// To remove default dialogue
+					}
+				}
+			};
+			editor[s_id] = catalogue_shop_data;
+		}
+
+		static bool HasShopItem(ShopData shop_data, string f_id)
+		{
+			foreach (ShopItemData shop_item_data in shop_data.Items)
+			{
+				if (shop_item_data.ItemId == $"(F){f_id}")
+					return true;
+			}
+			return false;
 		}
 
 		#endregion
@@ -268,11 +309,11 @@ namespace FurnitureFramework.Pack
 
 		public static void debug_print(string _, string[] args)
 		{
-			if (args.Count() == 0) debut_print_all();
+			if (args.Length == 0) debug_print_all();
 			else debug_print_single(args[0]);
 		}
 
-		private static void debut_print_all()
+		private static void debug_print_all()
 		{
 			foreach (string UID in UIDs.Keys)
 				debug_print_single(UID);
@@ -308,9 +349,10 @@ namespace FurnitureFramework.Pack
 			else ModEntry.log($"{indent}{UID}:", LogLevel.Debug);
 			
 			ModEntry.log($"{indent}\tFurniture:", LogLevel.Debug);
-			foreach (FurnitureType type in types.Values)
-				type.debug_print(indent_count+2, config.is_type_enabled(type.info.id));
-			
+			foreach (Data.FType.FType type in data.Furniture.Values)
+				ModEntry.log($"{type.FID}:\n{JObject.FromObject(type)}");
+
+			if (included_packs.Count == 0) return;
 			ModEntry.log($"{indent}\tIncluded Packs:", LogLevel.Debug);
 			foreach (IncludedPack i_pack in included_packs.Values)
 				i_pack.pack.debug_print(indent_count+2, config.is_pack_enabled(i_pack.data_UID));

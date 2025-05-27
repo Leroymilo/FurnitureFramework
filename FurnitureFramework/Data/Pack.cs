@@ -1,16 +1,14 @@
 using System.Reflection;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data
 {
-	[RequiresPreviewFeatures]
 	public sealed class FurniturePack
 	{
 		public int Format = 0;
-		public Dictionary<string, FType> Furniture = new();
+		public Dictionary<string, FType.FType> Furniture = new();
 		public Dictionary<string, IncludedPack> Included = new();
 	}
 
@@ -33,7 +31,6 @@ namespace FurnitureFramework.Data
 		}
 	}
 
-	[RequiresPreviewFeatures]
 	class Utils
 	{
 		public const string NOROT = "NoRot";
@@ -53,13 +50,13 @@ namespace FurnitureFramework.Data
 			List<string> result = new();
 
 			// Check if all [Required] fields are in the obj
-			foreach (string field_name in TagAttribute.GetRequired(type))
+			foreach (string field_name in FType.Properties.TagAttribute.GetRequired(type))
 			{
 				if (!obj.ContainsKey(field_name)) return new() { };
 				// If not return empty list to indicate that this might be a directional dict of DirListField
 			}
 			// Check if any of the [Directional] fields are present
-			foreach (string field_name in TagAttribute.GetDirectional(type))
+			foreach (string field_name in FType.Properties.TagAttribute.GetDirectional(type))
 			{
 				JToken? field_token = obj.GetValue(field_name);
 				if (field_token is not JObject field_obj) continue;

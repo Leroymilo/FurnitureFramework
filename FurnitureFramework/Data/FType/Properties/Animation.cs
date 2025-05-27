@@ -1,13 +1,11 @@
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewValley;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
-	[RequiresPreviewFeatures]
 	[JsonConverter(typeof(SpaceRemover<Animation>))]
 	public class Animation
 	{
@@ -79,7 +77,6 @@ namespace FurnitureFramework.Data
 	/// <summary>
 	/// Parses either an array of values or a single value used to generate an array
 	/// </summary>
-	[RequiresPreviewFeatures]
 	public class ValueListConverter<T> : ReadOnlyConverter<List<T>>
 	{
 		public override List<T>? ReadJson(JsonReader reader, Type objectType, List<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)

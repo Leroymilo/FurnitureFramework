@@ -1,5 +1,5 @@
+using FurnitureFramework.Data.FType;
 using Microsoft.Xna.Framework.Content;
-using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 
 namespace FurnitureFramework.Pack
@@ -66,7 +66,6 @@ namespace FurnitureFramework.Pack
 		{
 			if (is_loaded) return;
 
-			Data.FurniturePack data;
 			try
 			{
 				data = ModEntry.get_helper().GameContent.Load<Data.FurniturePack>($"FF/{data_UID}");
@@ -120,32 +119,17 @@ namespace FurnitureFramework.Pack
 			}
 		}
 
-		private void load_furniture(Dictionary<string, Data.FType> furniture)
+		private void load_furniture(Dictionary<string, Data.FType.FType> furniture)
 		{
-			List<FType.FurnitureType> new_types = new();
-			foreach (KeyValuePair<string, Data.FType> f_prop in furniture)
+			foreach (KeyValuePair<string, Data.FType.FType> pair in furniture)
 			{
-				if (f_prop.Value is null) continue;
-				
-				try
-				{
-					FType.FurnitureType.make_furniture(
-						content_pack, f_prop.Key,
-						f_prop.Value, new_types
-					);
-				}
-				catch (Exception ex)
-				{
-					ModEntry.log(ex.ToString(), LogLevel.Error);
-					ModEntry.log($"Failed to load data for Furniture \"{f_prop.Key}\" in {data_UID}, skipping entry.", LogLevel.Warn);
-					continue;
-				}
-			}
+				pair.Value.SetIDs(UID, pair.Key);
 
-			foreach (FType.FurnitureType type in new_types)
-			{
-				config.add_type(type.info.id, type.info.display_name);
-				types[type.info.id] = type;
+				foreach (Variant variant in pair.Value.Variants.Values)
+				{
+					config.add_type(variant.ID, variant.DisplayName);
+					types[variant.ID] = pair.Value;
+				}
 			}
 		}
 

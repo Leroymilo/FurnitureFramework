@@ -1,7 +1,4 @@
-
-
 using System.Runtime.Serialization;
-using System.Runtime.Versioning;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -9,11 +6,11 @@ using StardewValley;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 
-namespace FurnitureFramework.Data
+namespace FurnitureFramework.Data.FType.Properties
 {
 	using SVObject = StardewValley.Object;
 
-	[RequiresPreviewFeatures]
+	[JsonConverter(typeof(FieldConverter<Slot>))]
 	public class Slot : Field
 	{
 		[Required]
@@ -79,7 +76,7 @@ namespace FurnitureFramework.Data
 			held_obj.boundingBox.Value = new Rectangle(position, size);
 		}
 
-		public void DrawObj(FurnitureFramework.FType.DrawData draw_data, float top, SVObject obj)
+		public void DrawObj(DrawData draw_data, float top, SVObject obj)
 		{
 			draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
 			// Position is set to the bottom center of the slot area
@@ -94,8 +91,10 @@ namespace FurnitureFramework.Data
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 
-				if (Pack.FurniturePack.try_get_type(furn, out FurnitureFramework.FType.FurnitureType? type))
+				if (Pack.FurniturePack.try_get_type(furn, out FType? type))
 				{
+					draw_data.mod_id = type.ModID;
+					draw_data.texture_path = type.GetSourceImage(furn);
 					type.draw(furn, draw_data, draw_in_slot: true);
 					return;
 				}
@@ -115,14 +114,14 @@ namespace FurnitureFramework.Data
 			
 			if (DrawShadow)
 			{
-				FurnitureFramework.FType.DrawData shadow_data = draw_data;	// should clone value fields like position
+				DrawData shadow_data = draw_data;	// should clone value fields like position
 				shadow_data.texture = Game1.shadowTexture;
 				shadow_data.source_rect = Game1.shadowTexture.Bounds;
 				shadow_data.position += ShadowOffset * 4;
 				shadow_data.position -= shadow_data.source_rect.Size.ToVector2() * new Vector2(2, 4);
 				// draw pos is on top left of Shadow texture
 				
-				shadow_data.draw();
+				shadow_data.Draw();
 
 				draw_data.depth = MathF.BitIncrement(draw_data.depth);
 				// plus epsilon to make sure it's drawn over the shadow
@@ -147,11 +146,11 @@ namespace FurnitureFramework.Data
 			else
 			{
 				draw_data.texture = dataOrErrorItem.GetTexture();
-				draw_data.draw();
+				draw_data.Draw();
 			}
 		}
 
-		public void DrawDebug(FurnitureFramework.FType.DrawData draw_data)
+		public void DrawDebug(DrawData draw_data)
 		{
 			draw_data.texture = debug_texture;
 			draw_data.position += Area.Location.ToVector2() * 4f;
@@ -162,12 +161,12 @@ namespace FurnitureFramework.Data
 			draw_data.color *= ModEntry.get_config().slot_debug_alpha;
 			draw_data.depth = float.MaxValue;
 			
-			draw_data.draw();
+			draw_data.Draw();
 		}
 
-		public void DrawLights(FurnitureFramework.FType.DrawData draw_data, Furniture furn)
+		public void DrawLights(DrawData draw_data, Furniture furn)
 		{
-			if (Pack.FurniturePack.try_get_type(furn, out FurnitureFramework.FType.FurnitureType? type))
+			if (Pack.FurniturePack.try_get_type(furn, out FType? type))
 			{
 				// draw custom lights
 
@@ -177,10 +176,7 @@ namespace FurnitureFramework.Data
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 
-				type.draw_lights(
-					draw_data, furn.currentRotation.Value,
-					furn.IsOn, furn.timeToTurnOnLights()
-				);
+				type.DrawLights(furn, draw_data);
 			}
 			else
 			{
@@ -192,8 +188,7 @@ namespace FurnitureFramework.Data
 		#endregion
 	}
 
-	[RequiresPreviewFeatures]
-	public class SlotList : FieldList<Slot>
+	public class SlotList : List<Slot>
 	{
 
 		public int GetEmptySlot(Point rel_pos, Chest chest, Farmer who, Furniture furn, SVObject obj)
@@ -235,7 +230,7 @@ namespace FurnitureFramework.Data
 			return -1;
 		}
 
-		public void Draw(FurnitureFramework.FType.DrawData draw_data, float top, IList<Item> items)
+		public void Draw(DrawData draw_data, float top, IList<Item> items)
 		{
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
@@ -247,7 +242,7 @@ namespace FurnitureFramework.Data
 			}
 		}
 
-		public void DrawLights(FurnitureFramework.FType.DrawData draw_data, IList<Item> items)
+		public void DrawLights(DrawData draw_data, IList<Item> items)
 		{
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
