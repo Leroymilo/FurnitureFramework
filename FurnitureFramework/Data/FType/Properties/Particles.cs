@@ -13,36 +13,37 @@ namespace FurnitureFramework.Data.FType.Properties
 	public class Particles : Field
 	{
 		[Required]
-		string SourceImage = "";
-		Rectangle SourceRect = Rectangle.Empty;
-		int EmissionInterval = 500;
+		public string SourceImage = "";
+		public Rectangle SourceRect = Rectangle.Empty;
+		public int EmissionInterval = 500;
 
 		[Required]
 		[Directional]
-		Rectangle SpawnRect;
-		List<float> Depths = new();
-		Vector2 Speed = Vector2.Zero;
+		public Rectangle SpawnRect;
+		public List<float> Depths = new();
+		[JsonConverter(typeof(Vector2Converter))]
+		public Vector2 Speed = Vector2.Zero;
 
-		List<float> Rotations = new();
-		List<float> RotationSpeeds = new();
+		public List<float> Rotations = new();
+		public List<float> RotationSpeeds = new();
 
-		float Scale = 1f;
-		float ScaleChange = 0f;
+		public float Scale = 1f;
+		public float ScaleChange = 0f;
 
 		[JsonConverter(typeof(ColorConverter))]
-		Color Color = Color.White;
-		float Alpha = 1f;
-		float AlphaFade = 0f;
+		public Color Color = Color.White;
+		public float Alpha = 1f;
+		public float AlphaFade = 0f;
 
-		int FrameCount = 0;
-		int FrameDuration = 0;
-		int LoopCount = 0;
-		bool HoldLastFrame = true;
-		bool Flicker = false;
+		public int FrameCount = 0;
+		public int FrameDuration = 0;
+		public int LoopCount = 0;
+		public bool HoldLastFrame = true;
+		public bool Flicker = false;
 
-		bool EmitWhenOn = false;
-		bool EmitWhenOff = false;
-		bool Burst = true;
+		public bool EmitWhenOn = false;
+		public bool EmitWhenOff = false;
+		public bool Burst = true;
 
 		[OnDeserialized]
 		private void Validate(StreamingContext context)
@@ -84,9 +85,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		public void Make(Furniture furniture, string mod_id, Vector2? speed_ = null)
 		{
-			ModEntry.log("Making particle");
-
-			Texture2D texture = ModEntry.get_helper().ModContent.Load<Texture2D>($"FF/{mod_id}/{SourceImage}");
+			Texture2D texture = ModEntry.get_helper().GameContent.Load<Texture2D>($"FF/{mod_id}/{SourceImage}");
 
 			if (SourceRect == Rectangle.Empty)
 				SourceRect = texture.Bounds;

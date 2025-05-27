@@ -1,9 +1,33 @@
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FurnitureFramework.Data.FType.Properties
 {
+	class Vector2Converter : ReadOnlyConverter<Vector2>
+	{
+		public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
+		{
+			if (reader.TokenType == JsonToken.StartObject)
+			{
+				JObject obj = JObject.Load(reader);
+				JToken? X = obj.GetValue("X");
+				JToken? Y = obj.GetValue("Y");
+				if (X != null && Y != null)
+				{
+					return new(
+						X.Value<float>(),
+						Y.Value<float>()
+					);
+				}
+			}
+
+			ModEntry.log($"Could not parse Vector2 from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+			throw new InvalidDataException($"Could not parse Vector2 from {reader.Value} at {reader.Path}.");
+		}
+	}
+
 	#region Attributes
 
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
