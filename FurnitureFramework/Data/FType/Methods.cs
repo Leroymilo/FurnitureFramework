@@ -453,6 +453,29 @@ namespace FurnitureFramework.Data.FType
 			}
 		}
 
+		public void DayUpdate(Furniture furniture)
+		{
+			// Checking for the Santa easter-egg for multiple slots
+			if (Game1.IsMasterGame && Game1.season == Season.Winter && Game1.dayOfMonth == 25 && furniture.heldObject.Value is Chest chest)
+			{
+				foreach ((Item item, int index) in chest.Items.Select((value, index) => (value, index)))
+				{
+					if (item.QualifiedItemId == "(O)223" && !Game1.player.mailReceived.Contains("CookiePresent_year" + Game1.year))
+					{
+						chest.Items[index] = ItemRegistry.Create<SVObject>("(O)MysteryBox");
+						Game1.player.mailReceived.Add("CookiePresent_year" + Game1.year);
+						continue;
+					}
+					else if (item.Category == -6 && !Game1.player.mailReceived.Contains("MilkPresent_year" + Game1.year))
+					{
+						chest.Items[index] = ItemRegistry.Create<SVObject>("(O)MysteryBox");
+						Game1.player.mailReceived.Add("MilkPresent_year" + Game1.year);
+						continue;
+					}
+				}
+			}
+		}
+
 		public void updateWhenCurrentLocation(Furniture furniture)
 		{
 			string rot = GetRot(furniture);
@@ -471,8 +494,8 @@ namespace FurnitureFramework.Data.FType
 				{
 					Point bed_size = Collisions[rot].GameSize;
 					Point area_size = new(
-						Math.Max(64, bed_size.X - 64*2),
-						Math.Max(64, bed_size.Y - 64*2)
+						Math.Max(64, bed_size.X - 64 * 2),
+						Math.Max(64, bed_size.Y - 64 * 2)
 					);
 					bed_col = new Rectangle(
 						(bed_size - area_size) / new Point(2),

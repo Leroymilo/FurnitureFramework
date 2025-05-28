@@ -139,7 +139,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
-- **Work in Progress** The Santa easter-egg now checks custom Slots.
+- The Santa easter-egg now checks custom Slots.
 - Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
 
 # Planned Future Features

@@ -549,9 +549,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
-				{
 					type.GetDescription(__instance, ref __result);
-				}
 			}
 			catch (Exception ex)
 			{
@@ -559,6 +557,25 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 
 			return __result;
+		}
+
+		#endregion
+
+		#region DayUpdate
+
+		internal static void DayUpdate(
+			Furniture __instance
+		)
+		{
+			try
+			{
+				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+					type.DayUpdate(__instance);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.log($"Failed in {nameof(DayUpdate)}:\n{ex}", LogLevel.Error);
+			}
 		}
 
 		#endregion
