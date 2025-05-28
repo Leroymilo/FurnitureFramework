@@ -100,6 +100,9 @@ namespace FurnitureFramework.Data.FType
 		public DirStruct<Vector2> ScreenPosition = new();
 		public float ScreenScale = 2f;
 
+		[JsonConverter(typeof(FieldDictConverter<Depth>))]
+		public FieldDict<Depth> ScreenDepth = new() { { Utils.NOROT, new() { Tile = 0, Sub = 1000 } } };
+
 		// Bed
 		public BedType BedType = BedType.Double;
 		public Point BedSpot = new(1);

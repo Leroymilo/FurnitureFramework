@@ -303,5 +303,17 @@ namespace FurnitureFramework.Data.FType
 			draw_data.mod_id = ModID;
 			Lights[rot].DrawSources(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());
 		}
+
+		public static void addLights(Furniture furniture)
+		{
+			if (furniture.heldObject.Value is Chest chest)
+			{
+				foreach (Item item in chest.Items)
+				{
+					if (item is Furniture held_furn)
+						held_furn.addLights();
+				}
+			}
+		}
 	}
 }

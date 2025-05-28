@@ -2,9 +2,14 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StardewValley;
 
 namespace FurnitureFramework.Data.FType.Properties
 {
+	using SDColor = System.Drawing.Color;
+
+	#region Type Converters
+
 	class Vector2Converter : ReadOnlyConverter<Vector2>
 	{
 		public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
@@ -27,6 +32,28 @@ namespace FurnitureFramework.Data.FType.Properties
 			throw new InvalidDataException($"Could not parse Vector2 from {reader.Value} at {reader.Path}.");
 		}
 	}
+	
+	class ColorConverter : ReadOnlyConverter<Color>
+	{
+		public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue, JsonSerializer serializer)
+		{
+			if (reader.TokenType == JsonToken.String)
+			{
+				string color_name = JToken.Load(reader).ToString();
+
+				// From color code
+				if (Utility.StringToColor(color_name) is Color color)
+					return color;
+
+				// From color name
+				SDColor c_color = SDColor.FromName(color_name);
+				return new(c_color.R, c_color.G, c_color.B);
+			}
+			return existingValue;
+		}
+	}
+
+	#endregion
 
 	#region Attributes
 
@@ -245,7 +272,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
-				FieldDict<T> result = new();
+				existingValue ??= new();
 
 				JObject obj = Utils.RemoveSpaces(JObject.Load(reader));
 
@@ -255,7 +282,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				{
 					// Parsing as a single T
 					foreach (string key in sub_dirs)
-						ReadField(obj, key, ref result);
+						ReadField(obj, key, ref existingValue);
 				}
 
 				else
@@ -264,12 +291,12 @@ namespace FurnitureFramework.Data.FType.Properties
 					foreach (JProperty property in obj.Properties())
 					{
 						if (property.Value is JObject dir_obj)
-							ReadField(Utils.RemoveSpaces(dir_obj), property.Name, ref result);
+							ReadField(Utils.RemoveSpaces(dir_obj), property.Name, ref existingValue);
 					}
 				}
 
 				Field.CurrentDirKey = null;
-				return result;
+				return existingValue;
 			}
 
 			ModEntry.log($"Could not parse Directional Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);

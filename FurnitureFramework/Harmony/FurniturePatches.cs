@@ -570,7 +570,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
-					type.DayUpdate(__instance);
+					Data.FType.FType.DayUpdate(__instance);
 			}
 			catch (Exception ex)
 			{
@@ -700,16 +700,155 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		#endregion
 	}
 
+	internal class TVTranspilers
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Transpiler;
+		static readonly Type base_type = typeof(TV);
+		#pragma warning restore
+
+		static List<CodeInstruction> depth_replace = new()
+		{
+			new(OpCodes.Ldarg_0),
+			new(OpCodes.Ldfld, AccessTools.Field(
+				typeof(StardewValley.Object), "boundingBox"
+			)),
+			new(OpCodes.Callvirt, AccessTools.Method(
+				typeof(Netcode.NetRectangle), "get_Bottom"
+			)),
+			new(OpCodes.Ldc_I4_1),
+			new(OpCodes.Sub),
+			new(OpCodes.Conv_R4),
+			new(OpCodes.Ldc_R4, 10000f),
+			new(OpCodes.Div),
+			new(OpCodes.Ldc_R4, 1e-05f),
+			new(OpCodes.Add)
+		};
+
+		static List<CodeInstruction> depth_write = new()
+		{
+			new(OpCodes.Ldarg_0),
+			new(OpCodes.Ldc_I4_0),
+			new(OpCodes.Call, AccessTools.Method(
+				typeof(Data.FType.FType),
+				"GetScreenDepth"
+			))
+		};
+
+/*
+
+Replaces (float)(boundingBox.Bottom - 1) / 10000f + 1E-05f
+
+ldarg.0
+ldfld class Netcode.NetRectangle StardewValley.Object::boundingBox
+callvirt instance int32 Netcode.NetRectangle::get_Bottom()
+ldc.i4.1
+sub
+conv.r4
+ldc.r4 10000
+div
+ldc.r4 1E-05
+add
+
+With Data.FType.FType.GetScreenDepth(this, false)
+
+ldarg.0
+ldc.i4.0
+call void Data.FType.FType::GetScreenDepth(Furniture, bool)
+
+In selectChannel (x7) and proceedToNextScene (x6)
+
+*/
+
+		static IEnumerable<CodeInstruction> selectChannel(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new();
+			to_replace.AddRange(depth_replace);
+			List<CodeInstruction> to_write = new();
+			to_write.AddRange(depth_write);
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
+		}
+
+		static IEnumerable<CodeInstruction> proceedToNextScene(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new();
+			to_replace.AddRange(depth_replace);
+			List<CodeInstruction> to_write = new();
+			to_write.AddRange(depth_write);
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 6);
+		}
+
+/*
+
+Replaces (float)(boundingBox.Bottom - 1) / 10000f + 2E-05f
+
+ldarg.0
+ldfld class Netcode.NetRectangle StardewValley.Object::boundingBox
+callvirt instance int32 Netcode.NetRectangle::get_Bottom()
+ldc.i4.1
+sub
+conv.r4
+ldc.r4 10000
+div
+ldc.r4 2E-05
+add
+
+With Data.FType.FType.GetScreenDepth(this, true)
+
+ldarg.0
+ldc.i4.1
+call void Data.FType.FType::GetScreenDepth(Furniture, bool)
+
+In setFortuneOverlay (x5) and setWeatherOverlay (x7)
+
+*/
+
+		static IEnumerable<CodeInstruction> setFortuneOverlay(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new();
+			to_replace.AddRange(depth_replace);
+			to_replace[8] = new(OpCodes.Ldc_R4, 2e-05f);
+			List<CodeInstruction> to_write = new();
+			to_write.AddRange(depth_write);
+			to_write[1] = new(OpCodes.Ldc_I4_1);
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 5);
+		}
+
+		[TargetParamType(new[] {typeof(string)})]
+		static IEnumerable<CodeInstruction> setWeatherOverlay(
+			IEnumerable<CodeInstruction> instructions
+		)
+		{
+			List<CodeInstruction> to_replace = new();
+			to_replace.AddRange(depth_replace);
+			to_replace[8] = new(OpCodes.Ldc_R4, 2e-05f);
+			List<CodeInstruction> to_write = new();
+			to_write.AddRange(depth_write);
+			to_write[1] = new(OpCodes.Ldc_I4_1);
+
+			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
+		}
+	}
+
 	#endregion
 
 	#region BedFurniture
 
 	internal class BedFurniturePreFixes
 	{
-		#pragma warning disable 0414
+#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Prefix;
 		static readonly Type base_type = typeof(BedFurniture);
-		#pragma warning restore 0414
+#pragma warning restore 0414
 
 		#region draw
 

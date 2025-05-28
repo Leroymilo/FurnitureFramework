@@ -7,7 +7,7 @@ namespace FurnitureFramework.FFHarmony
 	static class Transpiler
 	{
 
-		static public bool are_equal(CodeInstruction a, CodeInstruction b, bool debug = false)
+		static public bool are_equal(CodeInstruction a, CodeInstruction b, int debug = 0)
 		{
 			if (a.IsStloc() && b.IsStloc())
 			{
@@ -39,7 +39,7 @@ namespace FurnitureFramework.FFHarmony
 		static public List<int> find_start_indices(
 			IEnumerable<CodeInstruction> original,
 			IEnumerable<CodeInstruction> to_find,
-			bool debug = false
+			int debug = 0
 		)
 		{
 			List<int> indices = new();
@@ -53,28 +53,24 @@ namespace FurnitureFramework.FFHarmony
 					CodeInstruction orig = original.ElementAt(i);
 					CodeInstruction to_f = to_find.ElementAt(j);
 
-					// if (debug)
-					// {
-					// 	ModEntry.log($"original element at {i} :");
-					// 	ModEntry.log($"\topcode : {orig.opcode}");
-					// 	ModEntry.log($"\toperand : {orig.operand}");
-					// 	ModEntry.log($"to_find element at {j} :");
-					// 	ModEntry.log($"\topcode : {to_f.opcode}");
-					// 	ModEntry.log($"\toperand : {to_f.operand}");
-					// }
+					if (debug > 1)
+					{
+						ModEntry.log($"original[{i}]: \topcode: {orig.opcode}, \toperand: {orig.operand}", StardewModdingAPI.LogLevel.Trace);
+						ModEntry.log($"to_find[{j}]: \topcode: {to_f.opcode}, \toperand: {to_f.operand}", StardewModdingAPI.LogLevel.Trace);
+					}
 
 					if (!are_equal(orig, to_f, debug))
 					{
-						// if (debug) ModEntry.log("Restart match");
+						if (debug > 1 && j > 0) ModEntry.log("Restart match", StardewModdingAPI.LogLevel.Trace);
 						seq_matches = false;
 						break;
 					}
-					// else if (debug) ModEntry.log("Matching!");
+					else if (debug > 1) ModEntry.log("Matching!");
 				}
 				if (seq_matches)
 				{
 					indices.Add(i-j);
-					// if (debug) ModEntry.log("Full Match found!", StardewModdingAPI.LogLevel.Info);
+					if (debug > 1) ModEntry.log("Full Match found!", StardewModdingAPI.LogLevel.Info);
 				}
 			}
 
@@ -86,7 +82,7 @@ namespace FurnitureFramework.FFHarmony
 			List<CodeInstruction> to_replace,
 			List<CodeInstruction> to_write,
 			int match_limit = 1,
-			bool debug = false
+			int debug = 0
 		)
 		{
 			List<int> start_indices = find_start_indices(instructions, to_replace, debug);
@@ -96,27 +92,27 @@ namespace FurnitureFramework.FFHarmony
 				start_indices.RemoveRange(match_limit, start_indices.Count - match_limit);
 			}
 
-			if (debug)
+			if (debug > 0)
 				ModEntry.log($"Transpiler found {start_indices.Count} instances to replace");
 
 			int k = 0;
 
 			List<CodeInstruction> new_inst = new();
 
-			if (debug)
+			if (debug > 0)
 				ModEntry.log($"Starting to replace instructions");
 
 			for (int i = 0; i < instructions.Count(); i++)
 			{
 				if (k < start_indices.Count && i == start_indices[k])
 				{
-					if (debug)
+					if (debug > 0)
 						ModEntry.log($"Replacing a set of instructions at index {i}");
 					k++;
 					i += to_replace.Count - 1;
 					foreach (CodeInstruction instruction in to_write)
 					{
-						if (debug)
+						if (debug > 1)
 							ModEntry.log($"\t{instruction}");
 						new_inst.Add(instruction);
 					}
@@ -128,7 +124,7 @@ namespace FurnitureFramework.FFHarmony
 				}
 			}
 
-			if (debug)
+			if (debug > 0)
 				ModEntry.log($"Finished replacing instructions");
 
 			return new_inst;

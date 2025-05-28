@@ -125,7 +125,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added the possibility of using a Color code instead of a name in all color fields.
 - Colored Light Sources should now be more intuitive: if the texture provided is white, the tint of the Light Source can be controlled by the "Color" field, which defaults to "White". This shouldn't break any existing pack, but it might change the color of Light Sources in some cases.
 
-## 3.1 (**Work in Progress**)
+## 3.1 (**Testing**)
 
 **Fixes**:
 - Fixed Furniture with "Force Type" set to `table` or `long table` being impossible to pick-up.
@@ -136,22 +136,21 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **New Features**:
 - Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
-- **Work in Progress** Added Screen Depth for customizing TV screen and make layers over the screen easier. Dev notes:
-	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
-	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
+- Added Screen Depth for customizing TV screen and make layers over the screen easier.
 - The Santa easter-egg now checks custom Slots.
 - Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
 
 # Planned Future Features
 
-- For eventual 4.0 format change:
-	- Remove the fucking spaces from the fucking json keys
-	- Put Special Furniture types into structures -> A type's Special Type is whatever is not null -> mutually exclusive
-	- Find a way to make rotation more accessible?
-
 - i18n support in `Display Name` and `Description` (also in variants tokens?).
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
+- Put a whole ShopData object next to the ShopID
 - (internal) Move stuff from the `Pack` namespace into the `Data.Pack` data model.
 - Make a custom config menu to enable/disable Furniture and Included packs
+
+- For eventual 4.0 format change:
+	- Remove the fucking spaces from the fucking json keys
+	- Put Special Furniture types into structures -> A type's Special Type is whatever is not null -> mutually exclusive
+	- Find a way to make rotation more accessible?

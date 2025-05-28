@@ -4,6 +4,17 @@ using System.Reflection;
 
 namespace FurnitureFramework.FFHarmony
 {
+		[AttributeUsage(AttributeTargets.Method)]
+		public class TargetParamTypeAttribute : Attribute
+		{
+			public Type[] parameter_types;
+
+			public TargetParamTypeAttribute(Type[] types)
+			{
+				parameter_types = types;
+			}
+		}
+
 	namespace Patches
 	{
 		enum PatchType {
@@ -30,7 +41,7 @@ namespace FurnitureFramework.FFHarmony
 					!t.IsEnum
 				);
 
-			foreach (System.Type type in types)
+			foreach (Type type in types)
 			{
 				#region Get Identification Fields
 
@@ -57,7 +68,7 @@ namespace FurnitureFramework.FFHarmony
 					ModEntry.log($"No base_type in {type}", LogLevel.Trace);
 					continue;
 				}
-				System.Type? base_type = (System.Type?)prop.GetValue(null);
+				Type? base_type = (Type?)prop.GetValue(null);
 				if (base_type is null)
 				{
 					ModEntry.log($"base_type is invalid in {type}", LogLevel.Trace);
@@ -74,10 +85,15 @@ namespace FurnitureFramework.FFHarmony
 				{
 					ModEntry.log($"Patching {patch_type} for {base_type.Name}.{method.Name}", LogLevel.Trace);
 
-					MethodInfo original = AccessTools.DeclaredMethod(
-						base_type,
-						method.Name
-					);
+					MethodInfo original;
+					TargetParamTypeAttribute? attribute = method.GetCustomAttribute<TargetParamTypeAttribute>();
+					if (patch_type == Patches.PatchType.Transpiler && attribute != null)
+					{
+						original = AccessTools.DeclaredMethod(
+							base_type, method.Name, attribute.parameter_types
+						);
+					}
+					else original = AccessTools.DeclaredMethod(base_type, method.Name);
 
 					HarmonyMethod? prefix = null, postfix = null, transpiler = null;
 

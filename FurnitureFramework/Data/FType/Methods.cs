@@ -1,3 +1,4 @@
+using FurnitureFramework.Data.FType.Properties;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -439,21 +440,19 @@ namespace FurnitureFramework.Data.FType
 			}
 		}
 
-		#endregion
-
-		public static void addLights(Furniture furniture)
+		public static float GetScreenDepth(Furniture furniture, bool overlay = false)
 		{
-			if (furniture.heldObject.Value is Chest chest)
-			{
-				foreach (Item item in chest.Items)
-				{
-					if (item is Furniture held_furn)
-						held_furn.addLights();
-				}
-			}
+			float depth;
+			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+				depth = type.ScreenDepth[type.GetRot(furniture)].GetValue(furniture.GetBoundingBox().Top);
+			else depth = (float)(furniture.boundingBox.Bottom - 1) / 10000f + 1E-05f;
+			if (overlay) depth = MathF.BitIncrement(depth);
+			return depth;
 		}
 
-		public void DayUpdate(Furniture furniture)
+		#endregion
+
+		public static void DayUpdate(Furniture furniture)
 		{
 			// Checking for the Santa easter-egg for multiple slots
 			if (Game1.IsMasterGame && Game1.season == Season.Winter && Game1.dayOfMonth == 25 && furniture.heldObject.Value is Chest chest)
