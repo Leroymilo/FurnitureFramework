@@ -146,11 +146,12 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
-- Add ShopData field, add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`)
+- Add ShopData field (with a way to get catalogue tabs by using CustomFields).
+- Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - (internal) Move stuff from the `Pack` namespace into the `Data.Pack` data model.
 - Make a custom config menu to enable/disable Furniture and Included packs
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys
-	- Put Special Furniture types into structures -> A type's Special Type is whatever is not null -> mutually exclusive
+	- Put Special Furniture types into structures -> A Furniture's Special Type is whatever is not null -> mutually exclusive
 	- Find a way to make rotation more accessible?
