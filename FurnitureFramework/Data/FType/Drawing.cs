@@ -156,7 +156,7 @@ namespace FurnitureFramework.Data.FType
 			if (furniture.isTemporarilyInvisible) return;   // taken from game code, no idea what this property is
 
 			if (furniture is FishTankFurniture fish_tank)
-				draw_fish_tank(fish_tank, draw_data);
+				DrawFishTank(fish_tank, draw_data);
 
 			draw_data.is_on = Toggle && furniture.IsOn;
 			draw_data.is_dark = TimeBased && furniture.timeToTurnOnLights();
@@ -202,7 +202,7 @@ namespace FurnitureFramework.Data.FType
 			}
 		}
 
-		private void draw_fish_tank(FishTankFurniture furniture, DrawData draw_data)
+		private void DrawFishTank(FishTankFurniture furniture, DrawData draw_data)
 		{
 			// Code copied from FishTankFurniture.draw
 
@@ -222,6 +222,11 @@ namespace FurnitureFramework.Data.FType
 				tankFish.Draw(draw_data.sprite_batch, draw_data.color.A, num);
 			}
 
+			draw_data.texture = ModEntry.get_helper().GameContent.Load<Texture2D>("LooseSprites/AquariumFish");
+			// From FishTankFurniture.GetAquariumTexture
+			// Going through FF's content's pipeline causes a "Disposed object" error,
+			// maybe missing some invalidation somewhere.
+
 			// Floor decorations
 			foreach (KeyValuePair<Rectangle, Vector2>? pair in furniture.floorDecorations)
 			{
@@ -231,9 +236,6 @@ namespace FurnitureFramework.Data.FType
 				Rectangle key = pair.Value.Key;
 
 				DrawData fish_data = draw_data;
-
-				fish_data.texture_path = "Content/LooseSprites/AquariumFish";
-				// From FishTankFurniture.GetAquariumTexture
 
 				fish_data.position = new Vector2(
 					tank_bounds.Left,
@@ -256,9 +258,6 @@ namespace FurnitureFramework.Data.FType
 			foreach (Vector4 bubble in furniture.bubbles)
 			{
 				DrawData bubble_data = draw_data;
-
-				bubble_data.texture_path = "Content/LooseSprites/AquariumFish";
-				// From FishTankFurniture.GetAquariumTexture
 
 				bubble_data.position = new Vector2(
 					tank_bounds.Left + bubble.X,

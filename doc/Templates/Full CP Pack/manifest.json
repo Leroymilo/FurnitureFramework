@@ -1,16 +1,13 @@
 {
-	"Name": "Furniture Example Pack (CP)",
+	"Name": "Full CP Pack Template",
 	"Author": "leroymilo",
 	"Version": "3.1.0",
 	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
-	"Description": "An example pack for the Furniture Framework",
-	"UniqueID": "leroymilo.FurnitureExample.CP",
+	"Description": "A template pack for the Furniture Framework (CP)",
+	"UniqueID": "leroymilo.FullCPPack.CP",
 	"ContentPackFor": {
 		"UniqueID": "Pathoschild.ContentPatcher",
 		"MinimumVersion": "2.7"
-	},
-	"UpdateKeys": [
-		"Nexus:23458"
-	]
+	}
 }

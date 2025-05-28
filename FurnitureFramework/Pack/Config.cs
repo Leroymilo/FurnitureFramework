@@ -112,7 +112,7 @@ namespace FurnitureFramework.Pack
 			Dictionary<string, bool> types = new();
 			Dictionary<string, string> type_names = new();
 			Dictionary<string, bool> i_packs = new();
-			Dictionary<string, bool> i_pack_defaults = new();
+			Dictionary<string, Data.IncludedPack> i_pack_info = new();
 			Dictionary<string, string> i_pack_names = new();
 
 			public void set_data(JObject data)
@@ -139,12 +139,12 @@ namespace FurnitureFramework.Pack
 				return types[type_id];
 			}
 
-			public void add_i_pack(string i_data_UID, string name, bool def)
+			public void add_i_pack(string i_data_UID, string name, Data.IncludedPack info)
 			{
-				i_pack_defaults[i_data_UID] = def;
+				i_pack_info[i_data_UID] = info;
 				i_pack_names[i_data_UID] = name;
 				JToken? token = data_p.GetValue(i_data_UID);
-				if (token == null) i_packs[i_data_UID] = def;
+				if (token == null) i_packs[i_data_UID] = info.Enabled;
 				else i_packs[i_data_UID] = token.Value<bool>();
 			}
 
@@ -170,7 +170,7 @@ namespace FurnitureFramework.Pack
 				types.Clear();
 				type_names.Clear();
 				i_packs.Clear();
-				i_pack_defaults.Clear();
+				i_pack_info.Clear();
 				i_pack_names.Clear();
 			}
 
@@ -180,7 +180,7 @@ namespace FurnitureFramework.Pack
 					types[type_id] = true;
 
 				foreach(string i_data_UID in i_packs.Keys)
-					i_packs[i_data_UID] = i_pack_defaults[i_data_UID];
+					i_packs[i_data_UID] = i_pack_info[i_data_UID].Enabled;
 			}
 
 			public void register(IGenericModConfigMenuApi api, IManifest manifest)
@@ -220,7 +220,7 @@ namespace FurnitureFramework.Pack
 								i_packs[i_data_UID] = value;
 							},
 							() => i_pack_names[i_data_UID],
-							() => i_data_UID,
+							() => i_pack_info[i_data_UID].Description,
 							i_data_UID
 						);
 

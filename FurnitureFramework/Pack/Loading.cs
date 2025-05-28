@@ -145,7 +145,7 @@ namespace FurnitureFramework.Pack
 					included_packs.Add(i_data_UID, i_pack);
 					packs[i_pack.data_UID] = i_pack.pack;
 					
-					config.add_i_pack(i_data_UID, i_pack.name, i_pack.default_enabled);
+					config.add_i_pack(i_data_UID, i_pack.name, data.Value);
 
 					to_load.Push(i_data_UID);
 				}

@@ -140,11 +140,18 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 1E-05f` in selectChannel and proceedToNextScene
 	- replace `(float)(boundingBox.Bottom - 1) / 10000f + 2E-05f` in setFortuneOverlay and setWeatherOverlay
 - **Work in Progress** The Santa easter-egg now checks custom Slots.
-- **Work in Progress** Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
+- Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
 
 # Planned Future Features
 
+- For eventual 4.0 format change:
+	- Remove the fucking spaces from the fucking json keys
+	- Put Special Furniture types into structures -> A type's Special Type is whatever is not null -> mutually exclusive
+	- Find a way to make rotation more accessible?
+
 - i18n support in `Display Name` and `Description` (also in variants tokens?).
-- API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data.  
+- API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
+- (internal) Move stuff from the `Pack` namespace into the `Data.Pack` data model.
+- Make a custom config menu to enable/disable Furniture and Included packs

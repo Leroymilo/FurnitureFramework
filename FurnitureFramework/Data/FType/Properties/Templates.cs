@@ -402,6 +402,11 @@ namespace FurnitureFramework.Data.FType.Properties
 
 	public class DirStruct<T> : Dictionary<string, T> where T : struct
 	{
+		public DirStruct()
+		{
+			this[Utils.NOROT] = new();
+		}
+
 		new public T this[string key]
 		{
 			get

@@ -1,0 +1,50 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].fishtank": {
+			"Display Name": "CP Fishtank",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 4,
+				"Height": 1
+			},
+			"Placement Restriction": 2,
+			"Source Image": "assets/fish_tank.png",
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 64,
+						"Height": 48
+					}
+				},
+				{
+					"Source Rect": {
+						"X": 64,
+						"Y": 0,
+						"Width": 64,
+						"Height": 48
+					},
+					"Depth": {
+						"Tile": 0,
+						"Sub": 1000
+					},
+					"Draw Pos": {
+						"X": 0,
+						"Y": 0
+					}
+				}
+			],
+			"Special Type": "FishTank"
+			// "Fish Area": {
+			// 	"X": 1,
+			// 	"Y": -32,
+			// 	"Width": 62,
+			// 	"Height": 25
+			// }
+			//"Disable Fishtank Light": false
+		}
+	}
+}

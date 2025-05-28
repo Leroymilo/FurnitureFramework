@@ -1,6 +1,6 @@
 {
 	"$schema": "https://smapi.io/schemas/content-patcher.json",
-	"Format": "2.6.0",
+	"Format": "2.7.0",
 	"DynamicTokens": [
 		// To use to refer to resources from the Furniture Pack
 		{"Name": "FFModID", "Value": "leroymilo.DropdownTemplate.FF"}

@@ -1,6 +1,7 @@
 .vscode
 .editorconfig
 test.sh
+buildtest.sh
 *.zip
 FurnitureFramework/bin/
 FurnitureFramework/obj/

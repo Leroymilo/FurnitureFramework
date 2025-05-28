@@ -1,0 +1,85 @@
+{
+	"$schema": "https://smapi.io/schemas/content-patcher.json",
+	"Format": "2.7.0",
+
+	"DynamicTokens": [
+		// To use to refer to resources of FF's Default Pack
+		{"Name": "DefModID", "Value": "leroymilo.FurnitureFramework.DefaultPack"}
+	],
+
+	"ConfigSchema": {
+		"FishtankLight": {
+			"AllowValues": "true, false",
+			"Default": true
+		},
+		"FishtankFishArea": {
+			"AllowValues": "full, half",
+			"Default": "full"
+		}
+	},
+
+	"Changes": [
+		{
+			// Adding an Included pack to directly load a local file
+			"Action": "EditData",
+			"LogName": "Adding this Pack to Default Pack's Included",
+			"Target": "FF/{{DefModID}}/content.json",
+			"TargetField": [ "Included" ],
+			"Entries": {
+				"Full CP Pack": {
+					"Path": "{{ModID}}/content.json",	// The asset asked by FF will be "FF/{{DefModID}}/{{ModID}}/content.json"
+					"Description": "A Furniture Pack made entirely with CP"
+				}
+			}
+		},
+		{
+			// Loading the file defined above
+			"Action": "Load",
+			"LogName": "Loading FF content file",
+			"Target": "FF/{{DefModID}}/{{ModID}}/content.json",
+			"FromFile": "ff_content.json"
+		},
+		{
+			// Loading assets that will be required by the previously included pack
+			"Action": "Load",
+			"LogName": "Loading Fishtank texture",
+			"Target": "FF/{{DefModID}}/assets/fish_tank.png",
+			"FromFile": "assets/fish_tank.png"
+		},
+
+		{
+			// Editing FF content file to disable Fishtank Light
+			"Action": "EditData",
+			"LogName": "Editing data for Fishtank Light",
+			"Target": "FF/{{DefModID}}/{{ModID}}/content.json",
+			"TargetField": [ "Furniture", "[[ModID]].fishtank" ],
+			"Entries": {
+				"DisableFishtankLight": true
+			},
+			"When": {
+				"FishtankLight": false
+			}
+		},
+
+		{
+			// Editing FF content file to force fishes to swim only on the right (directional struct example)
+			"Action": "EditData",
+			"LogName": "Editing data for Fishtank Fish Area",
+			"Target": "FF/{{DefModID}}/{{ModID}}/content.json",
+			"TargetField": [ "Furniture", "[[ModID]].fishtank" ],
+			"Entries": {
+				"FishArea": {
+					"NoRot": {
+						"X": 1,
+						"Y": -32,
+						"Width": 30,
+						"Height": 25
+					}
+				}
+			},
+			"When": {
+				"FishtankFishArea": "half"
+			}
+		}
+	]
+}
