@@ -707,7 +707,9 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		static readonly Type base_type = typeof(TV);
 		#pragma warning restore
 
-		static List<CodeInstruction> depth_replace = new()
+		#region depth instruction lists
+
+		static List<CodeInstruction> depth_replace(bool overlay) => new()
 		{
 			new(OpCodes.Ldarg_0),
 			new(OpCodes.Ldfld, AccessTools.Field(
@@ -721,20 +723,23 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			new(OpCodes.Conv_R4),
 			new(OpCodes.Ldc_R4, 10000f),
 			new(OpCodes.Div),
-			new(OpCodes.Ldc_R4, 1e-05f),
+			new(OpCodes.Ldc_R4, overlay ? 2e-05f : 1e-05f),
 			new(OpCodes.Add)
 		};
 
-		static List<CodeInstruction> depth_write = new()
+		static List<CodeInstruction> depth_write(bool overlay) => new()
 		{
 			new(OpCodes.Ldarg_0),
-			new(OpCodes.Ldc_I4_0),
+			new(overlay ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0),
 			new(OpCodes.Call, AccessTools.Method(
 				typeof(Data.FType.FType),
 				"GetScreenDepth"
 			))
 		};
 
+		#endregion
+
+		#region screen depth
 /*
 
 Replaces (float)(boundingBox.Bottom - 1) / 10000f + 1E-05f
@@ -764,11 +769,8 @@ In selectChannel (x7) and proceedToNextScene (x6)
 			IEnumerable<CodeInstruction> instructions
 		)
 		{
-			List<CodeInstruction> to_replace = new();
-			to_replace.AddRange(depth_replace);
-			List<CodeInstruction> to_write = new();
-			to_write.AddRange(depth_write);
-
+			List<CodeInstruction> to_replace = depth_replace(false);
+			List<CodeInstruction> to_write = depth_write(false);
 			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
 		}
 
@@ -776,14 +778,14 @@ In selectChannel (x7) and proceedToNextScene (x6)
 			IEnumerable<CodeInstruction> instructions
 		)
 		{
-			List<CodeInstruction> to_replace = new();
-			to_replace.AddRange(depth_replace);
-			List<CodeInstruction> to_write = new();
-			to_write.AddRange(depth_write);
-
+			List<CodeInstruction> to_replace = depth_replace(false);
+			List<CodeInstruction> to_write = depth_write(false);
 			return Transpiler.replace_instructions(instructions, to_replace, to_write, 6);
 		}
 
+		#endregion
+
+		#region screen overlay depth
 /*
 
 Replaces (float)(boundingBox.Bottom - 1) / 10000f + 2E-05f
@@ -813,13 +815,8 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			IEnumerable<CodeInstruction> instructions
 		)
 		{
-			List<CodeInstruction> to_replace = new();
-			to_replace.AddRange(depth_replace);
-			to_replace[8] = new(OpCodes.Ldc_R4, 2e-05f);
-			List<CodeInstruction> to_write = new();
-			to_write.AddRange(depth_write);
-			to_write[1] = new(OpCodes.Ldc_I4_1);
-
+			List<CodeInstruction> to_replace = depth_replace(true);
+			List<CodeInstruction> to_write = depth_write(true);
 			return Transpiler.replace_instructions(instructions, to_replace, to_write, 5);
 		}
 
@@ -828,15 +825,12 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			IEnumerable<CodeInstruction> instructions
 		)
 		{
-			List<CodeInstruction> to_replace = new();
-			to_replace.AddRange(depth_replace);
-			to_replace[8] = new(OpCodes.Ldc_R4, 2e-05f);
-			List<CodeInstruction> to_write = new();
-			to_write.AddRange(depth_write);
-			to_write[1] = new(OpCodes.Ldc_I4_1);
-
+			List<CodeInstruction> to_replace = depth_replace(true);
+			List<CodeInstruction> to_write = depth_write(true);
 			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
 		}
+
+		#endregion
 	}
 
 	#endregion
@@ -845,10 +839,10 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 
 	internal class BedFurniturePreFixes
 	{
-#pragma warning disable 0414
+		#pragma warning disable 0414
 		static readonly PatchType patch_type = PatchType.Prefix;
 		static readonly Type base_type = typeof(BedFurniture);
-#pragma warning restore 0414
+		#pragma warning restore 0414
 
 		#region draw
 

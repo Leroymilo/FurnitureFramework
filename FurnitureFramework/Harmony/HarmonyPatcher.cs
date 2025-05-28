@@ -83,8 +83,6 @@ namespace FurnitureFramework.FFHarmony
 					BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic
 				))
 				{
-					ModEntry.log($"Patching {patch_type} for {base_type.Name}.{method.Name}", LogLevel.Trace);
-
 					MethodInfo original;
 					TargetParamTypeAttribute? attribute = method.GetCustomAttribute<TargetParamTypeAttribute>();
 					if (patch_type == Patches.PatchType.Transpiler && attribute != null)
@@ -94,6 +92,11 @@ namespace FurnitureFramework.FFHarmony
 						);
 					}
 					else original = AccessTools.DeclaredMethod(base_type, method.Name);
+
+					// Excludes Transpiler helper methods
+					if (original == null) continue;
+
+					ModEntry.log($"Patching {patch_type} for {base_type.Name}.{method.Name}", LogLevel.Trace);
 
 					HarmonyMethod? prefix = null, postfix = null, transpiler = null;
 
