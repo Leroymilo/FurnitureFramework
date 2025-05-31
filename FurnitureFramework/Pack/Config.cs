@@ -59,6 +59,14 @@ namespace FurnitureFramework.Pack
 				setValue: value => config.disable_AT_warning = value
 			);
 
+			config_menu_api.AddBoolOption(
+				mod: manifest,
+				name: () => "Load Packs on game start",
+				tooltip: () => "Check this to force the game to load all the Furniture Packs when the game starts.",
+				getValue: () => config.load_packs_on_game_start,
+				setValue: value => config.load_packs_on_game_start = value
+			);
+
 			config_menu_api.AddPageLink(
 				mod: manifest,
 				pageId: $"{manifest.UniqueID}.slots",

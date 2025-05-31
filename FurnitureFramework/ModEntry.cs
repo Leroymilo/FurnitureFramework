@@ -83,6 +83,8 @@ namespace FurnitureFramework
 				log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
 				log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
 			}
+
+			if (config?.load_packs_on_game_start ?? false) Pack.FurniturePack.load_all();
 		}
 
 		private void register_config()

@@ -139,17 +139,18 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added Screen Depth for customizing TV screen and make layers over the screen easier.
 - The Santa easter-egg now checks custom Slots.
 - Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
+- Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
 
 # Planned Future Features
 
-- i18n support in `Display Name` and `Description` (also in variants tokens?).
-- API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
+- i18n support in `Display Name`, `Description` and variant tokens.
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - (internal) Move stuff from the `Pack` namespace into the `Data.Pack` data model.
-- Make a custom config menu to enable/disable Furniture and Included packs
+- Make a custom config menu to enable/disable Furniture and Included packs.
+- API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys
