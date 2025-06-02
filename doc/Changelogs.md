@@ -143,7 +143,8 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 # Planned Future Features
 
-- i18n support in `Display Name`, `Description` and variant tokens.
+- Add possibility to specify a Furniture ID when calling ff_debug_print.
+- i18n support in `Display Name`, `Description` and variant tokens (they need an english version to use in Furniture ID).
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
