@@ -141,15 +141,23 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
 - Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
 
+### 3.1.1 (**Work in Progress**)
+
+**Fixes**:
+- Fixed TV's Screen Position failing parsing.
+- **Work in Progress** Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
+- **Work in Progress** (internal) Moved stuff from the `Pack` namespace into the `Data.Pack` data model.
+
+**New Features**:
+- **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.
+
 # Planned Future Features
 
-- Add possibility to specify a Furniture ID when calling ff_debug_print.
 - i18n support in `Display Name`, `Description` and variant tokens (they need an english version to use in Furniture ID).
 - Customize StorageFurniture allowed item types. (@B)
 - Customize the category of Furniture in the vanilla Furniture Catalogue (in which tab it appears).
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
-- (internal) Move stuff from the `Pack` namespace into the `Data.Pack` data model.
 - Make a custom config menu to enable/disable Furniture and Included packs.
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 
