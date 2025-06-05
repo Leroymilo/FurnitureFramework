@@ -5,7 +5,8 @@
 			"type": "object",
 			"properties": {
 				"Tile": {"type": "integer"},
-				"Sub": {"type": "integer", "minimum": 0, "maximum": 1000}
+				"Sub": {"type": "integer", "minimum": 0, "maximum": 1000},
+				"Front": {"type": "boolean"}
 			},
 			"required": [ "Tile" ],
 			"additionalProperties": false

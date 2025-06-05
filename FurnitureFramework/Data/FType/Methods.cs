@@ -1,4 +1,3 @@
-using FurnitureFramework.Data.FType.Properties;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -343,7 +342,7 @@ namespace FurnitureFramework.Data.FType
 			Rectangle bounding_box = furniture.boundingBox.Value;
 			position = bounding_box.Location.ToVector2();
 			position.Y += bounding_box.Height;
-			position += ScreenPosition[GetRot(furniture)] * 4f;
+			position += ScreenPosition[GetRot(furniture)].ToVector2() * 4f;
 		}
 
 		public void getScreenSizeModifier(ref float scale)
@@ -444,8 +443,11 @@ namespace FurnitureFramework.Data.FType
 		{
 			float depth;
 			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			{
 				depth = type.ScreenDepth[type.GetRot(furniture)].GetValue(furniture.GetBoundingBox().Top);
-			else depth = (float)(furniture.boundingBox.Bottom - 1) / 10000f + 1E-05f;
+				depth = MathF.BitIncrement(depth);
+			}
+			else depth = (furniture.boundingBox.Bottom - 1) / 10000f + 1E-05f;
 			if (overlay) depth = MathF.BitIncrement(depth);
 			return depth;
 		}

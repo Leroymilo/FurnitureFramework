@@ -1,0 +1,30 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].seasonal_bush_test": {
+			"Display Name": "Bush Test",
+			"Description": "An example of seasonal Furniture.",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 1
+			},
+			"Placement Restriction": 1,
+			
+			"Source Image": "assets/bush.png", // This file doesn't actually exist,
+			// there will be an error if something isn't loaded in its place by Content Patcher
+
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 32
+					}
+				}
+			]
+		}
+	}
+}

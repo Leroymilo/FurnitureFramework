@@ -96,8 +96,8 @@ namespace FurnitureFramework.Data.FType
 		public FieldListDict<ParticleList, Particles> Particles = new();
 
 		// TV
-		[JsonConverter(typeof(DirStructConverter<Vector2>))]
-		public DirStruct<Vector2> ScreenPosition = new();
+		[JsonConverter(typeof(DirStructConverter<Point>))]
+		public DirStruct<Point> ScreenPosition = new();
 		public float ScreenScale = 2f;
 
 		[JsonConverter(typeof(FieldDictConverter<Depth>))]

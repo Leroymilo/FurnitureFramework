@@ -3,9 +3,9 @@
 	"Format": "2.7.0",
 	"Changes": [
 		{
-			"LogName": "Seasonal texture for FF/leroymilo.FurnitureExample.FF/assets/bush.png",
+			"LogName": "Seasonal texture for FF/leroymilo.SeasonalFurniture.FF/assets/bush.png",
 			"Action": "Load",
-			"Target": "FF/leroymilo.FurnitureExample.FF/assets/bush.png",
+			"Target": "FF/leroymilo.SeasonalFurniture.FF/assets/bush.png",
 			"FromFile": "assets/bush_{{season}}.png"
 		}
 	]

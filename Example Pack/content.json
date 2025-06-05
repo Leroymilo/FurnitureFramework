@@ -51,30 +51,6 @@
 				}
 			]
 		},
-		"[[ModID]].seasonal_bush_test": {
-			"Display Name": "Bush Test",
-			"Description": "An example of seasonal Furniture.",
-			"Rotations": 1,
-			"Collisions": {
-				"Width": 2,
-				"Height": 1
-			},
-			"Placement Restriction": 1,
-			"Source Image": "assets/bush.png",
-			"Shows in Shops": [
-				"[[ModID]].custom_catalogue"
-			],
-			"Layers": [
-				{
-					"Source Rect": {
-						"X": 0,
-						"Y": 0,
-						"Width": 32,
-						"Height": 32
-					}
-				}
-			]
-		},
 		"[[ModID]].table_test": {
 			"Display Name": "Table Test",
 			"Rotations": 2,
@@ -382,7 +358,7 @@
 		},
 		"[[ModID]].large_bed": {
 			"Display Name": "Large Bed",
-			"Description": "A bed to test Custom Beds",
+			"Description": "A very large Modern Bed to test Custom Beds",
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 5,
@@ -431,7 +407,7 @@
 		},
 		"[[ModID]].simple_bed": {
 			"Display Name": "Simple Bed",
-			"Description": "A bed to test Custom Beds",
+			"Description": "A re-creation of the vanilla Modern Simple Bed",
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 2,
@@ -525,7 +501,7 @@
 		},
 		"[[ModID]].fishtank_test": {
 			"Display Name": "Fish-Tank Test",
-			"Description": "A Fish tank to test Custom Fish tanks",
+			"Description": "A re-creation of the vanilla Fish Tank",
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 4,
@@ -572,7 +548,7 @@
 		},
 		"[[ModID]].lamp_test": {
 			"Display Name": "Lamp Test",
-			"Description": "A simple Lamp example",
+			"Description": "A re-creation of the vanilla Rustic Lamp",
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 1,
@@ -614,7 +590,7 @@
 		},
 		"[[ModID]].window_test": {
 			"Display Name": "Window Test",
-			"Description": "A simple Window example",
+			"Description": "A re-creation of the vanilla Window",
 			"Rotations": 1,
 			"Collisions": {
 				"Width": 1,
@@ -654,6 +630,44 @@
 					}
 				}
 			]
+		},
+		"[[ModID]].tv_test": {
+			"Display Name": "Test TV",
+			"Description": "A re-creation of the vanilla TV",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 2,
+				"Height": 2
+			},
+			"Placement Restriction": 0,
+
+			"Source Image": "assets/TVs.png",
+			"Layers": {
+				"Source Rect": {"X": 0, "Y": 0, "Width": 32, "Height": 48}
+			},
+
+			"Special Type": "TV",
+			"Screen Scale": 2,
+			"Screen Position": {"X": 6, "Y": -32}
+		},
+		"[[ModID]].big_tv_test": {
+			"Display Name": "Test Large TV",
+			"Description": "A re-creation of the vanilla Large TV",
+			"Rotations": 1,
+			"Collisions": {
+				"Width": 3,
+				"Height": 1
+			},
+			"Placement Restriction": 0,
+
+			"Source Image": "assets/TVs.png",
+			"Layers": {
+				"Source Rect": {"X": 32, "Y": 0, "Width": 48, "Height": 48}
+			},
+
+			"Special Type": "TV",
+			"Screen Scale": 4,
+			"Screen Position": {"X": 3, "Y": -40}
 		}
 	},
 	"Included": {

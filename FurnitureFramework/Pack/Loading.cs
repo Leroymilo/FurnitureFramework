@@ -226,6 +226,12 @@ namespace FurnitureFramework.Pack
 			foreach (string asset_name in loaded_assets[UID])
 				ModEntry.get_helper().GameContent.InvalidateCache(asset_name);
 
+			// Log looks like this for each <asset_name>, not sure it's good:
+			// [16:53:42 TRACE Furniture Framework] Requested cache invalidation for '<asset_name>'.
+			// [16:53:42 TRACE SMAPI] Furniture Framework loaded asset '<asset_name>'.
+			// [16:53:42 TRACE SMAPI] Invalidated 1 asset names (<asset_name>).
+			// Propagated 1 core assets (<asset_name>).
+
 			ModEntry.log($"Invalidated assets from {UID}.");
 
 			to_load.Push(data_UID);

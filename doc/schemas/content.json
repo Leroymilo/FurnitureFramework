@@ -411,12 +411,33 @@
 
 					"Screen Position": {
 						"description": "The position of the TV screen, in pixels, starting from the bottom left of the Furniture.",
-						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
+						"oneOf": [
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json" },
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
+								}
+							}
+						]
 					},
 
 					"Screen Scale": {
 						"description": "The scale of the TV screen. Vanilla normal sized TVs have a scale of 4, bigger TVs have a scale of 2.",
 						"type": "number"
+					},
+
+					"Screen Depth": {
+						"description": "The depth at which the TV's screen will be drawn by the game.",
+						"oneOf": [
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/depth.json" },
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/depth.json"
+								}
+							}
+						]
 					},
 
 					"Bed Spot": {
@@ -436,7 +457,15 @@
 
 					"Fish Area": {
 						"description": "The Rectangle of the Furniture where the fishes will be able swim.",
-						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+						"oneOf": [
+							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json" },
+							{
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+								}
+							}
+						]
 					},
 
 					"Disable Fishtank Light": {

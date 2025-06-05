@@ -31,8 +31,7 @@ if __name__ == "__main__":
 	cp_v: str = args.cp
 	
 	update_manifest(Path("FurnitureFramework/manifest.json"))
-	update_manifest(Path("Example Pack/[FF]/manifest.json"))
-	update_manifest(Path("Example Pack/[CP]/manifest.json"))
+	update_manifest(Path("Example Pack/manifest.json"))
 
 	templates = Path("doc/Templates")
 	pile = list(templates.iterdir())
