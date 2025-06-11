@@ -10,11 +10,16 @@ namespace FurnitureFramework.Data.FType
 	
 	public partial class FType
 	{
-		public void SetModData(Furniture furniture)
+		public static void SetModData(Furniture furniture)
 		{
-			furniture.modData["FF"] = "true";
-			furniture.modData["FF.ImageVariant"] = Variants[furniture.ItemId].ImageVariant;
-			furniture.modData["FF.RectVariant"] = Variants[furniture.ItemId].RectVariant;
+			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			{
+				furniture.modData["FF"] = "true";
+				furniture.modData["FF.ImageVariant"] = type.Variants[furniture.ItemId].ImageVariant;
+				furniture.modData["FF.RectVariant"] = type.Variants[furniture.ItemId].RectVariant;
+				furniture.modData["FF.particle_timers"] = "[]";
+				type.InitializeSlots(furniture);
+			}
 		}
 
 		public void GetDescription(Furniture furniture, ref string result)
@@ -117,11 +122,7 @@ namespace FurnitureFramework.Data.FType
 		{
 			// don't change this part
 
-			if (!loc.CanPlaceThisFurnitureHere(furniture))
-			{
-				result = false;
-				return;
-			}
+			if (!loc.CanPlaceThisFurnitureHere(furniture)) return;
 
 			if (!furniture.isGroundFurniture())
 			{
@@ -129,11 +130,7 @@ namespace FurnitureFramework.Data.FType
 			}
 
 			CollisionMask passable_ignored = CollisionMask.Buildings | CollisionMask.Flooring | CollisionMask.TerrainFeatures;
-			if (furniture.isPassable())
-			{
-				passable_ignored |= CollisionMask.Characters | CollisionMask.Farmers;
-			}
-
+			if (furniture.isPassable()) passable_ignored |= CollisionMask.Characters | CollisionMask.Farmers;
 			collisionMask &= ~(CollisionMask.Furniture | CollisionMask.Objects);
 
 			// Actual collision detection made by Collisions
@@ -191,8 +188,10 @@ namespace FurnitureFramework.Data.FType
 
 		#region Methods for Slots
 
-		private void InitializeSlots(Furniture furniture, string rot)
+		private void InitializeSlots(Furniture furniture, string rot = "")
 		{
+			if (rot == "") rot = GetRot(furniture);
+
 			int slots_count = Slots[rot].Count;
 			Point position = new(
 				furniture.boundingBox.Left,
@@ -594,7 +593,6 @@ namespace FurnitureFramework.Data.FType
 		{
 			string rot = GetRot(furniture);
 			Particles[rot].Burst(furniture, ModID);
-			InitializeSlots(furniture, rot);
 		}
 	}
 }

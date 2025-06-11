@@ -198,6 +198,8 @@ Note: this will create as many separate Furniture as source images are given, bu
 
 Note 2: you can also use a list of Source Image Variants instead of a dictionary but the `[[ImageVariant]]` token will be a number.
 
+:warning: <span style="color:red">**WARNING**</span>: Changing the Variant's key will make previously placed Furniture of this Variant break!
+
 ### Rect Variants
 
 Rect Variants will allow you to have each variant based on a different part of the Source Image.
@@ -216,6 +218,8 @@ These Offsets are **integer** [Vectors](Structures/Vector.md) that defines by ho
 Note: this will create as many separate Furniture as offsets are given, but all their properties will be identical, including their Display Name. However, you can use the `[[RectVariant]]` token in the Display Name field so that it will be replaced with the variant key (see the `cat_statue` Furniture in the Example Pack).  
 
 Note 2: you can also use a list of Source Rect Offsets instead of a dictionary but the `[[RectVariant]]` token will be a number.
+
+:warning: <span style="color:red">**WARNING**</span>: Changing the Variant's key will make previously placed Furniture of this Variant break!
 
 ## Description
 

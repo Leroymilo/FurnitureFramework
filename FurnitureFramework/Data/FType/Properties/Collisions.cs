@@ -155,10 +155,13 @@ namespace FurnitureFramework.Data.FType.Properties
 				) return false;
 			}
 
-			if (loc.objects.TryGetValue(v_tile, out var value) && value.isPassable() && furniture.isPassable())
+			if (loc.objects.TryGetValue(v_tile, out var value) && (!value.isPassable() || !furniture.isPassable()))
 				return false;
 
 			if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
+				return false;
+
+			if (loc.IsTileBlockedBy(v_tile, collisionMask, passable_ignored))
 				return false;
 
 			if (!furniture.isGroundFurniture())

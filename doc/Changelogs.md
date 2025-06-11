@@ -138,18 +138,22 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added a "default pack" with a "debug catalog" filled with all Furniture from all Packs. It is possible to target it with CP and add Custom Furniture without creating a Furniture Pack.
 - Added Screen Depth for customizing TV screen and make layers over the screen easier.
 - The Santa easter-egg now checks custom Slots.
-- Huge rework of Furniture Pack parsing for CP patches to work. Now, every entry in a list has an optional ID field.
+- Now, every entry in a list has an optional "ID" field.
 - Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
+- (internal) Huge rework of Furniture Pack parsing for CP patches to work.
 
 ### 3.1.1 (**Work in Progress**)
 
 **Fixes**:
 - Fixed TV's Screen Position failing parsing.
 - **Work in Progress** Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
-- **Work in Progress** (internal) Moved stuff from the `Pack` namespace into the `Data.Pack` data model.
+- Fixed Big Craftables not blocking Furniture placement.
+- **Testing** Fixed previously placed Furniture with variants.
 
 **New Features**:
 - **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.
+- **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture.
+- **Work in Progress** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 
 # Planned Future Features
 

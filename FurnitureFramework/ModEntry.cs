@@ -262,10 +262,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
-				{
-					furniture.modData["FF.particle_timers"] = "[]";
-				}
+				Data.FType.FType.SetModData(furniture);
 			}
 		}
 
@@ -276,10 +273,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
-				{
-					furniture.modData["FF.particle_timers"] = "[]";
-				}
+				Data.FType.FType.SetModData(furniture);
 			}
 		}
 		

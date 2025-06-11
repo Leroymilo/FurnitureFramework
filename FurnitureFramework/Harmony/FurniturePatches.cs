@@ -340,7 +340,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 							break;
 					}
 
-					type.SetModData(__result);
+					Data.FType.FType.SetModData(__result);
 				}
 			}
 			catch (Exception ex)
