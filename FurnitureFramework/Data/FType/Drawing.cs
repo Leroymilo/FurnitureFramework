@@ -71,7 +71,7 @@ namespace FurnitureFramework.Data.FType
 			if (SourceImage.Count == 1)
 				return SourceImage[""];
 
-			return SourceImage[furniture.modData["FF.ImageVariant"]];
+			return furniture.modData["FF.SourceImage"];
 		}
 
 		Point GetOffset(Furniture furniture)

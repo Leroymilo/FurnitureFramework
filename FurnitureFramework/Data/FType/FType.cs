@@ -194,7 +194,7 @@ namespace FurnitureFramework.Data.FType
 				{
 					ID = full_id,
 					DisplayName = display_name.Replace("[[ImageVariant]]", pair.Key, true, null),
-					ImageVariant = pair.Value,
+					ImageVariant = pair.Key,
 					SourceImage = pair.Value,
 					RectVariant = rect_variant,
 					Offset = offset

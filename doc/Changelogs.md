@@ -148,7 +148,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed TV's Screen Position failing parsing.
 - **Work in Progress** Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
 - Fixed Big Craftables not blocking Furniture placement.
-- **Testing** Fixed previously placed Furniture with variants.
+- Fixed previously placed Furniture with variants.
 
 **New Features**:
 - **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.
