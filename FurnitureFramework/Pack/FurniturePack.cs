@@ -37,7 +37,7 @@ namespace FurnitureFramework.Pack
 		string path = DEFAULT_PATH;
 		string UID { get => content_pack.Manifest.UniqueID; }
 		string DataUID { get => $"{UID}/{path}"; }
-		Data.FurniturePack data;
+		Data.FPack data;
 		FurniturePack? root = null;
 		bool is_included { get => root != null; }
 		bool is_loaded = false;
@@ -94,11 +94,11 @@ namespace FurnitureFramework.Pack
 			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
-			if (e.DataType == typeof(Data.FurniturePack))
+			if (e.DataType == typeof(Data.FPack))
 			{	
-				if (!asset_exists<Data.FurniturePack>(pc_helper, path)) return false;
+				if (!asset_exists<Data.FPack>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return load_resource<Data.FurniturePack>(pc_helper, path);},
+					() => {return load_resource<Data.FPack>(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
 			}

@@ -1,5 +1,3 @@
-
-
 using System.Text.Json.Serialization;
 
 namespace FurnitureFramework.Data.FPack
@@ -13,9 +11,9 @@ namespace FurnitureFramework.Data.FPack
 		public string Description = "";
 		public bool Enabled = true;
 
-		// [JsonIgnore]
-		// public FurniturePack Pack;
-		// [JsonIgnore]
-		// public string DataUID {get => Pack.DataUID;}
+		[JsonIgnore]
+		public FPack Pack;
+		[JsonIgnore]
+		public string DataUID {get => Pack.DataUID;}
 	}
 }
