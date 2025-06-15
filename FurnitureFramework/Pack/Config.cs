@@ -251,7 +251,7 @@ namespace FurnitureFramework.Pack
 			JObject? config_data = content_pack.ReadJsonFile<JObject>(CONFIG_PATH);
 			if (config_data == null) return;
 
-			JToken? config_token = config_data.GetValue(data_UID);
+			JToken? config_token = config_data.GetValue(DataUID);
 			if (config_token is JObject config_obj)
 				config.set_data(config_obj);
 		}
@@ -277,7 +277,7 @@ namespace FurnitureFramework.Pack
 
 		private void save_config(JObject config_data)
 		{
-			config_data[data_UID] = config.save();
+			config_data[DataUID] = config.save();
 
 			foreach (IncludedPack i_pack in included_packs.Values)
 				i_pack.pack.save_config(config_data);

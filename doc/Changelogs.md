@@ -149,6 +149,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **Work in Progress** Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
 - Fixed Big Craftables not blocking Furniture placement.
 - Fixed previously placed Furniture with variants.
+- Empty string custom Description no longer hides the item tooltip.
 
 **New Features**:
 - **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.

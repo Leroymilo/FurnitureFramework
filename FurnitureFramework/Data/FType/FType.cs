@@ -165,6 +165,8 @@ namespace FurnitureFramework.Data.FType
 			ShopId = ShopId?.Replace("[[ModID]]", mod_id, true, null);
 			for (int i = 0; i < ShowsinShops.Count; i++)
 				ShowsinShops[i] = ShowsinShops[i].Replace("[[ModID]]", mod_id, true, null);
+			for (int i = 0; i < ContextTags.Count; i++)
+				ContextTags[i] = ContextTags[i].Replace("[[ModID]]", mod_id, true, null);
 			FillVariants();
 		}
 

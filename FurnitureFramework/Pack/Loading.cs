@@ -27,8 +27,8 @@ namespace FurnitureFramework.Pack
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned().Append(default_pack))
 			{
 				FurniturePack pack = new(c_pack);
-				to_load.Push(pack.data_UID);
-				packs[pack.data_UID] = pack;
+				to_load.Push(pack.DataUID);
+				packs[pack.DataUID] = pack;
 				UIDs.Add(pack.UID, c_pack);
 			}
 			
@@ -68,11 +68,11 @@ namespace FurnitureFramework.Pack
 
 			try
 			{
-				data = ModEntry.get_helper().GameContent.Load<Data.FurniturePack>($"FF/{data_UID}");
+				data = ModEntry.get_helper().GameContent.Load<Data.FurniturePack>($"FF/{DataUID}");
 			}
 			catch (ContentLoadException ex)
 			{
-				ModEntry.log($"Could not load {data_UID}, skipping Furniture Pack:\n{ex}", LogLevel.Error);
+				ModEntry.log($"Could not load {DataUID}, skipping Furniture Pack:\n{ex}", LogLevel.Error);
 				return;
 			}
 
@@ -87,7 +87,7 @@ namespace FurnitureFramework.Pack
 
 			to_register.Add(UID);
 
-			ModEntry.log($"Loaded {data_UID}!", LogLevel.Info);
+			ModEntry.log($"Loaded {DataUID}!", LogLevel.Info);
 
 			is_loaded = true;
 
@@ -107,10 +107,10 @@ namespace FurnitureFramework.Pack
 					return false;
 				case > FORMAT:
 				case < 1:
-					ModEntry.log($"Invalid Format for {data_UID}: {format}, skipping Furniture Pack.", LogLevel.Error);
+					ModEntry.log($"Invalid Format for {DataUID}: {format}, skipping Furniture Pack.", LogLevel.Error);
 					return false;
 				case < FORMAT:
-					ModEntry.log($"Format {format} for {data_UID} is outdated, skipping Furniture Pack.", LogLevel.Error);
+					ModEntry.log($"Format {format} for {DataUID} is outdated, skipping Furniture Pack.", LogLevel.Error);
 					ModEntry.log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
 					ModEntry.log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
 					ModEntry.log("If you are the author, check the Changelogs in the documentation to update your Pack.", LogLevel.Info);
@@ -151,7 +151,7 @@ namespace FurnitureFramework.Pack
 				}
 				else
 				{
-					ModEntry.log($"Issue parsing included pack {i_pack.name} in {data_UID}:", LogLevel.Warn);
+					ModEntry.log($"Issue parsing included pack {i_pack.name} in {DataUID}:", LogLevel.Warn);
 					ModEntry.log($"\t{i_pack.error_msg}", LogLevel.Warn);
 				}
 			}
@@ -215,7 +215,7 @@ namespace FurnitureFramework.Pack
 		{
 			if (!is_loaded) return false;
 
-			ModEntry.log($"Reloading {data_UID}...");
+			ModEntry.log($"Reloading {DataUID}...");
 
 			clear(cascade: true);
 			unregister_config();
@@ -234,7 +234,7 @@ namespace FurnitureFramework.Pack
 
 			ModEntry.log($"Invalidated assets from {UID}.");
 
-			to_load.Push(data_UID);
+			to_load.Push(DataUID);
 			return true;
 		}
 

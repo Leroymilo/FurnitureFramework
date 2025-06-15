@@ -12,7 +12,7 @@ namespace FurnitureFramework.Pack
 			public readonly bool default_enabled = true;
 
 			public readonly FurniturePack pack;
-			public string data_UID {get => pack.data_UID;}
+			public string data_UID {get => pack.DataUID;}
 
 			public readonly bool is_valid = false;
 			public readonly string error_msg = "";

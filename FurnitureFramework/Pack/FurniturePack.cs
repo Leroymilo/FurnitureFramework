@@ -36,7 +36,7 @@ namespace FurnitureFramework.Pack
 		readonly IContentPack content_pack;
 		string path = DEFAULT_PATH;
 		string UID { get => content_pack.Manifest.UniqueID; }
-		string data_UID { get => $"{UID}/{path}"; }
+		string DataUID { get => $"{UID}/{path}"; }
 		Data.FurniturePack data;
 		FurniturePack? root = null;
 		bool is_included { get => root != null; }
@@ -208,7 +208,7 @@ namespace FurnitureFramework.Pack
 						if (type.Priority <= prev_prio) continue;
 					}
 
-					static_types[pair.Key] = data_UID;
+					static_types[pair.Key] = DataUID;
 					editor[pair.Key] = pair.Value;
 				}
 			}
@@ -338,7 +338,7 @@ namespace FurnitureFramework.Pack
 
 			if (is_included)
 			{
-				string text = $"{indent}{data_UID}";
+				string text = $"{indent}{DataUID}";
 				if (!enabled)
 				{
 					ModEntry.log(text + " (disabled)", LogLevel.Debug);

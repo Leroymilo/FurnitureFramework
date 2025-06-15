@@ -24,7 +24,7 @@ namespace FurnitureFramework.Data.FType
 
 		public void GetDescription(Furniture furniture, ref string result)
 		{
-			if (Description == null) return;
+			if (Description == null || Description.Length == 0) return;
 			Variant variant = Variants[furniture.ItemId];
 			result = Description;
 			result = result.Replace("[[RectVariant]]", variant.RectVariant);

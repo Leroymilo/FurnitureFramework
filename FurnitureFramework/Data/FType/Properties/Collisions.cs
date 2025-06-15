@@ -161,8 +161,8 @@ namespace FurnitureFramework.Data.FType.Properties
 			if (loc.IsTileOccupiedBy(v_tile, collisionMask, passable_ignored))
 				return false;
 
-			if (loc.IsTileBlockedBy(v_tile, collisionMask, passable_ignored))
-				return false;
+			// if (loc.IsTileBlockedBy(v_tile, collisionMask, passable_ignored))
+			// 	return false;
 
 			if (!furniture.isGroundFurniture())
 				return true;
