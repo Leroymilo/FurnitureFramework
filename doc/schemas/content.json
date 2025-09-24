@@ -429,7 +429,7 @@
 
 					"Screen Depth": {
 						"description": "The depth at which the TV's screen will be drawn by the game.",
-						"oneOf": [
+						"anyOf": [
 							{ "$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/depth.json" },
 							{
 								"type": "object",

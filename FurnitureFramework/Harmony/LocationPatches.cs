@@ -50,7 +50,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(getObjectAt)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(getObjectAt)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -79,7 +79,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(isObjectAt)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(isObjectAt)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}

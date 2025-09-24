@@ -12,7 +12,7 @@ namespace FurnitureFramework.Data.FType
 	{
 		public static void SetModData(Furniture furniture)
 		{
-			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FType? type))
 			{
 				furniture.modData["FF"] = "true";
 				furniture.modData["FF.SourceImage"] = type.Variants[furniture.ItemId].SourceImage;
@@ -397,7 +397,7 @@ namespace FurnitureFramework.Data.FType
 		public static bool IsClicked(Furniture furniture, int x, int y)
 		{
 			if (
-				!Pack.FurniturePack.try_get_type(furniture, out FType? type)
+				!FPack.FPack.TryGetType(furniture, out FType? type)
 				|| type.PlacementType == PlacementType.Rug
 			)
 			{
@@ -422,14 +422,14 @@ namespace FurnitureFramework.Data.FType
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+				if (FPack.FPack.TryGetType(furniture, out FType? type))
 				{
 					type.DrawLights(furniture, sprite_batch);
 				}
 
 				else if (
 					furniture.heldObject.Value is Furniture held_furn &&
-					Pack.FurniturePack.try_get_type(held_furn, out FType? held_type)
+					FPack.FPack.TryGetType(held_furn, out FType? held_type)
 				)
 				{
 					// maybe move the held furniture bounding box in the middle?
@@ -441,7 +441,7 @@ namespace FurnitureFramework.Data.FType
 		public static float GetScreenDepth(Furniture furniture, bool overlay = false)
 		{
 			float depth;
-			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FType? type))
 			{
 				depth = type.ScreenDepth[type.GetRot(furniture)].GetValue(furniture.GetBoundingBox().Top);
 				depth = MathF.BitIncrement(depth);

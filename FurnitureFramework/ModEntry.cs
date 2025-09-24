@@ -22,19 +22,19 @@ namespace FurnitureFramework
 
 		#region getters
 
-		static public IModHelper get_helper()
+		static public IModHelper GetHelper()
 		{
 			if (helper == null) throw new NullReferenceException("Helper was not set.");
 			return helper;
 		}
 
-		static public ModConfig get_config()
+		static public ModConfig GetConfig()
 		{
 			if (config == null) throw new NullReferenceException("Config was not set.");
 			return config;
 		}
 
-		static public void log(string message, LogLevel log_level = LogLevel.Debug)
+		static public void Log(string message, LogLevel log_level = LogLevel.Debug)
 		{
 			if (monitor == null) throw new NullReferenceException("Monitor was not set.");
 			monitor.Log(message, log_level);
@@ -52,16 +52,16 @@ namespace FurnitureFramework
 			helper = Helper;
 			config = helper.ReadConfig<ModConfig>();
 
-			helper.Events.GameLoop.GameLaunched += on_game_launched;
-            helper.Events.Input.ButtonPressed += on_button_pressed;
-			helper.Events.Content.AssetRequested += on_asset_requested;
-			helper.Events.Content.AssetsInvalidated += on_assets_invalidated;
-			helper.Events.Player.Warped += on_player_warped;
-			helper.Events.World.FurnitureListChanged += on_furniture_list_changed;
-			helper.Events.GameLoop.SaveLoaded += on_save_loaded;
+			helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.Input.ButtonPressed += OnButtonPressed;
+			helper.Events.Content.AssetRequested += OnAssetRequested;
+			helper.Events.Content.AssetsInvalidated += OnAssetsInvalidated;
+			helper.Events.Player.Warped += OnPlayerWarped;
+			helper.Events.World.FurnitureListChanged += OnFurnitureListChanged;
+			helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
 			
 			FFHarmony.HarmonyPatcher.harmony = new(ModManifest.UniqueID);
-			FFHarmony.HarmonyPatcher.patch();
+			FFHarmony.HarmonyPatcher.Patch();
         }
 
 		#region On Game Launched
@@ -69,49 +69,148 @@ namespace FurnitureFramework
 		/// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
 		/// <param name="sender">The event sender.</param>
 		/// <param name="e">The event data.</param>
-		private void on_game_launched(object? sender, GameLaunchedEventArgs e)
+		private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
 		{
-			Pack.FurniturePack.pre_load(get_helper());
-			register_config();
-			register_commands();
+			Data.FPack.FPack.PreLoad(GetHelper());
+			RegisterConfig();
+			RegisterCommands();
 
 			if (
 				Helper.ModRegistry.IsLoaded("PeacefulEnd.AlternativeTextures")
-				&& !get_config().disable_AT_warning
+				&& !GetConfig().disable_AT_warning
 			)
 			{
-				log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
-				log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
+				Log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
+				Log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
 			}
 
-			if (config?.load_packs_on_game_start ?? false) Pack.FurniturePack.load_all();
+			if (config?.load_packs_on_game_start ?? false) Data.FPack.FPack.LoadAll();
 		}
 
-		private void register_config()
+		private void RegisterConfig()
 		{
 			if (config == null) throw new NullReferenceException("Config was not set.");
 
 			// get Generic Mod Config Menu's API (if it's installed)
 			IGenericModConfigMenuApi? config_menu =
 				Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-			Pack.FurniturePack.config_menu_api = config_menu;
+			Data.FPack.FPack.ConfigMenuAPI = config_menu;
 
 			// get GMCM Options' API (if it's installed)
 			IGMCMOptionsAPI? config_options = Helper.ModRegistry.GetApi<IGMCMOptionsAPI>("jltaylor-us.GMCMOptions");
-			Pack.FurniturePack.config_options_api = config_options;
+			Data.FPack.FPack.ConfigOptionAPI = config_options;
 			
-			Pack.FurniturePack.register_FF_config(ModManifest);
+			RegisterFFConfig(ModManifest, config_menu, config_options);
+		}
+		public static void RegisterFFConfig(IManifest manifest,
+			IGenericModConfigMenuApi? ConfigMenuAPI,
+			IGMCMOptionsAPI? ConfigOptionAPI
+		)
+		{
+			if (ConfigMenuAPI is null) return;
+			
+			ModConfig config_ = GetConfig();
+			IModHelper helper_ = GetHelper();
+
+			// register mod
+			ConfigMenuAPI.Register(
+				mod: manifest,
+				reset: () => config_ = new ModConfig(),
+				save: () => helper_.WriteConfig(config_)
+			);
+
+			ConfigMenuAPI.AddKeybind(
+				mod: manifest,
+				name: () => "Slot Place Keybind",
+				tooltip: () => "The key to press to place an furniture in a slot.",
+				getValue: () => config_.slot_place_key,
+				setValue: value => config_.slot_place_key = value
+			);
+
+			ConfigMenuAPI.AddKeybind(
+				mod: manifest,
+				name: () => "Slot Take Keybind",
+				tooltip: () => "The key to press to take an furniture from a slot.",
+				getValue: () => config_.slot_take_key,
+				setValue: value => config_.slot_take_key = value
+			);
+
+			ConfigMenuAPI.AddKeybind(
+				mod: manifest,
+				name: () => "Slot Interact Keybind",
+				tooltip: () => "The key to press to interact with a Furniture placed in a slot.\nCan be weird with vanilla Furniture placed in Slots.",
+				getValue: () => config_.slot_interact_key,
+				setValue: value => config_.slot_interact_key = value
+			);
+
+			ConfigMenuAPI.AddBoolOption(
+				mod: manifest,
+				name: () => "Disable AT Warning",
+				tooltip: () => "Check this to disable the warning about Alternative Textures.",
+				getValue: () => config_.disable_AT_warning,
+				setValue: value => config_.disable_AT_warning = value
+			);
+
+			ConfigMenuAPI.AddBoolOption(
+				mod: manifest,
+				name: () => "Load Packs on game start",
+				tooltip: () => "Check this to force the game to load all the Furniture Packs when the game starts.",
+				getValue: () => config_.load_packs_on_game_start,
+				setValue: value => config_.load_packs_on_game_start = value
+			);
+
+			ConfigMenuAPI.AddPageLink(
+				mod: manifest,
+				pageId: $"{manifest.UniqueID}.slots",
+				text: () => "Slots Debug Options",
+				tooltip: () => "Options to draw slots areas for debugging purposes."
+			);
+
+			ConfigMenuAPI.AddPage(
+				mod: manifest,
+				pageId: $"{manifest.UniqueID}.slots",
+				pageTitle: () => "Slots Debug Options"
+			);
+
+			ConfigMenuAPI.AddBoolOption(
+				mod: manifest,
+				name: () => "Enable slots debug",
+				tooltip: () => "Check this to draw a colored rectangle over the areas of Furniture slots.",
+				getValue: () => config_.enable_slot_debug,
+				setValue: value => config_.enable_slot_debug = value
+			);
+
+			ConfigMenuAPI.AddNumberOption(
+				mod: manifest,
+				getValue: () => config_.slot_debug_alpha,
+				setValue: value => config_.slot_debug_alpha = Math.Clamp(value, 0f, 1f),
+				name: () => "Slot Debug Opacity",
+				tooltip: () => "The opacity of rectangles drawn over the areas of Furniture slots.",
+				min: 0f, max: 1f, interval: 0.01f
+			);
+
+			if (ConfigOptionAPI is null) return;
+
+			ConfigOptionAPI.AddColorOption(
+				mod: manifest,
+				getValue: () => config_.slot_debug_default_color,
+				setValue: value => config_.slot_debug_default_color = value,
+				name: () => "Default Slot Debug Color",
+				tooltip: () => "The default color of the rectangles drawn over the areas of Furniture slots. It will only update on Pack reload or restart.",
+				showAlpha: false,
+				colorPickerStyle: (uint)IGMCMOptionsAPI.ColorPickerStyle.HSLColorWheel
+			);
 		}
 
-		private void register_commands()
+		private void RegisterCommands()
 		{
 			string desc = "Reloads a Furniture Pack, or all Packs if no id is given.\n\n";
 			desc += "Usage: ff_reload <ModID>\n- ModID: the UniqueID of the Furniture Pack to reload.";
-			Helper.ConsoleCommands.Add("ff_reload", desc, Pack.FurniturePack.reload_pack);
+			Helper.ConsoleCommands.Add("ff_reload", desc, Data.FPack.FPack.Reload);
 
 			desc = "Dumps all the data from a Furniture Pack, or all Packs if no id is given.\n\n";
 			desc += "Usage: ff_debug_print <ModID>\n- ModID: the UniqueID of the Furniture Pack to debug print.";
-			Helper.ConsoleCommands.Add("ff_debug_print", desc, Pack.FurniturePack.debug_print);
+			Helper.ConsoleCommands.Add("ff_debug_print", desc, Data.FPack.FPack.DebugPrint);
 		}
 
 		#endregion
@@ -121,7 +220,7 @@ namespace FurnitureFramework
         /// <inheritdoc cref="IInputEvents.ButtonPressed"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void on_button_pressed(object? sender, ButtonPressedEventArgs e)
+        private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
         {
             // ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady)
@@ -149,49 +248,49 @@ namespace FurnitureFramework
 
 			Point pos = e.Cursor.AbsolutePixels.ToPoint();
 			Item? item = Game1.player.ActiveItem?.getOne();
-			if (e.Button == get_config().slot_place_key && item is SVObject obj)
+			if (e.Button == GetConfig().slot_place_key && item is SVObject obj)
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type);
+					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
 					if (type.PlaceInSlot(furniture, pos, Game1.player, obj))
 					{
-						Helper.Input.Suppress(get_config().slot_place_key);
+						Helper.Input.Suppress(GetConfig().slot_place_key);
 						return;
 					}
 				}
 			}
 
-			if (e.Button == get_config().slot_take_key)
+			if (e.Button == GetConfig().slot_take_key)
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type);
+					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
 					if (type.RemoveFromSlot(furniture, pos, Game1.player))
 					{
-						Helper.Input.Suppress(get_config().slot_take_key);
+						Helper.Input.Suppress(GetConfig().slot_take_key);
 						return;
 					}
 				}
 			}
 
-			if (e.Button == get_config().slot_interact_key)
+			if (e.Button == GetConfig().slot_interact_key)
 			{
 				// Checking distance between player and click
 				if ((Game1.player.StandingPixel - pos).ToVector2().Length() <= 128)
 				{
 					foreach (Furniture furniture in Game1.currentLocation.furniture)
 					{
-						Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type);
+						Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 						if (type == null) continue;
 
 						if (type.ActionInSlot(furniture, pos, Game1.player))
 						{
-							Helper.Input.Suppress(get_config().slot_interact_key);
+							Helper.Input.Suppress(GetConfig().slot_interact_key);
 							return;
 						}
 					}
@@ -208,25 +307,25 @@ namespace FurnitureFramework
         /// <inheritdoc cref="IContentEvents.AssetRequested"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-		private void on_asset_requested(object? sender, AssetRequestedEventArgs e)
+		private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
 		{
 			if (e.NameWithoutLocale.IsEquivalentTo("Data/Furniture") || e.Name.IsEquivalentTo("Data/Furniture_international"))
-				e.Edit(Pack.FurniturePack.EditFurnitureData, priority: AssetEditPriority.Early);
+				e.Edit(Data.FPack.FPack.EditFurnitureData, priority: AssetEditPriority.Early);
 
 			else if (e.NameWithoutLocale.IsEquivalentTo("Data/Shops") || e.Name.IsEquivalentTo("Data/Shops_international"))
-				e.Edit(Pack.FurniturePack.EditShopData, priority: AssetEditPriority.Early);
+				e.Edit(Data.FPack.FPack.EditShopData, priority: AssetEditPriority.Early);
 
 			// Loading any Furniture Pack data or texture (including menu icons)
-			else Pack.FurniturePack.load_resource(e);
+			else Data.FPack.FPack.LoadResource(e);
 		}
 
-		private void on_assets_invalidated(object? sender, AssetsInvalidatedEventArgs e)
+		private void OnAssetsInvalidated(object? sender, AssetsInvalidatedEventArgs e)
 		{
 			bool did_stuff = false;
 			foreach (IAssetName name in e.Names)
-				did_stuff |= Pack.FurniturePack.invalidate_asset(name);
+				did_stuff |= Data.FPack.FPack.InvalidateAsset(name);
 			
-			if (did_stuff) Pack.FurniturePack.invalidate_game_data();
+			if (did_stuff) Data.FPack.FPack.InvalidateGameData();
 		}
 
 		#endregion
@@ -236,11 +335,11 @@ namespace FurnitureFramework
         /// <inheritdoc cref="IWorldEvents.FurnitureListChanged"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-		private void on_furniture_list_changed(object? sender, FurnitureListChangedEventArgs e)
+		private void OnFurnitureListChanged(object? sender, FurnitureListChangedEventArgs e)
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
+				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type))
 				{
 					type.OnPlaced(furniture);
 				}
@@ -248,7 +347,7 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
+				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type))
 				{
 					Data.FType.FType.OnRemoved(furniture);
 				}
@@ -258,7 +357,7 @@ namespace FurnitureFramework
         /// <inheritdoc cref="IPlayerEvents.Warped"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-		private void on_player_warped(object? sender, WarpedEventArgs e)
+		private void OnPlayerWarped(object? sender, WarpedEventArgs e)
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
@@ -269,7 +368,7 @@ namespace FurnitureFramework
         /// <inheritdoc cref="IGameLoopEvents.SaveLoaded"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-		private void on_save_loaded(object? sender, SaveLoadedEventArgs e)
+		private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{

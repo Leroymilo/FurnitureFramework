@@ -91,7 +91,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 
-				if (Pack.FurniturePack.try_get_type(furn, out FType? type))
+				if (FPack.FPack.TryGetType(furn, out FType? type))
 				{
 					draw_data.mod_id = type.ModID;
 					draw_data.texture_path = type.GetSourceImage(furn);
@@ -156,9 +156,9 @@ namespace FurnitureFramework.Data.FType.Properties
 			draw_data.position += Area.Location.ToVector2() * 4f;
 			draw_data.source_rect = Area;
 			if (DebugColor == null)
-				draw_data.color = ModEntry.get_config().slot_debug_default_color;
+				draw_data.color = ModEntry.GetConfig().slot_debug_default_color;
 			else draw_data.color = (Color)DebugColor;
-			draw_data.color *= ModEntry.get_config().slot_debug_alpha;
+			draw_data.color *= ModEntry.GetConfig().slot_debug_alpha;
 			draw_data.depth = float.MaxValue;
 			
 			draw_data.Draw();
@@ -166,7 +166,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		public void DrawLights(DrawData draw_data, Furniture furn)
 		{
-			if (Pack.FurniturePack.try_get_type(furn, out FType? type))
+			if (FPack.FPack.TryGetType(furn, out FType? type))
 			{
 				// draw custom lights
 
@@ -234,7 +234,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		{
 			foreach ((Item item, int i) in items.Select((value, index) => (value, index)))
 			{
-				if (ModEntry.get_config().enable_slot_debug)
+				if (ModEntry.GetConfig().enable_slot_debug)
 					this[i].DrawDebug(draw_data);
 
 				if (item is not SVObject obj) continue;

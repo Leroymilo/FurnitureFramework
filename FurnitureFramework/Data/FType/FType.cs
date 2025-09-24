@@ -125,7 +125,7 @@ namespace FurnitureFramework.Data.FType
 				catch { }
 				if (!valid)
 				{
-					ModEntry.log($"Missing Collisions for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
+					ModEntry.Log($"Missing Collisions for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
 					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
 				}
 
@@ -134,7 +134,7 @@ namespace FurnitureFramework.Data.FType
 				catch { }
 				if (!valid)
 				{
-					ModEntry.log($"Missing Layer for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
+					ModEntry.Log($"Missing Layer for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
 					throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
 				}
 
@@ -210,7 +210,6 @@ namespace FurnitureFramework.Data.FType
 	/// </summary>
 	class SpaceRemover<T> : ReadOnlyConverter<T> where T : new()
 	{
-
 		/// <inheritdoc />
 		public override T ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{

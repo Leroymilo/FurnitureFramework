@@ -28,7 +28,7 @@ namespace FurnitureFramework.FFHarmony
 	{
 		public static Harmony? harmony;
 
-		public static void patch()
+		public static void Patch()
 		{
 			if (harmony == null)
 				throw new NullReferenceException("Harmony was not set");
@@ -50,13 +50,13 @@ namespace FurnitureFramework.FFHarmony
 				);
 				if (prop is null)
 				{
-					ModEntry.log($"No patch_type in {type}", LogLevel.Trace);
+					ModEntry.Log($"No patch_type in {type}", LogLevel.Trace);
 					continue;
 				}
 				Patches.PatchType? patch_type = (Patches.PatchType?)prop.GetValue(null);
 				if (patch_type is null)
 				{
-					ModEntry.log($"patch_type is invalid {type}", LogLevel.Trace);
+					ModEntry.Log($"patch_type is invalid {type}", LogLevel.Trace);
 					continue;
 				}
 
@@ -65,13 +65,13 @@ namespace FurnitureFramework.FFHarmony
 				);
 				if (prop is null)
 				{
-					ModEntry.log($"No base_type in {type}", LogLevel.Trace);
+					ModEntry.Log($"No base_type in {type}", LogLevel.Trace);
 					continue;
 				}
 				Type? base_type = (Type?)prop.GetValue(null);
 				if (base_type is null)
 				{
-					ModEntry.log($"base_type is invalid in {type}", LogLevel.Trace);
+					ModEntry.Log($"base_type is invalid in {type}", LogLevel.Trace);
 					continue;
 				}
 
@@ -96,7 +96,7 @@ namespace FurnitureFramework.FFHarmony
 					// Excludes Transpiler helper methods
 					if (original == null) continue;
 
-					ModEntry.log($"Patching {patch_type} for {base_type.Name}.{method.Name}", LogLevel.Trace);
+					ModEntry.Log($"Patching {patch_type} for {base_type.Name}.{method.Name}", LogLevel.Trace);
 
 					HarmonyMethod? prefix = null, postfix = null, transpiler = null;
 

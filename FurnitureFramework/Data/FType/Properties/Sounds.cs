@@ -22,7 +22,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		{
 			if (Name == "" || !Game1.soundBank.Exists(Name))
 			{
-				ModEntry.log($"Invalid Sound Name: \"{Name}\"", StardewModdingAPI.LogLevel.Error);
+				ModEntry.Log($"Invalid Sound Name: \"{Name}\"", StardewModdingAPI.LogLevel.Error);
 				throw new InvalidDataException($"Invalid Sound Name: \"{Name}\"");
 			}
 			else is_valid = true;

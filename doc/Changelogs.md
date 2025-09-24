@@ -153,8 +153,9 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **New Features**:
 - **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.
-- **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture.
 - **Work in Progress** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
+- **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture.
+- **Work in Progress** Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 
 # Planned Future Features
 
@@ -165,6 +166,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - Make a custom config menu to enable/disable Furniture and Included packs.
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
+- Add compatibility between custom TV screen depth and existing custom channel mods (if necessary).
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys

@@ -38,7 +38,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				// If Offset == (0, 0), then all frames are on the same rectangle, negating the animation.
 				if (Offset.First() == Point.Zero)
 				{
-					ModEntry.log("Offset is null");
+					ModEntry.Log("Offset is null");
 					return;
 				}
 				Point delta = Offset.First();

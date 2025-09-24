@@ -1,4 +1,5 @@
 using System.Reflection.Emit;
+using FurnitureFramework.Data.FPack;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,7 +28,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -35,7 +36,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -51,7 +52,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.drawAtNonTileSpot(__instance, spriteBatch, location, layerDepth, alpha);
@@ -59,7 +60,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(drawAtNonTileSpot)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(drawAtNonTileSpot)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -74,7 +75,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.rotate(__instance);
@@ -82,7 +83,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(rotate)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(rotate)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -95,7 +96,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.updateRotation(__instance);
@@ -103,7 +104,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(updateRotation)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(updateRotation)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -123,7 +124,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(clicked)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(clicked)}:\n{ex}", LogLevel.Error);
 			}
 
 			return true; // run original logic
@@ -322,7 +323,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__result, out Data.FType.FType? type))
+				if (FPack.TryGetType(__result, out Data.FType.FType? type))
 				{
 					switch (type.SpecialType)
 					{
@@ -345,7 +346,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(GetFurnitureInstance)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(GetFurnitureInstance)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -361,12 +362,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.GetSeatPositions(__instance, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(GetSeatPositions)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(GetSeatPositions)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -381,12 +382,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.GetSittingDirection(__instance, Game1.player, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(GetSittingDirection)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(GetSittingDirection)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -403,12 +404,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.IntersectsForCollision(__instance, rect, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -425,12 +426,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.canBePlacedHere(__instance, l, tile, collisionMask, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(canBePlacedHere)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(canBePlacedHere)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -450,7 +451,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(AllowPlacementOnThisTile)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(AllowPlacementOnThisTile)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -466,12 +467,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -487,12 +488,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
@@ -506,12 +507,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.isGroundFurniture(ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(isGroundFurniture)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(isGroundFurniture)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -527,12 +528,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.isPassable(ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(isPassable)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(isPassable)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -548,12 +549,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.GetDescription(__instance, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(loadDescription)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(loadDescription)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -569,12 +570,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					Data.FType.FType.DayUpdate(__instance);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(DayUpdate)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(DayUpdate)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
@@ -586,7 +587,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 				{
 					Data.FType.FType.addLights(__instance);
 
@@ -605,7 +606,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(addLights)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(addLights)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
@@ -634,12 +635,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(updateWhenCurrentLocation)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
@@ -665,12 +666,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.getScreenPosition(__instance, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(getScreenPosition)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(getScreenPosition)}:\n{ex}", LogLevel.Error);
 			}
 			
 			return __result;
@@ -686,12 +687,12 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.getScreenSizeModifier(ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(getScreenSizeModifier)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(getScreenSizeModifier)}:\n{ex}", LogLevel.Error);
 			}
 			
 			return __result;
@@ -853,7 +854,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -861,7 +862,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -885,7 +886,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 				{
 					__result = __instance.GetBoundingBox().Intersects(rect);
 					type.IntersectsForCollision(__instance, rect, ref __result);
@@ -893,7 +894,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(IntersectsForCollision)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -908,12 +909,12 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.GetBedSpot(__instance, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(GetBedSpot)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(GetBedSpot)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -931,12 +932,12 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					if (layer_name == "Back" && property_name == "TouchAction") __result = false;
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(DoesTileHaveProperty)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(DoesTileHaveProperty)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -955,7 +956,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(canBeRemoved)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(canBeRemoved)}:\n{ex}", LogLevel.Error);
 			}
 			return __result;
 		}
@@ -983,7 +984,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (!Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -991,7 +992,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(draw)}:\n{ex}", LogLevel.Error);
 				return true; // run original logic
 			}
 		}
@@ -1015,12 +1016,12 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(checkForAction)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
@@ -1036,7 +1037,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 				{
 					type.GetTankBounds(__instance, ref __result);
 				}
@@ -1044,7 +1045,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(GetTankBounds)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(GetTankBounds)}:\n{ex}", LogLevel.Error);
 			}
 
 			__result.Width = Math.Max(1, __result.Width);

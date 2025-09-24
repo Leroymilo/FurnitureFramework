@@ -55,22 +55,22 @@ namespace FurnitureFramework.FFHarmony
 
 					if (debug > 1)
 					{
-						ModEntry.log($"original[{i}]: \topcode: {orig.opcode}, \toperand: {orig.operand}", StardewModdingAPI.LogLevel.Trace);
-						ModEntry.log($"to_find[{j}]: \topcode: {to_f.opcode}, \toperand: {to_f.operand}", StardewModdingAPI.LogLevel.Trace);
+						ModEntry.Log($"original[{i}]: \topcode: {orig.opcode}, \toperand: {orig.operand}", StardewModdingAPI.LogLevel.Trace);
+						ModEntry.Log($"to_find[{j}]: \topcode: {to_f.opcode}, \toperand: {to_f.operand}", StardewModdingAPI.LogLevel.Trace);
 					}
 
 					if (!are_equal(orig, to_f, debug))
 					{
-						if (debug > 1 && j > 0) ModEntry.log("Restart match", StardewModdingAPI.LogLevel.Trace);
+						if (debug > 1 && j > 0) ModEntry.Log("Restart match", StardewModdingAPI.LogLevel.Trace);
 						seq_matches = false;
 						break;
 					}
-					else if (debug > 1) ModEntry.log("Matching!");
+					else if (debug > 1) ModEntry.Log("Matching!");
 				}
 				if (seq_matches)
 				{
 					indices.Add(i-j);
-					if (debug > 1) ModEntry.log("Full Match found!", StardewModdingAPI.LogLevel.Info);
+					if (debug > 1) ModEntry.Log("Full Match found!", StardewModdingAPI.LogLevel.Info);
 				}
 			}
 
@@ -93,27 +93,27 @@ namespace FurnitureFramework.FFHarmony
 			}
 
 			if (debug > 0)
-				ModEntry.log($"Transpiler found {start_indices.Count} instances to replace");
+				ModEntry.Log($"Transpiler found {start_indices.Count} instances to replace");
 
 			int k = 0;
 
 			List<CodeInstruction> new_inst = new();
 
 			if (debug > 0)
-				ModEntry.log($"Starting to replace instructions");
+				ModEntry.Log($"Starting to replace instructions");
 
 			for (int i = 0; i < instructions.Count(); i++)
 			{
 				if (k < start_indices.Count && i == start_indices[k])
 				{
 					if (debug > 0)
-						ModEntry.log($"Replacing a set of instructions at index {i}");
+						ModEntry.Log($"Replacing a set of instructions at index {i}");
 					k++;
 					i += to_replace.Count - 1;
 					foreach (CodeInstruction instruction in to_write)
 					{
 						if (debug > 1)
-							ModEntry.log($"\t{instruction}");
+							ModEntry.Log($"\t{instruction}");
 						new_inst.Add(instruction);
 					}
 				}
@@ -125,7 +125,7 @@ namespace FurnitureFramework.FFHarmony
 			}
 
 			if (debug > 0)
-				ModEntry.log($"Finished replacing instructions");
+				ModEntry.Log($"Finished replacing instructions");
 
 			return new_inst;
 		}

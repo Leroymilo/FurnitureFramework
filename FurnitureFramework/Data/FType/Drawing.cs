@@ -47,7 +47,7 @@ namespace FurnitureFramework.Data.FType
 				rect.Y += rect.Height;
 			rect.Location += rect_offset;
 
-			texture ??= ModEntry.get_helper().GameContent.Load<Texture2D>($"FF/{mod_id}/{texture_path}");
+			texture ??= ModEntry.GetHelper().GameContent.Load<Texture2D>($"FF/{mod_id}/{texture_path}");
 
 			sprite_batch.Draw(
 				texture, position, rect,
@@ -85,7 +85,7 @@ namespace FurnitureFramework.Data.FType
 		// for drawInMenu transpiler
 		private static Rectangle GetIconSourceRect(Furniture furniture)
 		{
-			if (Pack.FurniturePack.try_get_type(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FType? type))
 			{
 				Rectangle result = type.GetIconSourceRect();
 				result.Location += type.GetOffset(furniture);
@@ -222,7 +222,7 @@ namespace FurnitureFramework.Data.FType
 				tankFish.Draw(draw_data.sprite_batch, draw_data.color.A, num);
 			}
 
-			draw_data.texture = ModEntry.get_helper().GameContent.Load<Texture2D>("LooseSprites/AquariumFish");
+			draw_data.texture = ModEntry.GetHelper().GameContent.Load<Texture2D>("LooseSprites/AquariumFish");
 			// From FishTankFurniture.GetAquariumTexture
 			// Going through FF's content's pipeline causes a "Disposed object" error,
 			// maybe missing some invalidation somewhere.

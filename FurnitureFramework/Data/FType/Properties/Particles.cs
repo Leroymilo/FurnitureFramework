@@ -85,7 +85,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		public void Make(Furniture furniture, string mod_id, Vector2? speed_ = null)
 		{
-			Texture2D texture = ModEntry.get_helper().GameContent.Load<Texture2D>($"FF/{mod_id}/{SourceImage}");
+			Texture2D texture = ModEntry.GetHelper().GameContent.Load<Texture2D>($"FF/{mod_id}/{SourceImage}");
 
 			if (SourceRect == Rectangle.Empty)
 				SourceRect = texture.Bounds;
@@ -158,7 +158,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				try { timers_array = JArray.Parse(timers_string); }
 				catch (JsonReaderException)
 				{
-					ModEntry.log("Invalid FF.particle_timer modData.", LogLevel.Trace);
+					ModEntry.Log("Invalid FF.particle_timer modData.", LogLevel.Trace);
 					valid_mod_data = false;
 				}
 
@@ -168,7 +168,7 @@ namespace FurnitureFramework.Data.FType.Properties
 					{
 						if (timer_token.Type != JTokenType.Integer)
 						{
-							ModEntry.log("Invalid timer in FF.particle_timer modData.", LogLevel.Trace);
+							ModEntry.Log("Invalid timer in FF.particle_timer modData.", LogLevel.Trace);
 							valid_mod_data = false;
 							break;
 						}

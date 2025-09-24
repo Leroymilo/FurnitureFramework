@@ -28,7 +28,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				}
 			}
 
-			ModEntry.log($"Could not parse Vector2 from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+			ModEntry.Log($"Could not parse Vector2 from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 			throw new InvalidDataException($"Could not parse Vector2 from {reader.Value} at {reader.Path}.");
 		}
 	}
@@ -191,7 +191,7 @@ namespace FurnitureFramework.Data.FType.Properties
 	{
 		public new void Add(T value)
 		{
-			ModEntry.log("Adding ID to sound");
+			ModEntry.Log("Adding ID to sound");
 			value.ID ??= Count.ToString();  // Assigning default ID when omitted
 			base.Add(value);
 		}
@@ -219,7 +219,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 			else
 			{
-				ModEntry.log($"Could not parse List Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+				ModEntry.Log($"Could not parse List Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 				throw new InvalidDataException($"Could not parse List Field from {reader.Value} at {reader.Path}.");
 			}
 
@@ -299,7 +299,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				return existingValue;
 			}
 
-			ModEntry.log($"Could not parse Directional Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+			ModEntry.Log($"Could not parse Directional Field from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 			throw new InvalidDataException($"Could not parse Directional Field from {reader.Value} at {reader.Path}.");
 		}
 
@@ -388,7 +388,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 			else
 			{
-				ModEntry.log($"Could not parse Directional List from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+				ModEntry.Log($"Could not parse Directional List from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 				throw new InvalidDataException($"Could not parse Directional List from {reader.Value} at {reader.Path}.");
 			}
 
@@ -475,7 +475,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				return result;
 			}
 
-			ModEntry.log($"Could not parse Directional Point or Rectangle from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
+			ModEntry.Log($"Could not parse Directional Point or Rectangle from {reader.Value} at {reader.Path}.", StardewModdingAPI.LogLevel.Error);
 			throw new InvalidDataException($"Could not parse Directional Point or Rectangle from {reader.Value} at {reader.Path}.");
 		}
 	}

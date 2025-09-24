@@ -1,4 +1,5 @@
 using System.Reflection.Emit;
+using FurnitureFramework.Data.FPack;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -24,12 +25,12 @@ namespace FurnitureFramework.FFHarmony.Patches
 
 			try
 			{
-				if (Pack.FurniturePack.try_get_type(furniture, out Data.FType.FType? type))
+				if (FPack.TryGetType(furniture, out Data.FType.FType? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
 			{
-				ModEntry.log($"Failed in {nameof(getDrawLayer)}:\n{ex}", LogLevel.Error);
+				ModEntry.Log($"Failed in {nameof(getDrawLayer)}:\n{ex}", LogLevel.Error);
 			}
 
 			return __result;
