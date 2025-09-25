@@ -559,11 +559,18 @@ namespace FurnitureFramework.Data.FType
 			// Toggle
 			if (Toggle)
 			{
-				furniture.IsOn = !furniture.IsOn;
+				ToggleFurn(furniture);
 
-				Sounds.Play(furniture.Location, furniture.IsOn);
-
-				Particles[rot].Burst(furniture, ModID);
+				if (ModEntry.GetConfig().toggle_carry_to_slot &&
+					furniture.heldObject.Value is Chest held_chest)
+				{
+					foreach (Item item in held_chest.Items)
+					{
+						if (item is Furniture furn && FPack.FPack.TryGetType(furn, out FType? f_type))
+							f_type.ToggleFurn(furn);
+					}
+				}
+				
 				had_action = true;
 			}
 			else
@@ -581,6 +588,14 @@ namespace FurnitureFramework.Data.FType
 			}
 
 			// maybe add place in slot or remove from slot?
+		}
+
+		public void ToggleFurn(Furniture furniture)
+		{
+			furniture.IsOn = !furniture.IsOn;
+			Sounds.Play(furniture.Location, furniture.IsOn);
+			Particles[GetRot(furniture)].Burst(furniture, ModID);
+
 		}
 
 		public static void OnRemoved(Furniture furniture)

@@ -125,7 +125,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added the possibility of using a Color code instead of a name in all color fields.
 - Colored Light Sources should now be more intuitive: if the texture provided is white, the tint of the Light Source can be controlled by the "Color" field, which defaults to "White". This shouldn't break any existing pack, but it might change the color of Light Sources in some cases.
 
-## 3.1 (**Testing**)
+## 3.1
 
 **Fixes**:
 - Fixed Furniture with "Force Type" set to `table` or `long table` being impossible to pick-up.
@@ -154,8 +154,8 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **New Features**:
 - It is now possible to specify a Furniture ID in the `ff_debug_print` command.
 - **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
-- **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture.
-- **Work in Progress** Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
+- **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture. (Object.drawPlacementBounds)
+- Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 
 # Planned Future Features
 

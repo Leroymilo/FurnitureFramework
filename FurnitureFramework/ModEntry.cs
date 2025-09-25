@@ -145,6 +145,14 @@ namespace FurnitureFramework
 
 			ConfigMenuAPI.AddBoolOption(
 				mod: manifest,
+				name: () => "Enable toggle carry to slot",
+				tooltip: () => "If this is enabled, toggling a Furniture will also toggle the Furniture in its slots.",
+				getValue: () => config_.toggle_carry_to_slot,
+				setValue: value => config_.toggle_carry_to_slot = value
+			);
+
+			ConfigMenuAPI.AddBoolOption(
+				mod: manifest,
 				name: () => "Disable AT Warning",
 				tooltip: () => "Check this to disable the warning about Alternative Textures.",
 				getValue: () => config_.disable_AT_warning,

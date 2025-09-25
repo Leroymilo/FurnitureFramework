@@ -8,6 +8,7 @@ namespace FurnitureFramework
 		public SButton slot_place_key {get; set;} = SButton.MouseLeft;
 		public SButton slot_take_key {get; set;} = SButton.MouseLeft;
 		public SButton slot_interact_key {get; set;} = SButton.MouseRight;
+		public bool toggle_carry_to_slot {get; set;} = false;
 
 		public bool disable_AT_warning {get; set;} = false;
 		public bool load_packs_on_game_start {get; set;} = false;
