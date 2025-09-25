@@ -1,3 +1,7 @@
+using Newtonsoft.Json.Linq;
+using StardewModdingAPI;
+
+
 namespace FurnitureFramework.Data.FPack
 {
 	partial class FPack
@@ -6,7 +10,34 @@ namespace FurnitureFramework.Data.FPack
 
 		public static void DebugPrint(string _, string[] args)
 		{
-			ModEntry.Log("TODO", StardewModdingAPI.LogLevel.Warn);
+			if (args.Length == 0) PrintAll();
+			else PrintSingle(args[0]);
+		}
+
+		private static void PrintAll()
+		{
+			foreach (string UID in ContentPacks.Keys)
+				PrintSingle(UID);
+		}
+
+		private static void PrintSingle(string ID)
+		{
+			string data_UID = $"{ID}/{DEFAULT_PATH}";
+
+			if (PacksData.TryGetValue(data_UID, out FPack? f_pack))
+			{
+				ModEntry.Log($"{data_UID}: {JObject.FromObject(f_pack)}");
+				return;
+			}
+
+			if (TryGetType(ID, out FType.FType? f_type))
+			{
+				ModEntry.Log($"{ID}: {JObject.FromObject(f_type)}");
+				return;
+			}
+
+			ModEntry.Log($"Pack {ID} does not exist!", LogLevel.Warn);
+
 		}
 
 		#endregion

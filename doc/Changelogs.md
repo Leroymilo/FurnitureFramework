@@ -146,14 +146,14 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **Fixes**:
 - Fixed TV's Screen Position failing parsing.
-- **Work in Progress** Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
+- Fixed the `ff_reload` command (it was completely broken by the 3.1 update).
 - Fixed Big Craftables not blocking Furniture placement.
 - Fixed previously placed Furniture with variants.
 - Empty string custom Description no longer hides the item tooltip.
 
 **New Features**:
-- **Work in Progress** It is now possible to specify a Furniture ID in the `ff_debug_print` command.
-- **Work in Progress** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
+- It is now possible to specify a Furniture ID in the `ff_debug_print` command.
+- **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 - **Work in Progress** Added a config option to show the collision map instead of the bounding box when placing Furniture.
 - **Work in Progress** Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 
