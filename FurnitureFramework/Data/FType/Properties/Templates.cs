@@ -197,11 +197,11 @@ namespace FurnitureFramework.Data.FType.Properties
 		}
 	}
 
-	public class FieldListConverter<T> : ReadOnlyConverter<FieldList<T>> where T : Field, new()
+	public class FieldListConverter<ListT, T> : ReadOnlyConverter<ListT> where ListT : FieldList<T>, new() where T : Field, new()
 	{
-		public override FieldList<T>? ReadJson(JsonReader reader, Type objectType, FieldList<T>? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override ListT? ReadJson(JsonReader reader, Type objectType, ListT? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			FieldList<T> result = new();
+			ListT result = new();
 
 			if (reader.TokenType == JsonToken.StartObject)
 				// Parsing single T
@@ -226,7 +226,7 @@ namespace FurnitureFramework.Data.FType.Properties
 			return result;
 		}
 
-		static void ReadField(JObject obj, ref FieldList<T> result)
+		static void ReadField(JObject obj, ref ListT result)
 		{
 			T? value = obj.ToObject<T>();
 			if (value == null || !value.is_valid) return;

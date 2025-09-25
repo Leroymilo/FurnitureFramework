@@ -81,6 +81,7 @@ namespace FurnitureFramework.Data.FType
 		public bool Toggle = false;
 		public bool TimeBased = false;
 
+		[JsonConverter(typeof(FieldListConverter<SoundList, Sound>))]
 		public SoundList Sounds = new();
 
 		[JsonConverter(typeof(FieldListDictConverter<SeatList, Seat>))]

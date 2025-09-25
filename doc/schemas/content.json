@@ -224,22 +224,17 @@
 
 					"Sounds": {
 						"description": "Sounds that will trigger when you right-click on the Furniture.",
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"Mode": {
-									"description": "Defines when the sound will be played.",
-									"type": "string",
-									"enum": [ "on_turn_on", "on_turn_off", "on_click" ]
-								},
-
-								"Name": {
-									"type": "string",
-									"description": "The name of the sound in the game. See here for a list of valid sounds: https://www.stardewvalleywiki.com/Modding:Audio#Sound."
+						"oneOf": [
+							{
+								"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/sound.json"
+							},
+							{
+								"type": "array",
+								"items": {
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/sound.json"
 								}
 							}
-						}
+						]
 					},
 
 					"Layers": {

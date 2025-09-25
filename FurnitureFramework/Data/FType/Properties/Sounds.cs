@@ -1,5 +1,5 @@
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using StardewValley;
 
 namespace FurnitureFramework.Data.FType.Properties
@@ -29,7 +29,6 @@ namespace FurnitureFramework.Data.FType.Properties
 		}
 	}
 
-	[JsonConverter(typeof(FieldListConverter<Sound>))]
 	public class SoundList : FieldList<Sound>
 	{
 		public bool Play(GameLocation location, bool? state = null)
