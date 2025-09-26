@@ -142,7 +142,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
 - (internal) Huge rework of Furniture Pack parsing for CP patches to work.
 
-### 3.1.1 (**Work in Progress**)
+### 3.1.1 (**Testing**)
 
 **Fixes**:
 - Fixed TV's Screen Position failing parsing.
@@ -155,6 +155,11 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - It is now possible to specify a Furniture ID in the `ff_debug_print` command.
 - **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 - Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
+
+## 3.2 (**Testing**)
+
+**New Features**:
+- Added i18n support to `Display Name` and `Description`!
 
 # Planned Future Features
 

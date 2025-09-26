@@ -10,6 +10,7 @@ def update_manifest(path: Path):
 			manifest["ContentPackFor"]["MinimumVersion"] = version
 		elif manifest["ContentPackFor"]["UniqueID"] == "Pathoschild.ContentPatcher" and cp_v is not None:
 			manifest["ContentPackFor"]["MinimumVersion"] = cp_v
+			# Also update the Format in content.json?
 	if api_v is not None:
 		manifest["MinimumApiVersion"] = api_v
 	if game_v is not None:

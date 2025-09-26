@@ -20,14 +20,14 @@ namespace FurnitureFramework.Data.FType
 			Rectangle icon_rect = GetIconSourceRect();
 			icon_rect.Location += variant.Offset;
 
-			string result = variant.DisplayName;
+			string result = DisplayName;
 			result += $"/{ForceType}";
 			result += $"/{icon_rect.Width / 16} {icon_rect.Height / 16}";
 			result += $"/-1"; // overwritten by updateRotation
 			result += $"/4";  // overwritten by updateRotation
 			result += $"/{Price}";
 			result += $"/{PlacementRestriction}";
-			result += $"/{variant.DisplayName}";
+			result += $"/{DisplayName}";
 			result += $"/0";
 			result += $"/FF\\{ModID}\\{variant.SourceImage.Replace('/', '\\')}";    // for menu icon
 			result += $"/{ExcludefromRandomSales}";

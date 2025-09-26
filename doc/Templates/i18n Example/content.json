@@ -1,0 +1,51 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].i18n_test_1": {
+			// Here, the RectVariant Token is replaced before applying the translation,
+			// so there are 2 translation keys: one per variant (test_1_oak and test_2_walnut)
+			"Display Name": "i18n:test_1_[[RectVariant]]",
+			"Source Image": "assets/dressers.png",
+			"Rotations": 1,
+			"Collisions": {"Width": 2, "Height": 1},
+			"Layers": {
+				"Source Rect": {
+					"X": 0,
+					"Y": 0,
+					"Width": 32,
+					"Height": 32
+				}
+			},
+
+			"Source Rect Offsets": {
+				"Oak": {"X": 0, "Y": 0},
+				"Walnut": {"X": 0, "Y": 32}
+			}
+		},
+
+		"[[ModID]].i18n_test_2": {
+			// Here, the RectVariant Token is replaced after applying the translation,
+			// so there's only one translation key but the translation contains tokens to be replaced.
+			// This is limited because the RectVariant keys do not support i18n translation,
+			// so they'll be the same in all languages (see i18n folder).
+			"Display Name": "i18n:test_2",
+			"Source Image": "assets/dressers.png",
+			"Rotations": 1,
+			"Collisions": {"Width": 2, "Height": 1},
+			"Layers": {
+				"Source Rect": {
+					"X": 0,
+					"Y": 0,
+					"Width": 32,
+					"Height": 32
+				}
+			},
+
+			"Source Rect Offsets": {
+				"Birch": {"X": 32, "Y": 0},
+				"Mahogany": {"X": 32, "Y": 32}
+			}
+		}
+	}
+}

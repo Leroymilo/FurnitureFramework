@@ -541,6 +541,25 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 		#endregion
 
+		#region loadDisplayName
+
+		internal static string loadDisplayName(string __result, Furniture __instance)
+		{
+			try
+			{
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+					type.loadDisplayName(__instance, ref __result);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(loadDisplayName)}:\n{ex}", LogLevel.Error);
+			}
+
+			return __result;
+		}
+
+		#endregion
+
 		#region loadDescription
 
 		internal static string loadDescription(
@@ -550,7 +569,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			try
 			{
 				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
-					type.GetDescription(__instance, ref __result);
+					type.loadDescription(__instance, ref __result);
 			}
 			catch (Exception ex)
 			{

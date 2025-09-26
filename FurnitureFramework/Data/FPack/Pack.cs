@@ -17,7 +17,7 @@ namespace FurnitureFramework.Data.FPack
 
 		// Static Collections 
 
-		static readonly Dictionary<string, IContentPack> ContentPacks = new();
+		static public readonly Dictionary<string, IContentPack> ContentPacks = new();
 		// UIDs of all Furniture Packs (for reload all).
 		static readonly Dictionary<string, FPack> PacksData = new();
 		// maps data_UID to pack.
@@ -64,7 +64,7 @@ namespace FurnitureFramework.Data.FPack
 
 				foreach (Variant var_data in f_type.Variants.Values)
 				{
-					Config.AddType(var_data.ID, var_data.DisplayName);
+					Config.AddType(var_data.ID, var_data.GetVariantString(f_type.DisplayName, load_data.ContentPack));
 					Furniture[var_data.ID] = f_type;
 				}
 			}
@@ -78,9 +78,6 @@ namespace FurnitureFramework.Data.FPack
 				Config.AddIPack(data);
 				IncludedPacks.Add(name, data.Load());
 			}
-
-			if (!IsIncluded)
-				ModEntry.Log($"Success!", LogLevel.Debug);
 
 			if (Furniture.Count == 0 && Included.Count == 0)
 				ModEntry.Log("This Furniture Pack is empty!", LogLevel.Warn);

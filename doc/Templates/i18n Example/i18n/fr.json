@@ -1,0 +1,5 @@
+{
+	"test_1_oak": "Commode en Chêne",
+	"test_1_walnut": "Commode en Noyer",
+	"test_2": "Commode en [[RectVariant]]"	//[[RectVariant]] ne sera pas traduit ici
+}

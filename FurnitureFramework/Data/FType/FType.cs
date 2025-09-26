@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FurnitureFramework.Data.FType.Properties;
+using StardewModdingAPI;
 
 namespace FurnitureFramework.Data.FType
 {
@@ -26,11 +27,28 @@ namespace FurnitureFramework.Data.FType
 	public struct Variant
 	{
 		public string ID;
-		public string DisplayName;
 		public string ImageVariant;
 		public string RectVariant;
 		public string SourceImage;
 		public Point Offset;
+
+		public string GetVariantString(string value, IContentPack pack)
+		{
+			value = ReplaceTokens(value);
+			if (value.StartsWith("i18n:", true, null))
+			{
+				value = pack.Translation.Get(value[5..]);
+				value = ReplaceTokens(value);
+			}
+			return value;
+		}
+
+		private string ReplaceTokens(string value)
+		{
+			return value
+				.Replace("[[ImageVariant]]", ImageVariant, true, null)
+				.Replace("[[RectVariant]]", RectVariant, true, null);
+		}
 	}
 
 	[JsonConverter(typeof(SpaceRemover<FType>))]
@@ -174,19 +192,18 @@ namespace FurnitureFramework.Data.FType
 		void FillVariants()
 		{
 			if (SourceRectOffsets.Count == 0)
-				FillVariants(FID, DisplayName, "", Point.Zero);
+				FillVariants(FID, "", Point.Zero);
 
 			foreach (KeyValuePair<string, Point> pair in SourceRectOffsets)
 			{
 				FillVariants(
 					$"{FID}_{pair.Key}",
-					DisplayName.Replace("[[RectVariant]]", pair.Key, true, null),
 					pair.Key, pair.Value
 				);
 			}
 		}
 
-		void FillVariants(string id, string display_name, string rect_variant, Point offset)
+		void FillVariants(string id, string rect_variant, Point offset)
 		{
 			foreach (KeyValuePair<string, string> pair in SourceImage)
 			{
@@ -196,7 +213,6 @@ namespace FurnitureFramework.Data.FType
 				Variants.Add(full_id, new()
 				{
 					ID = full_id,
-					DisplayName = display_name.Replace("[[ImageVariant]]", pair.Key, true, null),
 					ImageVariant = pair.Key,
 					SourceImage = pair.Value,
 					RectVariant = rect_variant,

@@ -50,6 +50,7 @@ namespace FurnitureFramework.Data.FPack
 					else
 						result.Root = Parent;
 				}
+				else ModEntry.Log($"Success!", LogLevel.Debug);
 
 				return result;
 			}

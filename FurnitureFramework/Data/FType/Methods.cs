@@ -22,13 +22,16 @@ namespace FurnitureFramework.Data.FType
 			}
 		}
 
-		public void GetDescription(Furniture furniture, ref string result)
+		public void loadDisplayName(Furniture furniture, ref string result)
+		{
+			result = Variants[furniture.ItemId].GetVariantString(DisplayName, FPack.FPack.ContentPacks[ModID]);
+		}
+
+		public void loadDescription(Furniture furniture, ref string result)
 		{
 			if (Description == null || Description.Length == 0) return;
-			Variant variant = Variants[furniture.ItemId];
-			result = Description;
-			result = result.Replace("[[RectVariant]]", variant.RectVariant);
-			result = result.Replace("[[ImageVariant]]", variant.ImageVariant);
+
+			result = Variants[furniture.ItemId].GetVariantString(Description, FPack.FPack.ContentPacks[ModID]);
 		}
 
 		string GetRot(Furniture furniture)

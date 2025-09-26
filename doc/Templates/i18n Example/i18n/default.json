@@ -1,0 +1,5 @@
+{
+	"test_1_oak": "Oak Dresser",
+	"test_1_walnut": "Walnut Dresser",
+	"test_2": "[[RectVariant]] Dresser"	//[[RectVariant]] will not be translated here
+}
