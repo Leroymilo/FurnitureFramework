@@ -1,6 +1,6 @@
 {
 	"$schema": "https://smapi.io/schemas/content-patcher.json",
-	"Format": "2.7.0",
+	"Format": "2.8.0",
 
 	"DynamicTokens": [
 		// To use to refer to resources of FF's Default Pack

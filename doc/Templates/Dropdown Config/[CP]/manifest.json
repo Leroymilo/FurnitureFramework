@@ -2,12 +2,12 @@
 	"Name": "Dropdown Config Option Template (CP)",
 	"Author": "leroymilo",
 	"Version": "3.1.1",
-	"MinimumApiVersion": "4.2",
+	"MinimumApiVersion": "4.3",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "A template pack for the Furniture Framework (CP)",
 	"UniqueID": "leroymilo.DropdownTemplate.CP",
 	"ContentPackFor": {
 		"UniqueID": "Pathoschild.ContentPatcher",
-		"MinimumVersion": "2.7"
+		"MinimumVersion": "2.8"
 	}
 }
