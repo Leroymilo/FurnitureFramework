@@ -94,10 +94,7 @@ namespace FurnitureFramework.Data.FPack
 				
 				IncludedPacks.Add(i_pack.DataUID, i_pack);
 			}
-
-			if (!IsIncluded)
-				ModEntry.Log($"Success!", LogLevel.Debug);
-
+			
 			if (Furniture.Count == 0 && Included.Count == 0)
 				ModEntry.Log("This Furniture Pack is empty!", LogLevel.Warn);
 		}
