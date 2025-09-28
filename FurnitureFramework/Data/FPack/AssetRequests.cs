@@ -122,7 +122,6 @@ namespace FurnitureFramework.Data.FPack
 			else result = helper.Load<Type>(path);
 			// Load from Pack content
 
-			ModEntry.Log($"loaded asset at {path}", LogLevel.Trace);
 			return result;
 		}
 
@@ -143,6 +142,41 @@ namespace FurnitureFramework.Data.FPack
 			}
 
 			return c_pack is not null;
+		}
+
+		public static bool InvalidateAsset(IAssetName name)
+		{
+			// Check if it's a FF asset
+			if (!name.StartsWith("FF")) return false;
+			// Check if it's a content file
+			if (!PacksData.TryGetValue(name.Name[3..], out FPack? f_pack)) return false;
+			
+			if (ToLoad.Contains(f_pack.LoadData_)) return false;
+
+			bool queue = !f_pack.IsAnyParentQueued();
+
+			if (queue)
+			{
+				ToLoad.Push(f_pack.LoadData_);
+				ModEntry.Log($"Queued {f_pack.DataUID} for reload.", LogLevel.Trace);
+			}
+
+			ModEntry.GetHelper().GameContent.InvalidateCache(
+				asset_info => f_pack.IncludedPacks.ContainsKey(asset_info.Name.Name[3..])
+			);
+
+			return queue;
+		}
+
+		private bool IsAnyParentQueued()
+		{
+			FPack? prev = LoadData_.Parent;
+			while (prev != null)
+			{
+				if (ToLoad.Contains(prev.LoadData_)) return true;
+				prev = prev.LoadData_.Parent;
+			}
+			return false;
 		}
 
 		#region Data/Furniture

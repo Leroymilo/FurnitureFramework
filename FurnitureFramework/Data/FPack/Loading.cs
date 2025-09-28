@@ -43,13 +43,7 @@ namespace FurnitureFramework.Data.FPack
 				result.SetSource(this);
 
 				PacksData[DataUID] = result;
-				if (Parent != null)
-				{
-					if (Parent.IsIncluded)
-						result.Root = Parent.Root;
-					else
-						result.Root = Parent;
-				}
+				if (Parent == null) ModEntry.Log($"Success!", LogLevel.Debug);
 
 				return result;
 			}
@@ -63,6 +57,7 @@ namespace FurnitureFramework.Data.FPack
 
 		public static void PreLoad(IModHelper helper)
 		{
+			ModEntry.Log("Preloading Furniture Packs...");
 			DefaultPack = helper.ContentPacks.CreateTemporary(
 				helper.DirectoryPath,
 				"leroymilo.FurnitureFramework.DefaultPack",
@@ -104,7 +99,10 @@ namespace FurnitureFramework.Data.FPack
 					continue;
 				}
 
-				ToRegister.Add(data.UID);
+				if (load_data.Parent != null)
+					load_data.Parent.IncludedPacks[data.DataUID] = data;
+
+				data.UnregisterConfig();
 			}
 
 			RegisterPackConfig();
@@ -114,47 +112,24 @@ namespace FurnitureFramework.Data.FPack
 
 		#region Clearing
 
-		public static bool InvalidateAsset(IAssetName name)
-		{
-			if (!name.StartsWith("FF")) return false;
-			if (!TryGetCPFromResource(name, out IContentPack? c_pack))return false;
-			return ReloadSingle(c_pack.Manifest.UniqueID);
-		}
-
-		private static bool ReloadSingle(string UID)
+		private static void ReloadSingle(string UID)
 		{
 			string data_UID = $"{UID}/{DEFAULT_PATH}";
 
-			if (!PacksData.ContainsKey(data_UID))
-			{
-				ModEntry.Log($"Pack {UID} does not exist!", LogLevel.Warn);
-				return false;
-			}
-
-			return PacksData[data_UID].QueueReload();
-		}
-
-		private bool QueueReload()
-		{
-			if (ToLoad.Contains(LoadData_))
-			{
-				ModEntry.Log("Already queued!");
-				return false;
-			}
-			ToLoad.Push(LoadData_);
-			UnregisterConfig();
-			InvalidateRelatedAssets();
-			return true;
+			if (PacksData.TryGetValue(data_UID, out FPack? f_pack))
+				f_pack.InvalidateRelatedAssets();
+			else ModEntry.Log($"Pack {UID} does not exist!", LogLevel.Warn);
 		}
 
 		private void InvalidateRelatedAssets()
 		{
-			if (IsIncluded) return;
-
 			// Invalidate game assets attached to this pack:
-			foreach (string asset_name in LoadedAssets[UID])
-				ModEntry.GetHelper().GameContent.InvalidateCache(asset_name);
-
+			ModEntry.GetHelper().GameContent.InvalidateCache(
+				// Invalidates all associated texture files, but only the base content file
+				asset_info => LoadedAssets[UID].Contains(asset_info.Name.Name) && (
+					asset_info.DataType != typeof(FPack) || asset_info.Name.IsEquivalentTo($"FF/{DataUID}")	
+				)
+			);
 			ModEntry.Log($"Invalidated assets from {UID}.", LogLevel.Trace);
 		}
 

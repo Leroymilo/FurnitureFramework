@@ -191,7 +191,6 @@ namespace FurnitureFramework.Data.FType.Properties
 	{
 		public new void Add(T value)
 		{
-			ModEntry.Log("Adding ID to sound");
 			value.ID ??= Count.ToString();  // Assigning default ID when omitted
 			base.Add(value);
 		}

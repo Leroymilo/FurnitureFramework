@@ -91,3 +91,5 @@ What can be added but I don't have the knowledge/courage to do it any-time soon:
 # Known Issues
 
 - Default Slots Debug Color does not apply until Pack reload or restart.
+- Seats do not behave correctly for Furniture placed on Slots.
+- Vanilla Furniture placed in slots doesn't show on/off state properly (fire isn't drawn on torches).

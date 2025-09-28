@@ -53,6 +53,13 @@ namespace FurnitureFramework.Data.FPack
 		public void SetSource(LoadData load_data)
 		{
 			LoadData_ = load_data;
+			if (load_data.Parent != null)
+			{
+				if (load_data.Parent.Root == null)
+					Root = load_data.Parent;
+				else
+					Root = load_data.Parent.Root;
+			}
 
 			LoadConfig();
 
@@ -76,7 +83,16 @@ namespace FurnitureFramework.Data.FPack
 				data.Name = name;
 				data.Parent = this;
 				Config.AddIPack(data);
-				IncludedPacks.Add(name, data.Load());
+				FPack i_pack;
+
+				try { i_pack = data.Load(); }
+				catch (Exception e)
+				{
+					ModEntry.Log($"Failed, skipping pack.\n{e}", LogLevel.Error);
+					continue;
+				}
+				
+				IncludedPacks.Add(i_pack.DataUID, i_pack);
 			}
 
 			if (!IsIncluded)

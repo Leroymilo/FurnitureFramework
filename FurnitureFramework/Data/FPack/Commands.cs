@@ -52,11 +52,8 @@ namespace FurnitureFramework.Data.FPack
 
 		private static void ReloadAll()
 		{
-			bool reloaded = false;
 			foreach (string UID in ContentPacks.Keys)
-				reloaded |= ReloadSingle(UID);
-			
-			if (reloaded) InvalidateGameData();
+				ReloadSingle(UID);
 		}
 
 		#endregion
