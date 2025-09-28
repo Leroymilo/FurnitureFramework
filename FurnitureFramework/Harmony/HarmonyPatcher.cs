@@ -1,5 +1,8 @@
 using HarmonyLib;
 using StardewModdingAPI;
+using StardewValley;
+using StardewValley.Menus;
+using StardewValley.Objects;
 using System.Reflection;
 
 namespace FurnitureFramework.FFHarmony
@@ -119,7 +122,25 @@ namespace FurnitureFramework.FFHarmony
 				#endregion
 			}
 
-			CatalogueTabPatcher.Patch(harmony);
+			Type? _c = typeof(ShopMenu).GetNestedType("<>c", BindingFlags.NonPublic);
+			if (_c == null) return;
+
+			for (int tab_idx = 1; tab_idx < 6; tab_idx++)
+			{
+				string method_name = $"<UseFurnitureCatalogueTabs>b__61_{tab_idx}";
+				MethodInfo? method = _c.GetMethod(method_name, BindingFlags.Instance | BindingFlags.NonPublic);
+				if (method == null) ModEntry.Log($"Could not find {_c.Name}.{method_name}!", LogLevel.Error);
+
+				ModEntry.Log($"Patching Postfix for {typeof(ShopMenu).Name}.{_c.Name}.{method_name}", LogLevel.Trace);
+				harmony.Patch(original:method, postfix:new(AccessTools.Method(typeof(HarmonyPatcher), "IsInTab")));
+			}
+		}
+
+		static bool IsInTab(bool __result, ISalable item, MethodBase __originalMethod)
+		{
+			if (item is not Furniture furniture) return __result;
+			if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? f_type)) return __result;
+			return (int)f_type.FurnitureCatalogueTab == int.Parse(__originalMethod.Name.Last().ToString());
 		}
 	}
 }

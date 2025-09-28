@@ -161,7 +161,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **New Features**:
 - Added i18n support to `Display Name` and `Description`!
 - Added new Special Type: `FFStorage`. Works like a `Dresser` but accepts any item.
-- **Work in Progress** Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.
+- Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.
 
 # Planned Future Features
 

@@ -24,9 +24,7 @@
 						"Height": 48
 					}
 				}
-			],
-			"Exclude from Random Sales": false,
-			"Furniture Catalogue Tab": "Table"
+			]
 		},
 		"[[ModID]].custom_catalogue": {
 			"Display Name": "Custom Catalogue",
