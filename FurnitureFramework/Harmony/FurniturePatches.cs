@@ -183,7 +183,7 @@ call get_icon_source_rect
 				))
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 2);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 2);
 		}
 
 		#endregion
@@ -223,7 +223,7 @@ call check_held_object
 				))
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 1);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 1);
 		}
 
 		#endregion
@@ -296,7 +296,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 				)),
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 1);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 1);
 		}
 
 		#endregion
@@ -328,6 +328,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 					switch (type.SpecialType)
 					{
 						case Data.FType.SpecialType.Dresser:
+						case Data.FType.SpecialType.FFStorage:
 							__result = new StorageFurniture(itemId, position.Value);
 							break;
 						case Data.FType.SpecialType.TV:
@@ -664,6 +665,27 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		}
 
 		#endregion
+
+		#region GetShopMenuContext
+
+		internal static string GetShopMenuContext(
+			string __result, StorageFurniture __instance
+		)
+		{
+			try
+			{
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type) &&
+					type.SpecialType == Data.FType.SpecialType.FFStorage)
+					__result = "FFStorage";
+			}
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(GetShopMenuContext)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
+		}
+
+		#endregion
 	}
 
 	#endregion
@@ -791,7 +813,7 @@ In selectChannel (x7) and proceedToNextScene (x6)
 		{
 			List<CodeInstruction> to_replace = depth_replace(false);
 			List<CodeInstruction> to_write = depth_write(false);
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 7);
 		}
 
 		static IEnumerable<CodeInstruction> proceedToNextScene(
@@ -800,7 +822,7 @@ In selectChannel (x7) and proceedToNextScene (x6)
 		{
 			List<CodeInstruction> to_replace = depth_replace(false);
 			List<CodeInstruction> to_write = depth_write(false);
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 6);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 6);
 		}
 
 		#endregion
@@ -837,7 +859,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			List<CodeInstruction> to_replace = depth_replace(true);
 			List<CodeInstruction> to_write = depth_write(true);
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 5);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 5);
 		}
 
 		[TargetParamType(new[] {typeof(string)})]
@@ -847,7 +869,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			List<CodeInstruction> to_replace = depth_replace(true);
 			List<CodeInstruction> to_write = depth_write(true);
-			return Transpiler.replace_instructions(instructions, to_replace, to_write, 7);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write, 7);
 		}
 
 		#endregion

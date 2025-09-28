@@ -4,16 +4,16 @@ using System.Reflection;
 
 namespace FurnitureFramework.FFHarmony
 {
-		[AttributeUsage(AttributeTargets.Method)]
-		public class TargetParamTypeAttribute : Attribute
-		{
-			public Type[] parameter_types;
+	[AttributeUsage(AttributeTargets.Method)]
+	public class TargetParamTypeAttribute : Attribute
+	{
+		public Type[] parameter_types;
 
-			public TargetParamTypeAttribute(Type[] types)
-			{
-				parameter_types = types;
-			}
+		public TargetParamTypeAttribute(Type[] types)
+		{
+			parameter_types = types;
 		}
+	}
 
 	namespace Patches
 	{
@@ -26,13 +26,8 @@ namespace FurnitureFramework.FFHarmony
 
 	class HarmonyPatcher
 	{
-		public static Harmony? harmony;
-
-		public static void Patch()
+		public static void Patch(Harmony harmony)
 		{
-			if (harmony == null)
-				throw new NullReferenceException("Harmony was not set");
-			
 			var types = Assembly.GetExecutingAssembly()
 				.GetTypes()
 				.Where(
@@ -123,6 +118,8 @@ namespace FurnitureFramework.FFHarmony
 
 				#endregion
 			}
+
+			CatalogueTabPatcher.Patch(harmony);
 		}
 	}
 }

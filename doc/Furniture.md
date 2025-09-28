@@ -117,15 +117,15 @@ These fields are basically what you'll find in a Furniture defined in [`Data/Fur
 In this field, you can force the vanilla type of the Furniture (as a string). If you don't know how it works, don't set it: most types have not been tested and are replaced with other fields in the Furniture Framework. Please report it if you find Furniture types that completely break the mod so that I can list them here.
 
 The types listed here have been tested and will cause some issues, you should use FF's features to replace them:
-- chair
-- bench
-- couch
-- armchair
-- long table
-- table
-- dresser
-- rug
-- painting
+- `chair`
+- `bench`
+- `couch`
+- `armchair`
+- `long table`
+- `table`
+- `dresser`
+- `rug`
+- `painting`
 
 ### Price
 
@@ -146,6 +146,17 @@ This is an array (a list) of context tags you want to add to your Furniture, it 
 ### Exclude from Random Sales
 
 This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
+
+## Furniture Catalogue Tab
+
+This defines in which tab of the (vanilla) Furniture Catalogue this Furniture will show up (`Exclude from Random Sales` must be `false`). The possible values are:
+- `None`	(will only show up in the "everything" tab)
+- `Table`	(includes vanilla table, long table and dresser)
+- `Seat`	(includes vanilla chair, bench, couch and armchair)
+- `Wall`	(includes vanilla painting and window)
+- `Floor`	(includes only vanilla rug)
+- `Decor`	(includes vanilla lamp, sconce, bookcase, decor, other and fireplace)
+The default value is `None`.
 
 ## Custom Catalogue Shop
 
@@ -274,20 +285,21 @@ This is a boolean (`true` or `false`). Set to `false` to disable the Animation w
 ## Special Type
 
 This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one of these values:
-- None (no special type, default)
-- Dresser
-- [TV](Special%20Types/TV.md)
-- [Bed](Special%20Types/Bed.md)
-- [FishTank](Special%20Types/FishTank.md)
+- `None` (no special type, default)
+- `Dresser`
+- `FFStorage` (like a Dresser, but with no tabs and no restriction on items)
+- [`TV`](Special%20Types/TV.md)
+- [`Bed`](Special%20Types/Bed.md)
+- [`FishTank`](Special%20Types/FishTank.md)
 
 Some Special Types have their own documentation linked in this list for extra info.
 
 ## Placement Type
 
 This will change the way you place the Furniture, it's only used for Rugs and Wall mounted Furniture. The possible values are:
-- Normal (default)
-- Rug
-- Mural
+- `Normal` (default)
+- `Rug`
+- `Mural`
 
 Please note that some right-click interactions might not work for Rug Furniture (not tested, you can make experiments). However, Mural Furniture should be compatible with all other features.
 

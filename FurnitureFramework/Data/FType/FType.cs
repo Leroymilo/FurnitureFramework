@@ -12,6 +12,7 @@ namespace FurnitureFramework.Data.FType
 	public enum SpecialType {
 		None,
 		Dresser,
+		FFStorage,
 		TV,
 		Bed,
 		FishTank,
@@ -22,6 +23,15 @@ namespace FurnitureFramework.Data.FType
 		Normal,
 		Rug,
 		Mural
+	}
+
+	public enum CatalogueTab {
+		None,
+		Table,	// Table, LongTable, Dresser
+		Seat,	// Chair, Bench, Couch, Armchair
+		Wall,	// Painting, Window
+		Floor,	// Rug
+		Decor	// Lamp, Sconce, Bookcase, Decor, Other, Fireplace
 	}
 
 	public struct Variant
@@ -85,6 +95,7 @@ namespace FurnitureFramework.Data.FType
 		public int PlacementRestriction = 2;
 		public List<string> ContextTags = new();
 		public bool ExcludefromRandomSales = true;
+		public CatalogueTab FurnitureCatalogueTab = CatalogueTab.None;
 		public List<string> ShowsinShops = new();
 		public string? ShopId;
 

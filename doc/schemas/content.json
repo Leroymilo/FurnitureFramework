@@ -112,6 +112,12 @@
 						"type": "boolean"
 					},
 
+					"Furniture Catalogue Tab": {
+						"description": "Tells the game in which tab of the vanilla Furniture Catalogue this Furniture will show up.",
+						"type": "string",
+						"enum": [ "None", "Table", "Seat", "Wall", "Floor", "Decor" ]
+					},
+
 					"Shows in Shops": {
 						"description": "A list of Shop IDs where the Furniture will show up. Shop entries can be customized with Content Patcher.",
 						"type": "array", "items": { "type": "string" }
@@ -198,7 +204,7 @@
 					"Special Type": {
 						"description": "Tells the mod that your Furniture is one of the following: Dresser, TV, Bed or FishTank.\nSome of these have extra fields to fill, see the documentation.",
 						"type": "string",
-						"enum": [ "None", "Dresser", "TV", "Bed", "FishTank" ]
+						"enum": [ "None", "Dresser", "FFStorage", "TV", "Bed", "FishTank" ]
 					},
 
 					"Placement Type": {

@@ -167,7 +167,7 @@ call Data.FType.FType::HasHeldObject
 				)
 			};
 
-			instructions = Transpiler.replace_instructions(instructions, to_replace, to_write);
+			instructions = Transpiler.ReplaceInstructions(instructions, to_replace, to_write);
 
 			// replace heldObject != null with custom has_held_object
 			to_replace = new()
@@ -189,7 +189,7 @@ call Data.FType.FType::HasHeldObject
 				))
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write);
 		}
 
 		#endregion
@@ -294,7 +294,7 @@ call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furnit
 				)
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write);
 		}
 
 		#endregion

@@ -77,14 +77,17 @@ namespace FurnitureFramework.FFHarmony
 			return indices;
 		}
 
-		static public IEnumerable<CodeInstruction> replace_instructions(
+		static public IEnumerable<CodeInstruction> ReplaceInstructions(
 			IEnumerable<CodeInstruction> instructions,
 			List<CodeInstruction> to_replace,
 			List<CodeInstruction> to_write,
 			int match_limit = 1,
+			Dictionary<int, int>? copy_labels = null,
 			int debug = 0
 		)
 		{
+			copy_labels ??= new();
+
 			List<int> start_indices = find_start_indices(instructions, to_replace, debug);
 
 			if (start_indices.Count > match_limit)
@@ -115,6 +118,14 @@ namespace FurnitureFramework.FFHarmony
 						if (debug > 1)
 							ModEntry.Log($"\t{instruction}");
 						new_inst.Add(instruction);
+					}
+
+					// Copying labels
+					int j = new_inst.Count - to_write.Count;
+					foreach (int ii in copy_labels.Keys)
+					{
+						CodeInstruction original = instructions.ElementAt(i - to_replace.Count + 1 + ii);
+						new_inst[j + copy_labels[ii]].MoveLabelsFrom(original);
 					}
 				}
 

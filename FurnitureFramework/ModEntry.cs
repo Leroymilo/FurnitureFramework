@@ -60,8 +60,7 @@ namespace FurnitureFramework
 			helper.Events.World.FurnitureListChanged += OnFurnitureListChanged;
 			helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
 			
-			FFHarmony.HarmonyPatcher.harmony = new(ModManifest.UniqueID);
-			FFHarmony.HarmonyPatcher.Patch();
+			FFHarmony.HarmonyPatcher.Patch(new(ModManifest.UniqueID));
         }
 
 		#region On Game Launched

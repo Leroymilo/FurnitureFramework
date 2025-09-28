@@ -4,6 +4,7 @@ using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Menus;
 using StardewValley.Objects;
 
 namespace FurnitureFramework.FFHarmony.Patches
@@ -114,12 +115,11 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 				)
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write);
 		}
 
 		#endregion
 	}
-
 
 	internal class UtilityTranspiler
 	{
@@ -163,8 +163,44 @@ call check_held_object
 				))
 			};
 
-			return Transpiler.replace_instructions(instructions, to_replace, to_write);
+			return Transpiler.ReplaceInstructions(instructions, to_replace, to_write);
 
+		}
+
+		#endregion
+	}
+
+	internal class ShopMenuPrefixes
+	{
+		#pragma warning disable 0414
+		static readonly PatchType patch_type = PatchType.Prefix;
+		static readonly Type base_type = typeof(ShopMenu);
+		#pragma warning restore 0414
+
+		#region setUpStoreForContext
+
+		internal static void setUpStoreForContext(ShopMenu __instance)
+		{
+			if (__instance.ShopId == "FFStorage")
+			{
+				// __instance._isStorageShop = true; // not accessible
+				__instance.purchaseSound = null;
+				__instance.purchaseRepeatSound = null;
+			}
+		}
+
+		#endregion
+
+		#region highlightItemToSell
+
+		internal static bool highlightItemToSell(ref bool __result, ShopMenu __instance, Item i)
+		{
+			if (__instance.ShopId == "FFStorage")
+			{
+				__result = true;
+				return false;
+			}
+			return true;
 		}
 
 		#endregion
