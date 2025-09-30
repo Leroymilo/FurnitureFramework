@@ -676,7 +676,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			{
 				if (FPack.TryGetType(__instance, out Data.FType.FType? type) &&
 					type.SpecialType == Data.FType.SpecialType.FFStorage)
-					__result = "FFStorage";
+					__result = $"FF/{__instance.itemId}";
 			}
 			catch (Exception ex)
 			{

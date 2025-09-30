@@ -472,6 +472,44 @@
 					"Disable Fishtank Light": {
 						"description": "Disables the light that is automatically added by the game to Fish Tanks.",
 						"type": "boolean"
+					},
+
+					"Storage Preset": {
+						"description": "A preset to use the same tabs and conditions as one of the vanilla menus.",
+						"type": "string",
+						"enum": [ "None", "Dresser", "Catalogue", "FurnitureCatalogue" ]
+					},
+
+					"Storage Condition": {
+						"description": "A Game State Query to restrict the storage to certain items.",
+						"type": "string"
+					},
+
+					"Storage Tabs": {
+						"description": "A list of \"tab properties\", to define the tabs that will appear in this Storage menu.",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"ID": {
+									"description": "A string of text to identify this tab.",
+									"type": "string"
+								},
+								"Condition": {
+									"description": "A Game State Query to filter which items will appear in this tab.",
+									"type": "string"
+								},
+								"Source Image": {
+									"description": "The path to the image containing the icon for this tab.",
+									"type": "string"
+								},
+								"Source Rect": {
+									"description": "The part of the image to use as the icon for this tab.",
+									"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/rectangle.json"
+								}
+							},
+							"required": [ "ID", "Source Image", "Source Rect" ]
+						}
 					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions", "Layers" ],

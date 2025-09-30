@@ -1,0 +1,44 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].weapons_chest": {
+			"Display Name": "Weapons Chest",
+			"Source Image": "Content/TileSheets/Craftables",
+			// Taking the sprite directly from the game assets
+			"Rotations": 1,
+			"Collisions": {"Width": 1, "Height": 1},
+			"Layers": {
+				"Source Rect": {
+					"X": 32,
+					"Y": 512,
+					"Width": 16,
+					"Height": 32
+				}
+				// Coordinates of the sprite for the vanilla chest
+			},
+
+			"Special Type": "FFStorage",
+			"Storage Condition": "ITEM_CATEGORY Input -98 -99",// filter for weapons and
+			"Storage Tabs": [
+				{
+					"ID": "any",
+					"Source Image": "tab_icons.png",
+					"Source Rect": {"X": 0, "Y": 0, "Width": 16, "Height": 16}
+				},
+				{
+					"ID": "weapons",
+					"Condition": "ITEM_CATEGORY Input -98",
+					"Source Image": "tab_icons.png",
+					"Source Rect": {"X": 0, "Y": 16, "Width": 16, "Height": 16}
+				},
+				{
+					"ID": "tools",
+					"Condition": "ITEM_CATEGORY Input -99",
+					"Source Image": "tab_icons.png",
+					"Source Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 16}
+				}
+			]
+		}
+	}
+}

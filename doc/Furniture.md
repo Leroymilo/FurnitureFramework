@@ -22,6 +22,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 	* [Placement Restriction](#placement-restriction)
 	* [Context Tags](#context-tags)
 	* [Exclude from Random Sales](#exclude-from-random-sales)
+* [Furniture Catalogue Tab](#furniture-catalogue-tab)
 * [Custom Catalogue Shop](#custom-catalogue-shop)
 	* [Shows in Shops](#shows-in-shops)
 	* [Shop Id](#shop-id)
@@ -64,7 +65,7 @@ And the `"[[RectVariant]] Cat Statue"` Furniture will create 2 Furniture:
 - White Cat Statue
 - Black Cat Statue
 
-This field also supports i18n translations by setting its value to `"i18n:my_translation_key"` (and replace `my_translation_key` by anything). It can get a bit tricky when combined with variants, but you can check the [template](/doc/Templates/i18n%20Example/) to see how it can work.
+This field also supports i18n translations by setting its value to `"i18n:my_translation_key"` (and replace `my_translation_key` by anything). It can get a bit tricky when combined with variants, but you can check the [template](Templates/i18n%20Example/) to see how it can work.
 
 ## Rotations (required)
 
@@ -149,7 +150,7 @@ This defines wether or not this Furniture will show-up in random sales in the va
 
 ## Furniture Catalogue Tab
 
-This defines in which tab of the (vanilla) Furniture Catalogue this Furniture will show up (`Exclude from Random Sales` must be `false`). The possible values are:
+This defines in which tab of the (vanilla) Furniture Catalogue this Furniture will show up (`Exclude from Random Sales` must be `false`). It will also determine in which tab this Furniture will appear when placed in a [`FFStorage`](Special%20Types/Storage) Furniture with `Storage Preset` set to "FurnitureCatalogue". The possible values are:
 - `None`	(will only show up in the "everything" tab)
 - `Table`	(includes vanilla table, long table and dresser)
 - `Seat`	(includes vanilla chair, bench, couch and armchair)
@@ -294,6 +295,8 @@ This kind of replace the "Type" field in the vanilla Furniture data. It's a stri
 
 Some Special Types have their own documentation linked in this list for extra info.
 
+:warning: <span style="color:red">**WARNING**</span>: placing any StorageFurniture (one of Dresser, FFStorage or FishTank) in a slot (custom or vanilla) will delete all items inside it!
+
 ## Placement Type
 
 This will change the way you place the Furniture, it's only used for Rugs and Wall mounted Furniture. The possible values are:
@@ -334,6 +337,8 @@ Seats are what allow the Farmer to sit on your Furniture (duh), since they are q
 ## Slots (directional)
 
 Slots are where you can place items or other Furniture on a table-like Furniture. Since they are quite complicated, they have their own [Slots documentation](Complex%20Fields/Slots.md).
+
+:warning: <span style="color:red">**WARNING**</span>: placing any StorageFurniture (one of Dresser, FFStorage or FishTank, even vanilla) in a slot (custom or vanilla) will delete all items inside it!
 
 ## Particles (directional)
 

@@ -34,6 +34,13 @@ namespace FurnitureFramework.Data.FType
 		Decor	// Lamp, Sconce, Bookcase, Decor, Other, Fireplace
 	}
 
+	public enum StoragePreset {
+		None,
+		Dresser,
+		FurnitureCatalogue,
+		Catalogue
+	}
+
 	public struct Variant
 	{
 		public string ID;
@@ -143,6 +150,11 @@ namespace FurnitureFramework.Data.FType
 		public DirStruct<Rectangle> FishArea = new();
 		public bool DisableFishtankLight = false;
 
+		// FFStorage
+		public StoragePreset StoragePreset = StoragePreset.None;
+		public string? StorageCondition;
+		public List<TabProperty> StorageTabs = new();
+
 		#endregion
 
 		[OnDeserialized]
@@ -155,7 +167,7 @@ namespace FurnitureFramework.Data.FType
 				catch { }
 				if (!valid)
 				{
-					ModEntry.Log($"Missing Collisions for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
+					ModEntry.Log($"Missing Collisions for rotation {rot_name}.", LogLevel.Error);
 					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
 				}
 
@@ -164,7 +176,7 @@ namespace FurnitureFramework.Data.FType
 				catch { }
 				if (!valid)
 				{
-					ModEntry.Log($"Missing Layer for rotation {rot_name}.", StardewModdingAPI.LogLevel.Error);
+					ModEntry.Log($"Missing Layer for rotation {rot_name}.", LogLevel.Error);
 					throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
 				}
 

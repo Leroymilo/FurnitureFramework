@@ -1,7 +1,9 @@
+using FurnitureFramework.Data.FType.Properties;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Locations;
+using StardewValley.Menus;
 using StardewValley.Objects;
 
 namespace FurnitureFramework.Data.FType
@@ -339,6 +341,7 @@ namespace FurnitureFramework.Data.FType
 
 		#region Methods for Special Furniture
 
+		#region TV
 		public void getScreenPosition(TV furniture, ref Vector2 position)
 		{
 			Rectangle bounding_box = furniture.boundingBox.Value;
@@ -351,6 +354,8 @@ namespace FurnitureFramework.Data.FType
 		{
 			scale = ScreenScale;
 		}
+
+		#endregion
 
 		public void GetBedSpot(BedFurniture furniture, ref Point spot)
 		{
@@ -392,6 +397,50 @@ namespace FurnitureFramework.Data.FType
 				);
 			}
 		}
+
+		#region Storage
+
+		public void setUpStoreForContext(ShopMenu shop_menu, ref bool _isStorageShop)
+		{
+			shop_menu.purchaseSound = null;
+			shop_menu.purchaseRepeatSound = null;
+			_isStorageShop = true;
+			shop_menu.tabButtons = new();
+
+			switch (StoragePreset)
+			{
+				case StoragePreset.Dresser:
+					shop_menu.UseDresserTabs();
+					return;
+				case StoragePreset.Catalogue:
+					shop_menu.UseCatalogueTabs();
+					return;
+				case StoragePreset.FurnitureCatalogue:
+					shop_menu.UseFurnitureCatalogueTabs();
+					return;
+			}
+
+			foreach ((TabProperty tab_prop, int idx) in StorageTabs.Select((value, index) => (value, index)))
+				tab_prop.AddTab(shop_menu, ModID, idx);
+			shop_menu.repositionTabs();
+		}
+
+		public bool highlightItemToSell(ShopMenu shop_menu, Item item)
+		{
+			switch (StoragePreset)
+			{
+				case StoragePreset.Dresser:
+					return new List<int>(){ -95, -100, -97, -96 }.Contains(item.Category);
+				case StoragePreset.Catalogue:
+					return item is Wallpaper;
+				case StoragePreset.FurnitureCatalogue:
+					return item is Furniture;
+			}
+			if (StorageCondition == null) return true;
+			return GameStateQuery.CheckConditions(StorageCondition, inputItem:item);
+		}
+		
+		#endregion
 
 		#endregion
 

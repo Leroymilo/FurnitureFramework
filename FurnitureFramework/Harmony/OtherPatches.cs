@@ -170,22 +170,25 @@ call check_held_object
 		#endregion
 	}
 
-	internal class ShopMenuPrefixes
+	internal class ShopMenuPostfixes
 	{
 		#pragma warning disable 0414
-		static readonly PatchType patch_type = PatchType.Prefix;
+		static readonly PatchType patch_type = PatchType.Postfix;
 		static readonly Type base_type = typeof(ShopMenu);
 		#pragma warning restore 0414
 
 		#region setUpStoreForContext
 
-		internal static void setUpStoreForContext(ShopMenu __instance)
+		internal static void setUpStoreForContext(ShopMenu __instance, ref bool ____isStorageShop)
 		{
-			if (__instance.ShopId == "FFStorage")
+			try
 			{
-				// __instance._isStorageShop = true; // not accessible
-				__instance.purchaseSound = null;
-				__instance.purchaseRepeatSound = null;
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+					type.setUpStoreForContext(__instance, ref ____isStorageShop);
+			}
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(setUpStoreForContext)}:\n{ex}", LogLevel.Error);
 			}
 		}
 
@@ -193,14 +196,18 @@ call check_held_object
 
 		#region highlightItemToSell
 
-		internal static bool highlightItemToSell(ref bool __result, ShopMenu __instance, Item i)
+		internal static bool highlightItemToSell(bool __result, ShopMenu __instance, Item i)
 		{
-			if (__instance.ShopId == "FFStorage")
+			try
 			{
-				__result = true;
-				return false;
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+					return type.highlightItemToSell(__instance, i);
 			}
-			return true;
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(highlightItemToSell)}:\n{ex}", LogLevel.Error);
+			}
+			return __result;
 		}
 
 		#endregion

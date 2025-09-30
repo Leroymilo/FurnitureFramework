@@ -17,4 +17,12 @@ It works by having a Furniture both with an `Animation` field and `Time Based` s
 
 ## Full CP Pack
 
-This is an example of how to make a Furniture Pack by putting it entirely in FF's Default Pack with Content Patcher
+This is an example of how to make a Furniture Pack by putting it entirely in FF's Default Pack with Content Patcher. Note that this type of pack still requires FF to work, but it allows the use of CP tokens and operations, which can be quite usefull.
+
+## i18n Example
+
+This is an example of how to incorporate i18n translations in your Furniture's names and descriptions, specifically how the i18n implementation interacts with [Variants](/doc/Furniture.md#variants). Please make sure to read the [documentation on i18n](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Translation#i18n_folder) to understand how its files work (the "Reading translations" is not important here).
+
+## Custom Storage
+
+This is an example of a custom `FFStorage` Furniture with custom tabs and conditions.

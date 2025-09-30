@@ -160,12 +160,12 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **New Features**:
 - Added i18n support to `Display Name` and `Description`!
-- Added new Special Type: `FFStorage`. Works like a `Dresser` but accepts any item.
+- Added new Special Type: `FFStorage`. Works like a `Dresser` but with configurable tabs and item conditions.
 - Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.
 
 # Planned Future Features
 
-- Custom FFStorage tabs and item condition (context tags? categories?) (See ShopMenu class).
+- Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - Add a config option to show the collision map instead of the bounding box when placing Furniture. (Object.drawPlacementBounds)
@@ -175,5 +175,6 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys
+	- Merge Dresser and FFStorage (rename to just Storage?)
 	- Put Special Furniture types into structures -> A Furniture's Special Type is whatever is not null -> mutually exclusive
 	- Find a way to make rotation more accessible?

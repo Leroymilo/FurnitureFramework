@@ -83,6 +83,7 @@ What parts of Furniture I plan to add customization to in this Framework:
 
 What I don't plan on adding, but I can work on if multiple people ask for it:
 - Custom Randomized Plant
+- Opening animation for custom Storage Furniture
 - More customization for Particles (make some fields directional, list of scales and list of scale changes)
 
 What can be added but I don't have the knowledge/courage to do it any-time soon:
@@ -90,6 +91,7 @@ What can be added but I don't have the knowledge/courage to do it any-time soon:
 
 # Known Issues
 
+- Placing any StorageFurniture (Dresser, Fishtank or FFStorage) in a slot (vanilla or custom) will delete all items inside.
 - Default Slots Debug Color does not apply until Pack reload or restart.
 - Seats do not behave correctly for Furniture placed on Slots.
 - Vanilla Furniture placed in slots doesn't show on/off state properly (fire isn't drawn on torches).

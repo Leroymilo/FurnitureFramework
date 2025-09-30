@@ -4,6 +4,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley.GameData;
 using StardewValley.GameData.Shops;
+using StardewValley.Menus;
 using StardewValley.Objects;
 
 namespace FurnitureFramework.Data.FPack
@@ -37,9 +38,16 @@ namespace FurnitureFramework.Data.FPack
 			return true;
 		}
 
-		public static bool TryGetType(Furniture furniture, [MaybeNullWhen(false)] out Data.FType.FType type)
+		public static bool TryGetType(Furniture furniture, [MaybeNullWhen(false)] out FType.FType type)
 		{
 			return TryGetType(furniture.ItemId, out type);
+		}
+
+		public static bool TryGetType(ShopMenu shop_menu, [MaybeNullWhen(false)] out FType.FType type)
+		{
+			type = null;
+			if (!shop_menu.ShopId.StartsWith("FF/")) return false;
+			return TryGetType(shop_menu.ShopId[3..], out type);
 		}
 
 		#endregion
