@@ -1,5 +1,5 @@
 
-[Go to bottom](#304)
+[Go to bottom](#planned-future-features)
 
 # 2.0
 
