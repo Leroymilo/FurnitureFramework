@@ -686,6 +686,46 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		}
 
 		#endregion
+
+		#region ShowShopMenu
+
+		internal static void ShowShopMenu(StorageFurniture __instance)
+		{
+			try
+			{
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				{
+					__instance.modData["FF.storage_open_state"] = true.ToString();
+					__instance.modData["FF.storage_anim_start"] = ((long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds).ToString();
+				}
+			}
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(ShowShopMenu)}:\n{ex}", LogLevel.Error);
+			}
+		}
+
+		#endregion
+
+		#region OnMenuClose
+
+		internal static void OnMenuClose(StorageFurniture __instance)
+		{
+			try
+			{
+				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				{
+					__instance.modData["FF.storage_open_state"] = false.ToString();
+					__instance.modData["FF.storage_anim_start"] = ((long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds).ToString();
+				}
+			}
+			catch (Exception ex)
+			{
+				ModEntry.Log($"Failed in {nameof(OnMenuClose)}:\n{ex}", LogLevel.Error);
+			}
+		}
+
+		#endregion
 	}
 
 	#endregion

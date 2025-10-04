@@ -62,7 +62,7 @@ namespace FurnitureFramework.Data.FType.Properties
 			Animates = true;
 		}
 
-		public Point GetOffset()
+		public Point GetOffsetLoop()
 		{
 			if (!Animates) return Point.Zero;
 
@@ -71,6 +71,39 @@ namespace FurnitureFramework.Data.FType.Properties
 			int frame = EndTimes.BinarySearch(loop_time);
 			if (frame < 0) frame = ~frame;
 			return Offset[frame];
+		}
+
+		public Point GetOffsetOnce(long start_time)
+		{
+			if (!Animates) return Point.Zero;
+
+			long time_ms = (long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds - start_time;
+			if (time_ms >= EndTimes.Last()) return Offset.Last();
+			int frame = EndTimes.BinarySearch((int)time_ms);
+			if (frame < 0) frame = ~frame;
+			return Offset[frame];
+		}
+
+		public Animation Reverse()
+		{
+			Animation reversed = new()
+			{
+				FrameCount = FrameCount,
+				FrameDuration = FrameDuration.Reverse<int>().ToList(),
+				Offset = Offset.Reverse<Point>().ToList()
+			};
+
+			// Builds the EndTimes list from FrameDuration
+			int frame_end = 0;
+			foreach (int duration in reversed.FrameDuration)
+			{
+				frame_end += duration;
+				reversed.EndTimes.Add(frame_end);
+			}
+
+			reversed.Animates = true;
+
+			return reversed;
 		}
 	}
 

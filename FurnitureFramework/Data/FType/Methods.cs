@@ -21,6 +21,12 @@ namespace FurnitureFramework.Data.FType
 				furniture.modData["FF.RectVariant"] = type.Variants[furniture.ItemId].RectVariant;
 				furniture.modData["FF.particle_timers"] = "[]";
 				type.InitializeSlots(furniture);
+
+				if (furniture is StorageFurniture)
+				{
+					furniture.modData["FF.storage_open_state"] = false.ToString();
+					furniture.modData["FF.storage_anim_start"] = 0.ToString();
+				}
 			}
 		}
 

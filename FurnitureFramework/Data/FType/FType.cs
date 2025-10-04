@@ -154,6 +154,9 @@ namespace FurnitureFramework.Data.FType
 		public StoragePreset StoragePreset = StoragePreset.None;
 		public string? StorageCondition;
 		public List<TabProperty> StorageTabs = new();
+		
+		public Animation OpeningAnimation = new();
+		public Animation ClosingAnimation = new();
 
 		#endregion
 
@@ -198,6 +201,9 @@ namespace FurnitureFramework.Data.FType
 					ForceType = "painting";
 					break;
 			}
+
+			if (OpeningAnimation.Animates && !ClosingAnimation.Animates)
+				ClosingAnimation = OpeningAnimation.Reverse();
 		}
 
 		public void SetIDs(string mod_id, string f_id)

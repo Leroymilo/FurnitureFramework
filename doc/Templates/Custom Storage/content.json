@@ -4,14 +4,13 @@
 	"Furniture": {
 		"[[ModID]].weapons_chest": {
 			"Display Name": "Weapons Chest",
-			"Source Image": "Content/TileSheets/Craftables",
-			// Taking the sprite directly from the game assets
+			"Source Image": "modified_chest.png",
 			"Rotations": 1,
 			"Collisions": {"Width": 1, "Height": 1},
 			"Layers": {
 				"Source Rect": {
-					"X": 32,
-					"Y": 512,
+					"X": 0,
+					"Y": 0,
 					"Width": 16,
 					"Height": 32
 				}
@@ -38,7 +37,13 @@
 					"Source Image": "tab_icons.png",
 					"Source Rect": {"X": 0, "Y": 32, "Width": 16, "Height": 16}
 				}
-			]
+			],
+
+			"Opening Animation": {
+				"Frame Count": 6,
+				"Frame Duration": 100,
+				"Offset": {"X": 16, "Y": 0}
+			}
 		}
 	}
 }

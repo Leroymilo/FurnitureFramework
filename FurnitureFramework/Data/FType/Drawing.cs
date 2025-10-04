@@ -161,7 +161,15 @@ namespace FurnitureFramework.Data.FType
 			draw_data.is_on = Toggle && furniture.IsOn;
 			draw_data.is_dark = TimeBased && furniture.timeToTurnOnLights();
 
-			draw_data.rect_offset = Animation.GetOffset() + GetOffset(furniture);
+			draw_data.rect_offset = Animation.GetOffsetLoop() + GetOffset(furniture);
+
+			if (furniture is StorageFurniture && furniture.modData.ContainsKey("FF.storage_open_state"))
+			{
+				bool is_open = bool.Parse(furniture.modData["FF.storage_open_state"]);
+				long start_time = long.Parse(furniture.modData["FF.storage_anim_start"]);
+				if (is_open) draw_data.rect_offset += OpeningAnimation.GetOffsetOnce(start_time);
+				else draw_data.rect_offset += ClosingAnimation.GetOffsetOnce(start_time);
+			}
 
 			if (furniture.shakeTimer > 0)
 			{
@@ -195,7 +203,7 @@ namespace FurnitureFramework.Data.FType
 				// while placing
 
 				if (!AnimateWhenPlacing)
-					draw_data.rect_offset -= Animation.GetOffset();
+					draw_data.rect_offset -= Animation.GetOffsetLoop();
 
 				if (DrawLayersWhenPlacing) Layers[rot].DrawAll(draw_data, top);
 				else Layers[rot][0].Draw(draw_data, top);

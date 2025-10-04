@@ -161,6 +161,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 **New Features**:
 - Added i18n support to `Display Name` and `Description`!
 - Added new Special Type: `FFStorage`. Works like a `Dresser` but with configurable tabs and item conditions.
+- Added `Opening Animation` and `Closing Animation` fields for all Storage Furniture.
 - Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.
 
 # Planned Future Features
@@ -175,6 +176,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys
-	- Merge Dresser and FFStorage (rename to just Storage?)
+	- Merge Dresser, FishTank and FFStorage (rename to just Storage?)
 	- Put Special Furniture types into structures -> A Furniture's Special Type is whatever is not null -> mutually exclusive
+	- Split `Placement Restriction` to match 1.7 data structure.
 	- Find a way to make rotation more accessible?
