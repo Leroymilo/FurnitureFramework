@@ -7,4 +7,4 @@ FurnitureFramework/bin/
 FurnitureFramework/obj/
 **/__pycache__
 env/
-doc/Templates/test/
+doc/Templates/.test/
