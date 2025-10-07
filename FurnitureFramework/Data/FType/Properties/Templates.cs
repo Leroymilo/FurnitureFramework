@@ -141,9 +141,13 @@ namespace FurnitureFramework.Data.FType.Properties
 				JObject obj = JObject.Load(reader);
 				JObject new_obj = new();
 
+				bool debug = false;
+				if (obj.ContainsKey("DEBUG")) debug = true;
+
 				if (Field.CurrentDirKey == null)
 				{
 					// Non-directional Field (for FieldList)
+					if (debug) ModEntry.Log("Not directional!");
 					new_obj = Utils.RemoveSpaces(obj);
 				}
 
@@ -158,8 +162,9 @@ namespace FurnitureFramework.Data.FType.Properties
 						DirectionalAttribute? tag = (DirectionalAttribute?)Attribute.GetCustomAttribute(field, typeof(DirectionalAttribute));
 						if (tag != null && tag.Directional)
 						{
+							if (debug) ModEntry.Log($"Checking directional field {field.Name}");
 							// Removing the layer of directionality if present
-							if (property.Value is JObject prop_obj && (field.FieldType.IsEnum || prop_obj.First is JObject))
+							if (property.Value is JObject prop_obj && Utils.IsSubfieldDirectional(prop_obj, field))
 							{
 								if (prop_obj.ContainsKey(Field.CurrentDirKey))
 									new_obj.Add(property.Name, prop_obj.GetValue(Field.CurrentDirKey));

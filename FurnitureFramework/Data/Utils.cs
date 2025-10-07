@@ -51,10 +51,7 @@ namespace FurnitureFramework.Data
 				FieldInfo? field = type.GetField(field_name);
 				if (field == null) continue;
 
-				// Only 3 cases (for now): enum, Point or Rectangle
-				if (field.FieldType.IsEnum || field_obj.PropertyValues().First() is JObject)
-				// If the value is a JObject but represents an enum, then it's directional
-				// If any value in the JObject is also a JObjext, then it's directional (Point or Rectangle)
+				if (IsSubfieldDirectional(field_obj, field))
 				{
 					foreach (JProperty prop in field_obj.Properties())
 						result.Add(prop.Name);
@@ -64,6 +61,15 @@ namespace FurnitureFramework.Data
 			// Differentiates between invalid and no Directional Sub-Field
 			if (result.Count == 0) result.Add(NOROT);
 			return result.ToList();
+		}
+
+		public static bool IsSubfieldDirectional(JObject sub_field_data, FieldInfo sub_field_info)
+		{
+			// Only 3 cases (for now): enum, Point or Rectangle
+			if (sub_field_info.FieldType.IsEnum) return true;
+			// If the value is a JObject but represents an enum, then it's directional
+			return sub_field_data.PropertyValues().First() is JObject;
+			// If any value in the JObject is also a JObjext, then it's directional (Point or Rectangle)
 		}
 	}
 }
