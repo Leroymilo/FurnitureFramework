@@ -33,7 +33,7 @@ namespace FurnitureFramework.Data
 		public static List<string> GetSubDirections(Type type, JObject obj)
 		// type is passed for the method to work on inherited classes
 		{
-			List<string> result = new();
+			HashSet<string> result = new();
 
 			// Check if all [Required] fields are in the obj
 			foreach (string field_name in FType.Properties.TagAttribute.GetRequired(type))
@@ -52,10 +52,9 @@ namespace FurnitureFramework.Data
 				if (field == null) continue;
 
 				// Only 3 cases (for now): enum, Point or Rectangle
-
-				if (field.FieldType.IsEnum || field_obj.First is JObject)
+				if (field.FieldType.IsEnum || field_obj.PropertyValues().First() is JObject)
 				// If the value is a JObject but represents an enum, then it's directional
-				// If any value in the JObject is also a JObjext, then it's directional
+				// If any value in the JObject is also a JObjext, then it's directional (Point or Rectangle)
 				{
 					foreach (JProperty prop in field_obj.Properties())
 						result.Add(prop.Name);
@@ -64,7 +63,7 @@ namespace FurnitureFramework.Data
 
 			// Differentiates between invalid and no Directional Sub-Field
 			if (result.Count == 0) result.Add(NOROT);
-			return result;
+			return result.ToList();
 		}
 	}
 }
