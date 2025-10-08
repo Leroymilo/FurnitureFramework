@@ -150,6 +150,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed Big Craftables not blocking Furniture placement.
 - Fixed previously placed Furniture with variants.
 - Empty string custom Description no longer hides the item tooltip.
+- Fixed an issue with Directional Subfields parsing (e.g. Source Rect in a Layer)
 
 **New Features**:
 - It is now possible to specify a Furniture ID in the `ff_debug_print` command.
