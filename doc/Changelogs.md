@@ -142,7 +142,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
 - (internal) Huge rework of Furniture Pack parsing for CP patches to work.
 
-### 3.1.1 (**testing**)
+### 3.1.1 (**Testing**)
 
 **Fixes**:
 - Fixed TV's Screen Position failing parsing.
