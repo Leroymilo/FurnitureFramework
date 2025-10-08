@@ -408,11 +408,13 @@ namespace FurnitureFramework.Data.FType
 
 		public void setUpStoreForContext(ShopMenu shop_menu, ref bool _isStorageShop)
 		{
+			//shouldn't happen because shop_id must match FF/furniture_id to get here
+			if (SpecialType != SpecialType.FFStorage) return;
 			shop_menu.purchaseSound = null;
 			shop_menu.purchaseRepeatSound = null;
 			_isStorageShop = true;
-			shop_menu.tabButtons = new();
 
+			shop_menu.tabButtons = new();
 			switch (StoragePreset)
 			{
 				case StoragePreset.Dresser:
@@ -431,8 +433,9 @@ namespace FurnitureFramework.Data.FType
 			shop_menu.repositionTabs();
 		}
 
-		public bool highlightItemToSell(ShopMenu shop_menu, Item item)
+		public bool highlightItemToSell(Item item)
 		{
+			if (SpecialType != SpecialType.FFStorage) return false;
 			switch (StoragePreset)
 			{
 				case StoragePreset.Dresser:

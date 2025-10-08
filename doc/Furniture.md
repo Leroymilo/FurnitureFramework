@@ -142,22 +142,33 @@ This field is a number that defines if the Furniture can be placed indoor and/or
 
 ### Context Tags
 
-This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).
+This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).  
+Some context tags will be automatically added to your Furniture depending on what other fields you defined.  
+The following are used to properly filter your Furniture with the Furniture Catalogue's tabs (either in the vanilla catalogue, or with SpaceCore's ShopExtensionData):
+- ff_category_table
+- ff_category_seat
+- ff_category_wall
+- ff_category_floor
+- ff_category_decor
+The following are used to properly filter your Furniture in the Happy Home Designer menu (**Work in Progress**):
+- ff_hhd_category_chair
+- ff_hhd_category_couch
+- ff_hhd_category_dresser?
+- ff_hhd_category_table
+- ff_hhd_category_wall
+- ff_hhd_category_light
+- ff_hhd_category_decor
+- ff_hhd_category_floor
+- ff_hhd_category_wall_light
+- ff_hhd_category_bed
 
 ### Exclude from Random Sales
 
 This defines wether or not this Furniture will show-up in random sales in the vanilla Furniture Catalogue and other Furniture shops. It's a boolean value (true or false), defaulting to true.
 
-## Furniture Catalogue Tab
+## Disable Category Tags
 
-This defines in which tab of the (vanilla) Furniture Catalogue this Furniture will show up (`Exclude from Random Sales` must be `false`). It will also determine in which tab this Furniture will appear when placed in a [`FFStorage`](Special%20Types/Storage) Furniture with `Storage Preset` set to "FurnitureCatalogue". The possible values are:
-- `None`	(will only show up in the "everything" tab)
-- `Table`	(includes vanilla table, long table and dresser)
-- `Seat`	(includes vanilla chair, bench, couch and armchair)
-- `Wall`	(includes vanilla painting and window)
-- `Floor`	(includes only vanilla rug)
-- `Decor`	(includes vanilla lamp, sconce, bookcase, decor, other and fireplace)
-The default value is `None`.
+If set to `true`, this will disable the context tags that are automatically added to your Furniture by FF. This is usefull if you want to set them yourself to be more in line with what you consider your Furniture to be.
 
 ## Custom Catalogue Shop
 
@@ -171,19 +182,19 @@ This is an array (a list) of string Shop IDs where you want your Furniture to sh
 ```
 will add your Furniture to Robin's Shop. Here's the list of [vanilla Shop IDs](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs) on the wiki. It's also possible to add your Furniture to shops and catalogues from other mods, you just need to make sure to get the exact Shop ID from it.
 
-When used in combination to the "Shop Id" field, you can create a custom Catalogue for your custom Furniture.
+When used in combination to the `Shop Id` field, you can create a custom Catalogue for your custom Furniture.
 
 The token `[[ModID]]` can be used in this field.
 
 ### Shop Id
 
-The Shop ID of the Shop the game should open when right-clicking on the Furniture, it's a string that defaults to `null` (no Shop attached).  
+The Shop ID of the Shop the game should open when right-clicking on the Furniture, it's a string.  
 You can attach one of the [vanilla Shops](https://stardewvalleywiki.com/Modding:Shops#Vanilla_shop_IDs), or your own Shop. Be carefull, some shops have some weird quirks when their owner is not around.  
-By default, if the Shop ID given doesn't match any existing shop, a default shop similar to the vanilla Furniture Catalogue (no owner) will be created.  
-You can then use the same Shop ID in the "Shows in Shops" field of other Furniture you created to add them to this new Catalogue.  
+By default, if the Shop ID given doesn't match any existing shop, a default shop similar to the vanilla Furniture Catalogue (no owner) will be created. Those default catalogues are compatible with [Happy Home Designer](https://www.nexusmods.com/stardewvalley/mods/19675) (they will open as a HHD menu) and with [SpaceCore](https://www.nexusmods.com/stardewvalley/mods/1348) (they will have the tabs of the Vanilla Furniture Catalogue).  
+You can then use the same Shop ID in the `Shows in Shops` field of other Furniture you created to add them to this new Catalogue.  
 All Furniture in the Example Pack are put in a custom catalogue also defined in it.
 
-If you want to add more rules to your custom Catalogue (multipliers, prices, owners, ...), you'll need to define it in another mod using Content Patcher, see how to make a [Mixed Content Pack](Author.md#content-patcher-integration).
+If you want to add more rules to your custom Catalogue (multipliers, prices, owners, ...), you'll need to define it in another mod using Content Patcher, see how to make a [Mixed Content Pack](Author.md#content-patcher-integration). If you define it with Content Patcher with priority "Default" or earlier, it will override all the default behaviors (all items are free, compatibility with HHD and SpaceCore), but you can define it again yourself. If you want to keep this default behavior, simply use a patch priority of "Late".
 
 Note: the Shop ID is raw, your mod's UniqueID will not be prepended to it, so make sure it's unique (you can manually add your mod's ID to it by using `[[ModID]]` for example).
 

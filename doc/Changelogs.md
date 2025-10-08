@@ -163,7 +163,13 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added i18n support to `Display Name` and `Description`!
 - Added new Special Type: `FFStorage`. Works like a `Dresser` but with configurable tabs and item conditions.
 - Added `Opening Animation` and `Closing Animation` fields for all Storage Furniture.
-- Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.
+- ~~Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.~~
+- **Work in Progress** Added a context tag system to select wich tabs of the vanilla furniture catalogue a Furnitrure shows up. If not opted out with `"Category Tag" = false`, they will be added automatically to furniture from what they define (seats, slots, lights...)
+- Catalogues ShopData created with FF will have the tabs of the Furniture Catalogue if SpaceCore is installed (this behavior can be changed for any shop with a CP patch to `spacechase0.SpaceCore/ShopExtensionData`, see the [SpaceCore documentation](https://github.com/spacechase0/StardewValleyMods/blob/develop/framework/SpaceCore/docs/README.md))
+- The [FF Debug Catalogue](#31) now has the tabs of the Furniture Catalogue for filtering through many Furniture Packs.
+
+**Changes**
+- Catalogues ShopData created with FF now forces all items to be free. If you want to avoid this, define your shops with priority "Default" or earlier (FF patches Data/Shops with Default + 100).
 
 # Planned Future Features
 

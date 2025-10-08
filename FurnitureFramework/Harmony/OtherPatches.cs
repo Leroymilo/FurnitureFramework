@@ -185,6 +185,9 @@ call check_held_object
 			{
 				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
 					type.setUpStoreForContext(__instance, ref ____isStorageShop);
+				
+				if (__instance.ShopId == "leroymilo.FF.debug_catalog")
+					__instance.UseFurnitureCatalogueTabs();
 			}
 			catch (Exception ex)
 			{
@@ -201,7 +204,7 @@ call check_held_object
 			try
 			{
 				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
-					return type.highlightItemToSell(__instance, i);
+					return type.highlightItemToSell(i);
 			}
 			catch (Exception ex)
 			{

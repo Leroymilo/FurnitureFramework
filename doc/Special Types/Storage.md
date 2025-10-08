@@ -13,6 +13,8 @@ This will copy the definition of one of the vanilla menus, including tabs with t
 
 If this field is set, the following fields will be ignored.
 
+Note: when setting this to Catalogue or FurnitureCatalogue, the Storage will accept Floor/Wallpaper or Furniture respectively, unlike the actual catalogues, which don't accept "selling" any items.
+
 ## Storage Condition
 
 This is a string of text that you can use to restrict what can be placed in this Storage using a [Game State Query](https://stardewvalleywiki.com/Modding:Game_state_queries). Use the `Input` keyword to refer to the item being tested for the storage.  
@@ -31,7 +33,7 @@ A simple string of text used to differentiate items when patching this data with
 ### Condition
 
 This is a string of text that you can use to filter what items will be shown in that tab a [Game State Query](https://stardewvalleywiki.com/Modding:Game_state_queries). Use the `Input` keyword to refer to the item being tested for the tab.  
-The tab will show all items if this is not set, it is recommended to do this in the first tab to have an "everything" tab.
+The tab will show all items if this is not set; it is recommended to do this in the first tab to have an "everything" tab.
 
 Note: if there's an error in the Game State Query, the game will give you an error report in the console with details. I can't really help to fix issues with it because I used the built-in function to read them, so I don't know much about it.
 

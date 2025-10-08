@@ -160,6 +160,8 @@ namespace FurnitureFramework.Data.FType
 
 		#endregion
 
+		#region Validation
+
 		[OnDeserialized]
 		private void Validate(StreamingContext context)
 		{
@@ -249,6 +251,8 @@ namespace FurnitureFramework.Data.FType
 				});
 			}
 		}
+
+		#endregion
 	}
 
 	/// <summary>

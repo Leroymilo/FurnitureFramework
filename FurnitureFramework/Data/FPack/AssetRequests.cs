@@ -234,21 +234,15 @@ namespace FurnitureFramework.Data.FPack
 		public static void EditShopData(IAssetData asset)
 		{
 			LoadAll();
+			AddedCatalogues.Clear();
 
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
 			foreach (string UID in ContentPacks.Keys)
 				PacksData[$"{UID}/{DEFAULT_PATH}"].AddShopData(editor);
 			
-			// All items in the Debug Catalogue are free
-			if (!editor.ContainsKey("leroymilo.FF.debug_catalog")) return;    // Just in case
-			QuantityModifier price_mod = new() {
-				Id = "FreeCatalogue",
-				Modification = QuantityModifier.ModificationType.Set,
-				Amount = 0
-			};
-			editor["leroymilo.FF.debug_catalog"].PriceModifiers = new() { price_mod };
-			editor["leroymilo.FF.debug_catalog"].PriceModifierMode = QuantityModifier.QuantityModifierMode.Minimum;
+			// Reloads shop extension data
+			ModEntry.GetHelper().GameContent.InvalidateCache("spacechase0.SpaceCore/ShopExtensionData");
 		}
 
 		void AddShopData(IDictionary<string, ShopData> editor)
@@ -282,19 +276,30 @@ namespace FurnitureFramework.Data.FPack
 		{
 			if (editor.ContainsKey(s_id)) return;
 
+			// To remove portrait spot and default dialogue
+			ShopOwnerData shop_owner = new() {
+				Name = "AnyOrNone",
+				Dialogues = new() {}
+			};
+
+			// To make a proper catalogue: everything is free
+			QuantityModifier price_mod = new() {
+				Id = "FreeCatalogue",
+				Modification = QuantityModifier.ModificationType.Set,
+				Amount = 0
+			};
+
 			ShopData catalogue_shop_data = new()
 			{
-				CustomFields = new Dictionary<string, string>() {
+				Owners = new List<ShopOwnerData>() { shop_owner },
+				PriceModifiers = new() { price_mod },
+				PriceModifierMode = QuantityModifier.QuantityModifierMode.Minimum,
+				CustomFields = new() {
 					{"HappyHomeDesigner/Catalogue", "true"}
-				},
-				Owners = new List<ShopOwnerData>() { 
-					new() {
-						Name = "AnyOrNone",
-						Dialogues = new() {}	// To remove default dialogue
-					}
 				}
 			};
 			editor[s_id] = catalogue_shop_data;
+			AddedCatalogues.Add(s_id);
 		}
 
 		static bool HasShopItem(ShopData shop_data, string f_id)

@@ -1,6 +1,8 @@
-﻿using GenericModConfigMenu;
+﻿using System.Collections;
+using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -85,6 +87,8 @@ namespace FurnitureFramework
 
 			if (config?.load_packs_on_game_start ?? false) Data.FPack.FPack.LoadAll();
 		}
+
+		#region config
 
 		private void RegisterConfig()
 		{
@@ -209,6 +213,8 @@ namespace FurnitureFramework
 			);
 		}
 
+		#endregion
+
 		private void RegisterCommands()
 		{
 			string desc = "Reloads a Furniture Pack, or all Packs if no id is given.\n\n";
@@ -317,10 +323,23 @@ namespace FurnitureFramework
 		private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
 		{
 			if (e.NameWithoutLocale.IsEquivalentTo("Data/Furniture") || e.Name.IsEquivalentTo("Data/Furniture_international"))
-				e.Edit(Data.FPack.FPack.EditFurnitureData, priority: AssetEditPriority.Early);
+				e.Edit(Data.FPack.FPack.EditFurnitureData);
 
 			else if (e.NameWithoutLocale.IsEquivalentTo("Data/Shops") || e.Name.IsEquivalentTo("Data/Shops_international"))
-				e.Edit(Data.FPack.FPack.EditShopData, priority: AssetEditPriority.Early);
+				e.Edit(Data.FPack.FPack.EditShopData, AssetEditPriority.Default + 100);
+			
+			else if (e.NameWithoutLocale.IsEquivalentTo("spacechase0.SpaceCore/ShopExtensionData"))
+			// adding catalogue tabs with spacecore
+				e.Edit(asset => {
+					string json_string = "{\"Tabs\": \"FurnitureCatalogue\"}";
+					Type? type = Type.GetType("SpaceCore.VanillaAssetExpansion.ShopExtensionData,SpaceCore");
+					if (type == null) return;
+					var obj = JsonConvert.DeserializeObject(json_string, type);
+
+					var editor = asset.GetData<IDictionary>();
+					foreach (string shop_id in Data.FPack.FPack.AddedCatalogues)
+						editor.Add(shop_id, obj);
+				});
 
 			// Loading any Furniture Pack data or texture (including menu icons)
 			else Data.FPack.FPack.LoadResource(e);
