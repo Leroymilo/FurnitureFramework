@@ -21,7 +21,8 @@
 			"Source Rect Offsets": {
 				"Oak": {"X": 0, "Y": 0},
 				"Walnut": {"X": 0, "Y": 32}
-			}
+			},
+			"Special Type": "Dresser"
 		},
 
 		"[[ModID]].i18n_test_2": {
@@ -45,7 +46,8 @@
 			"Source Rect Offsets": {
 				"Birch": {"X": 32, "Y": 0},
 				"Mahogany": {"X": 32, "Y": 32}
-			}
+			},
+			"Special Type": "Dresser"
 		}
 	}
 }

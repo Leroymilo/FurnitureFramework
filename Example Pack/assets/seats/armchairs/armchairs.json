@@ -3,6 +3,7 @@
 	"Format": 3,
 	"Furniture": {
 		"[[ModID]].armchair_test": {
+			"Context Tags": ["ff_hhd_category_couch"],
 			"Display Name": "[[ImageVariant]] Armchair Test",
 			"Rotations": 4,
 			"Collisions": {

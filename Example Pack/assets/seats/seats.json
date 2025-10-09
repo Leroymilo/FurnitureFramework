@@ -187,6 +187,7 @@
 			]
 		},
 		"[[ModID]].couch_test": {
+			"Context Tags": ["ff_hhd_category_couch"],
 			"Display Name": "Couch Test",
 			"Rotations": 4,
 			"Collisions": {
@@ -368,6 +369,7 @@
 			]
 		},
 		"[[ModID]].living_room": {
+			"Context Tags": ["ff_hhd_category_couch"],
 			"Display Name": "Living Room",
 			"Description": "A complex Furniture to test Layers and Collision Maps.",
 			"Rotations": 4,
