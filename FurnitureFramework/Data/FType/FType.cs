@@ -213,6 +213,11 @@ namespace FurnitureFramework.Data.FType
 				has_category = true;
 				has_hhd_category = true;
 			}
+			else if (SpecialType == SpecialType.Dresser)
+			{
+				ContextTags.Add("ff_category_table");
+				has_category = true;
+			}
 			if (Seats.HasAny(Rotations))
 			{
 				ContextTags.Add("ff_category_seat");

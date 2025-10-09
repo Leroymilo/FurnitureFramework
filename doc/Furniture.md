@@ -4,7 +4,8 @@ To make Furniture highly customizable, the definition of a Furniture has a lot o
 
 Once again, this documentation uses the [Example Pack](../Example%20Pack) as an example, it is strongly recommeded to go back and forth between the explanation here and the examples to identify what is being explained.
 
-When it is question of coordinates (x and y, position or size), it will always be defined as x left to right and y top to bottom, this is the convention for anything related to computer graphics. This puts (0, 0) in the top left corner (so `{"X": 0, "Y": 0}` will be the top left pixel in images).  
+When it is question of coordinates (x and y, position or size), it will always be defined as x left to right and y top to bottom, this is the convention for anything related to computer graphics. This puts (0, 0) in the top left corner (so `{"X": 0, "Y": 0}` will be the top left pixel in images).
+
 ![axes representation](images/axes.png)
 
 ## Contents
