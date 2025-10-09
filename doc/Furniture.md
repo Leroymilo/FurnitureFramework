@@ -22,7 +22,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 	* [Placement Restriction](#placement-restriction)
 	* [Context Tags](#context-tags)
 	* [Exclude from Random Sales](#exclude-from-random-sales)
-* [Furniture Catalogue Tab](#furniture-catalogue-tab)
+* [Disable Category Tags](#disable-category-tags)
 * [Custom Catalogue Shop](#custom-catalogue-shop)
 	* [Shows in Shops](#shows-in-shops)
 	* [Shop Id](#shop-id)
@@ -40,6 +40,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 * [Sounds](#sounds)
 * [Seats](#seats-directional)
 * [Slots](#seats-directional)
+* [Particels](#particles-directional)
 * [Light](#lights-directional)
 
 ## Priority
@@ -145,22 +146,22 @@ This field is a number that defines if the Furniture can be placed indoor and/or
 This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).  
 Some context tags will be automatically added to your Furniture depending on what other fields you defined.  
 The following are used to properly filter your Furniture with the Furniture Catalogue's tabs (either in the vanilla catalogue, or with SpaceCore's ShopExtensionData):
-- ff_category_table
-- ff_category_seat
-- ff_category_wall
-- ff_category_floor
-- ff_category_decor
+- ff_category_table 	(if Slots are defined)
+- ff_category_seat		(if Seats are defined or `Special Type` is set to "Dresser")
+- ff_category_wall		(if `Placement Type` is set to "Mural")
+- ff_category_floor		(if `Placement Type` is set to "Rug")
+- ff_category_decor		(everything not in other categories)
 The following are used to properly filter your Furniture in the Happy Home Designer menu (**Work in Progress**):
-- ff_hhd_category_chair
-- ff_hhd_category_couch
-- ff_hhd_category_dresser?
-- ff_hhd_category_table
-- ff_hhd_category_wall
-- ff_hhd_category_light
-- ff_hhd_category_decor
-- ff_hhd_category_floor
-- ff_hhd_category_wall_light
-- ff_hhd_category_bed
+- ff_hhd_category_chair			(if Seats are defined and there is no "ff_hhd_category_couch" tag)
+- ff_hhd_category_couch			(set manually by the author (you))
+- ff_hhd_category_other			(everything not in other categories)
+- ff_hhd_category_table			(if Slots are defined)
+- ff_hhd_category_wall			(if `Placement Type` is set to "Mural" and no Lights are defined)
+- ff_hhd_category_light			(if Lights are defined but `Placement Type` is not set to "Mural")
+- ff_hhd_category_decor			(everything not in other categories that had no `Special Type` and no Shop ID)
+- ff_hhd_category_floor			(if `Placement Type` is set to "Rug")
+- ff_hhd_category_wall_light	(if `Placement Type` is set to "Mural" and Lights are defined)
+- ff_hhd_category_bed			(if `Special Type` is set to "Bed")
 
 ### Exclude from Random Sales
 

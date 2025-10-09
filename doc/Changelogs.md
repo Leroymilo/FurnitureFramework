@@ -157,19 +157,18 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 - Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 
-## 3.2 (**Testing**)
+## 3.2 (**Work in Progress**)
 
 **New Features**:
 - Added i18n support to `Display Name` and `Description`!
 - Added new Special Type: `FFStorage`. Works like a `Dresser` but with configurable tabs and item conditions.
 - Added `Opening Animation` and `Closing Animation` fields for all Storage Furniture.
-- ~~Added new field `Furniture Catalogue Tab` to choose in which tab of the vanilla furniture catalogue a Furnitrure shows up.~~
-- **Work in Progress** Added a context tag system to select wich tabs of the vanilla furniture catalogue a Furnitrure shows up. If not opted out with `"Category Tag" = false`, they will be added automatically to furniture from what they define (seats, slots, lights...)
+- Added a context tag system to select wich tabs of the vanilla furniture catalogue a Furnitrure shows up. If not opted out with `"Disable Category Tag" = true`, they will be added automatically to furniture from what they define (seats, slots, placement type...). Also sets context tags to be used by Happy Home Designer.
 - Catalogues ShopData created with FF will have the tabs of the Furniture Catalogue if SpaceCore is installed (this behavior can be changed for any shop with a CP patch to `spacechase0.SpaceCore/ShopExtensionData`, see the [SpaceCore documentation](https://github.com/spacechase0/StardewValleyMods/blob/develop/framework/SpaceCore/docs/README.md))
 - The [FF Debug Catalogue](#31) now has the tabs of the Furniture Catalogue for filtering through many Furniture Packs.
 
 **Changes**
-- Catalogues ShopData created with FF now forces all items to be free. If you want to avoid this, define your shops with priority "Default" or earlier (FF patches Data/Shops with Default + 100).
+- Catalogues ShopData created with FF now forces all items to be free. If you want to avoid this, define your shops with priority "Default" or earlier with Content Patcher or SMAPI (FF patches `Data/Shops` with Default + 100).
 
 # Planned Future Features
 
@@ -177,7 +176,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - Add a config option to show the collision map instead of the bounding box when placing Furniture. (Object.drawPlacementBounds)
-- Make a custom config menu to enable/disable Furniture and Included packs.
+- Make a custom menu to enable/disable Furniture and Included packs.
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Add compatibility between custom TV screen depth and existing custom channel mods (if necessary).
 

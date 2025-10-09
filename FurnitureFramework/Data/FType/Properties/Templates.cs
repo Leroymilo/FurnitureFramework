@@ -316,7 +316,7 @@ namespace FurnitureFramework.Data.FType.Properties
 	#region Directional List Dictionary
 
 	/// <summary>
-	/// Holds data of Directional Lists (1 value per direction)
+	/// Holds data of Directional Lists (1 list per direction)
 	/// </summary>
 
 	public class FieldListDict<ListT, T> : Dictionary<string, ListT> where ListT : List<T>, new() where T : Field
@@ -342,6 +342,13 @@ namespace FurnitureFramework.Data.FType.Properties
 			if (!ContainsKey(key)) this[key] = new();
 			value.ID ??= this[key].Count.ToString();    // Assigning default ID when omitted
 			this[key].Add(value);
+		}
+
+		public bool HasAny(List<string> rotations)
+		{
+			foreach (string rot in rotations)
+				if (this[rot].Count > 0) return true;
+			return false;
 		}
 	}
 

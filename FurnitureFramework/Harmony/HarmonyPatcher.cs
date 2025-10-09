@@ -136,11 +136,17 @@ namespace FurnitureFramework.FFHarmony
 			}
 		}
 
+		static List<string> CategoryTags = new() {
+			"ff_category_table", "ff_category_seat",
+			"ff_category_wall", "ff_category_floor",
+			"ff_category_decor"
+		};
+
 		static bool IsInTab(bool __result, ISalable item, MethodBase __originalMethod)
 		{
 			if (item is not Furniture furniture) return __result;
-			if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? f_type)) return __result;
-			return (int)f_type.FurnitureCatalogueTab == int.Parse(__originalMethod.Name.Last().ToString());
+			if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? _)) return __result;
+			return furniture.HasContextTag(CategoryTags[int.Parse(__originalMethod.Name.Last().ToString()) - 1]);
 		}
 	}
 }

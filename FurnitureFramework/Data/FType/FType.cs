@@ -25,15 +25,6 @@ namespace FurnitureFramework.Data.FType
 		Mural
 	}
 
-	public enum CatalogueTab {
-		None,
-		Table,	// Table, LongTable, Dresser
-		Seat,	// Chair, Bench, Couch, Armchair
-		Wall,	// Painting, Window
-		Floor,	// Rug
-		Decor	// Lamp, Sconce, Bookcase, Decor, Other, Fireplace
-	}
-
 	public enum StoragePreset {
 		None,
 		Dresser,
@@ -102,7 +93,7 @@ namespace FurnitureFramework.Data.FType
 		public int PlacementRestriction = 2;
 		public List<string> ContextTags = new();
 		public bool ExcludefromRandomSales = true;
-		public CatalogueTab FurnitureCatalogueTab = CatalogueTab.None;
+		public bool DisableCategoryTags = false;
 		public List<string> ShowsinShops = new();
 		public string? ShopId;
 
@@ -206,6 +197,70 @@ namespace FurnitureFramework.Data.FType
 
 			if (OpeningAnimation.Animates && !ClosingAnimation.Animates)
 				ClosingAnimation = OpeningAnimation.Reverse();
+			
+			if (!DisableCategoryTags) SetCategoryTags();
+		}
+
+		private void SetCategoryTags()
+		{
+			bool has_category = false;
+			bool has_hhd_category = false;
+
+			if (Slots.HasAny(Rotations))
+			{
+				ContextTags.Add("ff_category_table");
+				ContextTags.Add("ff_hhd_category_table");
+				has_category = true;
+				has_hhd_category = true;
+			}
+			if (Seats.HasAny(Rotations))
+			{
+				ContextTags.Add("ff_category_seat");
+				has_category = true;
+				if (!ContextTags.Contains("ff_hhd_category_couch"))
+					ContextTags.Add("ff_hhd_category_chair");
+				has_hhd_category = true;
+			}
+			switch (PlacementType)
+			{
+				case PlacementType.Mural:
+					ContextTags.Add("ff_category_wall");
+					has_category = true;
+					if (Lights.HasAny(Rotations)) ContextTags.Add("ff_hhd_category_wall_light");
+					else ContextTags.Add("ff_hhd_category_wall");
+					has_hhd_category = true;
+					break;
+				case PlacementType.Rug:
+					ContextTags.Add("ff_category_floor");
+					ContextTags.Add("ff_hhd_category_floor");
+					has_category = true;
+					has_hhd_category = true;
+					break;
+			}
+
+			if (Lights.HasAny(Rotations) && PlacementType != PlacementType.Mural)
+			{
+				ContextTags.Add("ff_hhd_category_light");
+				has_hhd_category = true;
+			}
+
+			if (SpecialType == SpecialType.Bed)
+			{
+				ContextTags.Add("ff_hhd_category_bed");
+				has_hhd_category = true;
+			}
+
+			if (!has_hhd_category && SpecialType == SpecialType.None && ShopId == null)
+			{
+				ContextTags.Add("ff_hhd_category_decor");
+				has_hhd_category = true;
+			}
+			
+			if (!has_category)
+				ContextTags.Add("ff_category_decor");
+
+			if (!has_hhd_category)
+				ContextTags.Add("ff_hhd_category_other");
 		}
 
 		public void SetIDs(string mod_id, string f_id)
