@@ -36,7 +36,7 @@ namespace FurnitureFramework.Data.FPack
 				return;
 			}
 
-			ModEntry.Log($"Pack {ID} does not exist!", LogLevel.Warn);
+			ModEntry.Log($"Pack or Furniture {ID} does not exist!", LogLevel.Warn);
 
 		}
 

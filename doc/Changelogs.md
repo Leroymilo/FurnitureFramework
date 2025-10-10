@@ -151,11 +151,13 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed previously placed Furniture with variants.
 - Empty string custom Description no longer hides the item tooltip.
 - Fixed an issue with Directional Subfields parsing (e.g. Source Rect in a Layer)
+- Fixed error on patching Data/Furniture or Data/Shops if some packs failed to load.
 
 **New Features**:
 - It is now possible to specify a Furniture ID in the `ff_debug_print` command.
 - **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 - Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
+- Added Furniture Pack name to log for clarity.
 
 # Planned Future Features
 
