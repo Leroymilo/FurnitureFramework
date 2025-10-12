@@ -179,7 +179,7 @@ namespace FurnitureFramework.Data.FType
 			foreach (KeyValuePair<string, Point> pair in SourceRectOffsets)
 			{
 				FillVariants(
-					$"{FID}_{pair.Key}",
+					$"{FID}_{pair.Key.ToLower()}",
 					DisplayName.Replace("[[RectVariant]]", pair.Key, true, null),
 					pair.Key, pair.Value
 				);
@@ -191,7 +191,7 @@ namespace FurnitureFramework.Data.FType
 			foreach (KeyValuePair<string, string> pair in SourceImage)
 			{
 				string full_id = id;
-				if (pair.Key != "") full_id = $"{id}_{pair.Key}";
+				if (pair.Key != "") full_id = $"{id}_{pair.Key.ToLower()}";
 
 				Variants.Add(full_id, new()
 				{
