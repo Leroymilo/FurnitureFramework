@@ -90,7 +90,7 @@ namespace FurnitureFramework.Data.FPack
 				try { i_pack = data.Load(); }
 				catch (Exception e)
 				{
-					ModEntry.Log($"Failed, skipping pack.\n{e}", LogLevel.Error);
+					ModEntry.Log($"Failed to load {data.Path}, skipping included pack.\n{e}", LogLevel.Error);
 					continue;
 				}
 				

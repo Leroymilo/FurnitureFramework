@@ -11,13 +11,6 @@ namespace FurnitureFramework.Data.FPack
 {
 	partial class FPack
 	{
-		public static void InvalidateGameData()
-		{
-			IGameContentHelper helper = ModEntry.GetHelper().GameContent;
-			helper.InvalidateCache("Data/Furniture");
-			helper.InvalidateCache("Data/Shops");
-		}
-
 		#region Getters
 
 		private FType.FType GetType(string f_id)
@@ -152,6 +145,15 @@ namespace FurnitureFramework.Data.FPack
 			return c_pack is not null;
 		}
 
+		#region Invalidation
+
+		public static void InvalidateGameData()
+		{
+			IGameContentHelper helper = ModEntry.GetHelper().GameContent;
+			helper.InvalidateCache("Data/Furniture");
+			helper.InvalidateCache("Data/Shops");
+		}
+
 		public static bool InvalidateAsset(IAssetName name)
 		{
 			// Check if it's a FF asset
@@ -159,33 +161,16 @@ namespace FurnitureFramework.Data.FPack
 			// Check if it's a content file
 			if (!PacksData.TryGetValue(name.Name[3..], out FPack? f_pack)) return false;
 			
-			if (ToLoad.Contains(f_pack.LoadData_)) return false;
-
-			bool queue = !f_pack.IsAnyParentQueued();
-
-			if (queue)
-			{
-				ToLoad.Push(f_pack.LoadData_);
-				ModEntry.Log($"Queued {f_pack.DataUID} for reload.", LogLevel.Trace);
-			}
-
+			if (!ToLoad.Add(f_pack.LoadData_)) return false;
+			ModEntry.Log($"Queued {f_pack.DataUID} for reload.", LogLevel.Trace);
 			ModEntry.GetHelper().GameContent.InvalidateCache(
 				asset_info => f_pack.IncludedPacks.ContainsKey(asset_info.Name.Name[3..])
 			);
 
-			return queue;
+			return true;
 		}
 
-		private bool IsAnyParentQueued()
-		{
-			FPack? prev = LoadData_.Parent;
-			while (prev != null)
-			{
-				if (ToLoad.Contains(prev.LoadData_)) return true;
-				prev = prev.LoadData_.Parent;
-			}
-			return false;
-		}
+		#endregion
 
 		#region Data/Furniture
 
@@ -198,7 +183,8 @@ namespace FurnitureFramework.Data.FPack
 			TypesOrigin.Clear();
 
 			foreach (string UID in ContentPacks.Keys)
-				PacksData[$"{UID}/{DEFAULT_PATH}"].AddFurnitureData(editor);
+				if (PacksData.TryGetValue($"{UID}/{DEFAULT_PATH}", out FPack? f_pack))
+					f_pack.AddFurnitureData(editor);
 		}
 
 		private void AddFurnitureData(IDictionary<string, string> editor)
@@ -239,7 +225,8 @@ namespace FurnitureFramework.Data.FPack
 			var editor = asset.AsDictionary<string, ShopData>().Data;
 
 			foreach (string UID in ContentPacks.Keys)
-				PacksData[$"{UID}/{DEFAULT_PATH}"].AddShopData(editor);
+				if (PacksData.TryGetValue($"{UID}/{DEFAULT_PATH}", out FPack? f_pack))
+					f_pack.AddShopData(editor);
 			
 			// Reloads shop extension data
 			ModEntry.GetHelper().GameContent.InvalidateCache("spacechase0.SpaceCore/ShopExtensionData");

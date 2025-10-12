@@ -47,13 +47,24 @@ namespace FurnitureFramework.Data.FPack
 
 				return result;
 			}
+
+			public bool IsAncestorQueued()
+			{
+				FPack? prev = Parent;
+				while (prev != null)
+				{
+					if (ToLoad.Contains(prev.LoadData_)) return true;
+					prev = prev.LoadData_.Parent;
+				}
+				return false;
+			}
 		}
 
 		#endregion
 
 		#region Load
 
-		static Stack<LoadData> ToLoad = new();
+		static HashSet<LoadData> ToLoad = new();
 
 		public static void PreLoad(IModHelper helper)
 		{
@@ -69,7 +80,7 @@ namespace FurnitureFramework.Data.FPack
 
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned().Append(DefaultPack))
 			{
-				ToLoad.Push(new LoadData(c_pack));
+				ToLoad.Add(new LoadData(c_pack));
 				ContentPacks.Add(c_pack.Manifest.UniqueID, c_pack);
 			}
 			
@@ -78,19 +89,27 @@ namespace FurnitureFramework.Data.FPack
 
 		public static void LoadAll()
 		{
-			if (ToLoad.Count == 0) return;
-			
-			ModEntry.Log($"Loading {ToLoad.Count} Furniture Packs...", LogLevel.Info);
+			int count = ToLoad.Count;
+			if (count == 0) return;
 
-			while (ToLoad.Count > 0)
+			Queue<LoadData> queue = new();
+
+			// Removing recursive loads
+			foreach (LoadData load_data in ToLoad)
+				if (!load_data.IsAncestorQueued()) queue.Enqueue(load_data);
+			ToLoad.Clear();
+			
+			ModEntry.Log($"Loading {queue.Count} Furniture Packs...", LogLevel.Info);
+
+			while (queue.Count > 0)
 			{
-				LoadData load_data = ToLoad.Pop();
-				ModEntry.Log($"Loading {load_data.DataUID}...");
+				LoadData load_data = queue.Dequeue();
+				ModEntry.Log($"Loading {load_data.ContentPack.Manifest.Name} ({load_data.DataUID})...");
 				FPack? data;
 				try { data = load_data.Load(); }
 				catch (Exception e)
 				{
-					ModEntry.Log($"Failed, skipping pack.\n{e}", LogLevel.Error);
+					ModEntry.Log($"Failed to load, skipping pack.\n{e}", LogLevel.Error);
 					data = null;
 				}
 				if (data == null)
