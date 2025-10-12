@@ -67,7 +67,7 @@ And the `"[[RectVariant]] Cat Statue"` Furniture will create 2 Furniture:
 - White Cat Statue
 - Black Cat Statue
 
-This field also supports i18n translations by setting its value to `"i18n:my_translation_key"` (and replace `my_translation_key` by anything). It can get a bit tricky when combined with variants, but you can check the [template](Templates/i18n%20Example/) to see how it can work.
+This field supports i18n translations, see the [relevant documentation](Author.md#i18n-integration).
 
 ## Rotations (required)
 
@@ -252,7 +252,7 @@ Note 2: you can also use a list of Source Rect Offsets instead of a dictionary b
 
 The description of the Furniture that will be displayed in the game. If this is not set, the game will use one of the default descriptions that depends on the [placement restriction](#placement-restriction) of the Furniture (like vanilla Furniture have). Variant tokens can be used in this field.
 
-This field supports i18n translation in the exact same way as the [Display Name](#display-name).
+This field supports i18n translations, see the [relevant documentation](Author.md#i18n-integration).
 
 ## Animation
 
