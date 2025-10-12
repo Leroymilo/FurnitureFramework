@@ -15,8 +15,6 @@ namespace FurnitureFramework.Data.FType
 			if (FPack.FPack.TryGetType(furniture, out FType? type))
 			{
 				furniture.modData["FF"] = "true";
-				furniture.modData["FF.SourceImage"] = type.Variants[furniture.ItemId].SourceImage;
-				furniture.modData["FF.RectVariant"] = type.Variants[furniture.ItemId].RectVariant;
 				furniture.modData["FF.particle_timers"] = "[]";
 				type.InitializeSlots(furniture);
 			}
