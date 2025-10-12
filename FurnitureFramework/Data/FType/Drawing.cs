@@ -71,7 +71,7 @@ namespace FurnitureFramework.Data.FType
 			if (SourceImage.Count == 1)
 				return SourceImage[""];
 
-			return furniture.modData["FF.SourceImage"];
+			return furniture.modData[Variants[furniture.ItemId].SourceImage];
 		}
 
 		Point GetOffset(Furniture furniture)
@@ -79,7 +79,7 @@ namespace FurnitureFramework.Data.FType
 			if (SourceRectOffsets.Count == 0)
 				return Point.Zero;
 
-			return SourceRectOffsets[furniture.modData["FF.RectVariant"]];
+			return SourceRectOffsets[Variants[furniture.ItemId].RectVariant];
 		}
 
 		// for drawInMenu transpiler
