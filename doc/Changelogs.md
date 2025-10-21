@@ -155,7 +155,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **New Features**:
 - It is now possible to specify a Furniture ID in the `ff_debug_print` command.
-- **Testing** (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
+- (internal) Finished Data rework by migrating Furniture Pack functions to the Pack Data class.
 - Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 - Added Furniture Pack name to log for clarity.
 
