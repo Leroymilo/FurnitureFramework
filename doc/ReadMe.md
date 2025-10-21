@@ -83,7 +83,6 @@ What parts of Furniture I plan to add customization to in this Framework:
 
 What I don't plan on adding, but I can work on if multiple people ask for it:
 - Custom Randomized Plant
-- Opening animation for custom Storage Furniture
 - More customization for Particles (make some fields directional, list of scales and list of scale changes)
 
 What can be added but I don't have the knowledge/courage to do it any-time soon:
