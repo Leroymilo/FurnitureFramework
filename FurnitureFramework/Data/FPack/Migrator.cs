@@ -1,0 +1,6 @@
+
+
+namespace FurnitureFramework.Data.FPack
+{
+	
+}

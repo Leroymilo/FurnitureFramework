@@ -115,7 +115,9 @@ namespace FurnitureFramework.Data.FPack
 					return null;
 				}
 
-				if (!CheckFormat(format_token)) return null;
+				int format = CheckFormat(format_token);
+				if (format == -1) return null;
+				if (format == 2) 
 
 				FPack result = new();
 				serializer.Populate(obj.CreateReader(), result);
@@ -127,12 +129,14 @@ namespace FurnitureFramework.Data.FPack
 			throw new InvalidDataException($"Furniture Pack data is Invalid.");
 		}
 
-		static bool CheckFormat(JToken format_token)
+		static int CheckFormat(JToken format_token)
 		{
+			// Returns -1 if the format is invalid, 0 if it is up to date,
+			// and the format number if it can be converted to the current format
 			if (format_token.Type != JTokenType.Integer)
 			{
 				ModEntry.Log("Invalid Format, skipping Furniture Pack.", LogLevel.Error);
-				return false;
+				return -1;
 			}
 
 			int format = format_token.Value<int>();
@@ -142,14 +146,11 @@ namespace FurnitureFramework.Data.FPack
 				case > FORMAT:
 				case < 1:
 					ModEntry.Log($"Invalid Format: {format}, skipping Furniture Pack.", LogLevel.Error);
-					return false;
+					return -1;
 				case < FORMAT:
-					ModEntry.Log($"Format {format} is outdated, skipping Furniture Pack.", LogLevel.Error);
-					ModEntry.Log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
-					ModEntry.Log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
-					ModEntry.Log("If you are the author, check the Changelogs in the documentation to update your Pack.", LogLevel.Info);
-					return false;
-				case FORMAT: return true;
+					ModEntry.Log($"Format {format} is outdated, converting Furniture Pack to format {FORMAT}...", LogLevel.Warn);
+					return format;
+				case FORMAT: return 0;
 			}
 		}
 	}
