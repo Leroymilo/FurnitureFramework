@@ -142,7 +142,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added config option to load all Furniture Pack on game start (instead of when Furniture is loaded, which is often when the character selection screen is loaded, so it doesn't really impact gameplay).
 - (internal) Huge rework of Furniture Pack parsing for CP patches to work.
 
-### 3.1.1 (**Testing**)
+### 3.1.1
 
 **Fixes**:
 - Fixed TV's Screen Position failing parsing.
@@ -159,7 +159,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added a config option to toggle Furniture placed in Slots when the (custom) Furniture on which they are placed is toggled.
 - Added Furniture Pack name to log for clarity.
 
-## 3.2 (**Work in Progress**)
+## 3.2
 
 **New Features**:
 - Added i18n support to `Display Name` and `Description`!
@@ -171,6 +171,10 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 **Changes**
 - Catalogues ShopData created with FF now forces all items to be free. If you want to avoid this, define your shops with priority "Default" or earlier with Content Patcher or SMAPI (FF patches `Data/Shops` with Default + 100).
+
+### 3.2.2
+
+- Fixed oversight in draw method that was causing many errors for Furniture placed before updating to 3.2.
 
 # Planned Future Features
 
