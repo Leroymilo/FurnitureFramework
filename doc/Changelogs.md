@@ -179,7 +179,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 ### 3.2.3
 
 - Fixed an error happening if a type has a single named image variant.
-- Made Pack parsing errors much clearer: removed stack trace from error log, added clearer messages, handled Content Loading Error to only show the Json formatting error. Still have to find a way to propagate the validation error of Furniture Types properly.
+- Made Pack parsing errors much clearer: removed stack trace from error log, added clearer messages, handled Content Loading Error to only show the Json formatting error.
 
 # Planned Future Features
 

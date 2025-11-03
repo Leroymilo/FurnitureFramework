@@ -113,7 +113,7 @@ namespace FurnitureFramework.Data.FPack
 		{
 			if (exception is OutdatedFormatError format_error) format_error.Log();
 			else ModEntry.Log(exception.Message, LogLevel.Error);
-			ModEntry.Log("Skipping Furniture Pack.", LogLevel.Info);
+			ModEntry.Log("Skipping Furniture Pack.", LogLevel.Warn);
 
 			if (exception.StackTrace != null)
 				ModEntry.Log(exception.StackTrace, LogLevel.Trace);
@@ -194,6 +194,7 @@ namespace FurnitureFramework.Data.FPack
 						}
 						catch (Exception e)
 						{
+							if (e is System.Reflection.TargetInvocationException && e.InnerException != null) e = e.InnerException;
 							ModEntry.Log($"Could not parse value of \"{key}\" -> \"{prop.Name}\", skipping.", LogLevel.Warn);
 							ModEntry.Log($"Reason: {e.Message}", LogLevel.Warn);
 							if (e.StackTrace != null) ModEntry.Log(e.StackTrace, LogLevel.Trace);
