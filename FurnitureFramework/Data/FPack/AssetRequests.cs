@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -62,10 +63,17 @@ namespace FurnitureFramework.Data.FPack
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
 			if (e.DataType == typeof(FPack))
-			{	
+			{
 				if (!AssetExists<FPack>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {return LoadResource<FPack>(pc_helper, path);},
+					() => {
+						try { return LoadResource<FPack>(pc_helper, path); }
+						catch (ContentLoadException e)
+						{
+							if (e.InnerException == null) return new InvalidPack(e);	// Shouldn't happen
+							return new InvalidPack(e.InnerException);
+						}
+					},
 					AssetLoadPriority.Low
 				);
 			}
@@ -96,7 +104,7 @@ namespace FurnitureFramework.Data.FPack
 			else if (path.StartsWith("Content/"))
 			{
 				IGameContentHelper gc_helper = ModEntry.GetHelper().GameContent;
-				IAssetName name = gc_helper.ParseAssetName(System.IO.Path.ChangeExtension(path[8..], null));
+				IAssetName name = gc_helper.ParseAssetName(Path.ChangeExtension(path[8..], null));
 				return gc_helper.DoesAssetExist<Type>(name);
 			}
 
@@ -115,7 +123,7 @@ namespace FurnitureFramework.Data.FPack
 
 			else if (path.StartsWith("Content/"))
 			{
-				string fixed_path = System.IO.Path.ChangeExtension(path[8..], null);
+				string fixed_path = Path.ChangeExtension(path[8..], null);
 				result = ModEntry.GetHelper().GameContent.Load<Type>(fixed_path);
 				// Load from game content
 			}

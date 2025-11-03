@@ -176,6 +176,11 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - Fixed oversight in draw method that was causing many errors for Furniture placed before updating to 3.2.
 
+### 3.2.3
+
+- Fixed an error happening if a type has a single named image variant.
+- Made Pack parsing errors much clearer: removed stack trace from error log, added clearer messages, handled Content Loading Error to only show the Json formatting error. Still have to find a way to propagate the validation error of Furniture Types properly.
+
 # Planned Future Features
 
 - Modify schema to make the requirements of special furniture clearer (with oneof and stuff)

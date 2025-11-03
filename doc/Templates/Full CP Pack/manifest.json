@@ -1,8 +1,8 @@
 {
 	"Name": "Full CP Pack Template",
 	"Author": "leroymilo",
-	"Version": "3.2.2",
-	"MinimumApiVersion": "4.3",
+	"Version": "3.2.3",
+	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "A template pack for the Furniture Framework (CP)",
 	"UniqueID": "leroymilo.FullCPPack.CP",

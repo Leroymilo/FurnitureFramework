@@ -68,9 +68,6 @@ namespace FurnitureFramework.Data.FType
 
 		public string GetSourceImage(Furniture furniture)
 		{
-			if (SourceImage.Count == 1)
-				return SourceImage[""];
-
 			return Variants[furniture.ItemId].SourceImage;
 		}
 
