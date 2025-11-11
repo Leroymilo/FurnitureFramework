@@ -16,9 +16,9 @@ namespace FurnitureFramework.Data.FType.Properties
 		[Required]
 		[Directional]
 		public Rectangle Area;
-		public Vector2 Offset = Vector2.Zero;
+		public Point Offset = Point.Zero;
 		public bool DrawShadow = true;
-		public Vector2 ShadowOffset = Vector2.Zero;
+		public Point ShadowOffset = Point.Zero;
 		public Depth Depth = new();
 		public Point MaxSize = new(1, 1);
 
@@ -70,7 +70,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		{
 			Point size = held_obj.boundingBox.Value.Size;
 			position += new Point(Area.Center.X, Area.Bottom) * new Point(4);
-			position += Offset.ToPoint() * new Point(4);
+			position += Offset * new Point(4);
 			position.X -= size.X / 2;
 
 			held_obj.boundingBox.Value = new Rectangle(position, size);
@@ -80,7 +80,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		{
 			draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
 			// Position is set to the bottom center of the slot area
-			draw_data.position += Offset * 4f;
+			draw_data.position += Offset.ToVector2() * 4f;
 
 			draw_data.depth = Depth.GetValue(top);
 			draw_data.depth = MathF.BitIncrement(draw_data.depth);
@@ -117,7 +117,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				DrawData shadow_data = draw_data;	// should clone value fields like position
 				shadow_data.texture = Game1.shadowTexture;
 				shadow_data.source_rect = Game1.shadowTexture.Bounds;
-				shadow_data.position += ShadowOffset * 4;
+				shadow_data.position += ShadowOffset.ToVector2() * 4;
 				shadow_data.position -= shadow_data.source_rect.Size.ToVector2() * new Vector2(2, 4);
 				// draw pos is on top left of Shadow texture
 				
@@ -172,7 +172,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 				draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
 				// Position is set to the bottom center of the slot area
-				draw_data.position += Offset * 4f;
+				draw_data.position += Offset.ToVector2() * 4f;
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 

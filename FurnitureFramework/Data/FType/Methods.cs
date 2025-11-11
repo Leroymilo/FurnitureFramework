@@ -190,6 +190,7 @@ namespace FurnitureFramework.Data.FType
 
 		public static void AllowPlacementOnThisTile(Furniture furniture, int x, int y, ref bool allow)
 		{
+			if (allow) return;	// Furniture Placement Tweaks compat
 			allow = !IsClicked(furniture, x * 64, y * 64);
 		}
 

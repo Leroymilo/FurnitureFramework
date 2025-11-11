@@ -181,6 +181,11 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed an error happening if a type has a single named image variant.
 - Made Pack parsing errors much clearer: removed stack trace from error log, added clearer messages, handled Content Loading Error to only show the Json formatting error.
 
+### 3.2.4
+
+- Fixed Slot Offset causing a json reading error.
+- Restored copatibility with [Furniture Placement Tweaks](https://www.nexusmods.com/stardewvalley/mods/14092)
+
 # Planned Future Features
 
 - Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
