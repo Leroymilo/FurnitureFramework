@@ -144,7 +144,8 @@ This field is a number that defines if the Furniture can be placed indoor and/or
 
 ### Context Tags
 
-This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).  
+This is an array (a list) of context tags you want to add to your Furniture, it defaults to an empty list. If you want to learn more about context tags, check [the wiki](https://stardewvalleywiki.com/Modding:Items#Context_tags).
+
 Some context tags will be automatically added to your Furniture depending on what other fields you defined.  
 The following are used to properly filter your Furniture with the Furniture Catalogue's tabs (either in the vanilla catalogue, or with SpaceCore's ShopExtensionData):
 - ff_category_table 	(if Slots are defined)
@@ -152,9 +153,9 @@ The following are used to properly filter your Furniture with the Furniture Cata
 - ff_category_wall		(if `Placement Type` is set to "Mural")
 - ff_category_floor		(if `Placement Type` is set to "Rug")
 - ff_category_decor		(everything not in other categories)
-The following are used to properly filter your Furniture in the Happy Home Designer menu (**Work in Progress**):
+The following are used to properly filter your Furniture in the Happy Home Designer menu:
 - ff_hhd_category_chair			(if Seats are defined and there is no "ff_hhd_category_couch" tag)
-- ff_hhd_category_couch			(set manually by the author (you))
+- ff_hhd_category_couch			(must be added manually)
 - ff_hhd_category_other			(everything not in other categories)
 - ff_hhd_category_table			(if Slots are defined)
 - ff_hhd_category_wall			(if `Placement Type` is set to "Mural" and no Lights are defined)
@@ -301,7 +302,7 @@ This is a boolean (`true` or `false`). Set to `false` to disable the Animation w
 This kind of replace the "Type" field in the vanilla Furniture data. It's a string that can take one of these values:
 - `None` (no special type, default)
 - `Dresser`
-- `FFStorage` (like a Dresser, but with no tabs and no restriction on items)
+- [`FFStorage`](Special%20Types/Storage.md) (like a Dresser, but with no tabs and no restriction on items)
 - [`TV`](Special%20Types/TV.md)
 - [`Bed`](Special%20Types/Bed.md)
 - [`FishTank`](Special%20Types/FishTank.md)
