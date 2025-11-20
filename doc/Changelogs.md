@@ -81,11 +81,11 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Added `Draw Layers When Placing` field (bool) to draw layers when the player is placing the Furniture (to be used when there's no base layer, defaults to false to avoid ugly transparent layer stacking).
 - Added `Animate When Placing` field (bool) to disable complex animation when the player is placing the Furniture (defaults to true).
 - Added `Priority` to ensure your Furniture is loaded before/after other.
-- **NOT TESTED** Added the possibility to put a list in the `Animation`'s `Offset` to define the offset of every frame separately.
+- Added the possibility to put a list in the `Animation`'s `Offset` to define the offset of every frame separately.
 - Added automatic config options (in config.json and GMCM) for every Furniture and Included Pack of every Pack.
 - Added CP compatibility: it is now possible to EditImage on the sprite-sheets used by a Furniture Pack and EditData on the content.json itself or any included files.
 - Added a new command `ff_debug_print <ModId>` to dump all the data for any Furniture Pack for debug purposes. Feedback is wellcome, adding new info is possible.
-- **NOT TESTED** `Fish Area` and `Screen Position` are now directional.
+- `Fish Area` and `Screen Position` are now directional.
 - Added a new config option for a "Slot interaction key" (right click by default) to interact with Furniture in slots. It doesn't work perfectly for vanilla Furniture (missing flame on torches), but it should work fine for any custom Furniture.
 - There is new logic to handle overlapping custom Slots: now the mod will search for the first valid slot when you click on a pixel where multiple Slots exist in the same Furniture (doesn't work if Slots from different Furniture overlap, but let's say that it won't happen).
 
@@ -184,14 +184,15 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 ### 3.2.4
 
 - Fixed Slot Offset causing a json reading error.
-- Restored copatibility with [Furniture Placement Tweaks](https://www.nexusmods.com/stardewvalley/mods/14092)
+- Restored compatibility with [Furniture Placement Tweaks](https://www.nexusmods.com/stardewvalley/mods/14092)
 
 # Planned Future Features
 
-- Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
+- Add Alternative Image and SourceRect to randomize Furniture appearance (on instantiating or on day change) (implement AT compat?).
 - Add a config option to show the collision map instead of the bounding box when placing Furniture. (Object.drawPlacementBounds)
+- Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
 - Make a custom menu to enable/disable Furniture and Included packs.
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Add compatibility between custom TV screen depth and existing custom channel mods (if necessary).
