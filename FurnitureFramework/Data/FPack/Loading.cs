@@ -35,11 +35,16 @@ namespace FurnitureFramework.Data.FPack
 				Name = c_pack.Manifest.Name;
 			}
 
-			public FPack Load()
+			public FPack? Load()
 			{
 				if (ContentPack == null) throw new Exception("Content Pack not set before loading Pack!");
 
 				FPack result = ModEntry.GetHelper().GameContent.Load<FPack>("FF/"+DataUID);
+				if (result is InvalidPack invalid_result)
+				{
+					invalid_result.Log();
+					return null;
+				}
 				result.SetSource(this);
 
 				PacksData[DataUID] = result;
@@ -105,16 +110,11 @@ namespace FurnitureFramework.Data.FPack
 			{
 				LoadData load_data = queue.Dequeue();
 				ModEntry.Log($"Loading {load_data.ContentPack.Manifest.Name} ({load_data.DataUID})...");
-				FPack? data;
-				try { data = load_data.Load(); }
-				catch (Exception e)
-				{
-					ModEntry.Log($"Failed to load, skipping pack.\n{e}", LogLevel.Error);
-					data = null;
-				}
+				FPack? data = load_data.Load();
 				if (data == null)
 				{
 					load_data.Parent?.Included.Remove(load_data.Name);
+					load_data.Parent?.IncludedPacks.Remove(load_data.DataUID);
 					continue;
 				}
 

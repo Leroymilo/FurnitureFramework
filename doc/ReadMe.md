@@ -24,6 +24,7 @@ If you are a C# mod author and need an API for this mod, you can either make it 
 	- Seats (chairs, armchairs, sofas, benches, ...)
 	- Table Slots (multiple slots per Furniture!)
 	- Toggleability (lamps, cauldrons, fireplaces, ...)
+	- Time Based fields (layers and lights to make windows)
 	- Light Sources (lamps) and Light Glows (windows)
 	- Sound Effects (on click)
 	- Particles
@@ -31,23 +32,27 @@ If you are a C# mod author and need an API for this mod, you can either make it 
 - Texture/Sprite customization:
 	- Rotations (as many as you want!)
 	- Source Image
-	- Source Rectangles (for each rotation)
 	- Source Rectangle for menu icon
 	- Layers (with custom depth and Source Rectangles)
 	- Variants (same data but with a different Source Image or Rectangle)
 	- Animations (base Sprite and Layers)
-	- Luminosity dependant Textures (like a vanilla window)
 
 - Shop customization:
 	- Default Price
 	- Shops where the Furniture appears
 	- Exclude from random sales
 	- Attached Shop (like a Catalogue)
+	- Custom Catalogues have tabs if [SpaceCore](https://www.nexusmods.com/stardewvalley/mods/1348) is installed
+	- Compatibility with [Happy Home Designer](https://www.nexusmods.com/stardewvalley/mods/19675) UI and tabs
 
 - Special Furniture:
 	- Rugs
 	- Wall-mounted Furniture
 	- Dressers
+	- Generic Storage
+		- Presets
+		- Filters
+		- Tabs
 	- TVs
 		- Screen position and scale
 	- Beds
@@ -79,18 +84,18 @@ Huge thanks to:
 # TODO
 
 What parts of Furniture I plan to add customization to in this Framework:
-- See [changelogs](Changelogs.md#31-work-in-progress) for future versions
+- See [changelogs](Changelogs.md#planned-future-features) for future versions
 
 What I don't plan on adding, but I can work on if multiple people ask for it:
 - Custom Randomized Plant
-- More customization for Particles (make some fields directional, list of scales and list of scale changes)
+- More customization for Particles
 
 What can be added but I don't have the knowledge/courage to do it any-time soon:
 - Music (sound) stop when Furniture turned off/on
 
 # Known Issues
 
-- Placing any StorageFurniture (Dresser, Fishtank or FFStorage) in a slot (vanilla or custom) will delete all items inside.
+- Placing any StorageFurniture (Dresser, Fishtank or FFStorage) in a slot (vanilla or custom) will delete all items inside (should be fixed in the next SV version).
 - Default Slots Debug Color does not apply until Pack reload or restart.
 - Seats do not behave correctly for Furniture placed on Slots.
 - Vanilla Furniture placed in slots doesn't show on/off state properly (fire isn't drawn on torches).

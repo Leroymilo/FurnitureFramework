@@ -1,17 +1,17 @@
 using FurnitureFramework.Data.FType;
+using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 
 namespace FurnitureFramework.Data.FPack
 {
-	[JsonConverter(typeof(FormatChecker))]
+	[JsonConverter(typeof(PackJsonConverter))]
 	public partial class FPack
 	{
 
 		// Constants
 
-		const int FORMAT = 3;
 		const string DEFAULT_PATH = "content.json";
 		const string CONFIG_PATH = "config.json";
 
@@ -40,7 +40,7 @@ namespace FurnitureFramework.Data.FPack
 		[JsonIgnore]
 		readonly PackConfig Config = new();
 
-		public int Format = 0;
+		public int Format;
 		public Dictionary<string, FType.FType> Furniture = new();
 		public Dictionary<string, LoadData> Included = new();
 
@@ -85,12 +85,10 @@ namespace FurnitureFramework.Data.FPack
 				data.Name = name;
 				data.Parent = this;
 				Config.AddIPack(data);
-				FPack i_pack;
 
-				try { i_pack = data.Load(); }
-				catch (Exception e)
-				{
-					ModEntry.Log($"Failed to load {data.Path}, skipping included pack.\n{e}", LogLevel.Error);
+				FPack? i_pack = data.Load();
+				if (i_pack == null) {
+					ModEntry.Log($"Failed to load {data.Path}, skipping included pack.", LogLevel.Warn);
 					continue;
 				}
 				
@@ -100,59 +98,110 @@ namespace FurnitureFramework.Data.FPack
 			if (Furniture.Count == 0 && Included.Count == 0)
 				ModEntry.Log("This Furniture Pack is empty!", LogLevel.Warn);
 		}
+	}
 
-	class FormatChecker : ReadOnlyConverter<FPack>
+	class InvalidPack : FPack
 	{
+		Exception exception;
+
+		public InvalidPack(Exception exception)
+		{
+			this.exception = exception;
+		}
+
+		public void Log()
+		{
+			if (exception is OutdatedFormatError format_error) format_error.Log();
+			else ModEntry.Log(exception.Message, LogLevel.Error);
+			ModEntry.Log("Skipping Furniture Pack.", LogLevel.Warn);
+
+			if (exception.StackTrace != null)
+				ModEntry.Log(exception.StackTrace, LogLevel.Trace);
+		}
+	}
+
+	class OutdatedFormatError : Exception
+	{
+		int format;
+
+		public OutdatedFormatError(int format)
+		{
+			this.format = format;
+		}
+
+		public void Log()
+		{
+			ModEntry.Log($"Format {format} is outdated!", LogLevel.Error);
+			ModEntry.Log("If you are a user, wait for an update for this Furniture Pack,", LogLevel.Info);
+			ModEntry.Log($"or use a version of the Furniture Framework starting with {format}.", LogLevel.Info);
+			ModEntry.Log("If you are the author, check the Changelogs in the documentation to update your Pack.", LogLevel.Info);
+		}
+	}
+
+	class PackJsonConverter : ReadOnlyConverter<FPack>
+	{
+		const int FORMAT = 3;
+
 		public override FPack? ReadJson(JsonReader reader, Type objectType, FPack? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
 				JObject obj = JObject.Load(reader);
 
-				if (!obj.TryGetValue("Format", out JToken? format_token))
-				{
-					ModEntry.Log("Missing Format, skipping Furniture Pack.", LogLevel.Error);
-					return null;
-				}
-
-				int format = CheckFormat(format_token);
-				if (format == -1) return null;
-				if (format == 2) 
-
 				FPack result = new();
-				serializer.Populate(obj.CreateReader(), result);
+
+				try { result.Format = CheckFormat(obj); }
+				catch (Exception e) { return new InvalidPack(e); }
+
+				ParseDict(obj, "Furniture", result.Furniture);
+				ParseDict(obj, "Included", result.Included);
 
 				return result;
 			}
 
-			ModEntry.Log($"Furniture Pack data is Invalid.");
-			throw new InvalidDataException($"Furniture Pack data is Invalid.");
+			return new InvalidPack(new InvalidDataException($"Furniture Pack data is Invalid."));
 		}
 
-		static int CheckFormat(JToken format_token)
+		static int CheckFormat(JObject obj)
 		{
-			// Returns -1 if the format is invalid, 0 if it is up to date,
-			// and the format number if it can be converted to the current format
+			if (!obj.TryGetValue("Format", out JToken? format_token))
+				throw new InvalidDataException("Missing Format!");
 			if (format_token.Type != JTokenType.Integer)
-			{
-				ModEntry.Log("Invalid Format, skipping Furniture Pack.", LogLevel.Error);
-				return -1;
-			}
+				throw new InvalidDataException("Invalid Format!");
 
 			int format = format_token.Value<int>();
 
-			switch (format)
+			return format switch
 			{
-				case > FORMAT:
-				case < 1:
-					ModEntry.Log($"Invalid Format: {format}, skipping Furniture Pack.", LogLevel.Error);
-					return -1;
-				case < FORMAT:
-					ModEntry.Log($"Format {format} is outdated, converting Furniture Pack to format {FORMAT}...", LogLevel.Warn);
-					return format;
-				case FORMAT: return 0;
+				FORMAT => format,
+				< FORMAT and > 0 => throw new OutdatedFormatError(format),
+				_ => throw new InvalidDataException("Invalid Format!"),
+			};
+		}
+
+		static void ParseDict<TValue>(JObject pack_obj, string key, Dictionary<string, TValue> dictionary)
+		{
+			if (pack_obj.TryGetValue(key, out JToken? token) && token is JObject dict)
+			{
+				foreach (JProperty prop in dict.Properties())
+				{
+					if (prop.Value is JObject obj)
+					{
+						try
+						{
+							TValue data = obj.ToObject<TValue>() ?? throw new NullReferenceException("Value is null.");
+							dictionary.Add(prop.Name, data);
+						}
+						catch (Exception e)
+						{
+							if (e is System.Reflection.TargetInvocationException && e.InnerException != null) e = e.InnerException;
+							ModEntry.Log($"Could not parse value of \"{key}\" -> \"{prop.Name}\", skipping.", LogLevel.Warn);
+							ModEntry.Log($"Reason: {e.Message}", LogLevel.Warn);
+							if (e.StackTrace != null) ModEntry.Log(e.StackTrace, LogLevel.Trace);
+						}
+					}
+				}
 			}
 		}
-	}
 	}
 }

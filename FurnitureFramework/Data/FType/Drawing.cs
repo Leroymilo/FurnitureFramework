@@ -68,10 +68,7 @@ namespace FurnitureFramework.Data.FType
 
 		public string GetSourceImage(Furniture furniture)
 		{
-			if (SourceImage.Count == 1)
-				return SourceImage[""];
-
-			return furniture.modData[Variants[furniture.ItemId].SourceImage];
+			return Variants[furniture.ItemId].SourceImage;
 		}
 
 		Point GetOffset(Furniture furniture)

@@ -1,13 +1,13 @@
 {
 	"Name": "Dropdown Config Option Template (FF)",
 	"Author": "leroymilo",
-	"Version": "3.2.0",
-	"MinimumApiVersion": "4.3",
+	"Version": "3.2.4",
+	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "A template pack for the Furniture Framework (FF)",
 	"UniqueID": "leroymilo.DropdownTemplate.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
-		"MinimumVersion": "3.2.0"
+		"MinimumVersion": "3.2.4"
 	}
 }

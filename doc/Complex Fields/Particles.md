@@ -1,7 +1,8 @@
 # How to define Custom Particles
 
 Custom Particles have a lot of fields, but don't be scared: most of them are not required.  
-If you need an example, the `Custom Cauldron` Furniture in the Example Pack has all its fields defined (even the optional fields for completeness).
+If you need an example, the `Custom Cauldron` Furniture in the Example Pack has all its fields defined (even the optional fields for completeness).  
+If there's something you want to do but seems impossible with this, you can checkout the [Particle Framework](https://www.nexusmods.com/stardewvalley/mods/23544), it might have what you are searching for. If what you want to do is still impossible, contact me to request a feature, there's still a lot of stuff that could be added to FF's particle definition.
 
 ## Source Image (required)
 
