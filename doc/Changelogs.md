@@ -199,7 +199,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - For eventual 4.0 format change:
 	- Remove the fucking spaces from the fucking json keys
-	- Merge Dresser, FishTank and FFStorage (rename to just Storage?)
+	- Merge Dresser, ~~FishTank~~ and FFStorage (rename to just Storage?)
 	- Put Special Furniture types into structures -> A Furniture's Special Type is whatever is not null -> mutually exclusive
 	- Split `Placement Restriction` to match 1.7 data structure.
 	- Overhaul rotations: instead of doing {rot_key: value}, add a "rotations" field to every rotational field to specify which rotations it applies to (all rotations if null).
