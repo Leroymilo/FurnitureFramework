@@ -14,12 +14,12 @@ namespace FurnitureFramework.Data.FPack
 	{
 		#region Getters
 
-		private FType.FType GetType(string f_id)
+		private FType.FF3Type GetType(string f_id)
 		{
 			return Furniture[f_id];
 		}
 
-		private static bool TryGetType(string f_id, [MaybeNullWhen(false)] out FType.FType type)
+		private static bool TryGetType(string f_id, [MaybeNullWhen(false)] out FType.FF3Type type)
 		{
 			ModEntry.GetHelper().GameContent.Load<Dictionary<string, string>>("Data/Furniture");
 
@@ -32,12 +32,12 @@ namespace FurnitureFramework.Data.FPack
 			return true;
 		}
 
-		public static bool TryGetType(Furniture furniture, [MaybeNullWhen(false)] out FType.FType type)
+		public static bool TryGetType(Furniture furniture, [MaybeNullWhen(false)] out FType.FF3Type type)
 		{
 			return TryGetType(furniture.ItemId, out type);
 		}
 
-		public static bool TryGetType(ShopMenu shop_menu, [MaybeNullWhen(false)] out FType.FType type)
+		public static bool TryGetType(ShopMenu shop_menu, [MaybeNullWhen(false)] out FType.FF3Type type)
 		{
 			type = null;
 			if (!shop_menu.ShopId.StartsWith("FF/")) return false;
@@ -62,12 +62,12 @@ namespace FurnitureFramework.Data.FPack
 			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
-			if (e.DataType == typeof(FPack))
+			if (e.DataType == typeof(BasePack))
 			{
-				if (!AssetExists<FPack>(pc_helper, path)) return false;
+				if (!AssetExists<BasePack>(pc_helper, path)) return false;
 				e.LoadFrom(
 					() => {
-						try { return LoadResource<FPack>(pc_helper, path); }
+						try { return LoadResource<BasePack>(pc_helper, path); }
 						catch (ContentLoadException e)
 						{
 							if (e.InnerException == null) return new InvalidPack(e);	// Shouldn't happen
@@ -197,7 +197,7 @@ namespace FurnitureFramework.Data.FPack
 
 		private void AddFurnitureData(IDictionary<string, string> editor)
 		{
-			foreach (FType.FType type in Furniture.Values)
+			foreach (FType.FF3Type type in Furniture.Values)
 			{
 				foreach (KeyValuePair<string, string> pair in type.GetStringData())
 				{
@@ -242,7 +242,7 @@ namespace FurnitureFramework.Data.FPack
 
 		void AddShopData(IDictionary<string, ShopData> editor)
 		{
-			foreach (FType.FType type in Furniture.Values)
+			foreach (FType.FF3Type type in Furniture.Values)
 			{
 				if (type.ShopId != null) AddShop(editor, type.ShopId);
 

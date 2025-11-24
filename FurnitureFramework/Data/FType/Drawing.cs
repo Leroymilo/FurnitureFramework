@@ -57,7 +57,7 @@ namespace FurnitureFramework.Data.FType
 		}
 	}
 	
-	public partial class FType
+	public partial class FF3Type
 	{
 		Rectangle GetIconSourceRect()
 		{
@@ -82,7 +82,7 @@ namespace FurnitureFramework.Data.FType
 		// for drawInMenu transpiler
 		private static Rectangle GetIconSourceRect(Furniture furniture)
 		{
-			if (FPack.FPack.TryGetType(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FF3Type? type))
 			{
 				Rectangle result = type.GetIconSourceRect();
 				result.Location += type.GetOffset(furniture);

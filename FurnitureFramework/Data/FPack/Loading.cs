@@ -3,8 +3,10 @@ using StardewModdingAPI;
 
 namespace FurnitureFramework.Data.FPack
 {
-	partial class FPack
+	partial class BasePack
 	{
+
+		protected static HashSet<LoadData> ToLoad = new();
 
 		#region LoadData class
 
@@ -39,18 +41,27 @@ namespace FurnitureFramework.Data.FPack
 			{
 				if (ContentPack == null) throw new Exception("Content Pack not set before loading Pack!");
 
-				FPack result = ModEntry.GetHelper().GameContent.Load<FPack>("FF/"+DataUID);
-				if (result is InvalidPack invalid_result)
+				BasePack result = ModEntry.GetHelper().GameContent.Load<BasePack>("FF/"+DataUID);
+				if (result is OldPack old_pack)
 				{
-					invalid_result.Log();
-					return null;
+					// Check if it's possible to convert included packs independently from each other
+					old_pack.Convert();
+					// Maybe use the ff_reload code ?
+					return null;	// Figure out what to return
 				}
-				result.SetSource(this);
+				if (result is FPack f_pack)
+				{
+					f_pack.SetSource(this);
 
-				PacksData[DataUID] = result;
-				if (Parent == null) ModEntry.Log($"Success!", LogLevel.Debug);
+					PacksData[DataUID] = f_pack;
+					if (Parent == null) ModEntry.Log($"Success!", LogLevel.Debug);
 
-				return result;
+					return f_pack;
+				}
+
+				if (result is InvalidPack invalid_result)
+					invalid_result.Log();
+				return null;
 			}
 
 			public bool IsAncestorQueued()
@@ -66,10 +77,12 @@ namespace FurnitureFramework.Data.FPack
 		}
 
 		#endregion
+	}
+
+	partial class FPack
+	{
 
 		#region Load
-
-		static HashSet<LoadData> ToLoad = new();
 
 		public static void PreLoad(IModHelper helper)
 		{

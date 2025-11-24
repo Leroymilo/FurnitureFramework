@@ -145,7 +145,7 @@ namespace FurnitureFramework.FFHarmony
 		static bool IsInTab(bool __result, ISalable item, MethodBase __originalMethod)
 		{
 			if (item is not Furniture furniture) return __result;
-			if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? _)) return __result;
+			if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? _)) return __result;
 			return furniture.HasContextTag(CategoryTags[int.Parse(__originalMethod.Name.Last().ToString()) - 1]);
 		}
 	}

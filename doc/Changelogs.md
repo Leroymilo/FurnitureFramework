@@ -186,6 +186,10 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed Slot Offset causing a json reading error.
 - Restored compatibility with [Furniture Placement Tweaks](https://www.nexusmods.com/stardewvalley/mods/14092)
 
+## 3.3
+
+- **Work in Progress** The Furniture Framework can now automatically update mods with Format 2.
+
 # Planned Future Features
 
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).

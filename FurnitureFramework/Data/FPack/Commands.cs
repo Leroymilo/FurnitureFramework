@@ -30,7 +30,7 @@ namespace FurnitureFramework.Data.FPack
 				return;
 			}
 
-			if (TryGetType(ID, out FType.FType? f_type))
+			if (TryGetType(ID, out FType.FF3Type? f_type))
 			{
 				ModEntry.Log($"{ID}: {JObject.FromObject(f_type)}");
 				return;

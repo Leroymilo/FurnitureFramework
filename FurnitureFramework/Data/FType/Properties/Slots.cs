@@ -91,7 +91,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 
-				if (FPack.FPack.TryGetType(furn, out FType? type))
+				if (FPack.FPack.TryGetType(furn, out FF3Type? type))
 				{
 					draw_data.mod_id = type.ModID;
 					draw_data.texture_path = type.GetSourceImage(furn);
@@ -166,7 +166,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		public void DrawLights(DrawData draw_data, Furniture furn)
 		{
-			if (FPack.FPack.TryGetType(furn, out FType? type))
+			if (FPack.FPack.TryGetType(furn, out FF3Type? type))
 			{
 				// draw custom lights
 

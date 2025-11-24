@@ -28,7 +28,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -52,7 +52,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.drawAtNonTileSpot(__instance, spriteBatch, location, layerDepth, alpha);
@@ -75,7 +75,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.rotate(__instance);
@@ -96,7 +96,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.updateRotation(__instance);
@@ -177,7 +177,7 @@ call get_icon_source_rect
 			{
 				new(OpCodes.Ldarg_0),
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Data.FType.FType),
+					typeof(Data.FType.FF3Type),
 					"GetIconSourceRect",
 					new Type[] {typeof(Furniture)}
 				))
@@ -218,7 +218,7 @@ call check_held_object
 			List<CodeInstruction> to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Data.FType.FType),
+					typeof(Data.FType.FF3Type),
 					"HasHeldObject"
 				))
 			};
@@ -323,7 +323,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 
 			try
 			{
-				if (FPack.TryGetType(__result, out Data.FType.FType? type))
+				if (FPack.TryGetType(__result, out Data.FType.FF3Type? type))
 				{
 					switch (type.SpecialType)
 					{
@@ -342,7 +342,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 							break;
 					}
 
-					Data.FType.FType.SetModData(__result);
+					Data.FType.FF3Type.SetModData(__result);
 				}
 			}
 			catch (Exception ex)
@@ -363,7 +363,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.GetSeatPositions(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -383,7 +383,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.GetSittingDirection(__instance, Game1.player, ref __result);
 			}
 			catch (Exception ex)
@@ -405,7 +405,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.IntersectsForCollision(__instance, rect, ref __result);
 			}
 			catch (Exception ex)
@@ -427,7 +427,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.canBePlacedHere(__instance, l, tile, collisionMask, ref __result);
 			}
 			catch (Exception ex)
@@ -448,7 +448,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				Data.FType.FType.AllowPlacementOnThisTile(__instance, tile_x, tile_y, ref __result);
+				Data.FType.FF3Type.AllowPlacementOnThisTile(__instance, tile_x, tile_y, ref __result);
 			}
 			catch (Exception ex)
 			{
@@ -468,7 +468,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
@@ -489,7 +489,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
@@ -508,7 +508,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.isGroundFurniture(ref __result);
 			}
 			catch (Exception ex)
@@ -529,7 +529,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.isPassable(ref __result);
 			}
 			catch (Exception ex)
@@ -548,7 +548,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.loadDisplayName(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -569,7 +569,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.loadDescription(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -590,8 +590,8 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
-					Data.FType.FType.DayUpdate(__instance);
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
+					Data.FType.FF3Type.DayUpdate(__instance);
 			}
 			catch (Exception ex)
 			{
@@ -607,9 +607,9 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 				{
-					Data.FType.FType.addLights(__instance);
+					Data.FType.FF3Type.addLights(__instance);
 
 					if (type.DisableFishtankLight)
 					{
@@ -655,7 +655,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.updateWhenCurrentLocation(__instance);
 			}
 			catch (Exception ex)
@@ -674,7 +674,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type) &&
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type) &&
 					type.SpecialType == Data.FType.SpecialType.FFStorage)
 					__result = $"FF/{__instance.itemId}";
 			}
@@ -693,7 +693,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 				{
 					__instance.modData["FF.storage_open_state"] = true.ToString();
 					__instance.modData["FF.storage_anim_start"] = ((long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds).ToString();
@@ -713,7 +713,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 				{
 					__instance.modData["FF.storage_open_state"] = false.ToString();
 					__instance.modData["FF.storage_anim_start"] = ((long)Game1.currentGameTime.TotalGameTime.TotalMilliseconds).ToString();
@@ -747,7 +747,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.getScreenPosition(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -768,7 +768,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.getScreenSizeModifier(ref __result);
 			}
 			catch (Exception ex)
@@ -814,7 +814,7 @@ callvirt instance void StardewValley.Objects.Furniture::updateRotation()
 			new(OpCodes.Ldarg_0),
 			new(overlay ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0),
 			new(OpCodes.Call, AccessTools.Method(
-				typeof(Data.FType.FType),
+				typeof(Data.FType.FF3Type),
 				"GetScreenDepth"
 			))
 		};
@@ -935,7 +935,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -967,7 +967,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 				{
 					__result = __instance.GetBoundingBox().Intersects(rect);
 					type.IntersectsForCollision(__instance, rect, ref __result);
@@ -990,7 +990,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.GetBedSpot(__instance, ref __result);
 			}
 			catch (Exception ex)
@@ -1013,7 +1013,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					if (layer_name == "Back" && property_name == "TouchAction") __result = false;
 			}
 			catch (Exception ex)
@@ -1033,7 +1033,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (Data.FType.FType.HasHeldObject(__instance)) return false;
+				if (Data.FType.FF3Type.HasHeldObject(__instance)) return false;
 			}
 			catch (Exception ex)
 			{
@@ -1065,7 +1065,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (!FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (!FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return true; // run original logic
 
 				type.draw(__instance, spriteBatch, x, y, alpha);
@@ -1097,7 +1097,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.checkForAction(__instance, who, justCheckingForActivity, ref __result);
 			}
 			catch (Exception ex)
@@ -1118,7 +1118,7 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 				{
 					type.GetTankBounds(__instance, ref __result);
 				}

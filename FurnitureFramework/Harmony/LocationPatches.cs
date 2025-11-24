@@ -26,7 +26,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 				return __result;
 			// no hit or hit non-furniture object
 			
-			if (Data.FType.FType.IsClicked(furniture, x, y))
+			if (Data.FType.FF3Type.IsClicked(furniture, x, y))
 				return furniture;
 			// the custom furniture found is correct
 			
@@ -34,7 +34,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			{
 				foreach (Furniture item in __instance.furniture)
 				{
-					if (!(ignorePassables && item.isPassable()) && Data.FType.FType.IsClicked(item, x, y))
+					if (!(ignorePassables && item.isPassable()) && Data.FType.FF3Type.IsClicked(item, x, y))
 					{
 						return item;
 					}
@@ -70,7 +70,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 			{
 				foreach (Furniture furniture in __instance.furniture)
 				{
-					if (Data.FType.FType.IsClicked(furniture, x, y))
+					if (Data.FType.FF3Type.IsClicked(furniture, x, y))
 					{
 						return true;
 					}
@@ -160,7 +160,7 @@ call Data.FType.FType::HasHeldObject
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.Method(
-						typeof(Data.FType.FType),
+						typeof(Data.FType.FF3Type),
 						"IsClicked",
 						new Type[] {typeof(Furniture), typeof(int), typeof(int)}
 					)
@@ -184,7 +184,7 @@ call Data.FType.FType::HasHeldObject
 			to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Data.FType.FType),
+					typeof(Data.FType.FF3Type),
 					"HasHeldObject"
 				))
 			};
@@ -287,7 +287,7 @@ call bool FurnitureFramework.Type.FurnitureType::is_clicked(StardewValley.Furnit
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.Method(
-						typeof(Data.FType.FType),
+						typeof(Data.FType.FF3Type),
 						"IsClicked",
 						new Type[] {typeof(Furniture), typeof(Point) }
 					)

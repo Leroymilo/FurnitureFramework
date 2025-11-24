@@ -26,7 +26,7 @@ namespace FurnitureFramework.FFHarmony.Patches
 
 			try
 			{
-				if (FPack.TryGetType(furniture, out Data.FType.FType? type))
+				if (FPack.TryGetType(furniture, out Data.FType.FF3Type? type))
 					type.GetSittingDepth(furniture, __instance, ref __result);
 			}
 			catch (Exception ex)
@@ -93,7 +93,7 @@ callvirt instance void Microsoft.Xna.Framework.Graphics.SpriteBatch::End()
 				new CodeInstruction(
 					OpCodes.Call,
 					AccessTools.DeclaredMethod(
-						typeof(Data.FType.FType),
+						typeof(Data.FType.FF3Type),
 						"DrawLighting",
 						new Type[] {typeof(SpriteBatch) }
 					)
@@ -158,7 +158,7 @@ call check_held_object
 			List<CodeInstruction> to_write = new()
 			{
 				new(OpCodes.Call, AccessTools.Method(
-					typeof(Data.FType.FType),
+					typeof(Data.FType.FF3Type),
 					"HasHeldObject"
 				))
 			};
@@ -183,7 +183,7 @@ call check_held_object
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					type.setUpStoreForContext(__instance, ref ____isStorageShop);
 				
 				if (__instance.ShopId == "leroymilo.FF.debug_catalog")
@@ -203,7 +203,7 @@ call check_held_object
 		{
 			try
 			{
-				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
+				if (FPack.TryGetType(__instance, out Data.FType.FF3Type? type))
 					return type.highlightItemToSell(i);
 			}
 			catch (Exception ex)

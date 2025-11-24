@@ -265,7 +265,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
+					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? type);
 					if (type == null) continue;
 
 					if (type.PlaceInSlot(furniture, pos, Game1.player, obj))
@@ -280,7 +280,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
+					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? type);
 					if (type == null) continue;
 
 					if (type.RemoveFromSlot(furniture, pos, Game1.player))
@@ -298,7 +298,7 @@ namespace FurnitureFramework
 				{
 					foreach (Furniture furniture in Game1.currentLocation.furniture)
 					{
-						Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
+						Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? type);
 						if (type == null) continue;
 
 						if (type.ActionInSlot(furniture, pos, Game1.player))
@@ -365,7 +365,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.Added)
 			{
-				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type))
+				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? type))
 				{
 					type.OnPlaced(furniture);
 				}
@@ -373,9 +373,9 @@ namespace FurnitureFramework
 			
 			foreach (Furniture furniture in e.Removed)
 			{
-				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type))
+				if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FF3Type? type))
 				{
-					Data.FType.FType.OnRemoved(furniture);
+					Data.FType.FF3Type.OnRemoved(furniture);
 				}
 			}
 		}
@@ -387,7 +387,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in e.NewLocation.furniture)
 			{
-				Data.FType.FType.SetModData(furniture);
+				Data.FType.FF3Type.SetModData(furniture);
 			}
 		}
 
@@ -398,7 +398,7 @@ namespace FurnitureFramework
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				Data.FType.FType.SetModData(furniture);
+				Data.FType.FF3Type.SetModData(furniture);
 			}
 		}
 		

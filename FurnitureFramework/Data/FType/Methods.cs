@@ -10,11 +10,11 @@ namespace FurnitureFramework.Data.FType
 {
 	using SVObject = StardewValley.Object;
 	
-	public partial class FType
+	public partial class FF3Type
 	{
 		public static void SetModData(Furniture furniture)
 		{
-			if (FPack.FPack.TryGetType(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FF3Type? type))
 			{
 				furniture.modData["FF"] = "true";
 				furniture.modData["FF.particle_timers"] = "[]";
@@ -457,7 +457,7 @@ namespace FurnitureFramework.Data.FType
 		public static bool IsClicked(Furniture furniture, int x, int y)
 		{
 			if (
-				!FPack.FPack.TryGetType(furniture, out FType? type)
+				!FPack.FPack.TryGetType(furniture, out FF3Type? type)
 				|| type.PlacementType == PlacementType.Rug
 			)
 			{
@@ -482,14 +482,14 @@ namespace FurnitureFramework.Data.FType
 		{
 			foreach (Furniture furniture in Game1.currentLocation.furniture)
 			{
-				if (FPack.FPack.TryGetType(furniture, out FType? type))
+				if (FPack.FPack.TryGetType(furniture, out FF3Type? type))
 				{
 					type.DrawLights(furniture, sprite_batch);
 				}
 
 				else if (
 					furniture.heldObject.Value is Furniture held_furn &&
-					FPack.FPack.TryGetType(held_furn, out FType? held_type)
+					FPack.FPack.TryGetType(held_furn, out FF3Type? held_type)
 				)
 				{
 					// maybe move the held furniture bounding box in the middle?
@@ -501,7 +501,7 @@ namespace FurnitureFramework.Data.FType
 		public static float GetScreenDepth(Furniture furniture, bool overlay = false)
 		{
 			float depth;
-			if (FPack.FPack.TryGetType(furniture, out FType? type))
+			if (FPack.FPack.TryGetType(furniture, out FF3Type? type))
 			{
 				depth = type.ScreenDepth[type.GetRot(furniture)].GetValue(furniture.GetBoundingBox().Top);
 				depth = MathF.BitIncrement(depth);
@@ -626,7 +626,7 @@ namespace FurnitureFramework.Data.FType
 				{
 					foreach (Item item in held_chest.Items)
 					{
-						if (item is Furniture furn && FPack.FPack.TryGetType(furn, out FType? f_type))
+						if (item is Furniture furn && FPack.FPack.TryGetType(furn, out FF3Type? f_type))
 							f_type.ToggleFurn(furn);
 					}
 				}

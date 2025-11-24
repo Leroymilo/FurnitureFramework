@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FurnitureFramework.Data.FType.Properties;
 using StardewModdingAPI;
+using FurnitureFramework.Data.FPack;
 
 namespace FurnitureFramework.Data.FType
 {
@@ -59,15 +60,27 @@ namespace FurnitureFramework.Data.FType
 		}
 	}
 
-	[JsonConverter(typeof(SpaceRemover<FType>))]
-	public partial class FType
+	/// <summary>
+	/// Class containing fields shared between all version of the model.
+	/// </summary>
+	[JsonConverter(typeof(SpaceRemover<FF3Type>))]
+	public class BaseType
 	{
-		#region fields
-
 		[JsonIgnore]
 		public string ModID;
 		[JsonIgnore]
 		public string FID;
+	}
+
+	public abstract class OldType : BaseType
+	{
+		public abstract void Convert(ConversionInfo info);
+	}
+
+	public partial class FF3Type : BaseType
+	{
+		#region fields
+		
 		[JsonIgnore]
 		public readonly Dictionary<string, Variant> Variants = new();
 
@@ -77,6 +90,7 @@ namespace FurnitureFramework.Data.FType
 
 		[JsonConverter(typeof(RotationConverter))]
 		public List<string> Rotations;
+		
 
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();

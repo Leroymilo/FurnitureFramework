@@ -3,7 +3,7 @@ using StardewValley.GameData.Shops;
 
 namespace FurnitureFramework.Data.FType
 {
-	public partial class FType
+	public partial class FF3Type
 	{
 		public Dictionary<string, string> GetStringData()
 		{

@@ -1,26 +1,46 @@
 using FurnitureFramework.Data.FType;
-using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;
 
 namespace FurnitureFramework.Data.FPack
 {
-	[JsonConverter(typeof(PackJsonConverter))]
-	public partial class FPack
-	{
 
+	[JsonConverter(typeof(PackJsonConverter))]
+	public abstract partial class BasePack
+	{
 		// Constants
 
-		const string DEFAULT_PATH = "content.json";
-		const string CONFIG_PATH = "config.json";
+		public const int OLDEST_FORMAT = 2;
+		public const int FORMAT = 3;
+		protected const string DEFAULT_PATH = "content.json";
+		protected const string CONFIG_PATH = "config.json";
 
 		// Static Collections 
+		protected static readonly Dictionary<string, FPack> PacksData = new();
+		// maps data_UID to pack.
 
+		[JsonIgnore]
+		protected LoadData LoadData_;
+		[JsonIgnore]
+		protected string UID { get => LoadData_.UID; }
+		[JsonIgnore]
+		public string DataUID { get => LoadData_.DataUID; }
+
+		// Pack Properties
+		public int Format;
+		public Dictionary<string, BaseType> Furniture = new();
+		public Dictionary<string, LoadData> Included = new();
+
+		[JsonIgnore]
+		public Dictionary<string, BasePack> IncludedPacks = new();
+	}
+
+	public partial class FPack : BasePack
+	{
+		// Static Collections 
 		static public readonly Dictionary<string, IContentPack> ContentPacks = new();
 		// UIDs of all Furniture Packs (for reload all).
-		static readonly Dictionary<string, FPack> PacksData = new();
-		// maps data_UID to pack.
 		static readonly Dictionary<string, string> TypesOrigin = new();
 		// maps type_id to the data_UID of the pack where it's defined.
 		static readonly Dictionary<string, HashSet<string>> LoadedAssets = new();
@@ -31,21 +51,14 @@ namespace FurnitureFramework.Data.FPack
 		static IContentPack DefaultPack;
 
 		// Pack Properties
-		[JsonIgnore]
-		LoadData LoadData_;
-		[JsonIgnore]
-		string UID { get => LoadData_.UID; }
-		[JsonIgnore]
-		public string DataUID { get => LoadData_.DataUID; }
+		new public int Format = FORMAT;
 		[JsonIgnore]
 		readonly PackConfig Config = new();
 
-		public int Format;
-		public Dictionary<string, FType.FType> Furniture = new();
-		public Dictionary<string, LoadData> Included = new();
+		public new Dictionary<string, FF3Type> Furniture = new();
 
 		[JsonIgnore]
-		public Dictionary<string, FPack> IncludedPacks = new();
+		public new Dictionary<string, FPack> IncludedPacks = new();
 
 		[JsonIgnore]
 		FPack? Root = null;
@@ -67,7 +80,7 @@ namespace FurnitureFramework.Data.FPack
 
 			foreach (string id in Furniture.Keys.ToList())
 			{
-				FType.FType f_type = Furniture[id];
+				FF3Type f_type = Furniture[id];
 				Furniture.Remove(id);
 				f_type.SetIDs(UID, id);
 
@@ -100,7 +113,7 @@ namespace FurnitureFramework.Data.FPack
 		}
 	}
 
-	class InvalidPack : FPack
+	class InvalidPack : BasePack
 	{
 		Exception exception;
 
@@ -122,7 +135,7 @@ namespace FurnitureFramework.Data.FPack
 
 	class OutdatedFormatError : Exception
 	{
-		int format;
+		readonly int format;
 
 		public OutdatedFormatError(int format)
 		{
@@ -138,25 +151,33 @@ namespace FurnitureFramework.Data.FPack
 		}
 	}
 
-	class PackJsonConverter : ReadOnlyConverter<FPack>
+	class PackJsonConverter : ReadOnlyConverter<BasePack>
 	{
-		const int FORMAT = 3;
 
-		public override FPack? ReadJson(JsonReader reader, Type objectType, FPack? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override BasePack? ReadJson(JsonReader reader, Type objectType, BasePack? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
 				JObject obj = JObject.Load(reader);
 
-				FPack result = new();
-
-				try { result.Format = CheckFormat(obj); }
+				int format;
+				try { format = CheckFormat(obj); }
 				catch (Exception e) { return new InvalidPack(e); }
 
-				ParseDict(obj, "Furniture", result.Furniture);
-				ParseDict(obj, "Included", result.Included);
-
-				return result;
+				if (format == BasePack.FORMAT)
+				{
+					FPack result = new();
+					ParseDict(obj, "Furniture", result.Furniture);
+					ParseDict(obj, "Included", result.Included);
+					return result;
+				}
+				else
+				{
+					OldPack result = new() { Format = format };
+					ParseDict(obj, "Furniture", result.Furniture);
+					ParseDict(obj, "Included", result.Included);
+					return result;
+				}
 			}
 
 			return new InvalidPack(new InvalidDataException($"Furniture Pack data is Invalid."));
@@ -173,14 +194,15 @@ namespace FurnitureFramework.Data.FPack
 
 			return format switch
 			{
-				FORMAT => format,
-				< FORMAT and > 0 => throw new OutdatedFormatError(format),
+				> 0 and < BasePack.OLDEST_FORMAT => throw new OutdatedFormatError(format),
+				> 0 and <= BasePack.FORMAT => format,
 				_ => throw new InvalidDataException("Invalid Format!"),
 			};
 		}
 
 		static void ParseDict<TValue>(JObject pack_obj, string key, Dictionary<string, TValue> dictionary)
 		{
+			ModEntry.Log($"type of TValue: {typeof(TValue)}");
 			if (pack_obj.TryGetValue(key, out JToken? token) && token is JObject dict)
 			{
 				foreach (JProperty prop in dict.Properties())
