@@ -62,18 +62,11 @@ namespace FurnitureFramework.Data.FPack
 			string path = e.Name.Name[(UID.Length + 4)..];	// removing the "FF/{UID}/" marker
 			IModContentHelper pc_helper = c_pack.ModContent;	// Pack Content Helper
 
-			if (e.DataType == typeof(BasePack))
+			if (e.DataType == typeof(FPack))
 			{
-				if (!AssetExists<BasePack>(pc_helper, path)) return false;
+				if (!AssetExists<FPack>(pc_helper, path)) return false;
 				e.LoadFrom(
-					() => {
-						try { return LoadResource<BasePack>(pc_helper, path); }
-						catch (ContentLoadException e)
-						{
-							if (e.InnerException == null) return new InvalidPack(e);	// Shouldn't happen
-							return new InvalidPack(e.InnerException);
-						}
-					},
+					() => {return LoadPack(pc_helper, path);},
 					AssetLoadPriority.Low
 				);
 			}
@@ -132,6 +125,32 @@ namespace FurnitureFramework.Data.FPack
 			// Load from Pack content
 
 			return result;
+		}
+
+		private static FPack LoadPack(IModContentHelper helper, string path, bool converted = false)
+		{
+			BasePack result;
+			try { result = LoadResource<BasePack>(helper, path); }
+			catch (ContentLoadException e)
+			{
+				if (e.InnerException == null) return new InvalidPack(e);	// Shouldn't happen
+				return new InvalidPack(e.InnerException);	// Parsing error
+			}
+
+			if (result is FPack f_pack) return f_pack;	// Normal case
+
+			if (result is OldPack old_pack)	// Back compat converter
+			{
+				// Avoids recursion, but shouldn't happen
+				if (converted) return new InvalidPack(new InvalidDataException("Converted pack still uses an outdated format (impossible)."));
+
+				// Check if it's possible to convert included packs independently from each other
+				old_pack.Convert();
+				return LoadPack(helper, path, true);
+			}
+
+			// Somehow neither FPack nor OldPack? shouldn't happen either
+			return new InvalidPack(new NotImplementedException("Pack is neither FPack nor OldPack (impossible)."));
 		}
 
 		private static bool TryGetCPFromResource(IAssetName asset_name, [MaybeNullWhen(false)] out IContentPack c_pack)

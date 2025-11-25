@@ -113,7 +113,7 @@ namespace FurnitureFramework.Data.FPack
 		}
 	}
 
-	class InvalidPack : BasePack
+	class InvalidPack : FPack
 	{
 		Exception exception;
 
