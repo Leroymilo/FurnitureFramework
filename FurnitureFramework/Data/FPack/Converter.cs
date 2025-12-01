@@ -1,5 +1,4 @@
 using FurnitureFramework.Data.FType;
-using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using StardewModdingAPI;
 
@@ -9,6 +8,12 @@ namespace FurnitureFramework.Data.FPack
 {
 	public struct ConversionInfo
 	{
+		static Dictionary<string, string> NewPaths = new();
+		// Store the target path for packs that have been converted so that
+		// included packs are saved in the same place when they are converted.
+		static Dictionary<string, string> NewCPPaths = new();
+		// Same thing but for CP Packs that were generated when necessary.
+
 		string PackPath;
 		IManifest Manifest;
 		List<string> SeasonalTextures = new();
@@ -22,7 +27,6 @@ namespace FurnitureFramework.Data.FPack
 
 	public class OldPack : BasePack
 	{
-		[JsonIgnore]
 		public new Dictionary<string, OldType> Furniture = new();
 		[JsonIgnore]
 		public new Dictionary<string, OldPack> IncludedPacks = new();
@@ -31,13 +35,17 @@ namespace FurnitureFramework.Data.FPack
 		{
 			info ??= new(LoadData_.ContentPack);
 
+			FPack result = new();
+
 			foreach (string key in Furniture.Keys.ToList())
 			{
-				
-			}
+				OldType f_type = Furniture[key];
+				string new_key = key;
+				if (f_type is FF2Type)
+					new_key = FF2Type.ReplaceTokens(key);
 
-			// Recursive included pack conversion?
-			// Or convert them when loaded in FPack.SetSource?
+				result.Furniture[new_key] = f_type.Convert(info.Value);
+			}
 		}
 	}
 }

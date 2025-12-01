@@ -74,7 +74,7 @@ namespace FurnitureFramework.Data.FType
 
 	public abstract class OldType : BaseType
 	{
-		public abstract void Convert(ConversionInfo info);
+		public abstract FF3Type Convert(ConversionInfo info);
 	}
 
 	public partial class FF3Type : BaseType
@@ -175,20 +175,14 @@ namespace FurnitureFramework.Data.FType
 				bool valid = false;
 				try { valid = Collisions[rot_name].is_valid; }
 				catch { }
-				if (!valid)
-				{
-					throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
-				}
+				if (!valid) throw new InvalidDataException($"Missing Collisions for rotation {rot_name}.");
 
 				valid = false;
 				try { valid = Layers[rot_name][0].is_valid; }
 				catch { }
-				if (!valid)
-				{
-					throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
-				}
+				if (!valid) throw new InvalidDataException($"Missing Layer for rotation {rot_name}.");
 
-				// The default depth of non-base layers is 
+				// The default depth of non-base layers is { Tile: 0, Sub: 1000 }
 				foreach (Layer layer in Layers[rot_name].Skip(1))
 					if (layer.Depth.is_default) layer.Depth.Sub = 1000;
 

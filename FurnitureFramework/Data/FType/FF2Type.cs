@@ -23,6 +23,8 @@ namespace FurnitureFramework.Data.FType
 
 		[JsonConverter(typeof(ImageVariantConverter))]
 		public Dictionary<string, string> SourceImage = new();
+		[JsonConverter(typeof(DirStructConverter<Rectangle>))]
+		public DirStruct<Rectangle> SourceRect;
 
 		[JsonConverter(typeof(FieldListDictConverter<LayerList, Layer>))]
 		public FieldListDict<LayerList, Layer> Layers = new();
@@ -74,32 +76,102 @@ namespace FurnitureFramework.Data.FType
 		public DirStruct<Point> ScreenPosition = new();
 		public float ScreenScale = 2f;
 
-		[JsonConverter(typeof(FieldDictConverter<Depth>))]
-		public FieldDict<Depth> ScreenDepth = new() { { Utils.NOROT, new() { Tile = 0, Sub = 1000 } } };
-
 		// Bed
 		public BedType BedType = BedType.Double;
 		public Point BedSpot = new(1);
 		public Rectangle? BedArea;
+		public Rectangle? BedAreaPixel;
 
 		// Fishtank
 		[JsonConverter(typeof(DirStructConverter<Rectangle>))]
 		public DirStruct<Rectangle> FishArea = new();
 		public bool DisableFishtankLight = false;
 
-		// FFStorage
-		public StoragePreset StoragePreset = StoragePreset.None;
-		public string? StorageCondition;
-		public List<TabProperty> StorageTabs = new();
-		
-		public Animation OpeningAnimation = new();
-		public Animation ClosingAnimation = new();
-
 		#endregion
 
-		public override void Convert(ConversionInfo info)
+		public static string? ReplaceNullTokens(string? value)
 		{
+			if (value == null) return value;
+			return value.Replace("{{", "[[").Replace("}}", "]]");
+		}
+		public static string ReplaceTokens(string value)
+		{
+			return value.Replace("{{", "[[").Replace("}}", "]]");
+		}
+
+		public override FF3Type Convert(ConversionInfo info)
+		{
+			FF3Type result = new();
+
+			#region field matching
+
+			result.DisplayName = ReplaceTokens(DisplayName);
+			result.Description = ReplaceNullTokens(Description);
+			result.Rotations = Rotations;
+			result.SourceImage = SourceImage;
+			result.Layers = Layers;
+			result.Collisions = Collisions;
 			
+			result.ForceType = ForceType;
+			result.Price = Price;
+			result.PlacementRestriction = PlacementRestriction;
+			result.ContextTags = ContextTags;
+			result.ExcludefromRandomSales = ExcludefromRandomSales;
+			for (int i = 0; i < ShowsinShops.Count; i++)
+			{
+				result.ShowsinShops.Add(ReplaceTokens(ShowsinShops[i]));
+			}
+			result.ShopId = ReplaceNullTokens(ShopId);
+
+			result.SourceRectOffsets = SourceRectOffsets;
+			result.Animation = new(){
+				FrameCount=FrameCount,
+				FrameDuration=new(){FrameLength},
+				Offset=new(){AnimationOffset}
+			};
+			result.Animation.Validate();
+
+			result.SpecialType = SpecialType;
+			result.PlacementType = PlacementType;
+			result.IconRect = IconRect;
+			result.Toggle = Toggle;
+			result.TimeBased = TimeBased;
+
+			result.Sounds = Sounds;
+			result.Seats = Seats;
+			result.Slots = Slots;
+			result.Lights = LightSources;
+			result.Particles = Particles;
+
+			result.ScreenPosition = ScreenPosition;
+			result.ScreenScale = ScreenScale;
+
+			result.BedType = BedType;
+			result.BedSpot = BedSpot;
+			if (BedArea.HasValue)
+				result.BedArea = new(BedArea.Value.Location * new Point(16), BedArea.Value.Size * new Point(16));
+			else if (BedAreaPixel.HasValue)
+				result.BedArea = BedAreaPixel;
+			
+			result.FishArea = FishArea;
+			result.DisableFishtankLight = DisableFishtankLight;
+
+			#endregion
+
+			#region positional rework
+
+			foreach (string dir_key in Rotations)
+			{
+				// Creating new layer from SourceRect field
+
+				// Computing new coordinates for all fields
+			}
+
+			#endregion
+
+			// Seasonal stuff
+
+			return result;
 		}
 	}
 }

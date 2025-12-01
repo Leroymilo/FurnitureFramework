@@ -144,7 +144,6 @@ namespace FurnitureFramework.Data.FPack
 				// Avoids recursion, but shouldn't happen
 				if (converted) return new InvalidPack(new InvalidDataException("Converted pack still uses an outdated format (impossible)."));
 
-				// Check if it's possible to convert included packs independently from each other
 				old_pack.Convert();
 				return LoadPack(helper, path, true);
 			}

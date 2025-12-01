@@ -62,6 +62,12 @@ namespace FurnitureFramework.Data.FType.Properties
 			Animates = true;
 		}
 
+		public void Validate()
+		{
+			if (Animates) return;
+			Validate(new());
+		}
+
 		public Point GetOffsetLoop()
 		{
 			if (!Animates) return Point.Zero;
