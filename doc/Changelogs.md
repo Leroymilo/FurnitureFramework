@@ -189,6 +189,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 ### 3.2.5
 
 - Fixed Source Rect Offset applied to items in Slots even though they shouldn't.
+- Fixed Bed Area that is not in the middle of the bed to cause a weird half-asleep state. The player is now considered "in bed" whenever they are in the bed's collision box (independant of the Bed Area), but the dialogue still only appears when they enter the Bed Area. 
 
 # Planned Future Features
 

@@ -1014,7 +1014,20 @@ In setFortuneOverlay (x5) and setWeatherOverlay (x7)
 			try
 			{
 				if (FPack.TryGetType(__instance, out Data.FType.FType? type))
-					if (layer_name == "Back" && property_name == "TouchAction") __result = false;
+					if (layer_name == "Back")
+					{
+						if (__result && property_name == "TouchAction")
+						{ __result = false; }
+						if (
+							!__result && property_name == "Bed" &&
+							tile_x >= __instance.TileLocation.X && tile_x < __instance.TileLocation.X + __instance.getTilesWide() &&
+							tile_y >= __instance.TileLocation.Y && tile_y < __instance.TileLocation.Y + __instance.getTilesHigh()
+						)
+						{
+							property_value = "T";
+							__result = true;
+						}
+					}
 			}
 			catch (Exception ex)
 			{

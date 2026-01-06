@@ -593,10 +593,7 @@ namespace FurnitureFramework.Data.FType
 						);
 					}
 				}
-				else
-				{
-					furniture.modData["FF.checked_bed_tile"] = "false";
-				}
+				else furniture.modData["FF.checked_bed_tile"] = "false";
 			}
 		}
 
