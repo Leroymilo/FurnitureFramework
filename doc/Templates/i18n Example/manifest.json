@@ -1,13 +1,13 @@
 {
 	"Name": "i18n Template",
 	"Author": "leroymilo",
-	"Version": "3.2.4",
+	"Version": "3.2.5",
 	"MinimumApiVersion": "4.2",
 	"MinimumGameVersion": "1.6.15",
 	"Description": "A template pack for the Furniture Framework (FF)",
 	"UniqueID": "leroymilo.i18nTemplate.FF",
 	"ContentPackFor": {
 		"UniqueID": "leroymilo.FurnitureFramework",
-		"MinimumVersion": "3.2.4"
+		"MinimumVersion": "3.2.5"
 	}
 }
