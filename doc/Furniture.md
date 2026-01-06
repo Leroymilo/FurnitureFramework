@@ -41,7 +41,7 @@ When it is question of coordinates (x and y, position or size), it will always b
 * [Sounds](#sounds)
 * [Seats](#seats-directional)
 * [Slots](#seats-directional)
-* [Particels](#particles-directional)
+* [Particles](#particles-directional)
 * [Light](#lights-directional)
 
 ## Priority

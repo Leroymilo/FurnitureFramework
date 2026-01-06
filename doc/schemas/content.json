@@ -151,54 +151,7 @@
 
 					"Animation": {
 						"description": "A field with the parameters required to add animation to your Furniture.",
-						"type": "object",
-						"properties": {
-							"Frame Count": {
-								"description": "The number of frames before the animation loops.",
-								"type": "integer"
-							},
-		
-							"Frame Duration": {
-								"description": "The length of each animation frame, in milliseconds",
-								"oneOf": [
-									{
-										"type": "integer",
-										"minimum": 1
-									},
-									{
-										"type": "array",
-										"items": {
-											"type": "integer",
-											"minimum": 1
-										}
-									}
-								]
-							},
-		
-							"Offset": {
-								"description": "The offset applied to the Source Rectangles at each frame of animation.\nIt is also possible to provide the offset of each frame separately in a list.",
-								"oneOf": [
-									{
-										"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json",
-										"not": {
-											"type": "object",
-											"properties": {
-												"X": { "const": 0 },
-												"Y": { "const": 0 }
-											}
-										}
-									},
-									{
-										"type": "array",
-										"items": {
-											"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/point.json"
-										}
-									}
-								]
-							}
-						},
-						"required": ["Frame Count", "Frame Duration", "Offset"],
-						"additionalProperties": false
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/animation.json"
 					},
 
 					"Special Type": {
@@ -510,6 +463,16 @@
 							},
 							"required": [ "ID", "Source Image", "Source Rect" ]
 						}
+					},
+
+					"Opening Animation": {
+						"description": "The animation frames to play when the storage furniture is opened.",
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/animation.json"
+					},
+
+					"Closing Animation": {
+						"description": "The animation frames to play when the storage furniture is closed.",
+						"$ref": "/Leroymilo/FurnitureFramework/main/doc/schemas/animation.json"
 					}
 				},
 				"required": [ "Display Name", "Rotations", "Source Image", "Collisions", "Layers" ],

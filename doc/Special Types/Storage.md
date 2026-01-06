@@ -44,3 +44,7 @@ The path (from your mod's root folder) to the image where the icon of this tab i
 ### Source Rect
 
 The part of the source image this tab should use as an icon, it's a [Rectangle](../Structures/Rectangle.md) **in pixels**.
+
+## Opening/Closing Animation
+
+You can define an animation that will play when the storage Furniture opens and closes by setting the "Opening Animation" and "Closing Animation" fields, their structure is the same as the Furniture's [base Animation](../Furniture.md#animation). If the opening animation is defined but the closing is not, it will just be the opening reversed.

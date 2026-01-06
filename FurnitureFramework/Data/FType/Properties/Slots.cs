@@ -81,6 +81,7 @@ namespace FurnitureFramework.Data.FType.Properties
 			draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
 			// Position is set to the bottom center of the slot area
 			draw_data.position += Offset.ToVector2() * 4f;
+			draw_data.rect_offset = Point.Zero;
 
 			draw_data.depth = Depth.GetValue(top);
 			draw_data.depth = MathF.BitIncrement(draw_data.depth);

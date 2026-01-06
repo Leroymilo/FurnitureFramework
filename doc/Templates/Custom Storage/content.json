@@ -18,7 +18,7 @@
 			},
 
 			"Special Type": "FFStorage",
-			"Storage Condition": "ITEM_CATEGORY Input -98 -99",// filter for weapons and
+			"Storage Condition": "ITEM_CATEGORY Input -98 -99",// filter for weapons and tools
 			"Storage Tabs": [
 				{
 					"ID": "any",
