@@ -1,0 +1,40 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Leroymilo/FurnitureFramework/main/doc/schemas/content.json",
+	"Format": 3,
+	"Furniture": {
+		"[[ModID]].layered_tv": {
+			// This TV has an extra layer that goes over the screen,
+			// so the Screen Depth has a value to go between the 2 layers
+			"Display Name": "Layered TV",
+			"Source Image": "assets/TV.png",
+			"Rotations": 1,
+			"Collisions": {"Width": 2, "Height": 1},
+			"Layers": [
+				{
+					"Source Rect": {
+						"X": 0,
+						"Y": 0,
+						"Width": 32,
+						"Height": 48
+					}
+					// Depth = {"Tile": 0, "Sub": 0} // by default for the base layer
+				},
+				{
+					// This layer goes over the screen
+					"Source Rect": {
+						"X": 32,
+						"Y": 0,
+						"Width": 32,
+						"Height": 48
+					}
+					// Depth = {"Tile": 0, "Sub": 1000} // by default for non-base layers
+				}
+			],
+
+			"Special Type": "TV",
+			"Screen Scale": 2,	// vanilla scale
+			"Screen Position": {"X": 6, "Y": -32},	// vanilla position
+			"Screen Depth": {"Tile": 0, "Sub": 500} // Goes between the 2 layers
+		}
+	}
+}

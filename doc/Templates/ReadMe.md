@@ -26,3 +26,7 @@ This is an example of how to incorporate i18n translations in your Furniture's n
 ## Custom Storage
 
 This is an example of a custom `FFStorage` Furniture with custom tabs and conditions.
+
+## Layered TV
+
+Just an example of a TV with a custom screen depth and a layer that is drawn over the screen.
