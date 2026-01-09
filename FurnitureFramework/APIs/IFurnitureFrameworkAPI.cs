@@ -10,7 +10,7 @@ namespace FurnitureFramework
 	public interface IFurnitureFrameworkAPI
 	{
 		/// <summary>
-		/// 
+		/// Requests the depth at which the TV's screen should be drawn
 		/// </summary>
 		/// <param name="furniture">The TV instance</param>
 		/// <param name="depth">The depth computed by FF if the instance is a FF TV</param>

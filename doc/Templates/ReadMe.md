@@ -29,4 +29,4 @@ This is an example of a custom `FFStorage` Furniture with custom tabs and condit
 
 ## Layered TV
 
-Just an example of a TV with a custom screen depth and a layer that is drawn over the screen.
+Just an example of a TV with a custom screen depth and a layer that is drawn over the screen to test compatibility with custom TV channel mods.
