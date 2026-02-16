@@ -190,7 +190,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - Fixed Source Rect Offset applied to items in Slots even though they shouldn't.
 - Fixed Bed Area that is not in the middle of the bed to cause a weird half-asleep state. The player is now considered "in bed" whenever they are in the bed's collision box (independant of the Bed Area), but the dialogue still only appears when they enter the Bed Area.
-- **Testing** Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to request information about a Furniture instance (more features can be requested):
+- Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to request information about a Furniture instance (more features can be requested):
   - TryGetScreenDepth (for compatibility with Astraios' channel framework)
 
 # Planned Future Features
@@ -203,7 +203,6 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
 - Make a custom menu to enable/disable Furniture and Included packs.
 - API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
-- Add compatibility between custom TV screen depth and existing custom channel mods (if necessary).
 - Make UI for [chu's Mod Smithy](https://github.com/Mushymato/StardewModSmithy)
 
 - For eventual 4.0 format change:

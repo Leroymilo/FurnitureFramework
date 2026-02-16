@@ -20,7 +20,7 @@ namespace FurnitureFramework.Data.FType.Properties
 		[OnDeserialized]
 		private void Validate(StreamingContext context)
 		{
-			if (Name == "" || !Game1.soundBank.Exists(Name))
+			if (string.IsNullOrEmpty(Name) || !Game1.soundBank.Exists(Name))
 			{
 				ModEntry.Log($"Invalid Sound Name: \"{Name}\"", StardewModdingAPI.LogLevel.Error);
 				throw new InvalidDataException($"Invalid Sound Name: \"{Name}\"");
