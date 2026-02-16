@@ -506,7 +506,7 @@ namespace FurnitureFramework.Data.FType
 				depth = type.ScreenDepth[type.GetRot(furniture)].GetValue(furniture.GetBoundingBox().Top);
 				depth = MathF.BitIncrement(depth);
 			}
-			else depth = (furniture.boundingBox.Bottom - 1) / 10000f + 1E-05f;
+			else depth = (furniture.boundingBox.Bottom - 1) / 10000f + 1E-05f;	// Vanilla f
 			if (overlay) depth = MathF.BitIncrement(depth);
 			return depth;
 		}
@@ -593,10 +593,7 @@ namespace FurnitureFramework.Data.FType
 						);
 					}
 				}
-				else
-				{
-					furniture.modData["FF.checked_bed_tile"] = "false";
-				}
+				else furniture.modData["FF.checked_bed_tile"] = "false";
 			}
 		}
 

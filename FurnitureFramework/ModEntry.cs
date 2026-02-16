@@ -65,6 +65,11 @@ namespace FurnitureFramework
 			FFHarmony.HarmonyPatcher.Patch(new(ModManifest.UniqueID));
         }
 
+		public override object? GetApi()
+		{
+			return new FurnitureFrameworkAPI();
+		}
+
 		#region On Game Launched
 
 		/// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>

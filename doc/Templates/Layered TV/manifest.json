@@ -1,0 +1,13 @@
+{
+	"Name": "Layered TV",
+	"Author": "leroymilo",
+	"Version": "3.2.5",
+	"MinimumApiVersion": "4.2",
+	"MinimumGameVersion": "1.6.15",
+	"Description": "A template pack for the Furniture Framework (FF)",
+	"UniqueID": "leroymilo.LayeredTV.FF",
+	"ContentPackFor": {
+		"UniqueID": "leroymilo.FurnitureFramework",
+		"MinimumVersion": "3.2.5"
+	}
+}
