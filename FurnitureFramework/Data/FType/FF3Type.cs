@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using FurnitureFramework.Data.FType.Properties;
 using StardewModdingAPI;
 using FurnitureFramework.Data.FPack;
+using System.Linq.Expressions;
 
 namespace FurnitureFramework.Data.FType
 {
@@ -63,7 +64,6 @@ namespace FurnitureFramework.Data.FType
 	/// <summary>
 	/// Class containing fields shared between all version of the model.
 	/// </summary>
-	[JsonConverter(typeof(SpaceRemover<FF3Type>))]
 	public class BaseType
 	{
 		[JsonIgnore]
@@ -77,6 +77,7 @@ namespace FurnitureFramework.Data.FType
 		public abstract FF3Type Convert(ConversionInfo info);
 	}
 
+	[JsonConverter(typeof(SpaceRemover<FF3Type>))]
 	public partial class FF3Type : BaseType
 	{
 		#region fields

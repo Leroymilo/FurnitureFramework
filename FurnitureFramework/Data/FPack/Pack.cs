@@ -167,15 +167,21 @@ namespace FurnitureFramework.Data.FPack
 				if (format == BasePack.FORMAT)
 				{
 					FPack result = new();
-					ParseDict(obj, "Furniture", result.Furniture);
-					ParseDict(obj, "Included", result.Included);
+					ParseDict<FF3Type,FF3Type>(obj, "Furniture", result.Furniture);
+					ParseIncluded(obj, "Included", result.Included);
 					return result;
 				}
 				else
 				{
 					OldPack result = new() { Format = format };
-					ParseDict(obj, "Furniture", result.Furniture);
-					ParseDict(obj, "Included", result.Included);
+					switch (format)
+					{
+						case 2: 
+							ParseDict<OldType,FF2Type>(obj, "Furniture", result.Furniture);
+							break;
+						default: return new InvalidPack(new InvalidDataException($"Impossible format {format}?!"));
+					}
+					ParseIncluded(obj, "Included", result.Included);
 					return result;
 				}
 			}
@@ -200,9 +206,8 @@ namespace FurnitureFramework.Data.FPack
 			};
 		}
 
-		static void ParseDict<TValue>(JObject pack_obj, string key, Dictionary<string, TValue> dictionary)
+		static void ParseDict<TDict,TValue>(JObject pack_obj, string key, Dictionary<string, TDict> dictionary) where TValue: TDict
 		{
-			ModEntry.Log($"type of TValue: {typeof(TValue)}");
 			if (pack_obj.TryGetValue(key, out JToken? token) && token is JObject dict)
 			{
 				foreach (JProperty prop in dict.Properties())
@@ -225,5 +230,8 @@ namespace FurnitureFramework.Data.FPack
 				}
 			}
 		}
+
+		static void ParseIncluded(JObject pack_obj, string key, Dictionary<string, BasePack.LoadData> dictionary)
+		{ ParseDict<BasePack.LoadData,BasePack.LoadData>(pack_obj, key, dictionary); }
 	}
 }

@@ -33,6 +33,8 @@ namespace FurnitureFramework.Data.FPack
 
 		public void Convert(ConversionInfo? info = null)
 		{
+			return;
+
 			info ??= new(LoadData_.ContentPack);
 
 			FPack result = new();

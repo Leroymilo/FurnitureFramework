@@ -1,6 +1,0 @@
-
-
-namespace FurnitureFramework.Data.FPack
-{
-	
-}

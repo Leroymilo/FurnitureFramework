@@ -142,7 +142,7 @@ namespace FurnitureFramework.Data.FPack
 			if (result is OldPack old_pack)	// Back compat converter
 			{
 				// Avoids recursion, but shouldn't happen
-				if (converted) return new InvalidPack(new InvalidDataException("Converted pack still uses an outdated format (impossible)."));
+				if (converted) return new InvalidPack(new InvalidDataException("Converted pack still uses an outdated format (should not happen)."));
 
 				old_pack.Convert();
 				return LoadPack(helper, path, true);

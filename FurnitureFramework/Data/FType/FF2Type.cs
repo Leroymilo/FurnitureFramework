@@ -10,6 +10,7 @@ namespace FurnitureFramework.Data.FType
 {
 	using BedType = StardewValley.Objects.BedFurniture.BedType;
 
+	[JsonConverter(typeof(SpaceRemover<FF2Type>))]
 	class FF2Type : OldType
 	{
 		#region fields
