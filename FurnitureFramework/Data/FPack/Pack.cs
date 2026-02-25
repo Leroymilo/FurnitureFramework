@@ -38,7 +38,7 @@ namespace FurnitureFramework.Data.FPack
 
 	public partial class FPack : BasePack
 	{
-		// Static Collections 
+		// Static Collections
 		static public readonly Dictionary<string, IContentPack> ContentPacks = new();
 		// UIDs of all Furniture Packs (for reload all).
 		static readonly Dictionary<string, string> TypesOrigin = new();
@@ -115,7 +115,7 @@ namespace FurnitureFramework.Data.FPack
 
 	class InvalidPack : FPack
 	{
-		Exception exception;
+		readonly Exception exception;
 
 		public InvalidPack(Exception exception)
 		{
@@ -164,26 +164,10 @@ namespace FurnitureFramework.Data.FPack
 				try { format = CheckFormat(obj); }
 				catch (Exception e) { return new InvalidPack(e); }
 
-				if (format == BasePack.FORMAT)
-				{
-					FPack result = new();
-					ParseDict<FF3Type,FF3Type>(obj, "Furniture", result.Furniture);
-					ParseIncluded(obj, "Included", result.Included);
-					return result;
-				}
-				else
-				{
-					OldPack result = new() { Format = format };
-					switch (format)
-					{
-						case 2: 
-							ParseDict<OldType,FF2Type>(obj, "Furniture", result.Furniture);
-							break;
-						default: return new InvalidPack(new InvalidDataException($"Impossible format {format}?!"));
-					}
-					ParseIncluded(obj, "Included", result.Included);
-					return result;
-				}
+				BasePack result = ParseData(obj, format);
+				
+				
+				
 			}
 
 			return new InvalidPack(new InvalidDataException($"Furniture Pack data is Invalid."));
@@ -204,6 +188,30 @@ namespace FurnitureFramework.Data.FPack
 				> 0 and <= BasePack.FORMAT => format,
 				_ => throw new InvalidDataException("Invalid Format!"),
 			};
+		}
+
+		static BasePack ParseData(JObject obj, int format)
+		{
+			if (format == BasePack.FORMAT)
+			{
+				FPack result = new();
+				ParseDict<FF3Type,FF3Type>(obj, "Furniture", result.Furniture);
+				ParseIncluded(obj, "Included", result.Included);
+				return result;
+			}
+			else
+			{
+				OldPack result = new() { Format = format };
+				switch (format)
+				{
+					case 2: 
+						ParseDict<OldType,FF2Type>(obj, "Furniture", result.Furniture);
+						break;
+					default: return new InvalidPack(new InvalidDataException($"Impossible format {format}?!"));
+				}
+				ParseIncluded(obj, "Included", result.Included);
+				return result;
+			}
 		}
 
 		static void ParseDict<TDict,TValue>(JObject pack_obj, string key, Dictionary<string, TDict> dictionary) where TValue: TDict

@@ -31,11 +31,10 @@ namespace FurnitureFramework.Data.FPack
 		[JsonIgnore]
 		public new Dictionary<string, OldPack> IncludedPacks = new();
 
-		public void Convert(ConversionInfo? info = null)
+		public void Convert(string path, ConversionInfo? info = null)
 		{
 			return;
-
-			info ??= new(LoadData_.ContentPack);
+			info ??= new();
 
 			FPack result = new();
 

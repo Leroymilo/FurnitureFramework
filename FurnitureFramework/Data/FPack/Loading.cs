@@ -51,7 +51,7 @@ namespace FurnitureFramework.Data.FPack
 				
 				result.SetSource(this);
 
-				PacksData[DataUID] = result;
+				FPack.PacksData[DataUID] = result;
 				if (Parent == null) ModEntry.Log($"Success!", LogLevel.Debug);
 
 				return result;
