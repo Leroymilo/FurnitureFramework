@@ -70,9 +70,9 @@ namespace FurnitureFramework.Data.FType.Properties
 		public void SetBox(SVObject held_obj, Point position)
 		{
 			Point size = held_obj.boundingBox.Value.Size;
-			position += new Point(Area.Center.X, Area.Bottom) * new Point(4);
-			position += Offset * new Point(4);
-			position.X -= size.X / 2;
+			position += new Point(Area.Center.X, Area.Bottom) * new Point(4);	// bottom center of slot
+			position += Offset * new Point(4);	// applying slot offset
+			position.X -= size.X / 2; position.Y -= size.Y; // position is in the top left corner
 
 			held_obj.boundingBox.Value = new Rectangle(position, size);
 		}
@@ -113,6 +113,8 @@ namespace FurnitureFramework.Data.FType.Properties
 				return;
 			}
 			
+			draw_data.is_on = false;
+			draw_data.is_dark = false;
 			
 			if (DrawShadow)
 			{

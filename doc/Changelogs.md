@@ -193,6 +193,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 ## 3.3
 
+- Fixed Source Rect for non-furniture items in Slots.
 - Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to interact with modded Furniture through C#. Current features (more can be requested):
 	- TryGetScreenDepth (requested by @Astraios for their channel framework)
 	- Slot related methods (CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot)
@@ -204,10 +205,9 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - Add Alternative Image and SourceRect to randomize Furniture appearance (on instantiating or on day change) (implement AT compat?).
-- Add a config option to show the collision map instead of the bounding box when placing Furniture. (Object.drawPlacementBounds)
-- Modify schema to make the requirements of special furniture clearer (with oneof and stuff)
+- Add a config option to show the collision map instead of the bounding box when placing Furniture. (`Object.drawPlacementBounds`)
+- Modify schema to make the requirements of special furniture clearer (with oneof)
 - Make a custom menu to enable/disable Furniture and Included packs.
-- API to attach any custom method to a Furniture action (right click), with access to some of the Furniture's data (modData based per-instance settings).
 - Make UI for [chu's Mod Smithy](https://github.com/Mushymato/StardewModSmithy)
 
 - For eventual 4.0 format change:

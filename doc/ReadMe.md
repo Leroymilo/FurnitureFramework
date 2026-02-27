@@ -95,7 +95,8 @@ What can be added but I don't have the knowledge/courage to do it any-time soon:
 
 # Known Issues
 
-- Placing any StorageFurniture (Dresser, Fishtank or FFStorage) in a slot (vanilla or custom) will delete all items inside (should be fixed in the next SV version).
+- Placing any StorageFurniture (Dresser, Fishtank or FFStorage) in a slot (vanilla or custom) will delete all items inside (should be fixed in SV 1.6.16).
+- Taking tools with slots (fishing rods and slingshots) out of a storage furniture will delete all items attached to them (should be fixed in SV 1.6.16).
 - Default Slots Debug Color does not apply until Pack reload or restart.
 - Seats do not behave correctly for Furniture placed on Slots.
 - Vanilla Furniture placed in slots doesn't show on/off state properly (fire isn't drawn on torches).
