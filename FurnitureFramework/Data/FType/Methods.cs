@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Metadata.Ecma335;
 using FurnitureFramework.Data.FType.Properties;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,12 +37,12 @@ namespace FurnitureFramework.Data.FType
 
 		public void loadDescription(Furniture furniture, ref string result)
 		{
-			if (Description == null || Description.Length == 0) return;
+			if (Description is null || Description.Length == 0) return;
 
 			result = Variants[furniture.ItemId].GetVariantString(Description, FPack.FPack.ContentPacks[ModID]);
 		}
 
-		string GetRot(Furniture furniture)
+		public string GetRot(Furniture furniture)
 		{
 			// Just in case there is a corrupted furniture.
 			if (furniture.currentRotation.Value >= Rotations.Count)
@@ -215,7 +217,7 @@ namespace FurnitureFramework.Data.FType
 				chest.Items.Add(held);
 				furniture.heldObject.Value = chest;
 
-				if (slots_count > 0 && held != null)
+				if (slots_count > 0 && held is not null)
 					Slots[rot][0].SetBox(held, position);
 			}
 
@@ -241,85 +243,97 @@ namespace FurnitureFramework.Data.FType
 			}
 		}
 
-		private Point GetRelPos(Furniture furniture, Point pos)
+		private static Point GetRelPos(Furniture furniture, Point pos)
 		{
 			Point this_pos = furniture.boundingBox.Value.Location;
 			this_pos.Y += furniture.boundingBox.Value.Height;
 			return (pos - this_pos) / new Point(4);
 		}
 
-		public bool PlaceInSlot(Furniture furniture, Point pos, Farmer who, SVObject obj)
+		public int GetSlot(Furniture furniture, Point? pos, Farmer? who, [NotNull] ref SVObject? obj)
+		{
+			string rot = GetRot(furniture);
+
+			if (furniture.heldObject.Value is not Chest chest) {
+				obj ??= new SVObject();
+				return -1;
+			}
+
+			pos = (pos is null) ? null : GetRelPos(furniture, pos.Value);
+			return Slots[rot].GetSlot(pos, chest, who, furniture, ref obj);
+		}
+
+		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer? who, SVObject obj, Action on_placed)
 		{
 			string rot = GetRot(furniture);
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
-			// Furniture is not a proper initialized table
-
-			int slot_index = Slots[rot].GetEmptySlot(GetRelPos(furniture, pos), chest, who, furniture, obj);
-			if (slot_index < 0) return false;
-			// No slot found at this pixel
+			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
+			if (!Slots[rot][slot_index].CanHold(who, furniture, obj)) return false;
 
 			obj.Location = furniture.Location;
+			obj.TileLocation = furniture.TileLocation;
 			Slots[rot][slot_index].SetBox(obj, new Point(
 				furniture.boundingBox.Left,
 				furniture.boundingBox.Bottom
 			));
 			chest.Items[slot_index] = obj;
-			who.reduceActiveItemByOne();
-			Game1.currentLocation.playSound("woodyStep");
+
+			on_placed();
 			obj.performDropDownAction(who);
 
 			return true;
 		}
 
-		public bool RemoveFromSlot(Furniture furniture, Point pos, Farmer who)
+		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer who, SVObject obj)
+		{
+			return PlaceInSlot(furniture, slot_index, who, obj,
+			() => {
+				who.reduceActiveItemByOne();
+				Game1.currentLocation.playSound("woodyStep");
+			});
+		}
+
+		public bool RemoveFromSlot(Furniture furniture, int slot_index, Func<SVObject, bool> can_be_removed, Action on_removed, [MaybeNullWhen(false)] out SVObject obj)
 		{
 			string rot = GetRot(furniture);
 
+			obj = null;
 			if (furniture.heldObject.Value is not Chest chest) return false;
-			// Furniture is not a proper initialized table
+			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
+			if (chest.Items[slot_index] is not SVObject held_obj) return false;
 
-			int slot_index = Slots[rot].GetFilledSlot(GetRelPos(furniture, pos), chest, out SVObject? obj);
-			if (slot_index < 0 || obj is null) return false;
-			// No slot found at this pixel
-
-			if (who.addItemToInventoryBool(obj))
+			obj = held_obj;
+			if (can_be_removed(obj))
 			{
-				obj.performRemoveAction();
+				held_obj.performRemoveAction();
+				on_removed();
 				chest.Items[slot_index] = null;
-				Game1.playSound("coin");
 				return true;
 			}
 
 			return false;
 		}
 
-		public bool ActionInSlot(Furniture furniture, Point pos, Farmer who)
+		public bool RemoveFromSlot(Furniture furniture, int slot_index, Farmer who)
 		{
-			string rot = GetRot(furniture);
-
-			if (furniture.heldObject.Value is not Chest chest) return false;
-			// Furniture is not a proper initialized table
-
-			int slot_index = Slots[rot].GetFilledSlot(GetRelPos(furniture, pos), chest, out SVObject? obj);
-			if (slot_index < 0 || obj is not Furniture furn) return false;
-			// No slot found at this pixel or item is not a Furniture
-
-			return furn.checkForAction(who);
+			return RemoveFromSlot(furniture, slot_index,
+			obj => { return who.addItemToInventoryBool(obj); },
+			() => { Game1.playSound("coin"); },
+			out SVObject? _);
 		}
 
 		// used in Furniture.canBeRemoved Transpiler
 		public static bool HasHeldObject(Furniture furniture)
 		{
 			SVObject held_obj = furniture.heldObject.Value;
-			if (held_obj == null) return false;
+			if (held_obj is null) return false;
 
 			if (held_obj is Chest chest)
 			{
 				foreach (Item? item in chest.Items)
 				{
-					if (item != null)
-						return true;
+					if (item is not null) return true;
 				}
 
 				return false;   // empty chest
@@ -444,7 +458,7 @@ namespace FurnitureFramework.Data.FType
 				case StoragePreset.FurnitureCatalogue:
 					return item is Furniture;
 			}
-			if (StorageCondition == null) return true;
+			if (StorageCondition is null) return true;
 			return GameStateQuery.CheckConditions(StorageCondition, inputItem:item);
 		}
 		
@@ -550,7 +564,7 @@ namespace FurnitureFramework.Data.FType
 				// Computing the collisions of the "Do you want to go to bed?" dialogue.
 				Rectangle bed_col;
 
-				if (BedArea == null)
+				if (BedArea is null)
 				{
 					Point bed_size = Collisions[rot].GameSize;
 					Point area_size = new(
@@ -607,7 +621,7 @@ namespace FurnitureFramework.Data.FType
 			// None of these actions are blocking other actions because I couldn't find a reason why they should.
 
 			// Shop
-			if (ShopId != null)
+			if (ShopId is not null)
 			{
 				if (Utility.TryOpenShopMenu(ShopId, Game1.currentLocation))
 					had_action = true;

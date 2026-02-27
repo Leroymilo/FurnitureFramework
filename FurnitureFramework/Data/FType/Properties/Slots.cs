@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -42,11 +43,11 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		#region methods
 
-		public bool CanHold(Farmer who, Furniture furniture, SVObject held_obj)
+		public bool CanHold(Farmer? who, Furniture furniture, SVObject held_obj)
 		{
 			bool result = true;
 
-			if (Condition != null)
+			if (Condition is not null)
 			{
 				result &= GameStateQuery.CheckConditions(
 					Condition,
@@ -156,7 +157,7 @@ namespace FurnitureFramework.Data.FType.Properties
 			draw_data.texture = debug_texture;
 			draw_data.position += Area.Location.ToVector2() * 4f;
 			draw_data.source_rect = Area;
-			if (DebugColor == null)
+			if (DebugColor is null)
 				draw_data.color = ModEntry.GetConfig().slot_debug_default_color;
 			else draw_data.color = (Color)DebugColor;
 			draw_data.color *= ModEntry.GetConfig().slot_debug_alpha;
@@ -192,42 +193,37 @@ namespace FurnitureFramework.Data.FType.Properties
 	public class SlotList : List<Slot>
 	{
 
-		public int GetEmptySlot(Point rel_pos, Chest chest, Farmer who, Furniture furn, SVObject obj)
+		public int GetSlot(Point? rel_pos, Chest chest, Farmer? who, Furniture furn, [NotNull] ref SVObject? obj)
 		{	
-			// handles overlapping slots, size limit and condition
+			// Searches for filled slot if obj is null, else for empty slot.
+			// Finds first valid slot in either condition, checks cursor position if rel_pos is not null.
 
 			bool skipped_invalid = false;
 			foreach ((Slot slot, int index) in this.Select((value, index) => (value, index)))
 			{
-				if (!slot.Area.Contains(rel_pos)) continue;
-				if (chest.Items[index] is not null) continue;
-				if (!slot.CanHold(who, furn, obj))
+				if (rel_pos is not null && !slot.Area.Contains(rel_pos.Value)) continue;
+				if ((obj is null) == (chest.Items[index] is null)) continue;
+
+				if (obj is null)
 				{
-					skipped_invalid = true;
-					continue;
+					if (chest.Items[index] is SVObject obj_)
+					{
+						obj = obj_;
+						return index;
+					}
 				}
-				return index;
+				else
+				{
+					if (slot.CanHold(who, furn, obj)) return index;
+					skipped_invalid = true;
+				}
 			}
 			
 			if (skipped_invalid) Game1.showRedMessage("This item cannot be placed here.");
-			// held item doesn't have valid context tags
+			// held item doesn't match condition
 			// or held furniture is too big
 
-			return -1;
-		}
-
-		public int GetFilledSlot(Point rel_pos, Chest chest, out SVObject? obj)
-		{
-			foreach ((Slot slot, int index) in this.Select((value, index) => (value, index)))
-			{
-				if (!slot.Area.Contains(rel_pos)) continue;
-				if (chest.Items[index] is SVObject obj_)
-				{
-					obj = obj_;
-					return index;
-				}
-			}
-			obj = null;
+			obj ??= new SVObject();
 			return -1;
 		}
 

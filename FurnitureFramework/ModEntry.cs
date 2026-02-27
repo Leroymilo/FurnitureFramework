@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using FurnitureFramework.FFHarmony.Patches;
 using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
@@ -273,7 +274,8 @@ namespace FurnitureFramework
 					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
-					if (type.PlaceInSlot(furniture, pos, Game1.player, obj))
+					int idx = type.GetSlot(furniture, pos, Game1.player, ref obj);
+					if (type.PlaceInSlot(furniture, idx, Game1.player, obj))
 					{
 						Helper.Input.Suppress(GetConfig().slot_place_key);
 						return;
@@ -288,7 +290,9 @@ namespace FurnitureFramework
 					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
-					if (type.RemoveFromSlot(furniture, pos, Game1.player))
+					SVObject? held_obj = null;
+					int idx = type.GetSlot(furniture, pos, Game1.player, ref held_obj);
+					if (type.RemoveFromSlot(furniture, idx, Game1.player))
 					{
 						Helper.Input.Suppress(GetConfig().slot_take_key);
 						return;
@@ -296,21 +300,19 @@ namespace FurnitureFramework
 				}
 			}
 
-			if (e.Button == GetConfig().slot_interact_key)
+			if (e.Button == GetConfig().slot_interact_key && (Game1.player.StandingPixel - pos).ToVector2().Length() <= 128)
 			{
-				// Checking distance between player and click
-				if ((Game1.player.StandingPixel - pos).ToVector2().Length() <= 128)
+				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					foreach (Furniture furniture in Game1.currentLocation.furniture)
-					{
-						Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
-						if (type == null) continue;
+					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
+					if (type == null) continue;
 
-						if (type.ActionInSlot(furniture, pos, Game1.player))
-						{
-							Helper.Input.Suppress(GetConfig().slot_interact_key);
-							return;
-						}
+					SVObject? held_obj = null;
+					type.GetSlot(furniture, pos, Game1.player, ref held_obj);
+					if (held_obj is Furniture held_furn && held_furn.checkForAction(Game1.player))
+					{
+						Helper.Input.Suppress(GetConfig().slot_interact_key);
+						return;
 					}
 				}
 			}
