@@ -196,7 +196,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 - Fixed Source Rect for non-furniture items in Slots.
 - Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to interact with modded Furniture through C#. Current features (more can be requested):
 	- TryGetScreenDepth (requested by @Astraios for their channel framework)
-	- Slot related methods (CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot)
+	- Slot related methods (CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot) (requested by @chu!(e))
 
 # Planned Future Features
 
