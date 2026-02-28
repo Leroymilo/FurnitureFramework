@@ -274,7 +274,7 @@ namespace FurnitureFramework
 					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
-					int idx = type.GetSlot(furniture, pos, Game1.player, ref obj);
+					int idx = type.GetSlot(furniture, pos, Game1.player, ref item);
 					if (type.PlaceInSlot(furniture, idx, Game1.player, obj))
 					{
 						Helper.Input.Suppress(GetConfig().slot_place_key);
@@ -290,8 +290,8 @@ namespace FurnitureFramework
 					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
-					SVObject? held_obj = null;
-					int idx = type.GetSlot(furniture, pos, Game1.player, ref held_obj);
+					Item? held_item = null;
+					int idx = type.GetSlot(furniture, pos, Game1.player, ref held_item);
 					if (type.RemoveFromSlot(furniture, idx, Game1.player))
 					{
 						Helper.Input.Suppress(GetConfig().slot_take_key);
@@ -307,9 +307,9 @@ namespace FurnitureFramework
 					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
 					if (type == null) continue;
 
-					SVObject? held_obj = null;
-					type.GetSlot(furniture, pos, Game1.player, ref held_obj);
-					if (held_obj is Furniture held_furn && held_furn.checkForAction(Game1.player))
+					Item? held_item = null;
+					type.GetSlot(furniture, pos, Game1.player, ref held_item);
+					if (held_item is Furniture held_furn && held_furn.checkForAction(Game1.player))
 					{
 						Helper.Input.Suppress(GetConfig().slot_interact_key);
 						return;

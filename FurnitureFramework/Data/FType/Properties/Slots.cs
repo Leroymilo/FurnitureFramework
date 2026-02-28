@@ -43,7 +43,7 @@ namespace FurnitureFramework.Data.FType.Properties
 
 		#region methods
 
-		public bool CanHold(Farmer? who, Furniture furniture, SVObject held_obj)
+		public bool CanHold(Farmer? who, Furniture furniture, Item held_item)
 		{
 			bool result = true;
 
@@ -54,11 +54,11 @@ namespace FurnitureFramework.Data.FType.Properties
 					location: furniture.Location,
 					player: who,
 					targetItem: furniture,
-					inputItem: held_obj
+					inputItem: held_item
 				);
 			}
 
-			if (held_obj is Furniture held_furn)
+			if (held_item is Furniture held_furn)
 			{
 				Point size = held_furn.boundingBox.Value.Size / new Point(64);
 				result &= size.X <= MaxSize.X && size.Y <= MaxSize.Y;
@@ -67,31 +67,39 @@ namespace FurnitureFramework.Data.FType.Properties
 			return result;
 		}
 
+		public Point GetLocalPos(Item item)
+		{
+			Point pos = new Point(Area.Center.X, Area.Bottom) * new Point(4);
+			pos += Offset * new Point(4);
+			if (item is not Furniture && DrawShadow) pos.Y -= 4;
+			return pos;
+		}
+
 		public void SetBox(SVObject held_obj, Point position)
 		{
 			Point size = held_obj.boundingBox.Value.Size;
-			position += new Point(Area.Center.X, Area.Bottom) * new Point(4);	// bottom center of slot
-			position += Offset * new Point(4);	// applying slot offset
-			position.X -= size.X / 2; position.Y -= size.Y; // position is in the top left corner
+			position += GetLocalPos(held_obj);
+			// position is in the top left corner
+			position.X -= size.X / 2;
+			position.Y -= size.Y;
 
 			held_obj.boundingBox.Value = new Rectangle(position, size);
 		}
 
-		public void DrawObj(DrawData draw_data, float top, SVObject obj)
+		public void DrawObj(DrawData draw_data, float top, Item item)
 		{
-			draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
+			draw_data.position += GetLocalPos(item).ToVector2();
 			// Position is set to the bottom center of the slot area
-			draw_data.position += Offset.ToVector2() * 4f;
 			draw_data.rect_offset = Point.Zero;
 
 			draw_data.depth = Depth.GetValue(top);
 			draw_data.depth = MathF.BitIncrement(draw_data.depth);
 			// plus epsilon to make sure it's drawn over the layer at the same depth
 
-			if (obj is Furniture furn)
+			if (item is Furniture furn)
 			{
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
-				// Moved to the bottom left of the object bounding box, centered in the slot
+				// Moved to the bottom left of the furniture bounding box, centered in the slot
 
 				if (FPack.FPack.TryGetType(furn, out FType? type))
 				{
@@ -121,6 +129,7 @@ namespace FurnitureFramework.Data.FType.Properties
 				DrawData shadow_data = draw_data;	// should clone value fields like position
 				shadow_data.texture = Game1.shadowTexture;
 				shadow_data.source_rect = Game1.shadowTexture.Bounds;
+				shadow_data.position.Y += 4;
 				shadow_data.position += ShadowOffset.ToVector2() * 4;
 				shadow_data.position -= shadow_data.source_rect.Size.ToVector2() * new Vector2(2, 4);
 				// draw pos is on top left of Shadow texture
@@ -129,18 +138,16 @@ namespace FurnitureFramework.Data.FType.Properties
 
 				draw_data.depth = MathF.BitIncrement(draw_data.depth);
 				// plus epsilon to make sure it's drawn over the shadow
-				draw_data.position.Y -= 4;
-				// 1 pixel higher to leave space to see the shadow under the item
 			}
 
-			ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(obj.QualifiedItemId);
+			ParsedItemData dataOrErrorItem = ItemRegistry.GetDataOrErrorItem(item.QualifiedItemId);
 			draw_data.source_rect = dataOrErrorItem.GetSourceRect();
 			draw_data.position -= draw_data.source_rect.Size.ToVector2() * new Vector2(2, 4);
-			// Moved to the top left of the object source rect, centered in the slot
+			// Moved to the top left of the item's source rect, centered in the slot
 
-			if (obj is ColoredObject)
+			if (item is ColoredObject)
 			{
-				obj.drawInMenu(
+				item.drawInMenu(
 					draw_data.sprite_batch,
 					draw_data.position, 1f, 1f,
 					draw_data.depth,
@@ -195,7 +202,7 @@ namespace FurnitureFramework.Data.FType.Properties
 	public class SlotList : List<Slot>
 	{
 
-		public int GetSlot(Point? rel_pos, Chest chest, Farmer? who, Furniture furn, [NotNull] ref SVObject? obj)
+		public int GetSlot(Point? rel_pos, Chest chest, Farmer? who, Furniture furn, [NotNull] ref Item? item)
 		{	
 			// Searches for filled slot if obj is null, else for empty slot.
 			// Finds first valid slot in either condition, checks cursor position if rel_pos is not null.
@@ -204,19 +211,19 @@ namespace FurnitureFramework.Data.FType.Properties
 			foreach ((Slot slot, int index) in this.Select((value, index) => (value, index)))
 			{
 				if (rel_pos is not null && !slot.Area.Contains(rel_pos.Value)) continue;
-				if ((obj is null) == (chest.Items[index] is null)) continue;
+				if ((item is null) == (chest.Items[index] is null)) continue;
 
-				if (obj is null)
+				if (item is null)
 				{
-					if (chest.Items[index] is SVObject obj_)
+					if (chest.Items[index] is Item item_)
 					{
-						obj = obj_;
+						item = item_;
 						return index;
 					}
 				}
 				else
 				{
-					if (slot.CanHold(who, furn, obj)) return index;
+					if (slot.CanHold(who, furn, item)) return index;
 					skipped_invalid = true;
 				}
 			}
@@ -225,7 +232,7 @@ namespace FurnitureFramework.Data.FType.Properties
 			// held item doesn't match condition
 			// or held furniture is too big
 
-			obj ??= new SVObject();
+			item ??= new SVObject();
 			return -1;
 		}
 
@@ -236,8 +243,8 @@ namespace FurnitureFramework.Data.FType.Properties
 				if (ModEntry.GetConfig().enable_slot_debug)
 					this[i].DrawDebug(draw_data);
 
-				if (item is not SVObject obj) continue;
-				this[i].DrawObj(draw_data, top, obj);
+				if (item is null) continue;
+				this[i].DrawObj(draw_data, top, item);
 			}
 		}
 

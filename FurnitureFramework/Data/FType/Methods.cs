@@ -250,63 +250,66 @@ namespace FurnitureFramework.Data.FType
 			return (pos - this_pos) / new Point(4);
 		}
 
-		public int GetSlot(Furniture furniture, Point? pos, Farmer? who, [NotNull] ref SVObject? obj)
+		public int GetSlot(Furniture furniture, Point? pos, Farmer? who, [NotNull] ref Item? item)
 		{
 			string rot = GetRot(furniture);
 
 			if (furniture.heldObject.Value is not Chest chest) {
-				obj ??= new SVObject();
+				item ??= new SVObject();
 				return -1;
 			}
 
 			pos = (pos is null) ? null : GetRelPos(furniture, pos.Value);
-			return Slots[rot].GetSlot(pos, chest, who, furniture, ref obj);
+			return Slots[rot].GetSlot(pos, chest, who, furniture, ref item);
 		}
 
-		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer? who, SVObject obj, Action on_placed)
+		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer? who, Item item, Action on_placed)
 		{
 			string rot = GetRot(furniture);
 
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
-			if (!Slots[rot][slot_index].CanHold(who, furniture, obj)) return false;
+			if (!Slots[rot][slot_index].CanHold(who, furniture, item)) return false;
 
-			obj.Location = furniture.Location;
-			obj.TileLocation = furniture.TileLocation;
-			Slots[rot][slot_index].SetBox(obj, new Point(
-				furniture.boundingBox.Left,
-				furniture.boundingBox.Bottom
-			));
-			chest.Items[slot_index] = obj;
+			if (item is SVObject obj)
+			{
+				obj.Location = furniture.Location;
+				obj.TileLocation = furniture.TileLocation;
+				Slots[rot][slot_index].SetBox(obj, new Point(
+					furniture.boundingBox.Left,
+					furniture.boundingBox.Bottom
+				));
+				obj.performDropDownAction(who);
+			}
+			chest.Items[slot_index] = item;
 
 			on_placed();
-			obj.performDropDownAction(who);
 
 			return true;
 		}
 
-		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer who, SVObject obj)
+		public bool PlaceInSlot(Furniture furniture, int slot_index, Farmer who, Item item)
 		{
-			return PlaceInSlot(furniture, slot_index, who, obj,
+			return PlaceInSlot(furniture, slot_index, who, item,
 			() => {
 				who.reduceActiveItemByOne();
 				Game1.currentLocation.playSound("woodyStep");
 			});
 		}
 
-		public bool RemoveFromSlot(Furniture furniture, int slot_index, Func<SVObject, bool> can_be_removed, Action on_removed, [MaybeNullWhen(false)] out SVObject obj)
+		public bool RemoveFromSlot(Furniture furniture, int slot_index, Func<Item, bool> can_be_removed, Action on_removed, [MaybeNullWhen(false)] out Item item)
 		{
 			string rot = GetRot(furniture);
 
-			obj = null;
+			item = null;
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
-			if (chest.Items[slot_index] is not SVObject held_obj) return false;
+			if (chest.Items[slot_index] is not Item held_item) return false;
 
-			obj = held_obj;
-			if (can_be_removed(obj))
+			item = held_item;
+			if (can_be_removed(item))
 			{
-				held_obj.performRemoveAction();
+				if (item is SVObject obj) obj.performRemoveAction();
 				on_removed();
 				chest.Items[slot_index] = null;
 				return true;
@@ -318,9 +321,9 @@ namespace FurnitureFramework.Data.FType
 		public bool RemoveFromSlot(Furniture furniture, int slot_index, Farmer who)
 		{
 			return RemoveFromSlot(furniture, slot_index,
-			obj => { return who.addItemToInventoryBool(obj); },
+			item => { return who.addItemToInventoryBool(item); },
 			() => { Game1.playSound("coin"); },
-			out SVObject? _);
+			out Item? _);
 		}
 
 		// used in Furniture.canBeRemoved Transpiler
@@ -666,7 +669,6 @@ namespace FurnitureFramework.Data.FType
 			furniture.IsOn = !furniture.IsOn;
 			Sounds.Play(furniture.Location, furniture.IsOn);
 			Particles[GetRot(furniture)].Burst(furniture, ModID);
-
 		}
 
 		public static void OnRemoved(Furniture furniture)

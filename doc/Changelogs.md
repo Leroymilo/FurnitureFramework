@@ -195,13 +195,15 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 - Fixed Source Rect for non-furniture items in Slots.
 - Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to interact with modded Furniture through C#. Current features (more can be requested):
+	- IsFF (equivalent of `furniture.modData.ContainsKey("FF")` but a bit more robust)
 	- TryGetScreenDepth (requested by @Astraios for their channel framework)
-	- Slot related methods (CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot) (requested by @chu!(e))
+	- Slot related methods (GetSlotItems, CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot) (requested by @chu!(e))
 
 # Planned Future Features
 
 - Automatic conversion of FF2 packs
 - De-hardcode on/off and day/night to allow autors to use vanilla tilesheets more easily.
+- Add support for interacting with more Object types in slots (Big Craftables Machines, Cask, Chest, CrabPot?, IndoorPot?, ItemPedestal?, Mannequin, MiniJukebox, Phone, Sign, WoodChipper, WorkBench?).
 - Add ShopData field (with a way to get catalogue tabs by using CustomFields).
 - Add optional ShopItemData to ShowsInShops (`Dictionary<string, ShopItemData>`).
 - Add Alternative Image and SourceRect to randomize Furniture appearance (on instantiating or on day change) (implement AT compat?).
