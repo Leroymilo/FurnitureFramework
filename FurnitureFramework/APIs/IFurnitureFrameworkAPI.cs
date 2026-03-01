@@ -28,11 +28,11 @@ namespace FurnitureFramework
 		bool TryGetScreenDepth(TV furniture, [MaybeNullWhen(false)] out float? depth, bool overlay = false);
 
 		/// <summary>
-		/// Requests a list of items in the given furniture slots and the position of their bottom center
+		/// Requests a list representing the contents of slots and the position of their bottom center when not empty
 		/// </summary>
 		/// <param name="furniture">The furniture holding the items</param>
-		/// <returns>A `List<Tuple<Item, Point>>` containing the items and their position (bottom center)</returns>
-		List<Tuple<Item, Point>> GetSlotItems(Furniture furniture);
+		/// <returns>A `List<Tuple<Item?, Vector2>>` containing the items (or null) and their position (bottom center) (garbage value for empty slots)</returns>
+		List<Tuple<Item?, Vector2>> GetSlotItems(Furniture furniture);
 
 		/// <summary>
 		/// Checks if the given slot can hold the given item (depending on size and condition)

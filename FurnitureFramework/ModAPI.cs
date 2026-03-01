@@ -22,11 +22,11 @@ namespace FurnitureFramework
 			return true;
 		}
 
-		public List<Tuple<Item, Point>> GetSlotItems(Furniture furniture)
+		public List<Tuple<Item?, Vector2>> GetSlotItems(Furniture furniture)
 		{
-			List<Tuple<Item, Point>> result = new();
+			List<Tuple<Item?, Vector2>> result = new();
 
-			Point furn_pos = new(furniture.boundingBox.Left, furniture.boundingBox.Bottom);
+			Vector2 furn_pos = new(furniture.boundingBox.Left, furniture.boundingBox.Bottom);
 
 			if (Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type) && furniture.heldObject.Value is Chest chest)
 			{
@@ -35,19 +35,22 @@ namespace FurnitureFramework
 				for (int i = 0; i < chest.Items.Count; i++)
 				{
 					Item item = chest.Items[i];
-					if (item is null) continue;
-					result.Add(new(item, furn_pos + type.Slots[rot][i].GetLocalPos(item)));
+					Vector2 pos = furn_pos;
+					if (item is not null) pos += type.Slots[rot][i].GetLocalPos(item).ToVector2();
+					result.Add(new(item, pos));
 				}
 			}
 
-			else if (furniture.heldObject.Value is StardewValley.Object obj)
+			else if (furniture.IsTable())
 			{
-				// reproducing vanilla positioning in draw
-				Point pos = furn_pos + furniture.boundingBox.Center;
-				if (obj is not Furniture) pos.Y += furniture.drawHeldObjectLow.Value ? 32 : -21;
-				else pos.Y += furniture.drawHeldObjectLow.Value ? 16 : -16;
+				// reproducing vanilla table slot positioning in draw
+				Vector2 pos = furn_pos + furniture.boundingBox.Center.ToVector2();
+				if (furniture.heldObject.Value is Furniture)
+					pos.Y += furniture.drawHeldObjectLow.Value ? 16 : -16;
+				else if (furniture.heldObject.Value is StardewValley.Object)
+					pos.Y += furniture.drawHeldObjectLow.Value ? 32 : -21;
 				
-				result.Add(new(obj, pos));
+				result.Add(new(furniture.heldObject.Value, pos));
 			}
 
 			return result;
