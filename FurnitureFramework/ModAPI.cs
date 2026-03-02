@@ -44,7 +44,7 @@ namespace FurnitureFramework
 			else if (furniture.IsTable())
 			{
 				// reproducing vanilla table slot positioning in draw
-				Vector2 pos = furn_pos + furniture.boundingBox.Center.ToVector2();
+				Vector2 pos = furniture.boundingBox.Center.ToVector2();
 				if (furniture.heldObject.Value is Furniture)
 					pos.Y += furniture.drawHeldObjectLow.Value ? 16 : -16;
 				else if (furniture.heldObject.Value is StardewValley.Object)

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using FurnitureFramework.FFHarmony.Patches;
 using GenericModConfigMenu;
 using GMCMOptions;
 using Microsoft.Xna.Framework;
@@ -111,6 +110,7 @@ namespace FurnitureFramework
 			
 			RegisterFFConfig(ModManifest, config_menu, config_options);
 		}
+
 		public static void RegisterFFConfig(IManifest manifest,
 			IGenericModConfigMenuApi? ConfigMenuAPI,
 			IGMCMOptionsAPI? ConfigOptionAPI
@@ -271,8 +271,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
-					if (type == null) continue;
+					if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type)) continue;
 
 					int idx = type.GetSlot(furniture, pos, Game1.player, ref item);
 					if (type.PlaceInSlot(furniture, idx, Game1.player, obj))
@@ -287,8 +286,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
-					if (type == null) continue;
+					if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type)) continue;
 
 					Item? held_item = null;
 					int idx = type.GetSlot(furniture, pos, Game1.player, ref held_item);
@@ -304,8 +302,7 @@ namespace FurnitureFramework
 			{
 				foreach (Furniture furniture in Game1.currentLocation.furniture)
 				{
-					Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type);
-					if (type == null) continue;
+					if (!Data.FPack.FPack.TryGetType(furniture, out Data.FType.FType? type)) continue;
 
 					Item? held_item = null;
 					type.GetSlot(furniture, pos, Game1.player, ref held_item);
