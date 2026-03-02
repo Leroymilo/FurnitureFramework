@@ -1,3 +1,4 @@
+using HappyHomeDesigner;
 using Newtonsoft.Json;
 using StardewModdingAPI;
 
@@ -68,6 +69,8 @@ namespace FurnitureFramework.Data.FPack
 		#endregion
 
 		#region Load
+
+		public static IHomeDesignerAPI? HomeDesignerAPI;
 
 		static HashSet<LoadData> ToLoad = new();
 

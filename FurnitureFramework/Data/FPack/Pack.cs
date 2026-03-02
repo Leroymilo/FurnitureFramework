@@ -1,5 +1,4 @@
 using FurnitureFramework.Data.FType;
-using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StardewModdingAPI;

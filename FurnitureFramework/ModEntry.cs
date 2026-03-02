@@ -90,6 +90,8 @@ namespace FurnitureFramework
 				Log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
 			}
 
+			Data.FPack.FPack.HomeDesignerAPI = Helper.ModRegistry.GetApi<HappyHomeDesigner.IHomeDesignerAPI>("tlitookilakin.HappyHomeDesigner");
+
 			if (config?.load_packs_on_game_start ?? false) Data.FPack.FPack.LoadAll();
 		}
 
@@ -110,7 +112,7 @@ namespace FurnitureFramework
 			
 			RegisterFFConfig(ModManifest, config_menu, config_options);
 		}
-
+		
 		public static void RegisterFFConfig(IManifest manifest,
 			IGenericModConfigMenuApi? ConfigMenuAPI,
 			IGMCMOptionsAPI? ConfigOptionAPI
