@@ -198,6 +198,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 	- IsFF (equivalent of `furniture.modData.ContainsKey("FF")` but a bit more robust)
 	- TryGetScreenDepth (requested by @Astraios for their channel framework)
 	- Slot related methods (GetSlotItems, CanSlotHold, GetSlotIndex, PlaceInSlot, RemoveFromSlot) (requested by @chu!(e))
+- Implemented Happy Home Designer's Catalogue Provider API
 
 # Planned Future Features
 

@@ -121,8 +121,8 @@ namespace FurnitureFramework.Data.FPack
 					continue;
 				}
 
-				if (load_data.Parent != null)
-					load_data.Parent.IncludedPacks[data.DataUID] = data;
+				if (load_data.Parent is null) HomeDesignerAPI?.AddCatalogueProvider(data);
+				else load_data.Parent.IncludedPacks[data.DataUID] = data;
 
 				data.UnregisterConfig();
 			}

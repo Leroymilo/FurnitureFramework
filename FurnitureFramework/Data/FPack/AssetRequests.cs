@@ -10,7 +10,7 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Data.FPack
 {
-	partial class FPack
+	partial class FPack : HappyHomeDesigner.IHomeDesignerAPI.ICatalogueProvider
 	{
 		#region Getters
 
@@ -174,6 +174,7 @@ namespace FurnitureFramework.Data.FPack
 			ModEntry.GetHelper().GameContent.InvalidateCache(
 				asset_info => f_pack.IncludedPacks.ContainsKey(asset_info.Name.Name[3..])
 			);
+			HomeDesignerAPI?.InvalidateProviderCache();
 
 			return true;
 		}
@@ -305,6 +306,22 @@ namespace FurnitureFramework.Data.FPack
 					return true;
 			}
 			return false;
+		}
+
+		public IEnumerable<KeyValuePair<string, string>> GetCatalogues()
+		{
+			List<KeyValuePair<string, string>> result = new();
+
+			foreach (string f_id in Furniture.Keys)
+			{
+				string? shop_id = Furniture[f_id].ShopId;
+				if (shop_id is not null) result.Add(new(f_id, shop_id));
+			}
+
+			foreach (FPack sub_pack in IncludedPacks.Values)
+				result.AddRange(sub_pack.GetCatalogues());
+
+			return result;
 		}
 
 		#endregion
