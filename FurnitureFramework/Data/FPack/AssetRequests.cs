@@ -10,7 +10,7 @@ using StardewValley.Objects;
 
 namespace FurnitureFramework.Data.FPack
 {
-	partial class FPack : HappyHomeDesigner.IHomeDesignerAPI.ICatalogueProvider
+	partial class FPack
 	{
 		#region Getters
 
@@ -174,7 +174,6 @@ namespace FurnitureFramework.Data.FPack
 			ModEntry.GetHelper().GameContent.InvalidateCache(
 				asset_info => f_pack.IncludedPacks.ContainsKey(asset_info.Name.Name[3..])
 			);
-			HomeDesignerAPI?.InvalidateProviderCache();
 
 			return true;
 		}
@@ -308,6 +307,25 @@ namespace FurnitureFramework.Data.FPack
 			return false;
 		}
 
+		#endregion
+
+		#region HHD API
+
+		class FFCatalogueProvider: HappyHomeDesigner.IHomeDesignerAPI.ICatalogueProvider
+		{
+			readonly string Data_UID;
+
+			public FFCatalogueProvider(string UID)
+			{ Data_UID = $"{UID}/{DEFAULT_PATH}"; }
+
+			public IEnumerable<KeyValuePair<string, string>> GetCatalogues()
+			{
+				if (!PacksData.ContainsKey(Data_UID)) // in case pack isn't loaded
+					return new Dictionary<string, string>();
+				return PacksData[Data_UID].GetCatalogues();
+			}
+		}
+
 		public IEnumerable<KeyValuePair<string, string>> GetCatalogues()
 		{
 			List<KeyValuePair<string, string>> result = new();
@@ -315,7 +333,7 @@ namespace FurnitureFramework.Data.FPack
 			foreach (string f_id in Furniture.Keys)
 			{
 				string? shop_id = Furniture[f_id].ShopId;
-				if (shop_id is not null) result.Add(new(f_id, shop_id));
+				if (shop_id is not null) result.Add(new("(F)"+f_id, shop_id));
 			}
 
 			foreach (FPack sub_pack in IncludedPacks.Values)

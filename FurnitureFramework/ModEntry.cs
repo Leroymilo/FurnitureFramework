@@ -77,6 +77,8 @@ namespace FurnitureFramework
 		/// <param name="e">The event data.</param>
 		private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
 		{
+			Data.FPack.FPack.HomeDesignerAPI = Helper.ModRegistry.GetApi<HappyHomeDesigner.IHomeDesignerAPI>("tlitookilakin.HappyHomeDesigner");
+
 			Data.FPack.FPack.PreLoad(GetHelper());
 			RegisterConfig();
 			RegisterCommands();
@@ -89,8 +91,6 @@ namespace FurnitureFramework
 				Log("Furniture made with the Furniture Framework mod are not compatible with Alternative Textures.", LogLevel.Warn);
 				Log("You can disable this message in the config of the Furniture Framework.", LogLevel.Warn);
 			}
-
-			Data.FPack.FPack.HomeDesignerAPI = Helper.ModRegistry.GetApi<HappyHomeDesigner.IHomeDesignerAPI>("tlitookilakin.HappyHomeDesigner");
 
 			if (config?.load_packs_on_game_start ?? false) Data.FPack.FPack.LoadAll();
 		}

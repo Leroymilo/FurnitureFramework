@@ -89,7 +89,15 @@ namespace FurnitureFramework.Data.FPack
 			foreach (IContentPack c_pack in helper.ContentPacks.GetOwned().Append(DefaultPack))
 			{
 				ToLoad.Add(new LoadData(c_pack));
-				ContentPacks.Add(c_pack.Manifest.UniqueID, c_pack);
+				string UID = c_pack.Manifest.UniqueID;
+				ContentPacks.Add(UID, c_pack);
+
+				if (HomeDesignerAPI is not null)
+				{
+					FFCatalogueProvider CatalogueProvider = new(UID);
+					HomeDesignerAPI.AddCatalogueProvider(CatalogueProvider);
+					ModEntry.Log($"Registered {UID} to HHD API", LogLevel.Warn);
+				}
 			}
 			
 			InvalidateGameData();
@@ -121,13 +129,14 @@ namespace FurnitureFramework.Data.FPack
 					continue;
 				}
 
-				if (load_data.Parent is null) HomeDesignerAPI?.AddCatalogueProvider(data);
-				else load_data.Parent.IncludedPacks[data.DataUID] = data;
+				if (load_data.Parent is not null) 
+					load_data.Parent.IncludedPacks[data.DataUID] = data;
 
 				data.UnregisterConfig();
 			}
 
 			RegisterPackConfig();
+			HomeDesignerAPI?.InvalidateProviderCache();
 		}
 
 		#endregion
