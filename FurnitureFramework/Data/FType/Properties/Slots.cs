@@ -181,18 +181,12 @@ namespace FurnitureFramework.Data.FType.Properties
 			{
 				// draw custom lights
 
-				draw_data.position += new Vector2(Area.Center.X, Area.Bottom) * 4f;
+				draw_data.position += GetLocalPos(furn).ToVector2();
 				// Position is set to the bottom center of the slot area
-				draw_data.position += Offset.ToVector2() * 4f;
 				draw_data.position.X -= furn.boundingBox.Value.Size.X / 2f;
 				// Moved to the bottom left of the object bounding box, centered in the slot
 
 				type.DrawLights(furn, draw_data);
-			}
-			else
-			{
-				// draw vanilla lights (how?)
-				// maybe call addLights? (fix bounding box before calling it)
 			}
 		}
 

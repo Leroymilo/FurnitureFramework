@@ -495,26 +495,6 @@ namespace FurnitureFramework.Data.FType
 			return IsClicked(furniture, pos.X, pos.Y);
 		}
 
-		public static void DrawLighting(SpriteBatch sprite_batch)
-		{
-			foreach (Furniture furniture in Game1.currentLocation.furniture)
-			{
-				if (FPack.FPack.TryGetType(furniture, out FType? type))
-				{
-					type.DrawLights(furniture, sprite_batch);
-				}
-
-				else if (
-					furniture.heldObject.Value is Furniture held_furn &&
-					FPack.FPack.TryGetType(held_furn, out FType? held_type)
-				)
-				{
-					// maybe move the held furniture bounding box in the middle?
-					held_type.DrawLights(held_furn, sprite_batch);
-				}
-			}
-		}
-
 		public static float GetScreenDepth(Furniture furniture, bool overlay = false)
 		{
 			float depth;

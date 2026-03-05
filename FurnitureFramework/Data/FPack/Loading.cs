@@ -96,7 +96,7 @@ namespace FurnitureFramework.Data.FPack
 				{
 					FFCatalogueProvider CatalogueProvider = new(UID);
 					HomeDesignerAPI.AddCatalogueProvider(CatalogueProvider);
-					ModEntry.Log($"Registered {UID} to HHD API", LogLevel.Warn);
+					ModEntry.Log($"Registered {UID} to HHD API", LogLevel.Trace);
 				}
 			}
 			

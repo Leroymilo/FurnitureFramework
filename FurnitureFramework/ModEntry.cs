@@ -61,6 +61,7 @@ namespace FurnitureFramework
 			helper.Events.Player.Warped += OnPlayerWarped;
 			helper.Events.World.FurnitureListChanged += OnFurnitureListChanged;
 			helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+			helper.Events.Display.RenderedStep += OnRenderedStep;
 			
 			FFHarmony.HarmonyPatcher.Patch(new(ModManifest.UniqueID));
         }
@@ -409,5 +410,14 @@ namespace FurnitureFramework
 		}
 		
 		#endregion
-    }
+    
+        /// <inheritdoc cref="IDisplayEvents.RenderedStep"/>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+		private void OnRenderedStep(object? sender, RenderedStepEventArgs e)
+		{
+			if (e.Step == StardewValley.Mods.RenderSteps.World_RenderLightmap)
+				Data.FType.FType.DrawLighting(e.SpriteBatch);
+		}
+	}
 }
