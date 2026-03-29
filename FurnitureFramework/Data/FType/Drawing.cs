@@ -323,7 +323,7 @@ namespace FurnitureFramework.Data.FType
 
 		public void DrawLights(Furniture furniture, DrawData draw_data)
 		{
-			string rot = Rotations[furniture.currentRotation.Value];
+			string rot = GetRot(furniture);
 			draw_data.texture_path = GetSourceImage(furniture);
 			draw_data.mod_id = ModID;
 			Lights[rot].DrawSources(draw_data, furniture.IsOn, furniture.timeToTurnOnLights());

@@ -1,7 +1,6 @@
 using System.Reflection.Emit;
 using FurnitureFramework.Data.FPack;
 using HarmonyLib;
-using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;

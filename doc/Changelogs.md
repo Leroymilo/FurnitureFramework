@@ -193,6 +193,7 @@ Added a "Condition" option to restrict what can be placed in a slot with a Game 
 
 ## 3.3
 
+- Internally reworked Slot interaction for the API.
 - Fixed Source Rect for non-furniture items in Slots.
 - Created a [C# API](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Mod-provided_APIs) to interact with modded Furniture through C#. Current features (more can be requested):
 	- IsFF (equivalent of `furniture.modData.ContainsKey("FF")` but a bit more robust)

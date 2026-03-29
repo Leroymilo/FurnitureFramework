@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Metadata.Ecma335;
 using FurnitureFramework.Data.FType.Properties;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Menus;
@@ -259,6 +257,10 @@ namespace FurnitureFramework.Data.FType
 				return -1;
 			}
 
+			// Safeguard against bad inventory size
+			if (chest.Items.Count != Slots[rot].Count)
+				InitializeSlots(furniture, rot);
+
 			pos = (pos is null) ? null : GetRelPos(furniture, pos.Value);
 			return Slots[rot].GetSlot(pos, chest, who, furniture, ref item);
 		}
@@ -270,6 +272,10 @@ namespace FurnitureFramework.Data.FType
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
 			if (!Slots[rot][slot_index].CanHold(who, furniture, item)) return false;
+
+			// Safeguard against bad inventory size
+			if (chest.Items.Count != Slots[rot].Count)
+				InitializeSlots(furniture, rot);
 
 			if (item is SVObject obj)
 			{
@@ -304,6 +310,10 @@ namespace FurnitureFramework.Data.FType
 			item = null;
 			if (furniture.heldObject.Value is not Chest chest) return false;
 			if (slot_index < 0 || slot_index >= Slots[rot].Count) return false;
+
+			// Safeguard against bad inventory size
+			if (chest.Items.Count != Slots[rot].Count)
+				InitializeSlots(furniture, rot);
 			if (chest.Items[slot_index] is not Item held_item) return false;
 
 			item = held_item;
