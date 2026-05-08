@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Extensions;
@@ -47,7 +48,15 @@ namespace FurnitureFramework.Data.FType
 				rect.Y += rect.Height;
 			rect.Location += rect_offset;
 
-			texture ??= ModEntry.GetHelper().GameContent.Load<Texture2D>($"FF/{mod_id}/{texture_path}");
+			try
+			{
+				texture ??= ModEntry.GetHelper().GameContent.Load<Texture2D>($"FF/{mod_id}/{texture_path}");
+			}
+			catch (ContentLoadException)
+			{
+				ModEntry.Log($"Missing texture for {mod_id} at {texture_path} !", StardewModdingAPI.LogLevel.Error);
+				texture = ModEntry.GetHelper().ModContent.Load<Texture2D>("assets/error.png");
+			}
 
 			sprite_batch.Draw(
 				texture, position, rect,
