@@ -194,7 +194,7 @@ Use the [migration script](../migrator), you'll need python and the PIL python l
 How to run the python script:
 - Install [python](https://www.python.org/downloads/).
 - Once installed, open a terminal to run the command `pip install Pillow` and wait for it to finish.
-- Download and uncompress the [migrator script](https://github.com/Leroymilo/FurnitureFramework/releases/tag/Patch-3.0.1).
+- Download and uncompress the [migrator script](https://github.com/Leroymilo/FurnitureFramework/releases/tag/Migrator-3.0.0).
 - Make a copy of your Furniture Pack in case something goes wrong (might not be your fault, so make one even if you have experience with python).
 - In a terminal, run the migrator script with the command `python <path to>/migrator/main.py <Furniture Pack directory> -o <Output directory>`, replace `<path to>` with the path to the newly downloaded script, `<Furniture Pack directory>` with the path to your mod (where the `manifest.json` is located), and `<Output directory>` with the path where you want your updated Furniture Pack to be written.
 - The script might ask you for the directory for FF or for the game's extracted files if your Pack makes use of them, so you'll need to provide the **absolute path** to these if it asks you.
