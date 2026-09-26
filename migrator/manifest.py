@@ -9,7 +9,7 @@ class Manifest:
 		self.folder = folder
 		path = folder / "manifest.json"
 
-		self.data = None
+		self.data: dict[str, object] = {}
 		
 		try:
 			with open(path) as f:
